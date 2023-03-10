@@ -3,10 +3,10 @@ import { Outlet } from 'react-router'
 import styled from 'styled-components'
 import Accordion from '../components/Accordion'
 
-const TopNav = ({ children }: any) => {
+const TopNav = () => {
   return (
     <>
-      <Header></Header>
+      <Header>Logo</Header>
       <Wrapper>
         <Accordion
           title="항해99"
@@ -44,18 +44,22 @@ const TopNav = ({ children }: any) => {
             </div>
           }
         />
-        {children || <Outlet />}
       </Wrapper>
+      {<Outlet />}
     </>
   )
 }
 const Header = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+  color: white;
   width: 100vw;
   height: 60px;
   position: fixed;
   left: 0%;
   top: 0%;
-  background-color: blueviolet;
+  background-color: black;
   z-index: 1;
 `
 const Wrapper = styled.div`

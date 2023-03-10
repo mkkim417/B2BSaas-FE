@@ -1,8 +1,9 @@
 import React from 'react'
+import { Outlet } from 'react-router'
 import styled from 'styled-components'
 import Accordion from '../components/Accordion'
 
-function TopNav() {
+const TopNav = ({ children }: any) => {
   return (
     <>
       <Header></Header>
@@ -43,6 +44,7 @@ function TopNav() {
             </div>
           }
         />
+        {children || <Outlet />}
       </Wrapper>
     </>
   )

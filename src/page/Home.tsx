@@ -12,7 +12,7 @@ function Home() {
     </Wrapper>
   )
 }
-export const Wrapper = styled.div`
+const Wrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;

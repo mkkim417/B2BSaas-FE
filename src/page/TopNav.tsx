@@ -1,8 +1,8 @@
-import React from 'react'
-import { Outlet } from 'react-router'
-import { Link } from 'react-router-dom'
-import styled from 'styled-components'
-import Accordion from '../components/Accordion'
+import React from 'react';
+import { Outlet } from 'react-router';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Accordion from '../components/Accordion';
 
 const TopNav = () => {
   return (
@@ -38,12 +38,12 @@ const TopNav = () => {
       </Wrapper>
       {<Outlet />}
     </>
-  )
-}
+  );
+};
 const Li = styled.div`
   margin-left: 30px;
   padding: 10px 0px;
-`
+`;
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -56,7 +56,7 @@ const Header = styled.div`
   top: 0%;
   background-color: black;
   z-index: 1;
-`
+`;
 const Wrapper = styled.div`
   padding-top: 80px;
   width: 200px;
@@ -65,5 +65,5 @@ const Wrapper = styled.div`
   left: 0%;
   top: 0%;
   background-color: black;
-`
-export default TopNav
+`;
+export default TopNav;

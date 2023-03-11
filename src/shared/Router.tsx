@@ -3,6 +3,14 @@ import TopNav from '../page/TopNav'
 import { getUser } from '../util/localstorage'
 import Home from '../page/Home'
 import SendMessage from '../page/SendMessage'
+import NoticePersonalList from '../page/NoticePersonalList'
+import NoticeSendCreate from '../page/NoticeSendCreate'
+import NoticeSendList from '../page/NoticeSendList'
+import UserDataCreate from '../page/UserDataCreate'
+import UserGroupCreate from '../page/UserGroupCreate'
+import UserGroupList from '../page/UserGroupList'
+import UserList from '../page/UserList'
+import Statistics from '../page/Statistics'
 
 const Router = () => {
   const userInfo = getUser()
@@ -12,6 +20,14 @@ const Router = () => {
         <Route element={<TopNav />}>
           <Route path="/" element={<Home />} />
           <Route path="/sendmessage" element={<SendMessage />} />
+          <Route path="/noticepersonallist" element={<NoticePersonalList />} />
+          <Route path="/noticesendcreate" element={<NoticeSendCreate />} />
+          <Route path="/noticesendlist" element={<NoticeSendList />} />
+          <Route path="/userdatacreate" element={<UserDataCreate />} />
+          <Route path="/usergroupcreate" element={<UserGroupCreate />} />
+          <Route path="/usergrouplist" element={<UserGroupList />} />
+          <Route path="/userlist" element={<UserList />} />
+          <Route path="/statistics" element={<Statistics />} />
         </Route>
       </Routes>
     </BrowserRouter>

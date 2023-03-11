@@ -1,12 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 
-function NoticePersonalList() {
+function Statistics() {
   return (
-    <Wrapper>NoticePersonalList</Wrapper>
+    <Wrapper>Statistics</Wrapper>
   )
 }
-
 export const Wrapper = styled.div`
   display: flex;
   align-items: center;
@@ -16,4 +15,5 @@ export const Wrapper = styled.div`
   padding-left: 200px;
   gap: 30px;
 `
-export default NoticePersonalList
+
+export default Statistics

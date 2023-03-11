@@ -1,9 +1,20 @@
 import React from 'react'
+import styled from 'styled-components'
 
-function userDataCreate() {
+function UserDataCreate() {
   return (
-    <div>userDataCreate</div>
+    <Wrapper>userDataCreate</Wrapper>
   )
 }
 
-export default userDataCreate
+export const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  padding-left: 200px;
+  gap: 30px;
+`
+
+export default UserDataCreate

@@ -42,12 +42,13 @@ const Container = styled.div`
   justify-content: center;
   border-radius: 4px;
   color: white;
+  cursor: pointer;
 `
 
 const Header = styled.div`
   display: flex;
   align-items: center;
-
+  font-weight: bold;
   height: 32px;
   margin: 0 32px 0 8px;
 `

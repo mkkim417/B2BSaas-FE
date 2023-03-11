@@ -1,45 +1,36 @@
 import React from 'react'
 import { Outlet } from 'react-router'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Accordion from '../components/Accordion'
 
 const TopNav = () => {
   return (
     <>
-      <Header>Logo</Header>
+      <Header>
+        <Link to={'/'}>Logo</Link>
+      </Header>
       <Wrapper>
         <Accordion
-          title="항해99"
+          title="SendingGo"
           contents={
             <div>
               <ul>
-                <li>아코디언1</li>
-                <li>아코디언2</li>
-                <li>아코디언3</li>
+                <Li>Mneu1</Li>
+                <Li>Mneu2</Li>
+                <Li>Mneu3</Li>
               </ul>
             </div>
           }
         />
         <Accordion
-          title="다이렉트메시지"
+          title="Message"
           contents={
             <div>
               <ul>
-                <li>아코디언1</li>
-                <li>아코디언2</li>
-                <li>아코디언3</li>
-              </ul>
-            </div>
-          }
-        />
-        <Accordion
-          title="글쎄요"
-          contents={
-            <div>
-              <ul>
-                <li>아코디언1</li>
-                <li>아코디언2</li>
-                <li>아코디언3</li>
+                <Link to={'/sendmessage'}>
+                  <Li>Send</Li>
+                </Link>
               </ul>
             </div>
           }
@@ -49,6 +40,10 @@ const TopNav = () => {
     </>
   )
 }
+const Li = styled.div`
+  margin-left: 30px;
+  padding: 10px 0px;
+`
 const Header = styled.div`
   display: flex;
   align-items: center;

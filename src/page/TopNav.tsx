@@ -11,6 +11,10 @@ const TopNav = () => {
         <Link to={'/'}>Logo</Link>
       </Header>
       <Wrapper>
+        <UserContatiner>
+          <UserButton>마이페이지</UserButton>
+          <UserButton>로그아웃</UserButton>
+        </UserContatiner>
         <Accordion
           title="SendingGo"
           contents={
@@ -23,6 +27,18 @@ const TopNav = () => {
             </div>
           }
         />
+        <Link to={'/'}>
+          <Accordion
+            title="Home" />
+        </Link>
+        <Link to={'/usergrouplist'}>
+          <Accordion
+            title="usergrouplist" />
+        </Link>
+        <Link to={'/userlist'}>
+          <Accordion
+            title="User" />
+        </Link>
         <Accordion
           title="Message"
           contents={
@@ -35,6 +51,10 @@ const TopNav = () => {
             </div>
           }
         />
+        <Link to={'/statistics'}>
+          <Accordion
+            title="Statistic" />
+        </Link>
       </Wrapper>
       {<Outlet />}
     </>
@@ -66,4 +86,15 @@ const Wrapper = styled.div`
   top: 0%;
   background-color: black;
 `
+const UserContatiner = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+`
+const UserButton = styled.button`
+  background-color: beige;
+  cursor: pointer;
+`
+
 export default TopNav

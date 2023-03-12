@@ -28,7 +28,7 @@ const SelectBoxs = ({ optionData, placeholder }: any): React.ReactElement => {
           {optionData.map((data: any, index: any) => (
             <Option
               key={index}
-              value={data.value}
+              value={data}
               onClick={handleOnChangeSelectValue}
             >
               {data}

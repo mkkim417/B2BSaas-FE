@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { Pagination } from '@mantine/core'
 import * as XLSX from 'xlsx'
+import { useDispatch } from 'react-redux'
+import { sendListCreate } from '../redux/modules/sendList'
 interface IData {
   id: number
   name: string
@@ -15,6 +17,24 @@ function UploadPage() {
   const [isChecked, setIsChecked] = useState(false)
   const fileInput = useRef<any>()
   const [isGroupName, setGroupName] = useState('')
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  // const mutation = useMutation(addTodos)
+  const NextBtnHandler = useCallback(
+    async (data: any) => {
+      if (isGroupName === '') {
+        alert('그룹명을 입력해주세요')
+        return
+      }
+      // await mutation.mutateAsync(newCart)
+      dispatch(sendListCreate(data))
+      // dispatch(sendListCreate(isKeyData))
+      navigate('/alarmtalk')
+    },
+    // [mutation]
+    [isGroupName, dispatch]
+  )
   //파일초기화함수
   const onClearAttachment = () => {
     fileInput.current.value = ''
@@ -43,7 +63,7 @@ function UploadPage() {
     checkedItemHandler(value, e.target.checked)
   }
   //저장함수
-  const onSubmit = useCallback(
+  const onDelete = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault()
 
@@ -54,13 +74,6 @@ function UploadPage() {
     },
     [checkedList]
   )
-  const NextBtnHandler = (data: any) => {
-    if (isGroupName === '') {
-      alert('그룹명을 입력해주세요')
-      return
-    }
-    console.log(data)
-  }
   //엑셀읽는함수
   function readExcel(event: any) {
     let input = event.target
@@ -164,7 +177,7 @@ function UploadPage() {
           >
             취소
           </Button>
-          {isOpen && isOpen ? <Button onClick={onSubmit}>삭제</Button> : null}
+          {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
           {!isOpen ? (
             <Button onClick={() => NextBtnHandler(isData)}>다음</Button>
           ) : null}

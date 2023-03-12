@@ -7,7 +7,7 @@ interface IData {
   id: number
   name: string
 }
-function SendMessage() {
+function UploadPage() {
   const [isData, setData] = useState<any>()
   const [isKeyData, setKeyData] = useState<any>()
   const [checkedList, setCheckedList] = useState<string[]>([])
@@ -48,9 +48,19 @@ function SendMessage() {
       e.preventDefault()
 
       //   console.log('checkedList:', checkedList)
+      // isData && isData.filter((x: any) => !checkedList.includes(x))
+      setData(isData.filter((x: any) => !checkedList.includes(x)))
+      setOpen(false)
     },
     [checkedList]
   )
+  const NextBtnHandler = (data: any) => {
+    if (isGroupName === '') {
+      alert('그룹명을 입력해주세요')
+      return
+    }
+    console.log(data)
+  }
   //엑셀읽는함수
   function readExcel(event: any) {
     let input = event.target
@@ -73,12 +83,12 @@ function SendMessage() {
     }
     reader.readAsBinaryString(input.files[0])
   }
-  console.log('csv넣은대상', isData)
-  console.log('취소된대상:', checkedList)
-  console.log(
-    '차집합 :',
-    isData && isData.filter((x: any) => !checkedList.includes(x))
-  )
+  // console.log('csv넣은대상', isData)
+  // console.log('취소된대상:', checkedList)
+  // console.log(
+  //   '차집합 :',
+  //   isData && isData.filter((x: any) => !checkedList.includes(x))
+  // )
   return (
     <Wrapper>
       <ContentsWrap>
@@ -137,23 +147,26 @@ function SendMessage() {
           </BottomContents>
         )}
         <BtnWrap>
+          {!isOpen ? (
+            <Button onClick={() => setOpen((prev) => !prev) as any}>
+              선택삭제
+            </Button>
+          ) : null}
           <Button
             onClick={() => [
               onClearAttachment(),
               setData(false),
               setGroupName(''),
-              setOpen((prev) => !prev),
+              setOpen(false),
               setKeyData(''),
               setCheckedList([]),
             ]}
           >
             취소
           </Button>
-          <Button onClick={onSubmit}>저장</Button>
-          {isData && isData ? (
-            <Button onClick={() => setOpen((prev) => !prev) as any}>
-              선택삭제
-            </Button>
+          {isOpen && isOpen ? <Button onClick={onSubmit}>삭제</Button> : null}
+          {!isOpen ? (
+            <Button onClick={() => NextBtnHandler(isData)}>다음</Button>
           ) : null}
         </BtnWrap>
       </ContentsWrap>
@@ -231,4 +244,4 @@ const BottomContents = styled.div`
   height: 250px;
   background-color: #ededed;
 `
-export default SendMessage
+export default UploadPage

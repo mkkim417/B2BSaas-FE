@@ -2,7 +2,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import TopNav from '../page/TopNav'
 import { getUser } from '../util/localstorage'
 import Home from '../page/Home'
-import SendMessage from '../page/SendMessage'
+import UploadPage from '../page/UploadPage'
+import Alarmtalk from '../page/Alarmtalk'
 
 const Router = () => {
   const userInfo = getUser()
@@ -11,7 +12,8 @@ const Router = () => {
       <Routes>
         <Route element={<TopNav />}>
           <Route path="/" element={<Home />} />
-          <Route path="/sendmessage" element={<SendMessage />} />
+          <Route path="/uploadpage" element={<UploadPage />} />
+          <Route path="/alarmtalk" element={<Alarmtalk />} />
         </Route>
       </Routes>
     </BrowserRouter>

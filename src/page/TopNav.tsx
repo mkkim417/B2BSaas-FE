@@ -44,7 +44,7 @@ const TopNav = () => {
           contents={
             <div>
               <ul>
-                <Link to={'/sendmessage'}>
+                <Link to={'/uploadpage'}>
                   <Li>Send</Li>
                 </Link>
               </ul>

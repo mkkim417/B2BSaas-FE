@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import cart from '../modules/cart'
+import sendList from '../modules/sendList'
+import sendKey from '../modules/sendKey'
 
 const store = configureStore({
   reducer: {
-    cart,
+    sendList,
+    sendKey,
   },
 })
 export default store

@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import TopNav from '../page/TopNav'
 import { getUser } from '../util/localstorage'
 import Home from '../page/Home'
-import SendMessage from '../page/SendMessage'
+import UploadPage from '../page/UploadPage'
 import NoticePersonalList from '../page/NoticePersonalList'
 import NoticeSendCreate from '../page/NoticeSendCreate'
 import NoticeSendList from '../page/NoticeSendList'
@@ -11,6 +11,7 @@ import UserGroupCreate from '../page/UserGroupCreate'
 import UserGroupList from '../page/UserGroupList'
 import UserList from '../page/UserList'
 import Statistics from '../page/Statistics'
+import Alarmtalk from '../page/Alarmtalk'
 
 const Router = () => {
   const userInfo = getUser()
@@ -19,7 +20,7 @@ const Router = () => {
       <Routes>
         <Route element={<TopNav />}>
           <Route path="/" element={<Home />} />
-          <Route path="/sendmessage" element={<SendMessage />} />
+          <Route path="/uploadpage" element={<UploadPage />} />
           <Route path="/noticepersonallist" element={<NoticePersonalList />} />
           <Route path="/noticesendcreate" element={<NoticeSendCreate />} />
           <Route path="/noticesendlist" element={<NoticeSendList />} />
@@ -28,6 +29,7 @@ const Router = () => {
           <Route path="/usergrouplist" element={<UserGroupList />} />
           <Route path="/userlist" element={<UserList />} />
           <Route path="/statistics" element={<Statistics />} />
+          <Route path="/alarmtalk" element={<Alarmtalk />} />
         </Route>
       </Routes>
     </BrowserRouter>

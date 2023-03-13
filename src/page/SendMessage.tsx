@@ -1,51 +1,51 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { dummyData } from '../constants/products'
-import { Pagination } from '@mantine/core'
-import * as XLSX from 'xlsx'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import { dummyData } from '../constants/products';
+import { Pagination } from '@mantine/core';
+import * as XLSX from 'xlsx';
 interface IData {
-  id: number
-  name: string
+  id: number;
+  name: string;
 }
 function SendMessage() {
-  const [isData, setData] = useState<any[]>()
-  const [isKeyData, setKeyData] = useState<any>()
-  const navigate = useNavigate()
+  const [isData, setData] = useState<any[]>();
+  const [isKeyData, setKeyData] = useState<any>();
+  const navigate = useNavigate();
   const onSubmit = () => {
-    alert('heelo submit')
-  }
+    alert('heelo submit');
+  };
 
   useEffect(() => {
     // setData(dummyData)
-  }, [])
+  }, []);
 
   function readExcel(event: any) {
-    let input = event.target
-    let reader = new FileReader()
+    let input = event.target;
+    let reader = new FileReader();
     reader.onload = function () {
-      let data = reader.result
-      let workBook = XLSX.read(data, { type: 'binary' })
+      let data = reader.result;
+      let workBook = XLSX.read(data, { type: 'binary' });
 
       if (workBook.bookType !== 'xlsx' && workBook.bookType !== 'csv') {
-        alert('csv, xlsx형식을 넣어주세요.')
-        return
+        alert('csv, xlsx형식을 넣어주세요.');
+        return;
       }
 
       workBook.SheetNames.forEach(function (sheetName) {
-        console.log('SheetName: ' + sheetName)
-        let rows = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName])
-        const jsonData = JSON.stringify(rows)
-        const pareData = JSON.parse(jsonData)
-        const keyData = Object.keys(pareData[0])
-        setKeyData(keyData)
-        setData(pareData)
-      })
-    }
-    reader.readAsBinaryString(input.files[0])
+        console.log('SheetName: ' + sheetName);
+        let rows = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName]);
+        const jsonData = JSON.stringify(rows);
+        const pareData = JSON.parse(jsonData);
+        const keyData = Object.keys(pareData[0]);
+        setKeyData(keyData);
+        setData(pareData);
+      });
+    };
+    reader.readAsBinaryString(input.files[0]);
   }
-  console.log(isData)
-  console.log(isKeyData)
+  console.log(isData);
+  console.log(isKeyData);
   return (
     <Wrapper>
       <ContentsWrap>
@@ -109,7 +109,7 @@ function SendMessage() {
         </BtnWrap>
       </ContentsWrap>
     </Wrapper>
-  )
+  );
 }
 
 const BtnWrap = styled.div`
@@ -118,7 +118,7 @@ const BtnWrap = styled.div`
   gap: 10px;
   justify-content: center;
   margin-top: 25px;
-`
+`;
 const Button = styled.button`
   border-radius: 15px;
   border: 2px solid #000;
@@ -126,26 +126,26 @@ const Button = styled.button`
   color: #000;
   width: 85px;
   padding: 5px 0px;
-`
+`;
 const InputFile = styled.input`
   border: 1px solid #000;
   background-color: #fff;
   width: 300px;
-`
+`;
 const Input = styled.input`
   width: 300px;
   border-radius: 15px;
   padding: 5px 10px;
   height: 30px;
-`
+`;
 const Wrapper = styled.div`
   padding-left: 200px;
   margin-top: 60px;
   display: flex;
   gap: 30px;
   justify-content: center;
-`
-const ContentsWrap = styled.div``
+`;
+const ContentsWrap = styled.div``;
 const TopContents = styled.div`
   justify-content: space-evenly;
   align-items: center;
@@ -156,7 +156,7 @@ const TopContents = styled.div`
   height: 100px;
   background-color: #ededed;
   margin: 30px 0px;
-`
+`;
 
 const BottomContents = styled.div`
   display: flex;
@@ -168,5 +168,5 @@ const BottomContents = styled.div`
   width: 100%;
   height: 250px;
   background-color: #ededed;
-`
-export default SendMessage
+`;
+export default SendMessage;

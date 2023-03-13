@@ -1,25 +1,59 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Wrapper } from './Home';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
+import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
 
-function Signup() {
+interface FormValues {
+  email: string;
+  password: string;
+  confirmPw: string;
+}
+
+const Signup = () => {
   const navigate = useNavigate();
+  const {
+    register,
+    watch,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
+
+  const password = useRef();
+  password.current = watch('password');
+  const confirmPw = useRef();
+
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    console.log(data);
+  };
+
+  console.log(watch('email'));
 
   return (
-    <Wrapper>
+    <Wrapper onSubmit={handleSubmit(onSubmit)}>
       <StEmail>
         <p>이메일</p>
-        <Stinput type="text" name="Email" />
+        <Stinput
+          type="email"
+          {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
+          name="email"
+        />
+        {errors.email && 'email is required'}
+
         <button>중복확인</button>
       </StEmail>
       <StBrand>
         <h1>소속명</h1>
         <StBrandinput
           type="text"
-          name="BrandName"
+          {...register('BrandName', {
+            required: true,
+            pattern: /^[A-Za-z0-9]+$/i,
+          })}
           placeholder="브랜드(기업)명을 입력하세요"
+          name="BrandName"
         />
+        {errors.BrandName && 'Brandname is required'}
         <button>중복확인</button>
         <StBrandInfo>
           <StBrandInputWrapper>
@@ -43,23 +77,40 @@ function Signup() {
       <StPw>
         <h1>비밀번호</h1>
         <StPwinput
-          type="text"
-          name="Password"
+          type="password"
+          {...register('password', { required: true, minLength: 4 })}
+          name="password"
           placeholder="영문, 숫자 포함 총 8자리"
         />
+        {errors.password &&
+          errors.password.type === 'required' &&
+          'this field is required'}
+        {errors.password &&
+          errors.password.type === 'minLength' &&
+          'your password must contain at least 4 characters'}
         <h1>비밀번호 확인</h1>
         <StPwinput
-          type="text"
-          name="ConfirmPw"
+          type="password"
+          {...register('confirmPw', {
+            required: true,
+            validate: (value) => value === confirmPw.current,
+          })}
+          name="confirmPw"
           placeholder="영문, 숫자 포함 총 8자리"
         />
+        {errors.confirmPw &&
+          errors.confirmPw.type === 'required' &&
+          'this field is required'}
+        {errors.confirmPw &&
+          errors.confirmPw.type === 'validate' &&
+          'The passwords do not matched'}
       </StPw>
-      <StSignupButton onClick={() => navigate('/login')}>
+      <StSignupButton type="submit" onClick={() => navigate('/login')}>
         회원가입
       </StSignupButton>
     </Wrapper>
   );
-}
+};
 
 export default Signup;
 

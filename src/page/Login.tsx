@@ -9,13 +9,13 @@ function Login() {
     <Wrapper>
       <StEmail>
         <p>아이디(이메일)</p>
-        <Stinput type="text" name="Email" />
+        <Stinput type="email" name="email" placeholder="sendingo@gmail.com" />
       </StEmail>
       <StPw>
         <h1>비밀번호</h1>
         <StPwinput
-          type="text"
-          name="Password"
+          type="password"
+          name="password"
           placeholder="영문, 숫자 포함 총 8자리"
         />
       </StPw>

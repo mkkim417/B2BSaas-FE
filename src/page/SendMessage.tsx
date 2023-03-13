@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { dummyData } from '../constants/products';
+// import { dummyData } from '../constants/products';
 import { Pagination } from '@mantine/core';
 import * as XLSX from 'xlsx';
 interface IData {

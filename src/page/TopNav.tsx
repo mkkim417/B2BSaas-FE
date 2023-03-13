@@ -7,9 +7,9 @@ import Accordion from '../components/Accordion'
 const TopNav = () => {
   return (
     <>
-      <Header>
+      {/* <Header>
         <Link to={'/'}>Logo</Link>
-      </Header>
+      </Header> */}
       <Wrapper>
         <UserContatiner>
           <UserButton>마이페이지</UserButton>
@@ -82,8 +82,8 @@ const Wrapper = styled.div`
   width: 200px;
   height: 100vh;
   position: fixed;
-  left: 0%;
-  top: 0%;
+  /* left: 0%; */
+  top: 70px;
   background-color: black;
 `
 const UserContatiner = styled.div`

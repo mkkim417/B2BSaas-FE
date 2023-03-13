@@ -12,13 +12,17 @@ import UserGroupList from '../page/UserGroupList'
 import UserList from '../page/UserList'
 import Statistics from '../page/Statistics'
 import Alarmtalk from '../page/Alarmtalk'
+import Header from '../components/Header'
 
 const Router = () => {
   const userInfo = getUser()
   return (
     <BrowserRouter>
+      <Header />
+      <TopNav />
       <Routes>
-        <Route element={<TopNav />}>
+        {/* <Route element={<TopNav />}> */}
+        
           <Route path="/" element={<Home />} />
           <Route path="/uploadpage" element={<UploadPage />} />
           <Route path="/noticepersonallist" element={<NoticePersonalList />} />
@@ -30,7 +34,6 @@ const Router = () => {
           <Route path="/userlist" element={<UserList />} />
           <Route path="/statistics" element={<Statistics />} />
           <Route path="/alarmtalk" element={<Alarmtalk />} />
-        </Route>
       </Routes>
     </BrowserRouter>
   )

@@ -6,9 +6,7 @@ function Header() {
   return (
     <HeaderContainer>
       <LogoContainer>
-        <Link to={'/'}>
-        Logo
-        </Link>
+        <Link to={'/'}>Logo</Link>
       </LogoContainer>
     </HeaderContainer>
   )
@@ -18,6 +16,7 @@ const HeaderContainer = styled.div`
   width: 100%;
   height: 70px;
   position: fixed;
+  top: 0;
   background-color: black;
   display: flex;
   justify-content: space-between;

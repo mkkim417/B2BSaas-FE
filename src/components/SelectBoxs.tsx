@@ -16,7 +16,7 @@ const SelectBoxs = ({ optionData, placeholder }: any): React.ReactElement => {
     const { innerText } = e.target
     setCurrentValue(innerText)
   }
-  console.log('optionData :', optionData)
+  // console.log('optionData :', optionData)
   return (
     <SelectBox
       ref={dropDownRef}
@@ -43,6 +43,7 @@ const SelectBox = styled.div<{ ref: any }>`
   margin-bottom: 30px;
   position: relative;
   height: 40px;
+  width: 200px;
   display: flex;
   align-items: center;
   color: #424242;

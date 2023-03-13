@@ -9,7 +9,6 @@ const sendKeySlice = createSlice({
   initialState,
   reducers: {
     sendKeyCreate: (state, action) => {
-      console.log('action.payload : ', action.payload)
       return { sendKey: [...state.sendKey, action.payload] }
     },
   },

@@ -5,6 +5,7 @@ import { Pagination } from '@mantine/core'
 import * as XLSX from 'xlsx'
 import { useDispatch } from 'react-redux'
 import { sendListCreate } from '../redux/modules/sendList'
+import { sendKeyCreate } from '../redux/modules/sendKey'
 interface IData {
   id: number
   name: string
@@ -22,14 +23,14 @@ function UploadPage() {
 
   // const mutation = useMutation(addTodos)
   const NextBtnHandler = useCallback(
-    async (data: any) => {
+    async (data: any, isKeyDataServe: any) => {
       if (isGroupName === '') {
         alert('그룹명을 입력해주세요')
         return
       }
       // await mutation.mutateAsync(newCart)
       dispatch(sendListCreate(data))
-      // dispatch(sendListCreate(isKeyData))
+      dispatch(sendKeyCreate(isKeyDataServe))
       navigate('/alarmtalk')
     },
     // [mutation]
@@ -55,6 +56,7 @@ function UploadPage() {
     }
     return
   }
+  //체크박스저장함수
   const checkHandler = (
     e: React.ChangeEvent<HTMLInputElement>,
     value: string
@@ -179,7 +181,9 @@ function UploadPage() {
           </Button>
           {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
           {!isOpen ? (
-            <Button onClick={() => NextBtnHandler(isData)}>다음</Button>
+            <Button onClick={() => NextBtnHandler(isData, isKeyData)}>
+              다음
+            </Button>
           ) : null}
         </BtnWrap>
       </ContentsWrap>

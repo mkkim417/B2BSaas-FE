@@ -12,6 +12,7 @@ import UserGroupList from '../page/UserGroupList'
 import UserList from '../page/UserList'
 import Statistics from '../page/Statistics'
 import Alarmtalk from '../page/Alarmtalk'
+import Header from '../components/Header'
 
 const Router = () => {
   const userInfo = getUser()
@@ -33,7 +34,6 @@ const Router = () => {
           <Route path="/userlist" element={<UserList />} />
           <Route path="/statistics" element={<Statistics />} />
           <Route path="/alarmtalk" element={<Alarmtalk />} />
-        </Route>
       </Routes>
     </BrowserRouter>
   )

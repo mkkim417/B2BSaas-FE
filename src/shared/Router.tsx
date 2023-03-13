@@ -17,8 +17,11 @@ const Router = () => {
   const userInfo = getUser()
   return (
     <BrowserRouter>
+      <Header />
+      <TopNav />
       <Routes>
-        <Route element={<TopNav />}>
+        {/* <Route element={<TopNav />}> */}
+        
           <Route path="/" element={<Home />} />
           <Route path="/uploadpage" element={<UploadPage />} />
           <Route path="/noticepersonallist" element={<NoticePersonalList />} />

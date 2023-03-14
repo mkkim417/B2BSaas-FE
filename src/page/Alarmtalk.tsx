@@ -4,13 +4,18 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import SelectBoxs from '../components/SelectBoxs'
 import { ALAERMTALK_TEMPLATE } from '../constants/alarmtalk'
-
+import AutoModal from '../components/Automodal'
 function Alarmtalk() {
   const navigate = useNavigate()
   const sendKeyData = useSelector((state: any) => {
     return state.sendKey.sendKey
   })
-  console.log('sendKeyData : ', sendKeyData)
+  const sendListData = useSelector((state: any) => {
+    return state.sendList.sendList
+  })
+  const sendGroupNameData = useSelector((state: any) => {
+    return state.sendGroupName.sendGroupName
+  })
   // console.log(ALAERMTALK_TEMPLATE['배송완료 안내'])
   const TemplatesNameDummy = () => {
     let Arr = []
@@ -19,13 +24,7 @@ function Alarmtalk() {
     }
     return Arr
   }
-  // const TemplatesReqDataDummy = (i: number) => {
-  //   let ArrReqData = []
-  //   for (const element of ALAERMTALK_TEMPLATES) {
-  //     ArrReqData.push(element.reqData)
-  //   }
-  //   return ArrReqData
-  // }
+  const [isAutoModal, setAutoModal] = useState<boolean>(false)
   const [currentValue, setCurrentValue] = useState(null)
   // const [isReqLength, setReqLength] = useState<any>(
   //   ALAERMTALK_TEMPLATE['택배번호 안내'].reqData.length
@@ -43,7 +42,7 @@ function Alarmtalk() {
       setAllData(ALAERMTALK_TEMPLATE[currentValue])
     }
   }, [currentValue])
-  console.log('isAllData : ', isAllData)
+  console.log('sendListData : ', sendListData[0].length)
   // ALAERMTALK_TEMPLATES.map((el: any) => el.reqData)
   return (
     <Wrapper>
@@ -87,9 +86,16 @@ function Alarmtalk() {
         <ContnetDataWrap>{isAllData.text}</ContnetDataWrap>
         <ButtonWrap>
           <Button onClick={() => navigate(-1)}>취소</Button>
-          <Button>다음</Button>
+          <Button onClick={() => setAutoModal((prev) => !prev)}>다음</Button>
         </ButtonWrap>
       </RightContents>
+      {isAutoModal && isAutoModal ? (
+        <AutoModal
+          closeModal={setAutoModal}
+          userNum={sendListData && sendListData[0]?.length}
+          groupName={sendGroupNameData && sendGroupNameData[0]}
+        />
+      ) : null}
     </Wrapper>
   )
 }

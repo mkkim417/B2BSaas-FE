@@ -6,6 +6,7 @@ import * as XLSX from 'xlsx'
 import { useDispatch } from 'react-redux'
 import { sendListCreate } from '../redux/modules/sendList'
 import { sendKeyCreate } from '../redux/modules/sendKey'
+import { sendGroupNameCreate } from '../redux/modules/sendGroupName'
 interface IData {
   id: number
   name: string
@@ -29,8 +30,10 @@ function UploadPage() {
         return
       }
       // await mutation.mutateAsync(newCart)
+
       dispatch(sendListCreate(data))
       dispatch(sendKeyCreate(isKeyDataServe))
+      dispatch(sendGroupNameCreate([isGroupName]))
       navigate('/alarmtalk')
     },
     // [mutation]

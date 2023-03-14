@@ -12,29 +12,34 @@ import UserGroupList from '../page/UserGroupList';
 import UserList from '../page/UserList';
 import Statistics from '../page/Statistics';
 import Alarmtalk from '../page/Alarmtalk';
+import Header from '../components/Header';
 import Signup from '../page/Signup';
 import Login from '../page/Login';
+import Mypage from '../page/Mypage';
 
 const Router = () => {
   const userInfo = getUser();
   return (
     <BrowserRouter>
+      <Header />
+      <TopNav />
       <Routes>
-        <Route element={<TopNav />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/uploadpage" element={<UploadPage />} />
-          <Route path="/noticepersonallist" element={<NoticePersonalList />} />
-          <Route path="/noticesendcreate" element={<NoticeSendCreate />} />
-          <Route path="/noticesendlist" element={<NoticeSendList />} />
-          <Route path="/userdatacreate" element={<UserDataCreate />} />
-          <Route path="/usergroupcreate" element={<UserGroupCreate />} />
-          <Route path="/usergrouplist" element={<UserGroupList />} />
-          <Route path="/userlist" element={<UserList />} />
-          <Route path="/statistics" element={<Statistics />} />
-          <Route path="/alarmtalk" element={<Alarmtalk />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-        </Route>
+        {/* <Route element={<TopNav />}> */}
+
+        <Route path="/" element={<Home />} />
+        <Route path="/uploadpage" element={<UploadPage />} />
+        <Route path="/noticepersonallist" element={<NoticePersonalList />} />
+        <Route path="/noticesendcreate" element={<NoticeSendCreate />} />
+        <Route path="/noticesendlist" element={<NoticeSendList />} />
+        <Route path="/userdatacreate" element={<UserDataCreate />} />
+        <Route path="/usergroupcreate" element={<UserGroupCreate />} />
+        <Route path="/usergrouplist" element={<UserGroupList />} />
+        <Route path="/userlist" element={<UserList />} />
+        <Route path="/statistics" element={<Statistics />} />
+        <Route path="/alarmtalk" element={<Alarmtalk />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/mypage" element={<Mypage />} />
       </Routes>
     </BrowserRouter>
   );

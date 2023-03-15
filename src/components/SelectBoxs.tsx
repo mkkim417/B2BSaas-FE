@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import useDetectClose from '../hook/useDetectClose'
 
@@ -6,17 +6,28 @@ interface Itodolist {
   optionData: any
   placeholder: any
 }
-const SelectBoxs = ({ optionData, placeholder }: any): React.ReactElement => {
+const SelectBoxs = ({
+  optionData,
+  placeholder,
+  propFunction,
+  className,
+}: any): React.ReactElement => {
   const [currentValue, setCurrentValue] = useState(null)
 
   const dropDownRef = useRef()
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false) //커스텀훅
-
   const handleOnChangeSelectValue = (e: any) => {
     const { innerText } = e.target
     setCurrentValue(innerText)
   }
-  // console.log('optionData :', optionData)
+
+  // onChange setState비동기
+  useEffect(() => {
+    if (currentValue !== null) {
+      propFunction(currentValue, className)
+    }
+  }, [currentValue, propFunction])
+
   return (
     <SelectBox
       ref={dropDownRef}

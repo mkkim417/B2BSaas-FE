@@ -32,23 +32,9 @@ const Signup = () => {
     mode: 'onChange',
   });
 
-  const handleSignup = () => {
-    const data = getValues();
-    console.log(data);
-    localStorage.setItem('email', data.Email);
-    localStorage.setItem('Password', data.Password);
-    console.log(handleSignup);
-    navigate('/login');
-  };
-
-  const Password = useRef<string>();
-  Password.current = watch('Password');
-  const ConfirmPw = useRef<string>();
-  ConfirmPw.current = watch('ConfirmPw');
-
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const handleSignup: SubmitHandler<FormValues> = (data) => {
     if (!isValid) {
-      setAlertMessage('Please enter all fields correctly.');
+      setAlertMessage('Please fill in all fields.');
       return;
     }
 
@@ -65,6 +51,33 @@ const Signup = () => {
     localStorage.setItem('Password', data.Password);
     setIsSubmitted(true);
     setAlertMessage('Your registration is complete.');
+    navigate('/login');
+  };
+
+  const Password = useRef<string>();
+  Password.current = watch('Password');
+  const ConfirmPw = useRef<string>();
+  ConfirmPw.current = watch('ConfirmPw');
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    if (!isValid) {
+      setAlertMessage('모든 영역을 기입하여 주십시오.');
+      return;
+    }
+
+    const formValues = Object.values(data);
+    const isFormEmpty = formValues.every((value) => value === '');
+
+    if (isFormEmpty) {
+      setAlertMessage('모든 영역을 기입하여 주십시오.');
+      return;
+    }
+
+    console.log(data);
+    localStorage.setItem('email', data.Email);
+    localStorage.setItem('Password', data.Password);
+    setIsSubmitted(true);
+    setAlertMessage('회원 가입이 완료되었습니다.');
   };
 
   const EmailValidation: Validate<string, FormValues> = (value) => {
@@ -73,7 +86,7 @@ const Signup = () => {
     if (EmailRegex.test(value)) {
       return true;
     } else {
-      return 'This is not a valid email format';
+      return '올바른 이메일 형식이 아닙니다.';
     }
   };
 
@@ -89,7 +102,7 @@ const Signup = () => {
     if (isValid) {
       return true;
     } else {
-      return 'Please enter only numbers and hyphens (-)';
+      return '숫자와 -(하이픈)만 입력하여 주십시오.';
     }
   };
 
@@ -98,7 +111,7 @@ const Signup = () => {
       {isSubmitted && <p>Your subscription has been completed.</p>}
       {alertMessage && <p>{alertMessage}</p>}
       <StEmail>
-        <p>Email</p>
+        <StEmailP>이메일</StEmailP>
         <Stinput
           type="email"
           {...register('Email', {
@@ -113,10 +126,12 @@ const Signup = () => {
             {errors.Email.message || 'Please enter your e-mail.'}
           </StErrorMsg>
         )}
-        <button>중복확인</button>
+        <StEmailCheckButton>중복확인</StEmailCheckButton>
       </StEmail>
+
       <StBrand>
-        <h1>Affiliation Name</h1>
+        <StBrandP>소속명</StBrandP>
+        <StBrandCheckButton>중복확인</StBrandCheckButton>
         <StBrandInput
           type="text"
           {...register('BrandName', {
@@ -125,70 +140,73 @@ const Signup = () => {
           })}
           name="BrandName"
           required
-          placeholder="Enter the brand (company) name"
+          placeholder="브랜드(기업)명을 입력해주세요"
         />
         {errors.BrandName && (
           <StErrorMsg>
-            {errors.BrandName.message || 'Brandname is required'}
+            {errors.BrandName.message || '브랜드(기업)명을 입력해주세요'}
           </StErrorMsg>
         )}
+        <StBrandNumberP>소속대표전화</StBrandNumberP>
         <StBrandNumberInput
           type="text"
-          placeholder="Enter representative number"
+          placeholder="대표 번호를 입력해주세요"
           {...register('BrandNumber', {
             required: true,
             validate: PhoneNumberValidation,
           })}
           name="BrandNumber"
           required
+          hasError={!!errors.BrandNumber}
         />
         {errors.BrandNumber && (
           <StErrorMsg>
-            {errors.BrandNumber.message || 'BrandNumber is required'}
+            {errors.BrandNumber.message || '대표 번호가 필요합니다'}
           </StErrorMsg>
         )}
-        <button>중복확인</button>
-        <StBrandInfo>
-          <StBrandInputWrapper>
-            <h1>Contact Name</h1>
-            <StBrandInput
-              type="text"
-              {...register('PicName', {
-                required: true,
-              })}
-              name="PicName"
-              placeholder="Please enter a contact person"
-              required
-            />
-            {errors.PicName && (
-              <StErrorMsg>
-                {errors.PicName.message || 'Picname is required'}
-              </StErrorMsg>
-            )}
-          </StBrandInputWrapper>
-          <StContectNumberInputWrapper>
-            <h1>Contact Phone Number</h1>
-            <StBrandInput
-              type="text"
-              placeholder="Enter contact phone number"
-              {...register('PicNumber', {
-                required: true,
-                validate: PhoneNumberValidation,
-              })}
-              name="PicNumber"
-              required
-            />
-            {errors.PicNumber && (
-              <StErrorMsg>
-                {errors.PicNumber.message ||
-                  'Please enter contact phone number'}
-              </StErrorMsg>
-            )}
-          </StContectNumberInputWrapper>
-        </StBrandInfo>
+        <StEmailCheckButton>중복확인</StEmailCheckButton>
       </StBrand>
+
+      <StPicInfo>
+        <h1>담당자 이름</h1>
+        <StBrandInput
+          type="text"
+          {...register('PicName', {
+            required: true,
+          })}
+          name="PicName"
+          placeholder="담당자를 입력해주세요"
+          required
+        />
+        {errors.PicName && (
+          <StErrorMsg>
+            {errors.PicName.message || '담당자 이름이 필요합니다'}
+          </StErrorMsg>
+        )}
+
+        <StContectNumberInputWrapper>
+          <h1>담당자 번호</h1>
+          <StBrandInput
+            type="text"
+            placeholder="담당자 번호를 입력해주세요"
+            {...register('PicNumber', {
+              required: true,
+              validate: PhoneNumberValidation,
+            })}
+            name="PicNumber"
+            required
+            hasError={!!errors.PicNumber}
+          />
+          {errors.PicNumber && (
+            <StErrorMsg>
+              {errors.PicNumber.message || '담당자 번호를 입력해주세요'}
+            </StErrorMsg>
+          )}
+        </StContectNumberInputWrapper>
+      </StPicInfo>
+
       <StPw>
-        <h1>Password</h1>
+        <StPwP>비밀번호</StPwP>
         <StPwinput
           type="password"
           {...register('Password', {
@@ -196,16 +214,16 @@ const Signup = () => {
             pattern: PasswordRegex,
           })}
           name="Password"
-          placeholder="A total of 10 digits, including English and numbers"
+          placeholder="영문, 숫자를 포함한 10글자를 입력해주세요"
           required
         />
         {errors.Password && (
           <StErrorMsg>
             {errors.Password.message ||
-              'Your password must contain at least one letter, one number, and be at least 10 characters'}
+              '암호는 영문, 숫자를 포함하여 총 10자리가 되어야 합니다'}
           </StErrorMsg>
         )}
-        <h1>Confirm password</h1>
+        <StPwP>비밀번호 확인</StPwP>
         <StPwinput
           type="password"
           {...register('ConfirmPw', {
@@ -228,9 +246,7 @@ const Signup = () => {
           errors.ConfirmPw.type === 'validate' &&
           'The Passwords do not matched'}
       </StPw>
-      <StSignupButton type="submit" onClick={handleSignup}>
-        회원가입
-      </StSignupButton>
+      <StSignupButton type="submit">회원가입</StSignupButton>
     </Wrapper>
   );
 };
@@ -248,7 +264,6 @@ const StErrorMsg = styled.span`
   left: 0;
   font-size: 14px;
   color: red;
-  visibility: hidden;
 `;
 
 const Stinput = styled.input<StInputProps>`
@@ -258,11 +273,13 @@ const Stinput = styled.input<StInputProps>`
   margin: 10px auto;
   border: 2px solid rgba(170, 170, 170, 0.26);
   transition: border-color 0.2s ease-in-out;
-  &:focus + ${StErrorMsg} {
-    visibility: visible;
-  }
+
   &:focus {
     border-color: #333;
+  }
+
+  &:focus + ${StErrorMsg} {
+    visibility: visible;
   }
 
   ${({ hasError }) =>
@@ -270,14 +287,36 @@ const Stinput = styled.input<StInputProps>`
     `
     border-color: red;
   `}
-
-  &:focus + ${StErrorMsg} {
-    visibility: visible;
-  }
 `;
 
-const StEmail = styled(StInputWrapper)`
-  border: 2px solid;
+const StEmailP = styled.p`
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #000000;
+  mix-blend-mode: darken;
+`;
+
+const StEmail = styled(StInputWrapper)``;
+
+const StEmailCheckButton = styled.button`
+  background: #d3d3d3;
+  border-radius: 40px;
+  margin: 10px;
+`;
+
+const StBrandP = styled.p`
+  font-family: 'Roboto';
+  font-style: normal;
+  display: flex;
+  justify-content: left
+  align-items: center;
+  color: #000000;
+  mix-blend-mode: darken;
 `;
 
 const StBrand = styled.div`
@@ -288,44 +327,80 @@ const StBrand = styled.div`
 
 const StBrandInput = styled.input<StInputProps>`
   background: #d3d3d3;
-  margin-right: 20px;
+  border-radius: 40px;
+  margin: 10px;
+  display: flex;
+  justify-content: left;
+  width: 500px;
 `;
 
 const StBrandNumberInput = styled.input<StInputProps>`
   background: #d3d3d3;
-  margin-right: 20px;
+  border-radius: 40px;
+  border-color: ${({ hasError }) => (hasError ? 'red' : 'inherit')};
 `;
 
 const StContectNumberInputWrapper = styled.div<StInputProps>`
   background: #d3d3d3;
   margin-right: 20px;
+  border-color: ${({ hasError }) => (hasError ? 'red' : 'inherit')};
 `;
 
-const StBrandInfo = styled.div`
+const StBrandNumberP = styled.p`
+  font-family: 'Roboto';
+  font-style: normal;
   display: flex;
-  justify-content: center;
+
+  align-items: center;
+  text-align: center;
+  color: #000000;
 `;
 
-const StBrandInputWrapper = styled.div`
-  margin: 10px;
+const StBrandCheckButton = styled.button`
+  background: #d3d3d3;
+  border-radius: 40px;
 `;
 
 const StPw = styled(StInputWrapper)`
+  width: 600px;
+
   border: 2px solid;
 `;
 
+const StPwP = styled.p`
+  /* 비밀번호* */
+
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+
+  color: #000000;
+
+  mix-blend-mode: darken;
+`;
+
 const StPwinput = styled.input<StInputProps>`
-  background: rgba(170, 170, 170, 0.26);
+  background: #d3d3d3;
   border-radius: 40px;
-  width: 400px;
+  width: 500px;
   margin: 10px auto;
   border: 2px solid rgba(170, 170, 170, 0.26);
   transition: border-color 0.2s ease-in-out;
-  &:focus + ${StErrorMsg} {
-    visibility: visible;
-  }
+  align-items: center;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+
   &:focus {
     border-color: #333;
+  }
+
+  &:focus + ${StErrorMsg} {
+    visibility: visible;
   }
 
   ${({ hasError }) =>
@@ -333,10 +408,6 @@ const StPwinput = styled.input<StInputProps>`
     `
     border-color: red;
   `}
-
-  &:focus + ${StErrorMsg} {
-    visibility: visible;
-  }
 `;
 
 const StSignupButton = styled.button`
@@ -354,4 +425,9 @@ const StSignupButton = styled.button`
   &:hover {
     background-color: #e65100;
   }
+`;
+
+const StPicInfo = styled.div`
+  width: 600px;
+  border: 2px solid;
 `;

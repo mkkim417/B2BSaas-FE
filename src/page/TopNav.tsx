@@ -55,6 +55,10 @@ const TopNav = () => {
           <Accordion
             title="Statistic" />
         </Link>
+        <Link to={'userdatacreate'}>
+          <Accordion
+            title="Create" />
+        </Link>
       </Wrapper>
       {<Outlet />}
     </>

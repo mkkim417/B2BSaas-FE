@@ -158,5 +158,22 @@
       "phone": "010-1111-1111",
       "createDt": "20230313"
     }
-  ]
+  ],
+  "usersIngroup": [
+    {
+      "groupName": "3월 신규 고객",
+      "groupDescription": "2022년 3월 첫 가입고객",
+      "clientName": "문동은",
+      "contact": "010-1234-1234",
+      "createdA": "2022-07-25T07:54:24.000Z"
+    },
+    {
+      "groupName": "2월 신규 고객",
+      "groupDescription" : "2022년 2월 첫 가입고객",
+      "clientName": "박연진",
+      "contact": "010-2345-2345",
+      "createdAt": "2022-07-25T07:54:24.000Z"
+    }
+    ]
+
 }

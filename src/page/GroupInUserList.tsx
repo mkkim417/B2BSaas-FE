@@ -16,5 +16,4 @@ export const Wrapper = styled.div`
   padding-left: 200px;
   gap: 30px;
 `
-
 export default GroupInUserList

@@ -8,6 +8,8 @@ function UserGroupList() {
 
   const navigate = useNavigate()
 
+  // modal hook
+
   // 그룹리스트 api 담는 상태변수
   const [ groupList, setGroupList ] = useState([] as any)
 
@@ -152,7 +154,8 @@ function UserGroupList() {
         <div>유저 그룹 리스트</div>
         <div>체크 갯수 : {checkedArr.length}</div>
         <input placeholder='검색' onChange={inputChange}/>
-        <Button onClick={messageSendHandler}> 메세지 보내기</Button>
+        <Button onClick={messageSendHandler}>그룹생성</Button>
+        <Button onClick={messageSendHandler}>메세지 보내기</Button>
         <Button onClick={individualDeleteHandler}> 선택 삭제 </Button>
         <Button onClick={groupDeleteHandler}> 전체 삭제 </Button>
       </HeaderBar>
@@ -180,13 +183,6 @@ function UserGroupList() {
               </CardInBox>
             })}
           </CardContainer>
-        {/* <div>
-          {groupList?.map((item : any)  => {
-            return <div key={item.id}>
-              {item.title}
-            </div>
-          })}
-        </div> */}
       </ContentContainer>
     </Wrapper>
   )

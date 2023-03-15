@@ -1,11 +1,41 @@
-import React, { useRef } from 'react'
+import axios from 'axios'
+import React, { useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import useDetectClose from '../hook/useDetectClose'
 const AutoModal = (props: any) => {
   const dropDownRef = useRef()
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false) //커스텀훅
-  console.log('props.userNum : ', props.userNum)
-  console.log('props.groupName : ', props.groupName)
+  const [isGorupDesc, setGorupDesc] = useState()
+  const navigate = useNavigate()
+  const isGorupDescChage = (e: any) => {
+    setGorupDesc(e.target.value)
+  }
+  const ClientListData = useSelector((state: any) => {
+    return state.sendList.sendList
+  })
+  console.log('ClientListData : ', ClientListData)
+  const onSubmit = () => {
+    if (isGorupDesc === undefined || null || '') {
+      alert('그룹설명을 해주세요')
+    }
+    navigate('/group')
+  }
+  let body = {
+    groupName: props.groupName[0],
+    groupDescription: isGorupDesc,
+    groupTagName: '신규',
+    groupList: ClientListData[0],
+  }
+  //클라이언트 그룹 생성 post api요청
+  const res = axios.post(
+    '/api/clients/groups',
+    {
+      body,
+    },
+    { withCredentials: true }
+  )
   return (
     <Container>
       <Background
@@ -13,16 +43,52 @@ const AutoModal = (props: any) => {
       ></Background>
       <ModalBlock ref={dropDownRef}>
         <XboxWrap onClick={() => props.closeModal(false)}></XboxWrap>
-        <ImageWrap>
+        <ContentsWrap>
           <BoxMent>그룹 생성</BoxMent>
-          <BoxMent>그룹명 {props.groupName}</BoxMent>
-          <BoxMent>유저수 {props.userNum}</BoxMent>
-          <BoxMent>
-            그룹설명 <input type="text" placeholder="그룹설명"></input>
-          </BoxMent>
-          <div>대량발송정보</div>미리보기
-          <div>고객명 회사명 운송장번호 송장번호</div>
-        </ImageWrap>
+          <TwiceWrap>
+            <Flex width="50%">
+              <Strong>
+                그룹명<Red>*</Red>
+              </Strong>
+              <Input type="text" defaultValue={props.groupName} />
+            </Flex>
+            <Flex width="50%">
+              <Strong>유저수</Strong> {props.userNum}
+            </Flex>
+          </TwiceWrap>
+          <Flex width="100%">
+            <Strong>그룹설명</Strong>
+            <Input
+              width="80%"
+              type="text"
+              placeholder="그룹설명"
+              value={isGorupDesc}
+              onChange={isGorupDescChage}
+            />
+          </Flex>
+          <TwiceWrap>
+            <Flex width="50%" flexDirection="column" alignItems="initial">
+              <Strong>미리보기</Strong>
+              <KakaoBox>
+                <YellowWrap>{props.currentValue}</YellowWrap>
+                <WhiteWrap>{props.isAllData.text}</WhiteWrap>
+              </KakaoBox>
+            </Flex>
+            <Flex width="50%" flexDirection="column" alignItems="initial">
+              <Strong>정보</Strong>
+              <Flex width="100%" flexDirection="column">
+                <Flex width="100%">
+                  <Flex width="50%">고객명</Flex>
+                  <Flex width="50%">회사명</Flex>
+                </Flex>
+                <Flex width="100%">
+                  <Flex width="50%">운송장번호</Flex>
+                  <Flex width="50%">송장번호</Flex>
+                </Flex>
+              </Flex>
+            </Flex>
+          </TwiceWrap>
+        </ContentsWrap>
 
         <div>
           <ButtonWrap>
@@ -54,8 +120,9 @@ const AutoModal = (props: any) => {
                 bgColor="#fff"
                 border="3px solid #000"
                 color="#000"
+                onClick={onSubmit}
               >
-                보내기
+                그룹저장
               </Button>
             </ButtonGap>
           </ButtonWrap>
@@ -64,6 +131,68 @@ const AutoModal = (props: any) => {
     </Container>
   )
 }
+
+const Input = styled.input<{
+  width?: string
+}>`
+  width: 200px;
+  width: ${(props) => (props.width ? props.width : '200px')};
+  padding: 15px;
+  background-color: #ededed;
+  border: none;
+  border-radius: 10px;
+  justify-content: space-between;
+`
+const Flex = styled.div<{
+  width?: string
+  flexDirection?: string
+  alignItems?: string
+}>`
+  align-items: center;
+  display: flex;
+  margin-top: 10px;
+  align-items: ${(props) => (props.alignItems ? props.alignItems : 'center')};
+  width: ${(props) => (props.width ? props.width : '50%')};
+  flex-direction: ${(props) =>
+    props.flexDirection ? props.flexDirection : 'initial'};
+`
+const Red = styled.span`
+  color: red;
+`
+const Strong = styled.div`
+  margin-right: 30px;
+  font-weight: bold;
+`
+const TwiceWrap = styled.div`
+  margin-top: 10px;
+  display: flex;
+`
+export const WhiteWrap = styled.div`
+  font-size: 14px;
+  background-color: #fff;
+  letter-spacing: 0.1rem;
+  line-height: 1.3;
+  padding: 10px;
+  height: 130px;
+`
+export const KakaoBox = styled.div`
+  width: 300px;
+  height: 200px;
+  background-color: lightblue;
+  padding: 15px 30px;
+  margin-top: 15px;
+`
+export const YellowWrap = styled.div`
+  background-color: yellow;
+  width: 100%;
+  font-size: 14px;
+  text-align: center;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+`
 const ButtonGap = styled.div`
   display: flex;
   gap: 10px;
@@ -106,10 +235,10 @@ const ModalBlock = styled.div<{ ref?: any }>`
   position: absolute;
   top: 6.5rem;
   border-radius: 10px;
-  padding: 1.5rem;
+  padding: 3rem 3rem;
   background-color: white;
   color: black;
-  width: 800px;
+  width: 750px;
   height: 600px;
   top: 50%;
   left: 50%;
@@ -140,15 +269,9 @@ const Button = styled.button<{
   }
 `
 const BoxMent = styled.div`
-  margin: 35px 0 40px;
   font-weight: bold;
   font-size: 26px;
-  font-family: 'KCC-DodamdodamR';
+  text-align: left;
 `
-const ImageWrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-`
+const ContentsWrap = styled.div``
 export default AutoModal

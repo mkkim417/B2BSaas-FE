@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import SelectBoxs from '../components/SelectBoxs'
 import { ALAERMTALK_TEMPLATE } from '../constants/alarmtalk'
-import AutoModal from '../components/Automodal'
+import AutoModal, {
+  KakaoBox,
+  WhiteWrap,
+  YellowWrap,
+} from '../components/Automodal'
 function Alarmtalk() {
   const navigate = useNavigate()
   const sendKeyData = useSelector((state: any) => {
@@ -16,7 +20,6 @@ function Alarmtalk() {
   const sendGroupNameData = useSelector((state: any) => {
     return state.sendGroupName.sendGroupName
   })
-  // console.log(ALAERMTALK_TEMPLATE['배송완료 안내'])
   const TemplatesNameDummy = () => {
     let Arr = []
     for (const element in ALAERMTALK_TEMPLATE) {
@@ -24,32 +27,51 @@ function Alarmtalk() {
     }
     return Arr
   }
+
   const [isAutoModal, setAutoModal] = useState<boolean>(false)
   const [currentValue, setCurrentValue] = useState(null)
-  // const [isReqLength, setReqLength] = useState<any>(
-  //   ALAERMTALK_TEMPLATE['택배번호 안내'].reqData.length
-  // )
   const [isAllData, setAllData] = useState<any>(
     ALAERMTALK_TEMPLATE['택배번호 안내']
+  )
+  const [isViewData, setViewData] = useState<any>(
+    ALAERMTALK_TEMPLATE['택배번호 안내'].text
   )
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value)
   }
+
+  const highFunction = useCallback((text: string, target: string) => {
+    const obj_n = document.getElementById(`${target}`)?.innerHTML
+    const targetData = document.getElementById(`${obj_n}`)?.innerHTML
+    const ChangeData = sendListData[0][0][text]
+    const splitObj = document
+      .getElementById('view')
+      ?.innerHTML.split(`<span id=\"${obj_n}\">${targetData}`)
+    const sumData =
+      document
+        .getElementById('view')
+        ?.innerHTML.split(`<span id=\"${obj_n}\">${targetData}`)[0] +
+      `<span id=\"${obj_n}\">${ChangeData}` +
+      document
+        .getElementById('view')
+        ?.innerHTML.split(`<span id=\"${obj_n}\">${targetData}`)[1]
+    console.log(sumData)
+    setViewData(sumData)
+    return
+  }, [])
+
   // onChange setState비동기
   useEffect(() => {
     if (currentValue !== null) {
-      //초기값을 지켜주면서 onChange로 바뀔경우에만 setState
       setAllData(ALAERMTALK_TEMPLATE[currentValue])
     }
   }, [currentValue])
-  console.log('sendListData : ', sendListData[0].length)
-  // ALAERMTALK_TEMPLATES.map((el: any) => el.reqData)
+
   return (
     <Wrapper>
       <LeftContents>
         <>
           <H1>알림톡 대량발송하기</H1>
-          {/* {TemplatesReqDataDummy()} */}
           <select name="" id="" onChange={(e) => handleOnChangeSelectValue(e)}>
             {TemplatesNameDummy().map((el, idx) => (
               <option key={idx} value={el}>
@@ -57,33 +79,31 @@ function Alarmtalk() {
               </option>
             ))}
           </select>
-          {isAllData.reqData.map(
-            (el: any, idx: any) => (
-              <>
-                <div>
-                  <div>{el}</div>
-                  <SelectBoxs
-                    optionData={
-                      (sendKeyData && sendKeyData[0]) || ['빈값입니다.']
-                    }
-                  ></SelectBoxs>
-                </div>
-              </>
-            )
-            // .map((el2: any, idx2: any) => (
-            //   <SelectBoxs optionData={TemplatesNameDummy()}>{}</SelectBoxs>
-            // ))
-          )}
-
-          {/* {sendKeyData.map((el: any, idx: number) => {
-            return (
-              <SelectBoxs optionData={Object.values(el)} key={idx}></SelectBoxs>
-            )
-          })} */}
+          {isAllData.reqData.map((el: any, idx: any) => (
+            <div key={idx}>
+              {/* {#회사명} */}
+              <div id={`obj_${idx}`}>{el}</div>
+              <SelectBoxs
+                className={`obj_${idx}`}
+                propFunction={highFunction}
+                optionData={(sendKeyData && sendKeyData[0]) || ['빈값입니다.']}
+              ></SelectBoxs>
+            </div>
+          ))}
         </>
       </LeftContents>
       <RightContents>
-        <ContnetDataWrap>{isAllData.text}</ContnetDataWrap>
+        <ContnetDataWrap>
+          <KakaoBox>
+            <YellowWrap>
+              {currentValue === null ? '택배번호 안내' : currentValue}
+            </YellowWrap>
+            <WhiteWrap
+              id="view"
+              dangerouslySetInnerHTML={{ __html: isViewData }}
+            ></WhiteWrap>
+          </KakaoBox>
+        </ContnetDataWrap>
         <ButtonWrap>
           <Button onClick={() => navigate(-1)}>취소</Button>
           <Button onClick={() => setAutoModal((prev) => !prev)}>다음</Button>
@@ -94,6 +114,8 @@ function Alarmtalk() {
           closeModal={setAutoModal}
           userNum={sendListData && sendListData[0]?.length}
           groupName={sendGroupNameData && sendGroupNameData[0]}
+          isAllData={isAllData}
+          currentValue={currentValue}
         />
       ) : null}
     </Wrapper>
@@ -137,10 +159,8 @@ const LeftContents = styled.div`
   justify-content: space-around;
 `
 const ContnetDataWrap = styled.div`
-  background-color: #ededed;
   border-radius: 15px;
   width: 300px;
-  height: 250px;
   padding: 10px;
   font-size: 13px;
   line-height: 1.2;

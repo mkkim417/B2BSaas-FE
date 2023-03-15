@@ -1,52 +1,49 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import SelectBoxs from '../components/SelectBoxs'
-import { ALAERMTALK_TEMPLATE } from '../constants/alarmtalk'
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import SelectBoxs from '../components/SelectBoxs';
+import { ALAERMTALK_TEMPLATE } from '../constants/alarmtalk';
 import AutoModal, {
   KakaoBox,
   WhiteWrap,
   YellowWrap,
-} from '../components/Automodal'
+} from '../components/Automodal';
 function Alarmtalk() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const sendKeyData = useSelector((state: any) => {
-    return state.sendKey.sendKey
-  })
+    return state.sendKey.sendKey;
+  });
   const sendListData = useSelector((state: any) => {
-    return state.sendList.sendList
-  })
+    return state.sendList.sendList;
+  });
   const sendGroupNameData = useSelector((state: any) => {
-    return state.sendGroupName.sendGroupName
-  })
+    return state.sendGroupName.sendGroupName;
+  });
   const TemplatesNameDummy = () => {
-    let Arr = []
+    let Arr = [];
     for (const element in ALAERMTALK_TEMPLATE) {
-      Arr.push(element)
+      Arr.push(element);
     }
-    return Arr
-  }
+    return Arr;
+  };
 
-  const [isAutoModal, setAutoModal] = useState<boolean>(false)
-  const [currentValue, setCurrentValue] = useState(null)
+  const [isAutoModal, setAutoModal] = useState<boolean>(false);
+  const [currentValue, setCurrentValue] = useState(null);
   const [isAllData, setAllData] = useState<any>(
     ALAERMTALK_TEMPLATE['택배번호 안내']
-  )
-  const [isViewData, setViewData] = useState<any>(
+  );
+  const [isViewData, setViewData] = useState<string>(
     ALAERMTALK_TEMPLATE['택배번호 안내'].text
-  )
+  );
   const handleOnChangeSelectValue = (e: any) => {
-    setCurrentValue(e.target.value)
-  }
+    setCurrentValue(e.target.value);
+  };
 
   const highFunction = useCallback((text: string, target: string) => {
-    const obj_n = document.getElementById(`${target}`)?.innerHTML
-    const targetData = document.getElementById(`${obj_n}`)?.innerHTML
-    const ChangeData = sendListData[0][0][text]
-    const splitObj = document
-      .getElementById('view')
-      ?.innerHTML.split(`<span id=\"${obj_n}\">${targetData}`)
+    const obj_n = document.getElementById(`${target}`)?.innerHTML;
+    const targetData = document.getElementById(`${obj_n}`)?.innerHTML;
+    const ChangeData = sendListData[0][0][text];
     const sumData =
       document
         .getElementById('view')
@@ -54,18 +51,20 @@ function Alarmtalk() {
       `<span id=\"${obj_n}\">${ChangeData}` +
       document
         .getElementById('view')
-        ?.innerHTML.split(`<span id=\"${obj_n}\">${targetData}`)[1]
-    console.log(sumData)
-    setViewData(sumData)
-    return
-  }, [])
+        ?.innerHTML.split(`<span id=\"${obj_n}\">${targetData}`)[1];
+    console.log(sumData);
+    setViewData(sumData);
+    return;
+  }, []);
 
   // onChange setState비동기
   useEffect(() => {
     if (currentValue !== null) {
-      setAllData(ALAERMTALK_TEMPLATE[currentValue])
+      setAllData(ALAERMTALK_TEMPLATE[currentValue]);
+      setViewData(ALAERMTALK_TEMPLATE[currentValue]['text']);
+      setCurrentValue(null);
     }
-  }, [currentValue])
+  }, [currentValue]);
 
   return (
     <Wrapper>
@@ -114,25 +113,25 @@ function Alarmtalk() {
           closeModal={setAutoModal}
           userNum={sendListData && sendListData[0]?.length}
           groupName={sendGroupNameData && sendGroupNameData[0]}
-          isAllData={isAllData}
-          currentValue={currentValue}
+          isAllData={isViewData}
+          currentValue={currentValue === null ? '택배번호 안내' : currentValue}
         />
       ) : null}
     </Wrapper>
-  )
+  );
 }
 
 const H1 = styled.h1`
   font-weight: bold;
   font-size: 25px;
-`
-const RightContents = styled.div``
+`;
+const RightContents = styled.div``;
 const ButtonWrap = styled.div`
   display: flex;
   justify-content: center;
   gap: 10px;
   margin-top: 30px;
-`
+`;
 const Button = styled.button`
   border-radius: 15px;
   border: 2px solid #000;
@@ -140,7 +139,7 @@ const Button = styled.button`
   color: #000;
   width: 85px;
   padding: 5px 0px;
-`
+`;
 const Wrapper = styled.div`
   padding-left: 200px;
   margin-top: 60px;
@@ -150,14 +149,14 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-`
+`;
 const LeftContents = styled.div`
   width: 200px;
   height: 500px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-`
+`;
 const ContnetDataWrap = styled.div`
   border-radius: 15px;
   width: 300px;
@@ -165,6 +164,6 @@ const ContnetDataWrap = styled.div`
   font-size: 13px;
   line-height: 1.2;
   letter-spacing: 2px;
-`
+`;
 
-export default Alarmtalk
+export default Alarmtalk;

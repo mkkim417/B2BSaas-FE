@@ -22,18 +22,19 @@ const Router = () => {
       <TopNav />
       <Routes>
         {/* <Route element={<TopNav />}> */}
-        
-          <Route path="/" element={<Home />} />
-          <Route path="/uploadpage" element={<UploadPage />} />
-          <Route path="/noticepersonallist" element={<NoticePersonalList />} />
-          <Route path="/noticesendcreate" element={<NoticeSendCreate />} />
-          <Route path="/noticesendlist" element={<NoticeSendList />} />
-          <Route path="/userdatacreate" element={<UserDataCreate />} />
-          <Route path="/usergroupcreate" element={<UserGroupCreate />} />
-          <Route path="/usergrouplist" element={<UserGroupList />} />
-          <Route path="/userlist" element={<UserList />} />
-          <Route path="/statistics" element={<Statistics />} />
-          <Route path="/alarmtalk" element={<Alarmtalk />} />
+
+        <Route path="/" element={<Home />} />
+        <Route path="/uploadpage" element={<UploadPage />} />
+        <Route path="/noticepersonallist" element={<NoticePersonalList />} />
+        <Route path="/noticesendcreate" element={<NoticeSendCreate />} />
+        <Route path="/noticesendlist" element={<NoticeSendList />} />
+        <Route path="/userdatacreate" element={<UserDataCreate />} />
+        <Route path="/usergroupcreate" element={<UserGroupCreate />} />
+        <Route path="/usergrouplist" element={<UserGroupList />} />
+        <Route path="/userlist" element={<UserList />} />
+        <Route path="/statistics" element={<Statistics />} />
+        <Route path="/alarmtalk" element={<Alarmtalk />} />
+        <Route path="/group" element={<UserGroupList />} />
       </Routes>
     </BrowserRouter>
   )

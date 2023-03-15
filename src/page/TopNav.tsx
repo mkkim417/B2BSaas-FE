@@ -28,16 +28,13 @@ const TopNav = () => {
           }
         />
         <Link to={'/'}>
-          <Accordion
-            title="Home" />
+          <Accordion title="Home" />
         </Link>
         <Link to={'/usergrouplist'}>
-          <Accordion
-            title="usergrouplist" />
+          <Accordion title="usergrouplist" />
         </Link>
         <Link to={'/userlist'}>
-          <Accordion
-            title="User" />
+          <Accordion title="User" />
         </Link>
         <Accordion
           title="Message"
@@ -52,8 +49,10 @@ const TopNav = () => {
           }
         />
         <Link to={'/statistics'}>
-          <Accordion
-            title="Statistic" />
+          <Accordion title="Statistic" />
+        </Link>
+        <Link to={'/group'}>
+          <Accordion title="Group" />
         </Link>
       </Wrapper>
       {<Outlet />}

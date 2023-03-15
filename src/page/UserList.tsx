@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import Pagination from 'react-js-pagination'
 import styled from 'styled-components'
+import UserCreateModal from '../components/modal/UserCreateModal'
 import { Button, CardContainer, CardInBox, ContentContainer, HeaderBar, Percentage } from './UserGroupList'
 
 function UserList() {
@@ -18,9 +19,17 @@ function UserList() {
     const response = await axios.get('http://localhost:4000/userList')
     setUserList(response.data)
     setMonsters(response.data)
-
     // console.log(userList)
   }
+
+  // Modal 변수들
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const clickModal = () => {
+    setIsOpenModal(true);
+  };
+  const closeModal = () => {
+    setIsOpenModal(false);
+  };
   
   // Pagination 처리
   const [ currentPage, setCurrentPage ] = useState(1);  // 현재 페이지 default값으로
@@ -91,7 +100,7 @@ function UserList() {
   useEffect(() => {
     // 필터 bar 
     // console.log('targetvalue', searchTerm)
-    console.log('monsters', monsters)
+    // console.log('monsters', monsters)
     setUserList(
       // 조건 검색 여기서 설정 => 현재는 그룹명만 설정
       monsters.filter(
@@ -163,6 +172,7 @@ function UserList() {
         <div>체크 갯수 : {checkedArr.length}</div>
         <input placeholder='검색' onChange={inputChange}/>
         <Button onClick={sendMessageButton}> 메세지 보내기</Button>
+        <Button onClick={clickModal}> 유저 생성</Button>
         <Button onClick={groupCreateButton}> 그룹 생성</Button>
         <Button onClick={individualDeleteHandler}> 선택 삭제 </Button>
         <Button onClick={groupDeleteHandler}> 전체 삭제 </Button>
@@ -216,6 +226,13 @@ function UserList() {
         totalItemsCount={count}
         onChange={setPage}/>
       </PaginationBox>
+      {isOpenModal && (
+        <UserCreateModal
+          closeModal={closeModal}
+          title="정말로 채팅방을 나가시겠습니까?"
+          memo="친구신청, 대화에 쓰인 포인트는 환불이 불가능합니다."
+        />
+      )}
     </Wrapper>
   )
 }
@@ -241,7 +258,7 @@ const CardHeader = styled.div`
   background-color: deeppink;
   margin-bottom: 20px;
 `
-const PaginationBox = styled.div`
+export const PaginationBox = styled.div`
   .pagination {
   display: flex;
   justify-content: center;

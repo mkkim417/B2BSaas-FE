@@ -313,7 +313,7 @@ const StBrandP = styled.p`
   font-family: 'Roboto';
   font-style: normal;
   display: flex;
-  justify-content: left
+  justify-content: left;
   align-items: center;
   color: #000000;
   mix-blend-mode: darken;

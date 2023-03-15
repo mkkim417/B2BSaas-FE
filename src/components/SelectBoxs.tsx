@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
-import useDetectClose from '../hook/useDetectClose'
+import React, { useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import useDetectClose from '../hook/useDetectClose';
 
 interface Itodolist {
-  optionData: any
-  placeholder: any
+  optionData: any;
+  placeholder: any;
 }
 const SelectBoxs = ({
   optionData,
@@ -12,21 +12,22 @@ const SelectBoxs = ({
   propFunction,
   className,
 }: any): React.ReactElement => {
-  const [currentValue, setCurrentValue] = useState(null)
+  const [currentValue, setCurrentValue] = useState(null);
 
-  const dropDownRef = useRef()
-  const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false) //커스텀훅
+  const dropDownRef = useRef();
+  const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false); //커스텀훅
   const handleOnChangeSelectValue = (e: any) => {
-    const { innerText } = e.target
-    setCurrentValue(innerText)
-  }
+    const { innerText } = e.target;
+    setCurrentValue(innerText);
+  };
 
   // onChange setState비동기
   useEffect(() => {
     if (currentValue !== null) {
-      propFunction(currentValue, className)
+      propFunction(currentValue, className);
+      console.log(currentValue);
     }
-  }, [currentValue, propFunction])
+  }, [currentValue, propFunction]);
 
   return (
     <SelectBox
@@ -48,8 +49,8 @@ const SelectBoxs = ({
         </SelectOptions>
       )}
     </SelectBox>
-  )
-}
+  );
+};
 const SelectBox = styled.div<{ ref: any }>`
   margin-bottom: 30px;
   position: relative;
@@ -75,12 +76,12 @@ const SelectBox = styled.div<{ ref: any }>`
     color: #ddd;
     font-size: 14px;
   }
-`
+`;
 const Label = styled.label`
   font-size: 14px;
   margin-left: 4px;
   text-align: left;
-`
+`;
 const SelectOptions = styled.ul<{ ref?: any }>`
   z-index: 1;
   position: absolute;
@@ -97,7 +98,7 @@ const SelectOptions = styled.ul<{ ref?: any }>`
   box-sizing: border-box;
   color: #000;
   max-height: none;
-`
+`;
 const Option = styled.li`
   font-size: 14px;
   padding: 16px 18px;
@@ -105,6 +106,6 @@ const Option = styled.li`
   &:hover {
     background-color: #ddd;
   }
-`
+`;
 
-export default SelectBoxs
+export default SelectBoxs;

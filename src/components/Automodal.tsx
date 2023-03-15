@@ -1,33 +1,35 @@
-import axios from 'axios'
-import React, { useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import useDetectClose from '../hook/useDetectClose'
+import axios from 'axios';
+import React, { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import useDetectClose from '../hook/useDetectClose';
 const AutoModal = (props: any) => {
-  const dropDownRef = useRef()
-  const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false) //커스텀훅
-  const [isGorupDesc, setGorupDesc] = useState()
-  const navigate = useNavigate()
+  const dropDownRef = useRef();
+  const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false); //커스텀훅
+  const [isGorupDesc, setGorupDesc] = useState();
+  const navigate = useNavigate();
   const isGorupDescChage = (e: any) => {
-    setGorupDesc(e.target.value)
-  }
+    setGorupDesc(e.target.value);
+  };
   const ClientListData = useSelector((state: any) => {
-    return state.sendList.sendList
-  })
-  console.log('ClientListData : ', ClientListData)
+    return state.sendList.sendList;
+  });
+  console.log('ClientListData : ', ClientListData);
   const onSubmit = () => {
     if (isGorupDesc === undefined || null || '') {
-      alert('그룹설명을 해주세요')
+      alert('그룹설명을 해주세요');
     }
-    navigate('/group')
-  }
+    navigate('/group');
+  };
+  console.log(props.currentValue);
+  console.log(props.isAllData);
   let body = {
     groupName: props.groupName[0],
     groupDescription: isGorupDesc,
     groupTagName: '신규',
     groupList: ClientListData[0],
-  }
+  };
   //클라이언트 그룹 생성 post api요청
   const res = axios.post(
     '/api/clients/groups',
@@ -35,7 +37,7 @@ const AutoModal = (props: any) => {
       body,
     },
     { withCredentials: true }
-  )
+  );
   return (
     <Container>
       <Background
@@ -71,7 +73,9 @@ const AutoModal = (props: any) => {
               <Strong>미리보기</Strong>
               <KakaoBox>
                 <YellowWrap>{props.currentValue}</YellowWrap>
-                <WhiteWrap>{props.isAllData.text}</WhiteWrap>
+                <WhiteWrap
+                  dangerouslySetInnerHTML={{ __html: props.isAllData }}
+                ></WhiteWrap>
               </KakaoBox>
             </Flex>
             <Flex width="50%" flexDirection="column" alignItems="initial">
@@ -129,11 +133,11 @@ const AutoModal = (props: any) => {
         </div>
       </ModalBlock>
     </Container>
-  )
-}
+  );
+};
 
 const Input = styled.input<{
-  width?: string
+  width?: string;
 }>`
   width: 200px;
   width: ${(props) => (props.width ? props.width : '200px')};
@@ -142,11 +146,11 @@ const Input = styled.input<{
   border: none;
   border-radius: 10px;
   justify-content: space-between;
-`
+`;
 const Flex = styled.div<{
-  width?: string
-  flexDirection?: string
-  alignItems?: string
+  width?: string;
+  flexDirection?: string;
+  alignItems?: string;
 }>`
   align-items: center;
   display: flex;
@@ -155,18 +159,18 @@ const Flex = styled.div<{
   width: ${(props) => (props.width ? props.width : '50%')};
   flex-direction: ${(props) =>
     props.flexDirection ? props.flexDirection : 'initial'};
-`
+`;
 const Red = styled.span`
   color: red;
-`
+`;
 const Strong = styled.div`
   margin-right: 30px;
   font-weight: bold;
-`
+`;
 const TwiceWrap = styled.div`
   margin-top: 10px;
   display: flex;
-`
+`;
 export const WhiteWrap = styled.div`
   font-size: 14px;
   background-color: #fff;
@@ -174,14 +178,14 @@ export const WhiteWrap = styled.div`
   line-height: 1.3;
   padding: 10px;
   height: 130px;
-`
+`;
 export const KakaoBox = styled.div`
   width: 300px;
   height: 200px;
   background-color: lightblue;
   padding: 15px 30px;
   margin-top: 15px;
-`
+`;
 export const YellowWrap = styled.div`
   background-color: yellow;
   width: 100%;
@@ -192,23 +196,23 @@ export const YellowWrap = styled.div`
   align-items: center;
   justify-content: center;
   font-weight: bold;
-`
+`;
 const ButtonGap = styled.div`
   display: flex;
   gap: 10px;
-`
+`;
 const ButtonWrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`
+`;
 const XboxWrap = styled.span`
   cursor: pointer;
   position: absolute;
   z-index: 99;
   right: 28px;
   width: 35px;
-`
+`;
 const Container = styled.div`
   position: fixed;
   width: 100%;
@@ -221,14 +225,14 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
+`;
 const Background = styled.div`
   position: fixed;
   width: 100%;
   height: 100%;
   background-color: black;
   opacity: 0.8;
-`
+`;
 const ModalBlock = styled.div<{ ref?: any }>`
   display: flex;
   flex-direction: column;
@@ -245,14 +249,14 @@ const ModalBlock = styled.div<{ ref?: any }>`
   transform: translate(-50%, -50%);
   box-shadow: 1px 1px 1px 1px gray;
   justify-content: space-between;
-`
+`;
 const Button = styled.button<{
-  width?: string
-  bgColor?: string
-  color?: string
-  border?: string
-  fontWeight?: string
-  height?: string
+  width?: string;
+  bgColor?: string;
+  color?: string;
+  border?: string;
+  fontWeight?: string;
+  height?: string;
 }>`
   border: ${(props) => (props.border ? props.border : null)};
   cursor: pointer;
@@ -267,11 +271,11 @@ const Button = styled.button<{
   &:active {
     filter: brightness(50%);
   }
-`
+`;
 const BoxMent = styled.div`
   font-weight: bold;
   font-size: 26px;
   text-align: left;
-`
-const ContentsWrap = styled.div``
-export default AutoModal
+`;
+const ContentsWrap = styled.div``;
+export default AutoModal;

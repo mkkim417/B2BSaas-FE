@@ -195,7 +195,7 @@ function UserGroupList() {
                   {item.customerlist.length}
                 </Percentage>
               </CardInBox>
-            })}
+            )})}
           </CardContainer>
       </ContentContainer>
     </Wrapper>

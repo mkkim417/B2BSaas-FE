@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import styled from 'styled-components';
 import UserCreateModal from '../components/modal/UserCreateModal';
@@ -21,12 +21,12 @@ function UserList() {
   const [monsters, setMonsters] = useState([] as any);
 
   // 유저리스트 get API
-  const getUserData = async () => {
+  const getUserData = useCallback(async () => {
     const response = await axios.get('http://localhost:4000/userList');
     setUserList(response.data);
     setMonsters(response.data);
     // console.log(userList)
-  };
+  }, []);
 
   // Modal 변수들
   const [isOpenModal, setIsOpenModal] = useState(false);

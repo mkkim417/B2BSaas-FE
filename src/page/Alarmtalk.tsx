@@ -125,7 +125,7 @@ function Alarmtalk() {
   );
 }
 
-const H1 = styled.h1`
+export const H1 = styled.h1`
   font-weight: bold;
   font-size: 25px;
 `;

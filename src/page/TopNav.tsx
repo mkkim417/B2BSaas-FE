@@ -48,6 +48,18 @@ const TopNav = () => {
             </div>
           }
         />
+        <Accordion
+          title="Email"
+          contents={
+            <div>
+              <ul>
+                <Link to={'/email'}>
+                  <Li>Send</Li>
+                </Link>
+              </ul>
+            </div>
+          }
+        />
         <Link to={'/statistics'}>
           <Accordion title="Statistic" />
         </Link>
@@ -55,8 +67,7 @@ const TopNav = () => {
           <Accordion title="Group" />
         </Link>
         <Link to={'userdatacreate'}>
-          <Accordion
-            title="Create" />
+          <Accordion title="Create" />
         </Link>
       </Wrapper>
       {<Outlet />}

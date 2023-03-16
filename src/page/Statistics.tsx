@@ -1,10 +1,16 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from 'react';
+import styled from 'styled-components';
+import { Chart } from '../components/Chart';
 
 function Statistics() {
+  //참고할 레퍼런스
+  // https://react-chartjs-2.js.org/examples/grouped-bar-chart
+
   return (
-    <Wrapper>Statistics</Wrapper>
-  )
+    <Wrapper>
+      <Chart></Chart>
+    </Wrapper>
+  );
 }
 export const Wrapper = styled.div`
   display: flex;
@@ -14,6 +20,6 @@ export const Wrapper = styled.div`
   height: 100vh;
   padding-left: 200px;
   gap: 30px;
-`
+`;
 
-export default Statistics
+export default Statistics;

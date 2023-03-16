@@ -30,6 +30,7 @@ function Alarmtalk() {
 
   const [isAutoModal, setAutoModal] = useState<boolean>(false);
   const [currentValue, setCurrentValue] = useState(null);
+  const [isValue, setValue] = useState('');
   const [isAllData, setAllData] = useState<any>(
     ALAERMTALK_TEMPLATE['택배번호 안내']
   );
@@ -40,29 +41,31 @@ function Alarmtalk() {
     setCurrentValue(e.target.value);
   };
 
-  const highFunction = useCallback((text: string, target: string) => {
-    const obj_n = document.getElementById(`${target}`)?.innerHTML;
-    const targetData = document.getElementById(`${obj_n}`)?.innerHTML;
-    const ChangeData = sendListData[0][0][text];
-    const sumData =
-      document
-        .getElementById('view')
-        ?.innerHTML.split(`<span id=\"${obj_n}\">${targetData}`)[0] +
-      `<span id=\"${obj_n}\">${ChangeData}` +
-      document
-        .getElementById('view')
-        ?.innerHTML.split(`<span id=\"${obj_n}\">${targetData}`)[1];
-    console.log(sumData);
-    setViewData(sumData);
-    return;
-  }, []);
+  const highFunction = useCallback(
+    (text: string, target: string) => {
+      const obj_n = document.getElementById(`${target}`)?.innerHTML;
+      const targetData = document.getElementById(`${obj_n}`)?.innerHTML;
+      const ChangeData = sendListData[0][0][text];
+      const sumData =
+        document
+          .getElementById('view')
+          ?.innerHTML.split(`<span id=\"${obj_n}\">${targetData}`)[0] +
+        `<span id=\"${obj_n}\">${ChangeData}` +
+        document
+          .getElementById('view')
+          ?.innerHTML.split(`<span id=\"${obj_n}\">${targetData}`)[1];
+      // console.log(sumData);
+      setViewData(sumData);
+      return;
+    },
+    [sendListData]
+  );
 
   // onChange setState비동기
   useEffect(() => {
     if (currentValue !== null) {
       setAllData(ALAERMTALK_TEMPLATE[currentValue]);
       setViewData(ALAERMTALK_TEMPLATE[currentValue]['text']);
-      setCurrentValue(null);
     }
   }, [currentValue]);
 
@@ -83,6 +86,7 @@ function Alarmtalk() {
               {/* {#회사명} */}
               <div id={`obj_${idx}`}>{el}</div>
               <SelectBoxs
+                currentCategoryValue={currentValue}
                 className={`obj_${idx}`}
                 propFunction={highFunction}
                 optionData={(sendKeyData && sendKeyData[0]) || ['빈값입니다.']}

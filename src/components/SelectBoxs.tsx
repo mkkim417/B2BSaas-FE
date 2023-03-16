@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import useDetectClose from '../hook/useDetectClose';
 
@@ -8,33 +8,36 @@ interface Itodolist {
 }
 const SelectBoxs = ({
   optionData,
-  placeholder,
+  currentCategoryValue,
   propFunction,
   className,
 }: any): React.ReactElement => {
   const [currentValue, setCurrentValue] = useState(null);
-
+  const selectInputRef = useRef(null);
   const dropDownRef = useRef();
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false); //커스텀훅
   const handleOnChangeSelectValue = (e: any) => {
     const { innerText } = e.target;
     setCurrentValue(innerText);
   };
-
   // onChange setState비동기
+  const ResetHandler = useCallback(() => {
+    setCurrentValue(null);
+  }, []);
   useEffect(() => {
     if (currentValue !== null) {
       propFunction(currentValue, className);
-      console.log(currentValue);
     }
   }, [currentValue, propFunction]);
-
+  useEffect(() => {
+    ResetHandler();
+  }, [currentCategoryValue, ResetHandler]);
   return (
     <SelectBox
       ref={dropDownRef}
       onClick={() => setIsOpen((prev: any) => !prev)}
     >
-      <Label>{currentValue === null ? placeholder : currentValue}</Label>
+      <Label ref={selectInputRef}>{currentValue}</Label>
       {isOpen && (
         <SelectOptions>
           {optionData.map((data: any, index: any) => (
@@ -108,4 +111,4 @@ const Option = styled.li`
   }
 `;
 
-export default SelectBoxs;
+export default React.memo(SelectBoxs);

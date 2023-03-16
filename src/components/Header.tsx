@@ -1,6 +1,6 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 function Header() {
   return (
@@ -8,8 +8,12 @@ function Header() {
       <LogoContainer>
         <Link to={'/'}>Logo</Link>
       </LogoContainer>
+      <SignupContainer>
+        <Link to={'login'}>로그인</Link>
+        <Link to={'signup'}>회원가입</Link>
+      </SignupContainer>
     </HeaderContainer>
-  )
+  );
 }
 
 const HeaderContainer = styled.div`
@@ -21,12 +25,17 @@ const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`
+`;
 const LogoContainer = styled.div`
   margin-left: 30px;
   padding: 10px;
   margin: 20px;
   background-color: antiquewhite;
   cursor: pointer;
-`
-export default Header
+`;
+
+const SignupContainer = styled.div`
+  background-color: white;
+`;
+
+export default Header;

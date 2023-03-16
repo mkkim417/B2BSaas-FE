@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Wrapper } from './Home';
 import styled from 'styled-components';
+import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useForm, SubmitHandler, Validate } from 'react-hook-form';
 
@@ -26,59 +27,41 @@ const Signup = () => {
     register,
     formState: { errors, isValid },
     handleSubmit,
-    getValues,
     watch,
   } = useForm<FormValues>({
     mode: 'onChange',
   });
 
-  const handleSignup: SubmitHandler<FormValues> = (data) => {
+  const handleSignup: SubmitHandler<FormValues> = async (data) => {
     if (!isValid) {
       setAlertMessage('Please fill in all fields.');
       return;
     }
 
-    const formValues = Object.values(data);
-    const isFormEmpty = formValues.every((value) => value === '');
-
-    if (isFormEmpty) {
-      setAlertMessage('Please fill in all fields.');
-      return;
-    }
-
-    console.log(data);
-    localStorage.setItem('email', data.Email);
-    localStorage.setItem('Password', data.Password);
-    setIsSubmitted(true);
-    setAlertMessage('Your registration is complete.');
-    navigate('/login');
+    axios
+      .post('/api/users/signup', data)
+      .then((response) => {
+        if (response.status === 200) {
+          setIsSubmitted(true);
+          setAlertMessage('회원가입이 완료되었습니다.');
+          alert('회원가입이 완료되었습니다.');
+          navigate('/login');
+        } else {
+          setAlertMessage('회원가입 실패.');
+          alert('회원가입 실패.');
+        }
+      })
+      .catch((error) => {
+        console.error('회원가입 시 문제 발생:', error);
+        setAlertMessage('회원가입 실패.');
+        alert('회원가입 실패.');
+      });
   };
 
   const Password = useRef<string>();
   Password.current = watch('Password');
   const ConfirmPw = useRef<string>();
   ConfirmPw.current = watch('ConfirmPw');
-
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    if (!isValid) {
-      setAlertMessage('모든 영역을 기입하여 주십시오.');
-      return;
-    }
-
-    const formValues = Object.values(data);
-    const isFormEmpty = formValues.every((value) => value === '');
-
-    if (isFormEmpty) {
-      setAlertMessage('모든 영역을 기입하여 주십시오.');
-      return;
-    }
-
-    console.log(data);
-    localStorage.setItem('email', data.Email);
-    localStorage.setItem('Password', data.Password);
-    setIsSubmitted(true);
-    setAlertMessage('회원 가입이 완료되었습니다.');
-  };
 
   const EmailValidation: Validate<string, FormValues> = (value) => {
     const EmailRegex = /^\S+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
@@ -90,32 +73,32 @@ const Signup = () => {
     }
   };
 
-  const PasswordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.{10,})/;
+  const PasswordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,20}$/;
 
   const PhoneNumberValidation: Validate<string, FormValues> = (
     value,
     values
   ) => {
-    const PhoneRegex = /^[0-9-]*$/;
+    const PhoneRegex = /^\d{10,11}$/;
     const isValid = PhoneRegex.test(value.toString());
 
     if (isValid) {
       return true;
     } else {
-      return '숫자와 -(하이픈)만 입력하여 주십시오.';
+      return '숫자 10-11자리를 입력하여 주십시오.';
     }
   };
 
   return (
     <Wrapper onSubmit={handleSubmit(handleSignup)}>
-      {isSubmitted && <p>Your subscription has been completed.</p>}
+      {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
       {alertMessage && <p>{alertMessage}</p>}
       <StEmail>
         <StEmailP>이메일</StEmailP>
         <Stinput
           type="email"
           {...register('Email', {
-            required: true,
+            required: '해당 항목은 필수입니다',
             validate: EmailValidation,
           })}
           name="Email"
@@ -123,7 +106,7 @@ const Signup = () => {
         />
         {errors.Email && (
           <StErrorMsg>
-            {errors.Email.message || 'Please enter your e-mail.'}
+            {errors.Email.message || '이메일을 입력해주시기 바랍니다.'}
           </StErrorMsg>
         )}
         <StEmailCheckButton>중복확인</StEmailCheckButton>

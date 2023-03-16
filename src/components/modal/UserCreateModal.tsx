@@ -10,6 +10,8 @@ type Props = {
 };
 const UserCreateModal = ({ title, memo, coin, closeModal }: Props) => {
 
+  // input 추가를 위한 변수들
+  
   const initialData = {
     clientName : '',
     contact : ''

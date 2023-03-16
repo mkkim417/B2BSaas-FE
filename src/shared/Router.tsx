@@ -17,6 +17,7 @@ import Signup from '../page/Signup';
 import Login from '../page/Login';
 import Mypage from '../page/Mypage';
 import GroupInUserList from '../page/GroupInUserList';
+import Email from '../page/Email';
 
 const Router = () => {
   const userInfo = getUser();
@@ -39,6 +40,7 @@ const Router = () => {
         <Route path="/statistics" element={<Statistics />} />
         <Route path="/alarmtalk" element={<Alarmtalk />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/email" element={<Email />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/groupinuserlist/:id" element={<GroupInUserList />} />

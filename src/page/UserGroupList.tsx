@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { off } from 'process';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -58,35 +58,28 @@ function UserGroupList() {
     }
     console.log('checkedList', checkedArr);
   };
+  //yarn json-server --watch grouplist.json --port 4000
+
+  const getGroupData = useCallback(async () => {
+    const response = await axios.get('http://localhost:4000/grouplist');
+    setGroupList(response.data);
+    setMonsters(response.data);
+    setCopy(response.data);
+  }, []);
 
   useEffect(() => {
     // 페이지 렌더링시 우선 데이터 받아오기
-    const getGroupData = async () => {
-      const response = await axios.get('http://localhost:4000/grouplist');
-      setGroupList(response.data);
-      // console.log('grouplist{}', data.map((item : any) => item.title))
-      console.log(
-        'grouplist62',
-        response.data.filter(
-          (item: any) => item.title === '1주년 기념 행사 고객리스트'
-        )
-      );
-      setMonsters(response.data);
-      setCopy(response.data);
-    };
     getGroupData();
-  }, [groupList]);
+  }, [getGroupData]);
 
   useEffect(() => {
-    // 필터 bar
-    console.log('targetvalue', searchTerm);
     setGroupList(
       // 조건 검색 여기서 설정 => 현재는 그룹명만 설정
       monsters.filter((item: any) =>
         item.title.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
-  }, [monsters, searchTerm]);
+  }, [searchTerm]);
 
   // Input search handler
   const inputChange = (e: any) => {
@@ -154,7 +147,7 @@ function UserGroupList() {
       <HeaderBar>
         <div>유저 그룹 리스트</div>
         <div>체크 갯수 : {checkedArr.length}</div>
-        <input placeholder='검색' onChange={inputChange}/>
+        <input placeholder="검색" onChange={inputChange} />
         <Button onClick={messageSendHandler}>그룹생성</Button>
         <Button onClick={messageSendHandler}>메세지 보내기</Button>
         <Button onClick={individualDeleteHandler}> 선택 삭제 </Button>
@@ -195,8 +188,9 @@ function UserGroupList() {
                   {item.customerlist.length}
                 </Percentage>
               </CardInBox>
-            )})}
-          </CardContainer>
+            );
+          })}
+        </CardContainer>
       </ContentContainer>
     </Wrapper>
   );

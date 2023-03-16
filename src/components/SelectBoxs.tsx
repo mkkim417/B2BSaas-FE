@@ -63,12 +63,12 @@ const SelectBox = styled.div<{ ref: any }>`
   align-items: center;
   color: #424242;
   padding: 8px 28px;
-  border-radius: 3px;
+  border-radius: 8px;
   background-color: #ffffff;
   justify-content: space-between;
   align-self: center;
   /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); */
-  border: 1px solid #ddd;
+  border: 3px solid #ddd;
   cursor: pointer;
   &::after {
     content: '▼';
@@ -97,7 +97,7 @@ const SelectOptions = styled.ul<{ ref?: any }>`
   padding: 0;
   border-radius: 8px;
   background-color: #fff;
-  border: 1px solid #ddd;
+  border: 3px solid #000;
   box-sizing: border-box;
   color: #000;
   max-height: none;
@@ -107,7 +107,9 @@ const Option = styled.li`
   padding: 16px 18px;
   transition: background-color 0.2s ease-in;
   &:hover {
-    background-color: #ddd;
+    background-color: #000;
+    color: white;
+    font-weight: bold;
   }
 `;
 

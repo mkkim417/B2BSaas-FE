@@ -9,6 +9,7 @@ function Statistics() {
   return (
     <Wrapper>
       <Chart></Chart>
+      <Chart></Chart>
     </Wrapper>
   );
 }

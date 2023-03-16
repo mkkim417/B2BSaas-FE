@@ -44,8 +44,17 @@ const Button = styled.button`
   border: 3px solid #000;
   padding: 10px;
   border-radius: 15px;
+  transition: 0.2s;
+  font-weight: bold;
+  &:hover {
+    background-color: black;
+    color: white;
+  }
 `;
 const Wrapper = styled.div`
   padding: 16px;
   width: 100%;
+  border: 3px solid #000;
+  border-radius: 15px;
+  padding: 10px;
 `;

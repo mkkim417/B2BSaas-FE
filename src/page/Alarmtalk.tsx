@@ -129,7 +129,7 @@ export const H1 = styled.h1`
   font-weight: bold;
   font-size: 25px;
 `;
-const RightContents = styled.div``;
+export const RightContents = styled.div``;
 const ButtonWrap = styled.div`
   display: flex;
   justify-content: center;
@@ -144,7 +144,7 @@ const Button = styled.button`
   width: 85px;
   padding: 5px 0px;
 `;
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   padding-left: 200px;
   margin-top: 60px;
   display: flex;
@@ -154,7 +154,7 @@ const Wrapper = styled.div`
   justify-content: center;
   height: 100vh;
 `;
-const LeftContents = styled.div`
+export const LeftContents = styled.div`
   width: 200px;
   height: 500px;
   display: flex;

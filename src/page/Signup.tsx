@@ -114,7 +114,7 @@ const Signup = () => {
 
       <StBrand>
         <StBrandP>소속명</StBrandP>
-        <StBrandCheckButton>중복확인</StBrandCheckButton>
+
         <StBrandInput
           type="text"
           {...register('BrandName', {
@@ -147,7 +147,6 @@ const Signup = () => {
             {errors.BrandNumber.message || '대표 번호가 필요합니다'}
           </StErrorMsg>
         )}
-        <StEmailCheckButton>중복확인</StEmailCheckButton>
       </StBrand>
 
       <StPicInfo>
@@ -197,13 +196,13 @@ const Signup = () => {
             pattern: PasswordRegex,
           })}
           name="Password"
-          placeholder="영문, 숫자를 포함한 10글자를 입력해주세요"
+          placeholder="암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리"
           required
         />
         {errors.Password && (
           <StErrorMsg>
             {errors.Password.message ||
-              '암호는 영문, 숫자를 포함하여 총 10자리가 되어야 합니다'}
+              '암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리'}
           </StErrorMsg>
         )}
         <StPwP>비밀번호 확인</StPwP>
@@ -321,6 +320,11 @@ const StBrandNumberInput = styled.input<StInputProps>`
   background: #d3d3d3;
   border-radius: 40px;
   border-color: ${({ hasError }) => (hasError ? 'red' : 'inherit')};
+  margin: 10px;
+  display: flex;
+  border: 2px solid;
+  justify-content: left;
+  width: 500px;
 `;
 
 const StContectNumberInputWrapper = styled.div<StInputProps>`
@@ -337,11 +341,6 @@ const StBrandNumberP = styled.p`
   align-items: center;
   text-align: center;
   color: #000000;
-`;
-
-const StBrandCheckButton = styled.button`
-  background: #d3d3d3;
-  border-radius: 40px;
 `;
 
 const StPw = styled(StInputWrapper)`

@@ -7,7 +7,7 @@ import { H1, LeftContents, RightContents, Wrapper } from './Alarmtalk';
 function SplitServicePage() {
   return (
     <Wrapper style={{ gap: '100px', flexDirection: 'column' }}>
-      <H1>서비스 선택</H1>
+      <H1>서비스 선택1</H1>
       <div style={{ display: 'flex', gap: '50px' }}>
         <Link to={'/alarmtalk'}>
           <KakaoWrap style={{ alignItems: 'center' }}>

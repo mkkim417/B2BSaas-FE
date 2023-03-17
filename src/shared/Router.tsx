@@ -18,6 +18,7 @@ import Login from '../page/Login';
 import Mypage from '../page/Mypage';
 import GroupInUserList from '../page/GroupInUserList';
 import Email from '../page/Email';
+import SplitServicePage from '../page/SplitServicePage';
 
 const Router = () => {
   const userInfo = getUser();
@@ -43,6 +44,7 @@ const Router = () => {
         <Route path="/email" element={<Email />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mypage" element={<Mypage />} />
+        <Route path="/splitservicepage" element={<SplitServicePage />} />
         <Route path="/groupinuserlist/:id" element={<GroupInUserList />} />
       </Routes>
     </BrowserRouter>

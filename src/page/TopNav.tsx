@@ -36,30 +36,9 @@ const TopNav = () => {
         <Link to={'/userlist'}>
           <Accordion title="User" />
         </Link>
-        <Accordion
-          title="Message"
-          contents={
-            <div>
-              <ul>
-                <Link to={'/uploadpage'}>
-                  <Li>Send</Li>
-                </Link>
-              </ul>
-            </div>
-          }
-        />
-        <Accordion
-          title="Email"
-          contents={
-            <div>
-              <ul>
-                <Link to={'/email'}>
-                  <Li>Send</Li>
-                </Link>
-              </ul>
-            </div>
-          }
-        />
+        <Link to={'/uploadpage'}>
+          <Accordion title="대량발송" />
+        </Link>
         <Link to={'/statistics'}>
           <Accordion title="Statistic" />
         </Link>

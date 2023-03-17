@@ -25,10 +25,6 @@ const GlobalStyles = createGlobalStyle`
       padding: 0;
       cursor: pointer;
     }
-    .public-DraftStyleDefault-ltr{
-      min-height: 100px;
-      
-    }
 `;
 
 export default GlobalStyles;

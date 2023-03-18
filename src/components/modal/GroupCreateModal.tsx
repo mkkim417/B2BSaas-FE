@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Pagination from 'react-js-pagination';
 import styled from 'styled-components'
 import { PaginationBox } from '../../page/UserList';
@@ -20,12 +20,11 @@ const GroupCreateModal = ({ title, memo, coin, closeModal }: Props) => {
   const [ monsters, setMonsters ] = useState([] as any);
 
   // 유저리스트 get API
-  const getUserData = async () => {
+  const getUserData = useCallback( async () => {
     const response = await axios.get('http://localhost:4000/userList')
     setUserList(response.data)
     setMonsters(response.data)
-    // console.log(userList)
-  }
+  }, [])
 
   // Pagination 처리
   const [ currentPage, setCurrentPage ] = useState(1);  // 현재 페이지 default값으로
@@ -92,7 +91,8 @@ const GroupCreateModal = ({ title, memo, coin, closeModal }: Props) => {
     setIndexOfLastPost(currentPage * postPerPage)
     setIndexOfFirstPost(indexOfLastPost - postPerPage)
     setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost))
-  }, [currentPage, indexOfLastPost, indexOfFirstPost, userList, postPerPage])
+  }, [currentPage, indexOfLastPost, indexOfFirstPost, postPerPage, getUserData])
+  
   // submit button handler
   const submitHandler = async (e:any, closeModal : any) => {
     // e.preventDefault();
@@ -102,8 +102,6 @@ const GroupCreateModal = ({ title, memo, coin, closeModal }: Props) => {
   // 검색필터 useEffect
   useEffect(() => {
     // 필터 bar 
-    // console.log('targetvalue', searchTerm)
-    // console.log('monsters', monsters)
     setUserList(
       // 조건 검색 여기서 설정
       monsters.filter(
@@ -114,7 +112,7 @@ const GroupCreateModal = ({ title, memo, coin, closeModal }: Props) => {
           item.createDt.includes(searchTerm)
       )
     )
-  }, [monsters, searchTerm])
+  }, [searchTerm])
 
   // Input search handler
   const inputChange = (e: any) => {

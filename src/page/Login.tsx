@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 
 interface FormValues {
   email: string;
@@ -17,7 +18,10 @@ function Login() {
 
   const handleLogin: SubmitHandler<FormValues> = async (data) => {
     try {
-      const response = await axios.post('/api/users/login', data);
+      const response = await axios.post(
+        `https://dev.sendingo-be.store/api/users/login`,
+        data
+      );
 
       if (response.status === 200) {
         setAlertMessage('Login successful.');
@@ -55,6 +59,7 @@ function Login() {
           />
         </StPw>
         <StLoginButton type="submit">로그인</StLoginButton>
+        <Link to="/signup">계정이 없으신가요? 여기서 회원가입 하세요</Link>
       </form>
     </Wrapper>
   );

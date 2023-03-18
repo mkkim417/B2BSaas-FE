@@ -224,8 +224,6 @@ const StUserList = styled.p`
 `;
 
 const StRow = styled.p`
-  /* 사용자 권한 */
-
   position: absolute;
   left: 30.64%;
   right: 56.54%;

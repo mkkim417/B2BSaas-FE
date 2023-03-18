@@ -18,7 +18,10 @@ function Login() {
 
   const handleLogin: SubmitHandler<FormValues> = async (data) => {
     try {
-      const response = await axios.post('/api/users/login', data);
+      const response = await axios.post(
+        `https://dev.sendingo-be.store/api/users/login`,
+        data
+      );
 
       if (response.status === 200) {
         setAlertMessage('Login successful.');

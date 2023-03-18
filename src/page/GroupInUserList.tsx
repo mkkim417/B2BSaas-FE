@@ -1,6 +1,6 @@
 import { Button } from '@mantine/core';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useEffect } from 'react';
 import Pagination from 'react-js-pagination';
 import { useParams } from 'react-router-dom';
@@ -21,12 +21,12 @@ function GroupInUserList() {
   const [filterList, setFilterList] = useState([] as any);
 
   // 유저리스트 get API
-  const getUserData = async () => {
+  const getUserData = useCallback(async () => {
     const response = await axios.get('http://localhost:4000/userList');
     setGroupUserList(response.data);
     setFilterList(response.data);
     // console.log(userList)
-  };
+  }, []);
 
   // Pagination 처리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
@@ -95,8 +95,8 @@ function GroupInUserList() {
     currentPage,
     indexOfLastPost,
     indexOfFirstPost,
-    groupUserList,
     postPerPage,
+    getUserData
   ]);
 
   // 검색필터 useEffect
@@ -114,7 +114,7 @@ function GroupInUserList() {
           item.createDt.includes(searchTerm)
       )
     );
-  }, [filterList, searchTerm]);
+  }, [searchTerm]);
 
   // 선택 삭제 button handler
   const individualDeleteHandler = () => {

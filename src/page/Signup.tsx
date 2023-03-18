@@ -33,78 +33,76 @@ const Signup = () => {
     mode: 'onChange',
   });
 
-  const handleSignup: SubmitHandler<FormValues> = async (data) => {
-    console.log('Data 콘솔찍은 내용', data);
-    if (!isValid) {
-      setAlertMessage('모든 항목을 입력하시기 바랍니다');
-      return;
-    }
-
-    console.log('axios 콜 이전', data);
-
-    axios
-      .post(`https://dev.sendingo-be.store/api/users/signup`, data)
-      .then((response) => {
-        if (response.status === 200) {
-          setIsSubmitted(true);
-          setAlertMessage('회원가입이 완료되었습니다.');
-          alert('회원가입이 완료되었습니다.');
-          navigate('/login');
-        } else {
-          setAlertMessage('회원가입 실패.');
-          alert('회원가입 실패.');
-        }
-      })
-      .catch((error) => {
-        console.error('회원가입 시 문제 발생:', error);
-        setAlertMessage('회원가입 실패.');
-        alert('회원가입 실패.');
-      });
-  };
-
-  console.log('After axios call');
-
   const Password = useRef<string>();
   Password.current = watch('Password');
   const ConfirmPw = useRef<string>();
   ConfirmPw.current = watch('ConfirmPw');
 
   const EmailValidation: Validate<string, FormValues> = (value) => {
-    const EmailRegex = /^\S+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
-
-    if (EmailRegex.test(value)) {
-      return true;
-    } else {
-      return '올바른 이메일 형식이 아닙니다.';
-    }
+    const emailRegex = /^\S+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
+    return emailRegex.test(value) || '올바른 이메일 형식이 아닙니다';
   };
 
   const PasswordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,20}$/;
 
-  const PhoneNumberValidation: Validate<string, FormValues> = (
-    value,
-    values
-  ) => {
-    const PhoneRegex = /^\d{10,11}$/;
-    const isValid = PhoneRegex.test(value.toString());
-
-    if (isValid) {
-      return true;
-    } else {
-      return '숫자 10-11자리를 입력하여 주십시오.';
-    }
+  const PhoneNumberValidation = (value: string) => {
+    const phoneRegex = /^\d{10,11}$/;
+    return (
+      phoneRegex.test(value.toString()) || 'Please enter a 10-11 digit number.'
+    );
   };
 
   const nameRegex = /^[a-zA-Z ]+$/;
 
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     console.log('onSubmit 콘솔찍은 내용', event);
     handleSubmit(handleSignup)(event);
   };
 
+  const handleSignup = async (data: FormValues) => {
+    console.log('Data 콘솔찍은 내용', data);
+    if (!isValid) {
+      setAlertMessage('모든 항목을 입력하세요');
+      return;
+    }
+
+    console.log('axios call 이전', data);
+
+    try {
+      const response = await axios.post(
+        `https://dev.sendingo-be.store/api/users/signup`,
+        data
+      );
+      console.log('API Response:', response);
+      if (response.status === 200) {
+        setIsSubmitted(true);
+        setAlertMessage('Your registration is complete.');
+        alert('Your registration is complete.');
+        navigate('/login');
+      } else {
+        setAlertMessage('Registration failed.');
+        alert('Login failed.');
+      }
+    } catch (error: any) {
+      console.error('Error during axios call', error);
+      if (error.response) {
+        console.error('API Response Error:', error.response);
+      } else if (error.request) {
+        console.error('No API Response:', error.request);
+      } else {
+        console.error('API Request Error:', error.message);
+      }
+      setAlertMessage('Registration failed.');
+      alert('Login failed.');
+    }
+  };
+
+  console.log('After axios 이후');
+
   return (
     <form onSubmit={onSubmit}>
-      <Wrapper onSubmit={handleSubmit(handleSignup)}>
+      <Wrapper>
         {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
         {alertMessage && <p>{alertMessage}</p>}
         <StEmail>
@@ -118,6 +116,7 @@ const Signup = () => {
             name="Email"
             required
           />
+
           {errors.Email && (
             <StErrorMsg>
               {errors.Email.message || '이메일을 입력해주시기 바랍니다.'}
@@ -161,6 +160,17 @@ const Signup = () => {
               {errors.BrandNumber.message || '대표 번호가 필요합니다'}
             </StErrorMsg>
           )}
+          <StBrandNumberP>대표 이메일</StBrandNumberP>
+          {/* <StBrandEmailInput
+            type="text"
+            placeholder="대표 이메일(발신용 이메일)을 입력해주세요"
+            {...register('BrandNumber', {
+              required: true,
+              validate: PhoneNumberValidation,
+            })}
+            name="BrandNumber"
+            required
+          /> */}
         </StBrand>
 
         <StPicInfo>
@@ -229,9 +239,6 @@ const Signup = () => {
             {...register('ConfirmPw', {
               required: true,
               validate: (value: string) => {
-                if (value === undefined || Password.current === undefined) {
-                  return false;
-                }
                 return value === Password.current;
               },
             })}
@@ -370,8 +377,6 @@ const StPw = styled(StInputWrapper)`
 `;
 
 const StPwP = styled.p`
-  /* 비밀번호* */
-
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 300;
@@ -432,4 +437,20 @@ const StSignupButton = styled.button`
 const StPicInfo = styled.div`
   width: 600px;
   border: 2px solid;
+`;
+
+const StSelect = styled.select`
+  width: 43%;
+  font-size: 15px;
+`;
+
+const StBrandEmailInput = styled.input`
+  background: #d3d3d3;
+  border-radius: 40px;
+
+  margin: 10px;
+  display: flex;
+  border: 2px solid;
+  justify-content: left;
+  width: 500px;
 `;

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useForm, SubmitHandler, Validate } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 
 interface FormValues {
   Email: string;
@@ -33,13 +34,16 @@ const Signup = () => {
   });
 
   const handleSignup: SubmitHandler<FormValues> = async (data) => {
+    console.log('Data 콘솔찍은 내용', data);
     if (!isValid) {
-      setAlertMessage('Please fill in all fields.');
+      setAlertMessage('모든 항목을 입력하시기 바랍니다');
       return;
     }
 
+    console.log('axios 콜 이전', data);
+
     axios
-      .post('/api/users/signup', data)
+      .post(`https://dev.sendingo-be.store/api/users/signup`, data)
       .then((response) => {
         if (response.status === 200) {
           setIsSubmitted(true);
@@ -57,6 +61,8 @@ const Signup = () => {
         alert('회원가입 실패.');
       });
   };
+
+  console.log('After axios call');
 
   const Password = useRef<string>();
   Password.current = watch('Password');
@@ -89,147 +95,161 @@ const Signup = () => {
     }
   };
 
+  const nameRegex = /^[a-zA-Z ]+$/;
+
+  const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+    console.log('onSubmit 콘솔찍은 내용', event);
+    handleSubmit(handleSignup)(event);
+  };
+
   return (
-    <Wrapper onSubmit={handleSubmit(handleSignup)}>
-      {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
-      {alertMessage && <p>{alertMessage}</p>}
-      <StEmail>
-        <StEmailP>이메일</StEmailP>
-        <Stinput
-          type="email"
-          {...register('Email', {
-            required: '해당 항목은 필수입니다',
-            validate: EmailValidation,
-          })}
-          name="Email"
-          required
-        />
-        {errors.Email && (
-          <StErrorMsg>
-            {errors.Email.message || '이메일을 입력해주시기 바랍니다.'}
-          </StErrorMsg>
-        )}
-        <StEmailCheckButton>중복확인</StEmailCheckButton>
-      </StEmail>
+    <form onSubmit={onSubmit}>
+      <Wrapper onSubmit={handleSubmit(handleSignup)}>
+        {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
+        {alertMessage && <p>{alertMessage}</p>}
+        <StEmail>
+          <StEmailP>이메일</StEmailP>
+          <Stinput
+            type="email"
+            {...register('Email', {
+              required: '해당 항목은 필수입니다',
+              validate: EmailValidation,
+            })}
+            name="Email"
+            required
+          />
+          {errors.Email && (
+            <StErrorMsg>
+              {errors.Email.message || '이메일을 입력해주시기 바랍니다.'}
+            </StErrorMsg>
+          )}
+          <StEmailCheckButton>중복확인</StEmailCheckButton>
+        </StEmail>
 
-      <StBrand>
-        <StBrandP>소속명</StBrandP>
+        <StBrand>
+          <StBrandP>소속명</StBrandP>
 
-        <StBrandInput
-          type="text"
-          {...register('BrandName', {
-            required: true,
-            pattern: /^[A-Za-z0-9\s]+$/i,
-          })}
-          name="BrandName"
-          required
-          placeholder="브랜드(기업)명을 입력해주세요"
-        />
-        {errors.BrandName && (
-          <StErrorMsg>
-            {errors.BrandName.message || '브랜드(기업)명을 입력해주세요'}
-          </StErrorMsg>
-        )}
-        <StBrandNumberP>소속대표전화</StBrandNumberP>
-        <StBrandNumberInput
-          type="text"
-          placeholder="대표 번호를 입력해주세요"
-          {...register('BrandNumber', {
-            required: true,
-            validate: PhoneNumberValidation,
-          })}
-          name="BrandNumber"
-          required
-          hasError={!!errors.BrandNumber}
-        />
-        {errors.BrandNumber && (
-          <StErrorMsg>
-            {errors.BrandNumber.message || '대표 번호가 필요합니다'}
-          </StErrorMsg>
-        )}
-      </StBrand>
-
-      <StPicInfo>
-        <h1>담당자 이름</h1>
-        <StBrandInput
-          type="text"
-          {...register('PicName', {
-            required: true,
-          })}
-          name="PicName"
-          placeholder="담당자를 입력해주세요"
-          required
-        />
-        {errors.PicName && (
-          <StErrorMsg>
-            {errors.PicName.message || '담당자 이름이 필요합니다'}
-          </StErrorMsg>
-        )}
-
-        <StContectNumberInputWrapper>
-          <h1>담당자 번호</h1>
           <StBrandInput
             type="text"
-            placeholder="담당자 번호를 입력해주세요"
-            {...register('PicNumber', {
+            {...register('BrandName', {
+              required: true,
+              pattern: /^[A-Za-z0-9\s]+$/i,
+            })}
+            name="BrandName"
+            required
+            placeholder="브랜드(기업)명을 입력해주세요"
+          />
+          {errors.BrandName && (
+            <StErrorMsg>
+              {errors.BrandName.message || '브랜드(기업)명을 입력해주세요'}
+            </StErrorMsg>
+          )}
+          <StBrandNumberP>소속대표전화</StBrandNumberP>
+          <StBrandNumberInput
+            type="text"
+            placeholder="대표 번호를 입력해주세요"
+            {...register('BrandNumber', {
               required: true,
               validate: PhoneNumberValidation,
             })}
-            name="PicNumber"
+            name="BrandNumber"
             required
-            hasError={!!errors.PicNumber}
+            hasError={!!errors.BrandNumber}
           />
-          {errors.PicNumber && (
+          {errors.BrandNumber && (
             <StErrorMsg>
-              {errors.PicNumber.message || '담당자 번호를 입력해주세요'}
+              {errors.BrandNumber.message || '대표 번호가 필요합니다'}
             </StErrorMsg>
           )}
-        </StContectNumberInputWrapper>
-      </StPicInfo>
+        </StBrand>
 
-      <StPw>
-        <StPwP>비밀번호</StPwP>
-        <StPwinput
-          type="password"
-          {...register('Password', {
-            required: true,
-            pattern: PasswordRegex,
-          })}
-          name="Password"
-          placeholder="암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리"
-          required
-        />
-        {errors.Password && (
-          <StErrorMsg>
-            {errors.Password.message ||
-              '암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리'}
-          </StErrorMsg>
-        )}
-        <StPwP>비밀번호 확인</StPwP>
-        <StPwinput
-          type="password"
-          {...register('ConfirmPw', {
-            required: true,
-            validate: (value: string) => {
-              if (value === undefined || Password.current === undefined) {
-                return false;
-              }
-              return value === Password.current;
-            },
-          })}
-          name="ConfirmPw"
-          placeholder="영문, 숫자 포함 총 10자리"
-          required
-        />
-        {errors.ConfirmPw &&
-          errors.ConfirmPw.type === 'required' &&
-          'this field is required'}
-        {errors.ConfirmPw &&
-          errors.ConfirmPw.type === 'validate' &&
-          'The Passwords do not matched'}
-      </StPw>
-      <StSignupButton type="submit">회원가입</StSignupButton>
-    </Wrapper>
+        <StPicInfo>
+          <h1>담당자 이름</h1>
+          <StBrandInput
+            type="text"
+            {...register('PicName', {
+              required: true,
+              pattern: {
+                value: nameRegex,
+                message: '담당자 이름은 문자만 허용됩니다',
+              },
+            })}
+            name="PicName"
+            placeholder="담당자를 입력해주세요"
+            required
+          />
+          {errors.PicName && (
+            <StErrorMsg>
+              {errors.PicName.message || '담당자 이름이 필요합니다'}
+            </StErrorMsg>
+          )}
+
+          <StContectNumberInputWrapper>
+            <h1>담당자 번호</h1>
+            <StBrandInput
+              type="text"
+              placeholder="담당자 번호를 입력해주세요"
+              {...register('PicNumber', {
+                required: true,
+                validate: PhoneNumberValidation,
+              })}
+              name="PicNumber"
+              required
+              hasError={!!errors.PicNumber}
+            />
+            {errors.PicNumber && (
+              <StErrorMsg>
+                {errors.PicNumber.message || '담당자 번호를 입력해주세요'}
+              </StErrorMsg>
+            )}
+          </StContectNumberInputWrapper>
+        </StPicInfo>
+
+        <StPw>
+          <StPwP>비밀번호</StPwP>
+          <StPwinput
+            type="password"
+            {...register('Password', {
+              required: true,
+              pattern: PasswordRegex,
+            })}
+            name="Password"
+            placeholder="암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리"
+            required
+          />
+          {errors.Password && (
+            <StErrorMsg>
+              {errors.Password.message ||
+                '암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리'}
+            </StErrorMsg>
+          )}
+          <StPwP>비밀번호 확인</StPwP>
+          <StPwinput
+            type="password"
+            {...register('ConfirmPw', {
+              required: true,
+              validate: (value: string) => {
+                if (value === undefined || Password.current === undefined) {
+                  return false;
+                }
+                return value === Password.current;
+              },
+            })}
+            name="ConfirmPw"
+            placeholder="암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리"
+            required
+          />
+          {errors.ConfirmPw &&
+            errors.ConfirmPw.type === 'required' &&
+            'this field is required'}
+          {errors.ConfirmPw &&
+            errors.ConfirmPw.type === 'validate' &&
+            'The Passwords do not matched'}
+        </StPw>
+        <StSignupButton type="submit">회원가입</StSignupButton>
+        <Link to="/login">이미 계정이 있으신가요? 여기서 로그인 하세요</Link>
+      </Wrapper>
+    </form>
   );
 };
 

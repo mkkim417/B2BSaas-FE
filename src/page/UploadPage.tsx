@@ -25,16 +25,20 @@ function UploadPage() {
   // const mutation = useMutation(addTodos)
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
+      console.log('fileInput : ', fileInput.current.files[0]);
       if (isGroupName === '') {
         alert('그룹명을 입력해주세요');
         return;
+      }
+      if (fileInput.current.files[0] === undefined) {
+        alert('파일을 선택해주세요');
       }
       // await mutation.mutateAsync(newCart)
 
       dispatch(sendListCreate(data));
       dispatch(sendKeyCreate(isKeyDataServe));
       dispatch(sendGroupNameCreate([isGroupName]));
-      navigate('/alarmtalk');
+      navigate(`/splitservicepage`);
     },
     // [mutation]
     [isGroupName, dispatch]
@@ -71,8 +75,7 @@ function UploadPage() {
   const onDelete = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-
-      //   console.log('checkedList:', checkedList)
+      // console.log('checkedList:', checkedList)
       // isData && isData.filter((x: any) => !checkedList.includes(x))
       setData(isData.filter((x: any) => !checkedList.includes(x)));
       setOpen(false);

@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import CustomEditor from '../components/Editor';
-import { Wrapper } from './Alarmtalk';
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 import { H1, LeftContents, RightContents } from './Alarmtalk';
 import SelectBoxs from '../components/SelectBoxs';
+import { EMAIL_TEMPLATE } from '../constants/emailTemplates';
+import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
 function Email() {
+  const location = useLocation();
+  console.log(location.state.id);
   const [editorState, setEditorState] = useState<EditorState | undefined>(
     undefined
   );
@@ -19,28 +23,35 @@ function Email() {
       //     )
       //   })
       // })
-      // console.log(
-      //   'contents : ',
-      //   JSON.stringify(convertToRaw(editorState.getCurrentContent()))
-      // );
+      console.log(
+        'contents : ',
+        JSON.stringify(convertToRaw(editorState.getCurrentContent()))
+      );
     }
   };
-  useEffect(() => {
+  const setFunc = useCallback(() => {
     if (editorState) {
-      // setEditorState(
-      //   EditorState.createWithContent(convertFromRaw(JSON.parse('')))
-      // );
+      setEditorState(
+        EditorState.createWithContent(
+          convertFromRaw(
+            JSON.parse(EMAIL_TEMPLATE[location.state.id]['text'] as any)
+          )
+        )
+      );
     } else {
       setEditorState(EditorState.createEmpty());
     }
   }, [editorState]);
-  console.log(editorState);
+
+  useEffect(() => {
+    setFunc();
+  }, [setFunc]);
   return (
     <Wrapper>
-      <LeftContents>
-        <H1>이메일 발송하기</H1>
+      {/* <LeftContents>
         <SelectBoxs></SelectBoxs>
-      </LeftContents>
+      </LeftContents> */}
+      <H1>이메일 발송하기</H1>
       <RightContents>
         {editorState != null && (
           <CustomEditor
@@ -53,5 +64,10 @@ function Email() {
     </Wrapper>
   );
 }
-
+const Wrapper = styled.div`
+  flex-direction: column;
+  display: flex;
+  margin-top: 80px;
+  padding-left: 200px;
+`;
 export default Email;

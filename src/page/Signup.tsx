@@ -283,15 +283,12 @@ const Stinput = styled.input<StInputProps>`
   margin: 10px auto;
   border: 2px solid rgba(170, 170, 170, 0.26);
   transition: border-color 0.2s ease-in-out;
-
   &:focus {
     border-color: #333;
   }
-
   &:focus + ${StErrorMsg} {
     visibility: visible;
   }
-
   ${({ hasError }) =>
     hasError &&
     `
@@ -365,7 +362,6 @@ const StBrandNumberP = styled.p`
   font-family: 'Roboto';
   font-style: normal;
   display: flex;
-
   align-items: center;
   text-align: center;
   color: #000000;
@@ -373,7 +369,6 @@ const StBrandNumberP = styled.p`
 
 const StPw = styled(StInputWrapper)`
   width: 600px;
-
   border: 2px solid;
 `;
 
@@ -385,9 +380,7 @@ const StPwP = styled.p`
   line-height: 28px;
   display: flex;
   align-items: center;
-
   color: #000000;
-
   mix-blend-mode: darken;
 `;
 
@@ -402,15 +395,12 @@ const StPwinput = styled.input<StInputProps>`
   text-align: center;
   display: flex;
   justify-content: center;
-
   &:focus {
     border-color: #333;
   }
-
   &:focus + ${StErrorMsg} {
     visibility: visible;
   }
-
   ${({ hasError }) =>
     hasError &&
     `
@@ -429,7 +419,6 @@ const StSignupButton = styled.button`
   margin-top: 20px;
   transition: background-color 0.2s ease-in-out;
   cursor: pointer;
-
   &:hover {
     background-color: #e65100;
   }
@@ -448,7 +437,6 @@ const StSelect = styled.select`
 const StBrandEmailInput = styled.input`
   background: #d3d3d3;
   border-radius: 40px;
-
   margin: 10px;
   display: flex;
   border: 2px solid;

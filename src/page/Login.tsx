@@ -16,22 +16,15 @@ function Login() {
   const [alertMessage, setAlertMessage] = useState('');
   const { register, handleSubmit } = useForm<FormValues>();
 
-  const handleLogin: SubmitHandler<FormValues> = async (data) => {
+  const handleLogin = async (data: any) => {
     try {
-      const response = await axios.post(
-        `https://dev.sendingo-be.store/api/users/login`,
-        data
-      );
-
-      if (response.status === 200) {
-        setAlertMessage('Login successful.');
-        navigate('/');
-      } else {
-        setAlertMessage('Login failed.');
-      }
+      const response = await axios
+        .post(`https://dev.sendingo-be.store/api/users/login`, data)
+        .then((res) => {
+          console.log(res);
+        });
     } catch (error) {
-      console.error('There was a problem logging in:', error);
-      setAlertMessage('Login failed.');
+      console.error(error);
     }
   };
 

@@ -7,13 +7,13 @@ import { useForm, SubmitHandler, Validate } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
 interface FormValues {
-  Email: string;
-  Password: string;
+  email: string;
+  password: string;
   ConfirmPw: string;
-  BrandName: string;
-  BrandNumber: string;
-  PicName: string;
-  PicNumber: string;
+  companyName: string;
+  companyNumber: string;
+  name?: string;
+  phoneNumber: string;
 }
 
 type StInputProps = {
@@ -34,7 +34,7 @@ const Signup = () => {
   });
 
   const Password = useRef<string>();
-  Password.current = watch('Password');
+  Password.current = watch('password');
   const ConfirmPw = useRef<string>();
   ConfirmPw.current = watch('ConfirmPw');
 
@@ -54,54 +54,55 @@ const Signup = () => {
 
   const nameRegex = /^[a-zA-Z ]+$/;
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log('onSubmit 콘솔찍은 내용', event);
-    handleSubmit(handleSignup)(event);
-  };
+  const onSubmit = async (data: any) => {
+    console.log(data);
+    // let {
+    //   companyName : data,
+    //   companyNumber : data.BrandNumber,
+    //   email : data.Email,
+    //   password : data.Password,
+    //   userName : data.PicName,
+    //   phoneNumber : data.PicNumber,
+    // } = newData;
 
-  const handleSignup = async (data: FormValues) => {
-    console.log('Data 콘솔찍은 내용', data);
+    // console.log(newData);
     if (!isValid) {
       setAlertMessage('모든 항목을 입력하세요');
       return;
     }
 
-    console.log('axios call 이전', data);
-
     try {
-      const response = await axios.post(
-        `https://dev.sendingo-be.store/api/users/signup`,
-        data
-      );
-      console.log('API Response:', response);
-      if (response.status === 200) {
-        setIsSubmitted(true);
-        setAlertMessage('Your registration is complete.');
-        alert('Your registration is complete.');
-        navigate('/login');
-      } else {
-        setAlertMessage('Registration failed.');
-        alert('Login failed.');
-      }
+      const response = await axios
+        .post('https://dev.sendingo-be.store/api/users/signup', data)
+        .then((res) => {
+          console.log(res);
+        });
+      console.log(response);
+      // if (response.status === 200) {
+      //   setIsSubmitted(true);
+      //   setAlertMessage('Your registration is complete.');
+      //   alert('Your registration is complete.');
+      //   navigate('/login');
+      // } else {
+      //   setAlertMessage('Registration failed.');
+      //   alert('Login failed.');
+      // }
     } catch (error: any) {
-      console.error('Error during axios call', error);
-      if (error.response) {
-        console.error('API Response Error:', error.response);
-      } else if (error.request) {
-        console.error('No API Response:', error.request);
-      } else {
-        console.error('API Request Error:', error.message);
-      }
-      setAlertMessage('Registration failed.');
-      alert('Login failed.');
+      // console.error('Error during axios call', error);
+      // if (error.response) {
+      //   console.error('API Response Error:', error.response);
+      // } else if (error.request) {
+      //   console.error('No API Response:', error.request);
+      // } else {
+      //   console.error('API Request Error:', error.message);
+      // }
+      // setAlertMessage('Registration failed.');
+      // alert('Login failed.');
     }
   };
 
-  console.log('After axios 이후');
-
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Wrapper>
         {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
         {alertMessage && <p>{alertMessage}</p>}
@@ -109,17 +110,17 @@ const Signup = () => {
           <StEmailP>이메일</StEmailP>
           <Stinput
             type="email"
-            {...register('Email', {
+            {...register('email', {
               required: '해당 항목은 필수입니다',
               validate: EmailValidation,
             })}
-            name="Email"
+            name="email"
             required
           />
 
-          {errors.Email && (
+          {errors.email && (
             <StErrorMsg>
-              {errors.Email.message || '이메일을 입력해주시기 바랍니다.'}
+              {errors.email.message || '이메일을 입력해주시기 바랍니다.'}
             </StErrorMsg>
           )}
           <StEmailCheckButton>중복확인</StEmailCheckButton>
@@ -130,34 +131,34 @@ const Signup = () => {
 
           <StBrandInput
             type="text"
-            {...register('BrandName', {
+            {...register('companyName', {
               required: true,
               pattern: /^[A-Za-z0-9\s]+$/i,
             })}
-            name="BrandName"
+            name="companyName"
             required
             placeholder="브랜드(기업)명을 입력해주세요"
           />
-          {errors.BrandName && (
+          {errors.companyName && (
             <StErrorMsg>
-              {errors.BrandName.message || '브랜드(기업)명을 입력해주세요'}
+              {errors.companyName.message || '브랜드(기업)명을 입력해주세요'}
             </StErrorMsg>
           )}
           <StBrandNumberP>소속대표전화</StBrandNumberP>
           <StBrandNumberInput
             type="text"
             placeholder="대표 번호를 입력해주세요"
-            {...register('BrandNumber', {
+            {...register('companyNumber', {
               required: true,
               validate: PhoneNumberValidation,
             })}
-            name="BrandNumber"
+            name="companyNumber"
             required
-            hasError={!!errors.BrandNumber}
+            hasError={!!errors.companyNumber}
           />
-          {errors.BrandNumber && (
+          {errors.companyNumber && (
             <StErrorMsg>
-              {errors.BrandNumber.message || '대표 번호가 필요합니다'}
+              {errors.companyNumber.message || '대표 번호가 필요합니다'}
             </StErrorMsg>
           )}
           <StBrandNumberP>대표 이메일</StBrandNumberP>
@@ -177,20 +178,20 @@ const Signup = () => {
           <h1>담당자 이름</h1>
           <StBrandInput
             type="text"
-            {...register('PicName', {
+            {...register('name', {
               required: true,
               pattern: {
                 value: nameRegex,
                 message: '담당자 이름은 문자만 허용됩니다',
               },
             })}
-            name="PicName"
+            name="name"
             placeholder="담당자를 입력해주세요"
             required
           />
-          {errors.PicName && (
+          {errors.name && (
             <StErrorMsg>
-              {errors.PicName.message || '담당자 이름이 필요합니다'}
+              {errors.name.message || '담당자 이름이 필요합니다'}
             </StErrorMsg>
           )}
 
@@ -199,17 +200,17 @@ const Signup = () => {
             <StBrandInput
               type="text"
               placeholder="담당자 번호를 입력해주세요"
-              {...register('PicNumber', {
+              {...register('phoneNumber', {
                 required: true,
                 validate: PhoneNumberValidation,
               })}
-              name="PicNumber"
+              name="phoneNumber"
               required
-              hasError={!!errors.PicNumber}
+              hasError={!!errors.phoneNumber}
             />
-            {errors.PicNumber && (
+            {errors.phoneNumber && (
               <StErrorMsg>
-                {errors.PicNumber.message || '담당자 번호를 입력해주세요'}
+                {errors.phoneNumber.message || '담당자 번호를 입력해주세요'}
               </StErrorMsg>
             )}
           </StContectNumberInputWrapper>
@@ -219,17 +220,17 @@ const Signup = () => {
           <StPwP>비밀번호</StPwP>
           <StPwinput
             type="password"
-            {...register('Password', {
+            {...register('password', {
               required: true,
               pattern: PasswordRegex,
             })}
-            name="Password"
+            name="password"
             placeholder="암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리"
             required
           />
-          {errors.Password && (
+          {errors.password && (
             <StErrorMsg>
-              {errors.Password.message ||
+              {errors.password.message ||
                 '암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리'}
             </StErrorMsg>
           )}

@@ -25,7 +25,6 @@ function UserList() {
     const response = await axios.get('http://localhost:4000/userList');
     setUserList(response.data);
     setMonsters(response.data);
-    // console.log(userList)
   }, []);
 
   // Modal 변수들
@@ -99,13 +98,11 @@ function UserList() {
     setIndexOfLastPost(currentPage * postPerPage);
     setIndexOfFirstPost(indexOfLastPost - postPerPage);
     setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
-  }, [currentPage, indexOfLastPost, indexOfFirstPost, userList, postPerPage]);
-
+  }, [currentPage, indexOfLastPost, indexOfFirstPost, postPerPage, getUserData]);
+  // currentPage, indexOfLastPost, indexOfFirstPost, userList, postPerPage
   // 검색필터 useEffect
   useEffect(() => {
     // 필터 bar
-    // console.log('targetvalue', searchTerm)
-    // console.log('monsters', monsters)
     setUserList(
       // 조건 검색 여기서 설정 => 현재는 그룹명만 설정
       monsters.filter(
@@ -116,7 +113,7 @@ function UserList() {
           item.createDt.includes(searchTerm)
       )
     );
-  }, [monsters, searchTerm]);
+  }, [searchTerm]);
 
   // 선택 삭제 button handler
   const individualDeleteHandler = () => {

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import styled from 'styled-components';
 import UserCreateModal from '../components/modal/UserCreateModal';
+import UserEditModal from '../components/modal/UserEditModal';
 import {
   Button,
   CardContainer,
@@ -18,13 +19,20 @@ function UserList() {
 
   // 검색 조건 state
   const [searchTerm, setSearchTerm] = useState('');
-  const [monsters, setMonsters] = useState([] as any);
+  const [filterList, setFilterList] = useState([] as any);
 
+  // 유저 수정 state
+  const [ editUser, setEditUser ] = useState({
+    'clientId' : '',
+    'clientName' : '',
+    'clientContact' : ''
+  })
   // 유저리스트 get API
   const getUserData = useCallback(async () => {
-    const response = await axios.get('http://localhost:4000/userList');
-    setUserList(response.data);
-    setMonsters(response.data);
+    const response = await axios.get('https://dev.sendingo-be.store/api/clients');
+    setUserList(response.data.data);
+    setFilterList(response.data.data);
+    console.log('userlist', response.data.data)
   }, []);
 
   // Modal 변수들
@@ -36,11 +44,18 @@ function UserList() {
     setIsOpenModal(false);
   };
 
+  const [ editModal, setEditModal ] = useState(false);
+  const clickEditModal = () => {
+    setEditModal(true);
+  }
+  const closeEditModal = () => {
+    setEditModal(false)
+  }
   // Pagination 처리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
   const [count, setCount] = useState(0); // 아이템 총 갯수
   // const [ product, setProduct ] = useState([])  // 리스트에 담아낼 아이템들
-  const [postPerPage] = useState(10); // 한 페이지에 보여질 아이템 수
+  const [postPerPage] = useState(5); // 한 페이지에 보여질 아이템 수
   const [indexOfLastPost, setIndexOfLastPost] = useState(0); // 현재 페이지의 마지막 아이템 인덱스
   const [indexOfFirstPost, setIndexOfFirstPost] = useState(0); // 현재 페이지의 첫번째 아이템 인덱스
   const [currentPosts, setCurrentPosts] = useState(0); // 현재 페이지에서 보여지는 아이템들
@@ -53,8 +68,14 @@ function UserList() {
 
   // 개별 항목을 체크했을 때의 state
   const [isCheckingBox, setIsCheckingBox] = useState(false);
+  
   // 체크항목 저장하는 변수 state
   const [checkedArr, setCheckedArr] = useState<String[]>([]);
+  
+  // 수정 항목의 변수 state
+  const [ editName, setEditName ] = useState('')
+  const [ editEmail, setEditEmail ] = useState('')
+  const [ editContact, setEditContact ] = useState('')
   // 개별 체크표시 핸들러
   const checkHandler = (e: React.ChangeEvent<HTMLInputElement>, id: any) => {
     console.log('타켓 checked값 : ', e.target.checked, '타켓 Id값 :', id);
@@ -65,17 +86,22 @@ function UserList() {
   // 전체 체크박스 선택 핸들러
   const allCheckHandler = (isChecked: boolean) => {
     if (isChecked) {
-      userList.map((el: any) => {
-        if (checkedArr.includes(el.id)) {
+      const idArray = [] as any;
+      userList.forEach((item: any) => {
+        console.log('allchecked handler', userList)
+        if (idArray.includes(item.clientId)) {
           // check 배열에 전체선택 품목 중 포함되어있는 것이 있다면 빼고 push
         } else {
-          checkedArr.push(el.id);
-          setCheckedArr(checkedArr);
+          // checkedArr.push(item.clientId);
+          // setCheckedArr(checkedArr);
+          idArray.push(item.clientId);
+          setCheckedArr(idArray);
         }
       });
     } else {
       setCheckedArr([]);
     }
+    console.log('allcheck checkedArr', checkedArr)
   };
   // 체크아이템 변수에 담는 핸들러
   const checkedItemHandler = (isChecked: any, id: any) => {
@@ -94,23 +120,24 @@ function UserList() {
   useEffect(() => {
     getUserData();
 
-    setCount(userList.length);
+    // setCount(userList.length);
     setIndexOfLastPost(currentPage * postPerPage);
     setIndexOfFirstPost(indexOfLastPost - postPerPage);
     setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
+
   }, [currentPage, indexOfLastPost, indexOfFirstPost, postPerPage, getUserData]);
   // currentPage, indexOfLastPost, indexOfFirstPost, userList, postPerPage
   // 검색필터 useEffect
-  useEffect(() => {
+  useEffect(() => {    
     // 필터 bar
     setUserList(
       // 조건 검색 여기서 설정 => 현재는 그룹명만 설정
-      monsters.filter(
+      filterList.filter(
         (item: any) =>
-          item.id.includes(searchTerm) ||
-          item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.phone.includes(searchTerm) ||
-          item.createDt.includes(searchTerm)
+          item.clientId.includes(searchTerm) ||
+          item.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.contact.includes(searchTerm) ||
+          item.createdAt.includes(searchTerm)
       )
     );
   }, [searchTerm]);
@@ -120,17 +147,16 @@ function UserList() {
     // 선택 삭제하기 전 한번 더 cofirm창
     if (window.confirm('해당 유저를 삭제하시겠습니까?')) {
       // 확인을 눌렀을 때
-      alert('삭제가 완료되었습니다.');
-      // const urls = checkedArr.map((groupId) => `http://localhost:4000/grouplist/${groupId}`)
-      // console.log(urls)
-      // axios.all(urls.map(url => axios.delete(url)))
-      //   .then(response => {
-      //     console.log(response)
-      //     alert('삭제가 완료되었습니다')
-      //   }).catch(error => {
-      //     console.log(error.response)
-      //     alert('삭제를 실패하였습니다.')
-      //   })
+      const urls = checkedArr.map((groupId) => `https://dev.sendingo-be.store/api/clients/${groupId}`)
+      console.log(urls)
+      axios.all(urls.map(url => axios.delete(url)))
+        .then(response => {
+          console.log(response)
+          alert('삭제가 완료되었습니다')
+        }).catch(error => {
+          console.log(error.response)
+          alert('삭제를 실패하였습니다.')
+        })
     } else {
       // confirm창에서 취소를 눌렀을 때 아무일도 발생하지 않는다.
     }
@@ -160,13 +186,43 @@ function UserList() {
   };
 
   // 그룹 생성 버튼
-  const groupCreateButton = () => {
+  const userUpdateButton = () => {
     alert('그룹생성 버튼\n 협의 후 진행');
   };
   // Input search handler
   const inputChange = (e: any) => {
     setSearchTerm(e.target.value);
   };
+
+  const editButtonHandler = () => {
+    if (checkedArr.length > 1) {
+      alert('한 개만 체크해주세요.')
+    } else {
+      // edit object
+      userList.map((item : any) => {
+        if ( item.clientId === checkedArr[0]) {
+          console.log('값들어오ㅏ?', item.clientId)
+          setEditUser({...editUser,
+          'clientId' : item.clientId,
+          'clientName' : item.clientName,
+          'clientContact' : item.contact})
+
+          setEditName(item.clientName)
+          // setEdit.clientId = item.clientId
+          // editArr.clientName = item.ClientName
+          // editArr.clientContact = item.contact
+        }
+      })
+      // editArr.push(userList.filter((item :any) => item.clientId === checkedArr[0]))
+      // console.log('eidtArr', editArr)
+      // console.log('filter', userList.filter((item :any) => item.clientId === checkedArr[0]))
+      console.log('eidtArr', editUser)
+      console.log('eidtArr', editName)
+      // setEditName(editArr[0].clientName)
+      clickEditModal()
+    }
+    // console.log(editName)
+  }
   return (
     <Wrapper>
       <HeaderBar>
@@ -175,7 +231,7 @@ function UserList() {
         <input placeholder="검색" onChange={inputChange} />
         <Button onClick={sendMessageButton}> 메세지 보내기</Button>
         <Button onClick={clickModal}> 유저 생성</Button>
-        <Button onClick={groupCreateButton}> 그룹 생성</Button>
+        <Button onClick={editButtonHandler}>유저 수정</Button>
         <Button onClick={individualDeleteHandler}> 선택 삭제 </Button>
         <Button onClick={groupDeleteHandler}> 전체 삭제 </Button>
       </HeaderBar>
@@ -200,17 +256,17 @@ function UserList() {
               .slice(indexOfFirstPost, indexOfLastPost)
               .map((item: any) => {
                 return (
-                  <CardInBox>
+                  <CardInBox key={item.clientId}>
                     <Percentage width="10%">
                       <input
                         type="checkbox"
-                        checked={checkedArr.includes(item.id)}
-                        onChange={(e: any) => checkHandler(e, item.id)}
+                        checked={checkedArr.includes(item.clientId)}
+                        onChange={(e: any) => checkHandler(e, item.clientId)}
                       />
                     </Percentage>
-                    <Percentage width="20%">{item.name}</Percentage>
-                    <Percentage width="50%">{item.phone}</Percentage>
-                    <Percentage width="20%">{item.createDt}</Percentage>
+                    <Percentage width="20%">{item.clientName}</Percentage>
+                    <Percentage width="50%">{item.contact}</Percentage>
+                    <Percentage width="20%">{item.createdAt}</Percentage>
                   </CardInBox>
                 );
               })
@@ -226,7 +282,7 @@ function UserList() {
           pageRangeDisplayed={5}
           prevPageText={'<'}
           nextPageText={'>'}
-          totalItemsCount={count}
+          totalItemsCount={userList.length}
           onChange={setPage}
         />
       </PaginationBox>
@@ -236,6 +292,13 @@ function UserList() {
           title="정말로 채팅방을 나가시겠습니까?"
           memo="친구신청, 대화에 쓰인 포인트는 환불이 불가능합니다."
         />
+      )}
+      {editModal && (
+        <UserEditModal 
+          closeModal={closeEditModal}
+          clientId={editUser.clientId}
+          clientName={editUser.clientName}
+          clientContact={editUser.clientContact}/>
       )}
     </Wrapper>
   );

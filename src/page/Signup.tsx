@@ -5,25 +5,45 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useForm, SubmitHandler, Validate } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-
 interface FormValues {
   email: string;
+  emailProvider: string;
   password: string;
   ConfirmPw: string;
   companyName: string;
   companyNumber: string;
   name?: string;
   phoneNumber: string;
+  role: number;
+  emailPrefix: string;
+  emailSuffix: string;
 }
 
-type StInputProps = {
+interface Option {
+  value: string;
+  label: string;
+}
+
+const options: Option[] = [
+  { value: '', label: '이메일 공급자를 입력하여 주십시오' },
+  { value: 'gmail.com', label: 'gmail.com' },
+  { value: 'naver.com', label: 'naver.com' },
+  { value: 'kakao.com', label: 'kakao.com' },
+  { value: 'outlook.com', label: 'outlook.com' },
+  { value: 'direct', label: '직접입력' },
+];
+
+interface StInputProps {
   hasError?: boolean;
-} & React.InputHTMLAttributes<HTMLInputElement>;
+}
 
 const Signup = () => {
   const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const [isEmailChecked, setIsEmailChecked] = useState(false);
+  const [directInput, setDirectInput] = useState(false);
+
   const {
     register,
     formState: { errors, isValid },
@@ -32,6 +52,19 @@ const Signup = () => {
   } = useForm<FormValues>({
     mode: 'onChange',
   });
+  const [formData, setFormData] = useState<FormValues>({
+    email: '',
+    emailProvider: '',
+    password: '',
+    ConfirmPw: '',
+    companyName: '',
+    companyNumber: '',
+    name: '',
+    phoneNumber: '',
+    role: 0,
+    emailPrefix: '',
+    emailSuffix: '',
+  });
 
   const Password = useRef<string>();
   Password.current = watch('password');
@@ -39,38 +72,43 @@ const Signup = () => {
   ConfirmPw.current = watch('ConfirmPw');
 
   const EmailValidation: Validate<string, FormValues> = (value) => {
-    const emailRegex = /^\S+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
-    return emailRegex.test(value) || '올바른 이메일 형식이 아닙니다';
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const fullEmail = value + '@' + formData.emailProvider;
+    return emailRegex.test(fullEmail) ? true : '올바른 주소를 입력하세요';
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+    if (e.target.value === 'direct') {
+      setDirectInput(true);
+    } else {
+      setDirectInput(false);
+    }
   };
 
   const PasswordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,20}$/;
-
   const PhoneNumberValidation = (value: string) => {
     const phoneRegex = /^\d{10,11}$/;
     return (
-      phoneRegex.test(value.toString()) || 'Please enter a 10-11 digit number.'
+      phoneRegex.test(value.toString()) ||
+      '10-11자리 숫자를 입력하시기 바랍니다.'
     );
   };
-
   const nameRegex = /^[a-zA-Z ]+$/;
-
   const onSubmit = async (data: any) => {
     console.log(data);
-    // let {
-    //   companyName : data,
-    //   companyNumber : data.BrandNumber,
-    //   email : data.Email,
-    //   password : data.Password,
-    //   userName : data.PicName,
-    //   phoneNumber : data.PicNumber,
-    // } = newData;
 
-    // console.log(newData);
     if (!isValid) {
       setAlertMessage('모든 항목을 입력하세요');
       return;
     }
-
+    if (!isEmailChecked) {
+      setAlertMessage('이메일 중복확인을 해주세요.');
+      return;
+    }
     try {
       const response = await axios
         .post('https://dev.sendingo-be.store/api/users/signup', data)
@@ -78,15 +116,6 @@ const Signup = () => {
           console.log(res);
         });
       console.log(response);
-      // if (response.status === 200) {
-      //   setIsSubmitted(true);
-      //   setAlertMessage('Your registration is complete.');
-      //   alert('Your registration is complete.');
-      //   navigate('/login');
-      // } else {
-      //   setAlertMessage('Registration failed.');
-      //   alert('Login failed.');
-      // }
     } catch (error: any) {
       // console.error('Error during axios call', error);
       // if (error.response) {
@@ -101,34 +130,95 @@ const Signup = () => {
     }
   };
 
+  const handleDuplicateCheck = async () => {
+    try {
+      const response = await axios.post(
+        `https://dev.sendingo-be.store/api/users/signup/existemail`,
+        { email: formData.email }
+      );
+
+      if (response.data.exists) {
+        setAlertMessage('해당 이메일은 사용중인 이메일입니다.');
+      } else {
+        setAlertMessage('사용가능한 이메일 주소입니다.');
+        setIsEmailChecked(true);
+      }
+    } catch (error) {
+      console.error('이메일 중복 확인에 실패하셨습니다', error);
+      setAlertMessage('이메일 중복 확인에 실패하셨습니다');
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Wrapper>
         {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
         {alertMessage && <p>{alertMessage}</p>}
         <StEmail>
-          <StEmailP>이메일</StEmailP>
-          <Stinput
-            type="email"
-            {...register('email', {
-              required: '해당 항목은 필수입니다',
-              validate: EmailValidation,
-            })}
-            name="email"
-            required
-          />
-
-          {errors.email && (
-            <StErrorMsg>
-              {errors.email.message || '이메일을 입력해주시기 바랍니다.'}
-            </StErrorMsg>
+          <StEmailP>Email</StEmailP>
+          {formData.emailProvider === 'direct' ? (
+            <>
+              <StInput
+                type="text"
+                {...register('emailPrefix', {
+                  required: '이 항목은 필수입니다',
+                })}
+                name="emailPrefix"
+                required
+              />
+              @
+              <StInput
+                type="text"
+                {...register('emailSuffix', {
+                  required: '이 항목은 필수입니다',
+                  validate: (value) => {
+                    const regex = /^[A-Za-z0-9._%+-]+$/;
+                    return regex.test(value) || '이메일 공급자를 입력해주세요';
+                  },
+                })}
+                name="emailSuffix"
+                required
+              />
+              .com
+            </>
+          ) : (
+            <>
+              <StInput
+                type="text"
+                {...register('email', {
+                  required: '이 항목은 필수입니다',
+                  validate: EmailValidation,
+                })}
+                name="email"
+                required
+              />
+              <StSelect
+                name="emailProvider"
+                value={formData.emailProvider}
+                onChange={handleSelectChange}
+              >
+                {options.map(({ value, label }) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </StSelect>
+            </>
           )}
-          <StEmailCheckButton>중복확인</StEmailCheckButton>
+          {errors.email || errors.emailPrefix || errors.emailSuffix ? (
+            <StErrorMsg>
+              {errors.email?.message ||
+                errors.emailPrefix?.message ||
+                errors.emailSuffix?.message ||
+                'Please enter your email.'}
+            </StErrorMsg>
+          ) : null}
+          <StEmailCheckButton onClick={handleDuplicateCheck}>
+            double check
+          </StEmailCheckButton>
         </StEmail>
-
         <StBrand>
           <StBrandP>소속명</StBrandP>
-
           <StBrandInput
             type="text"
             {...register('companyName', {
@@ -161,8 +251,8 @@ const Signup = () => {
               {errors.companyNumber.message || '대표 번호가 필요합니다'}
             </StErrorMsg>
           )}
-          <StBrandNumberP>대표 이메일</StBrandNumberP>
-          {/* <StBrandEmailInput
+          {/* <StBrandNumberP>대표 이메일</StBrandNumberP>
+          <StBrandEmailInput
             type="text"
             placeholder="대표 이메일(발신용 이메일)을 입력해주세요"
             {...register('BrandNumber', {
@@ -173,7 +263,6 @@ const Signup = () => {
             required
           /> */}
         </StBrand>
-
         <StPicInfo>
           <h1>담당자 이름</h1>
           <StBrandInput
@@ -194,7 +283,6 @@ const Signup = () => {
               {errors.name.message || '담당자 이름이 필요합니다'}
             </StErrorMsg>
           )}
-
           <StContectNumberInputWrapper>
             <h1>담당자 번호</h1>
             <StBrandInput
@@ -214,6 +302,17 @@ const Signup = () => {
               </StErrorMsg>
             )}
           </StContectNumberInputWrapper>
+          <StPicRole>
+            <label>역할:</label>
+            <select
+              {...register('role')}
+              defaultValue="normal"
+              onChange={handleSelectChange}
+            >
+              <option value="normal">일반</option>
+              <option value="admin">관리자</option>
+            </select>
+          </StPicRole>
         </StPicInfo>
 
         <StPw>
@@ -260,23 +359,38 @@ const Signup = () => {
     </form>
   );
 };
-
 export default Signup;
 
 const StInputWrapper = styled.div`
   position: relative;
   margin: 10px;
 `;
-
 const StErrorMsg = styled.span`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  font-size: 14px;
   color: red;
+  visibility: hidden;
 `;
 
-const Stinput = styled.input<StInputProps>`
+const StInput = styled.input<StInputProps>`
+  background: rgba(170, 170, 170, 0.26);
+  border-radius: 40px;
+  width: 400px;
+  margin: 10px auto;
+  border: 2px solid rgba(170, 170, 170, 0.26);
+  transition: border-color 0.2s ease-in-out;
+  &:focus {
+    border-color: #333;
+  }
+  &:focus + ${StErrorMsg} {
+    visibility: visible;
+  }
+  ${({ hasError }: StInputProps) =>
+    hasError &&
+    `
+    border-color: red;
+  `}
+`;
+
+const Stinput2 = styled.input<StInputProps>`
   background: rgba(170, 170, 170, 0.26);
   border-radius: 40px;
   width: 400px;
@@ -307,15 +421,12 @@ const StEmailP = styled.p`
   color: #000000;
   mix-blend-mode: darken;
 `;
-
 const StEmail = styled(StInputWrapper)``;
-
 const StEmailCheckButton = styled.button`
   background: #d3d3d3;
   border-radius: 40px;
   margin: 10px;
 `;
-
 const StBrandP = styled.p`
   font-family: 'Roboto';
   font-style: normal;
@@ -325,13 +436,11 @@ const StBrandP = styled.p`
   color: #000000;
   mix-blend-mode: darken;
 `;
-
 const StBrand = styled.div`
   border: 2px solid;
   text-align: center;
   width: 600px;
 `;
-
 const StBrandInput = styled.input<StInputProps>`
   background: #d3d3d3;
   border-radius: 40px;
@@ -340,7 +449,6 @@ const StBrandInput = styled.input<StInputProps>`
   justify-content: left;
   width: 500px;
 `;
-
 const StBrandNumberInput = styled.input<StInputProps>`
   background: #d3d3d3;
   border-radius: 40px;
@@ -351,13 +459,11 @@ const StBrandNumberInput = styled.input<StInputProps>`
   justify-content: left;
   width: 500px;
 `;
-
 const StContectNumberInputWrapper = styled.div<StInputProps>`
   background: #d3d3d3;
   margin-right: 20px;
   border-color: ${({ hasError }) => (hasError ? 'red' : 'inherit')};
 `;
-
 const StBrandNumberP = styled.p`
   font-family: 'Roboto';
   font-style: normal;
@@ -366,12 +472,10 @@ const StBrandNumberP = styled.p`
   text-align: center;
   color: #000000;
 `;
-
 const StPw = styled(StInputWrapper)`
   width: 600px;
   border: 2px solid;
 `;
-
 const StPwP = styled.p`
   font-family: 'Roboto';
   font-style: normal;
@@ -383,7 +487,6 @@ const StPwP = styled.p`
   color: #000000;
   mix-blend-mode: darken;
 `;
-
 const StPwinput = styled.input<StInputProps>`
   background: #d3d3d3;
   border-radius: 40px;
@@ -407,7 +510,6 @@ const StPwinput = styled.input<StInputProps>`
     border-color: red;
   `}
 `;
-
 const StSignupButton = styled.button`
   background-color: #f57c00;
   color: white;
@@ -423,17 +525,18 @@ const StSignupButton = styled.button`
     background-color: #e65100;
   }
 `;
-
 const StPicInfo = styled.div`
   width: 600px;
   border: 2px solid;
 `;
-
 const StSelect = styled.select`
-  width: 43%;
-  font-size: 15px;
+  background: rgba(170, 170, 170, 0.26);
+  border-radius: 40px;
+  width: 400px;
+  margin: 10px auto;
+  border: 2px solid rgba(170, 170, 170, 0.26);
+  transition: border-color 0.2s ease-in-out;
 `;
-
 const StBrandEmailInput = styled.input`
   background: #d3d3d3;
   border-radius: 40px;
@@ -443,3 +546,5 @@ const StBrandEmailInput = styled.input`
   justify-content: left;
   width: 500px;
 `;
+
+const StPicRole = styled.div``;

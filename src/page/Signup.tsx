@@ -65,7 +65,6 @@ const Signup = () => {
     //   phoneNumber : data.PicNumber,
     // } = newData;
 
-    // console.log(newData);
     if (!isValid) {
       setAlertMessage('모든 항목을 입력하세요');
       return;
@@ -76,6 +75,8 @@ const Signup = () => {
         .post('https://dev.sendingo-be.store/api/users/signup', data)
         .then((res) => {
           console.log(res);
+          alert('회원가입완료');
+          navigate('/Login');
         });
       console.log(response);
       // if (response.status === 200) {
@@ -88,7 +89,7 @@ const Signup = () => {
       //   alert('Login failed.');
       // }
     } catch (error: any) {
-      // console.error('Error during axios call', error);
+      console.error('Error during axios call', error);
       // if (error.response) {
       //   console.error('API Response Error:', error.response);
       // } else if (error.request) {
@@ -96,8 +97,8 @@ const Signup = () => {
       // } else {
       //   console.error('API Request Error:', error.message);
       // }
-      // setAlertMessage('Registration failed.');
-      // alert('Login failed.');
+      setAlertMessage('Registration failed.');
+      alert('Login failed.');
     }
   };
 
@@ -249,12 +250,12 @@ const Signup = () => {
           />
           {errors.ConfirmPw &&
             errors.ConfirmPw.type === 'required' &&
-            'this field is required'}
+            '이 항목을 입력해주세요'}
           {errors.ConfirmPw &&
             errors.ConfirmPw.type === 'validate' &&
-            'The Passwords do not matched'}
+            '암호가 일치하지 않습니다'}
         </StPw>
-        <StSignupButton type="submit">회원가입</StSignupButton>
+        <StSignupButton onClick={onSubmit}>회원가입</StSignupButton>
         <Link to="/login">이미 계정이 있으신가요? 여기서 로그인 하세요</Link>
       </Wrapper>
     </form>

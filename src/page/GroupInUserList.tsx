@@ -56,13 +56,16 @@ function GroupInUserList() {
   };
   // 전체 체크박스 선택 핸들러
   const allCheckHandler = (isChecked: boolean) => {
+    const idArray = [] as any;
     if (isChecked) {
       groupUserList.map((el: any) => {
-        if (checkedArr.includes(el.id)) {
+        if (idArray.includes(el.id)) {
           // check 배열에 전체선택 품목 중 포함되어있는 것이 있다면 빼고 push
         } else {
           checkedArr.push(el.id);
           setCheckedArr(checkedArr);
+          idArray.push(el.id)
+          setCheckedArr(idArray)
         }
       });
     } else {

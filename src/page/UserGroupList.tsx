@@ -32,18 +32,22 @@ function UserGroupList() {
   };
   // 전체 체크박스 선택 핸들러
   const allCheckHandler = (isChecked: boolean) => {
+    const idArray = [] as any;
     if (isChecked) {
-      groupList.map((el: any) => {
-        if (checkedArr.includes(el.id)) {
+      groupList.forEach((item: any) => {
+        console.log('grouplist', item)
+        if (idArray.includes(item.groupId)) {
           // check 배열에 전체선택 품목 중 포함되어있는 것이 있다면 빼고 push
         } else {
-          checkedArr.push(el.id);
-          setCheckedArr(checkedArr);
+          // checkedArr.push(el.id);
+          idArray.push(item.groupId)
+          setCheckedArr(idArray);
         }
       });
     } else {
       setCheckedArr([]);
     }
+    console.log('checkArr', checkedArr)
   };
 
   // 체크아이템 변수에 담는 핸들러
@@ -61,10 +65,11 @@ function UserGroupList() {
   //yarn json-server --watch grouplist.json --port 4000
 
   const getGroupData = useCallback(async () => {
-    const response = await axios.get('http://localhost:4000/grouplist');
-    setGroupList(response.data);
-    setMonsters(response.data);
-    setCopy(response.data);
+    const response = await axios.get('https://dev.sendingo-be.store/api/groups');
+    console.log('grouplist', response.data.data)
+    setGroupList(response.data.data );
+    setMonsters(response.data.data);
+    setCopy(response.data.data);
   }, []);
 
   useEffect(() => {
@@ -76,7 +81,7 @@ function UserGroupList() {
     setGroupList(
       // 조건 검색 여기서 설정 => 현재는 그룹명만 설정
       monsters.filter((item: any) =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase())
+        item.groupName.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
   }, [searchTerm]);
@@ -170,22 +175,22 @@ function UserGroupList() {
         <CardContainer>
           {groupList?.map((item: any) => {
             return (
-              <CardInBox key={item.id}>
+              <CardInBox key={item.groupId}>
                 <Percentage width="10%">
                   <input
                     type="checkbox"
-                    checked={checkedArr.includes(item.id)}
-                    onChange={(e: any) => checkHandler(e, item.id)}
+                    checked={checkedArr.includes(item.groupId)}
+                    onChange={(e: any) => checkHandler(e, item.groupId)}
                   />
                 </Percentage>
-                <Percentage width="20%" onClick={() => moveInUserList(item.id)}>
-                  2023-03-12
+                <Percentage width="20%" onClick={() => moveInUserList(item.groupId)}>
+                  {item.createdAt}
                 </Percentage>
-                <Percentage width="50%" onClick={() => moveInUserList(item.id)}>
-                  {item.title}
+                <Percentage width="50%" onClick={() => moveInUserList(item.groupName)}>
+                  {item.groupName}
                 </Percentage>
-                <Percentage width="20%" onClick={() => moveInUserList(item.id)}>
-                  {item.customerlist.length}
+                <Percentage width="20%" onClick={() => moveInUserList(item.groupId)}>
+                  {/* {item.customerlist.length} */}
                 </Percentage>
               </CardInBox>
             );

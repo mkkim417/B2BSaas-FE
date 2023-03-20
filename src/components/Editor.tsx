@@ -49,6 +49,7 @@ export default function CustomEditor({
           toolbarClassName="editorToolbar-hidden"
           editorClassName="editor-class"
           onEditorStateChange={onEditorStateChange}
+          // toolbar={{ options: ['inline', 'list', 'textAlign', 'link','image'] }}
           toolbar={{
             inline: { inDropdown: true },
             list: { inDropdown: true },
@@ -81,8 +82,7 @@ const Button = styled.button`
 `;
 const Wrapper = styled.div`
   padding: 16px;
-  width: 100%;
+  width: 900px;
   border: 3px solid #000;
   border-radius: 15px;
-  padding: 10px;
 `;

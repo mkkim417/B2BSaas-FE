@@ -27,7 +27,34 @@
 .App-link {
   color: #61dafb;
 }
-
+.rdw-editor-toolbar {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+  left: 220px;
+}
+.rdw-block-dropdown {
+  width: 61px !important;
+}
+.rdw-fontfamily-dropdown {
+  width: 63px !important;
+}
+.public-DraftStyleDefault-block {
+  margin: 10em 0;
+}
+.wrapper-class rdw-editor-wrapper {
+  min-height: 200px;
+}
+.notranslate > div {
+  min-height: 300px;
+}
+.rdw-image-modal,
+.rdw-embedded-modal {
+  top: 50% !important;
+  left: 50% !important;
+  position: fixed !important;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

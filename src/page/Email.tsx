@@ -1,11 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import CustomEditor from '../components/Editor';
-import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
-import { H1, LeftContents, RightContents } from './Alarmtalk';
+import {
+  EditorState,
+  convertFromRaw,
+  convertToRaw,
+  ContentState,
+} from 'draft-js';
+import { LeftContents, RightContents } from './Alarmtalk';
 import SelectBoxs from '../components/SelectBoxs';
 import { EMAIL_TEMPLATE } from '../constants/emailTemplates';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import htmlToDraft from 'html-to-draftjs';
 function Email() {
   const location = useLocation();
   console.log(location.state.id);
@@ -24,28 +30,38 @@ function Email() {
       //   })
       // })
       console.log(
-        'contents : ',
         JSON.stringify(convertToRaw(editorState.getCurrentContent()))
       );
     }
   };
-  const setFunc = useCallback(() => {
-    if (editorState) {
-      setEditorState(
-        EditorState.createWithContent(
-          convertFromRaw(
-            JSON.parse(EMAIL_TEMPLATE[location.state.id]['text'] as any)
-          )
-        )
-      );
-    } else {
-      setEditorState(EditorState.createEmpty());
-    }
-  }, [editorState]);
 
+  const htmlToEditor = `<pre>const editorToHtml = 
+  draftToHtml(convertToRaw(editorState.getCurrentContent()));</pre>
+  <p style="text-align:center;"><strong>ㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇ
+  </strong></p>`;
+  const blocksFromHtml = htmlToDraft(htmlToEditor);
+  const { contentBlocks, entityMap } = blocksFromHtml;
+  const contentState = ContentState.createFromBlockArray(
+    contentBlocks,
+    entityMap
+  );
+  const editorStateSecond = EditorState.createWithContent(contentState);
   useEffect(() => {
-    setFunc();
-  }, [setFunc]);
+    if (location.state.id !== null) {
+      if (!editorState) {
+        setEditorState(
+          // EditorState.createWithContent(
+          //   convertFromRaw(
+          //     JSON.parse(EMAIL_TEMPLATE[location.state.id]['text'] as any)
+          //   )
+          // )
+          editorStateSecond
+        );
+      } else {
+        setEditorState(EditorState.createEmpty());
+      }
+    }
+  }, []);
   return (
     <Wrapper>
       {/* <LeftContents>
@@ -64,10 +80,17 @@ function Email() {
     </Wrapper>
   );
 }
+const H1 = styled.h1`
+  margin: 30px 0px;
+  font-weight: bold;
+  font-size: 25px;
+`;
 const Wrapper = styled.div`
   flex-direction: column;
   display: flex;
-  margin-top: 80px;
-  padding-left: 200px;
+  padding-top: 80px;
+  padding-left: 350px;
+  width: 100%;
+  margin: 100px auto;
 `;
 export default Email;

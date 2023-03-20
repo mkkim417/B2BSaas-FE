@@ -15,16 +15,35 @@ interface FormValues {
   name?: string;
   phoneNumber: string;
   role: number;
+  emailPrefix: string;
+  emailSuffix: string;
 }
 
-type StInputProps = {
+interface Option {
+  value: string;
+  label: string;
+}
+
+const options: Option[] = [
+  { value: '', label: '이메일 공급자를 입력하여 주십시오' },
+  { value: 'gmail.com', label: 'gmail.com' },
+  { value: 'naver.com', label: 'naver.com' },
+  { value: 'kakao.com', label: 'kakao.com' },
+  { value: 'outlook.com', label: 'outlook.com' },
+  { value: 'direct', label: '직접입력' },
+];
+
+interface StInputProps {
   hasError?: boolean;
-} & React.InputHTMLAttributes<HTMLInputElement>;
+}
+
 const Signup = () => {
   const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [isEmailChecked, setIsEmailChecked] = useState(false);
+  const [directInput, setDirectInput] = useState(false);
+
   const {
     register,
     formState: { errors, isValid },
@@ -43,6 +62,8 @@ const Signup = () => {
     name: '',
     phoneNumber: '',
     role: 0,
+    emailPrefix: '',
+    emailSuffix: '',
   });
 
   const Password = useRef<string>();
@@ -56,29 +77,16 @@ const Signup = () => {
     return emailRegex.test(fullEmail) ? true : '올바른 주소를 입력하세요';
   };
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = event.target;
-    setFormData((prevState: FormValues) => ({
-      ...prevState,
-      [name]: value,
-      role: value === '관리자' ? 0 : 1,
-    }));
-  };
-
-  const selectbox = () => {
-    return (
-      <StSelect
-        name="emailProvider"
-        value={formData.emailProvider}
-        onChange={handleSelectChange}
-      >
-        <option value="">이메일 공급자를 선택하세요</option>
-        <option value="gmail.com">gmail.com</option>
-        <option value="naver.com">naver.com</option>
-        <option value="kakao.com">kakao.com</option>
-        <option value="outlook.com">outlook.com</option>
-      </StSelect>
-    );
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+    if (e.target.value === 'direct') {
+      setDirectInput(true);
+    } else {
+      setDirectInput(false);
+    }
   };
 
   const PasswordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,20}$/;
@@ -147,24 +155,66 @@ const Signup = () => {
         {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
         {alertMessage && <p>{alertMessage}</p>}
         <StEmail>
-          <StEmailP>이메일</StEmailP>
-          <Stinput
-            type="text"
-            {...register('email', {
-              required: '해당 항목은 필수입니다',
-              validate: EmailValidation,
-            })}
-            name="email"
-            required
-          />
-          @{selectbox()}
-          {errors.email && (
-            <StErrorMsg>
-              {errors.email.message || '이메일을 입력해주시기 바랍니다.'}
-            </StErrorMsg>
+          <StEmailP>Email</StEmailP>
+          {formData.emailProvider === 'direct' ? (
+            <>
+              <StInput
+                type="text"
+                {...register('emailPrefix', {
+                  required: '이 항목은 필수입니다',
+                })}
+                name="emailPrefix"
+                required
+              />
+              @
+              <StInput
+                type="text"
+                {...register('emailSuffix', {
+                  required: '이 항목은 필수입니다',
+                  validate: (value) => {
+                    const regex = /^[A-Za-z0-9._%+-]+$/;
+                    return regex.test(value) || '이메일 공급자를 입력해주세요';
+                  },
+                })}
+                name="emailSuffix"
+                required
+              />
+              .com
+            </>
+          ) : (
+            <>
+              <StInput
+                type="text"
+                {...register('email', {
+                  required: '이 항목은 필수입니다',
+                  validate: EmailValidation,
+                })}
+                name="email"
+                required
+              />
+              <StSelect
+                name="emailProvider"
+                value={formData.emailProvider}
+                onChange={handleSelectChange}
+              >
+                {options.map(({ value, label }) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </StSelect>
+            </>
           )}
+          {errors.email || errors.emailPrefix || errors.emailSuffix ? (
+            <StErrorMsg>
+              {errors.email?.message ||
+                errors.emailPrefix?.message ||
+                errors.emailSuffix?.message ||
+                'Please enter your email.'}
+            </StErrorMsg>
+          ) : null}
           <StEmailCheckButton onClick={handleDuplicateCheck}>
-            중복확인
+            double check
           </StEmailCheckButton>
         </StEmail>
         <StBrand>
@@ -316,13 +366,31 @@ const StInputWrapper = styled.div`
   margin: 10px;
 `;
 const StErrorMsg = styled.span`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  font-size: 14px;
   color: red;
+  visibility: hidden;
 `;
-const Stinput = styled.input<StInputProps>`
+
+const StInput = styled.input<StInputProps>`
+  background: rgba(170, 170, 170, 0.26);
+  border-radius: 40px;
+  width: 400px;
+  margin: 10px auto;
+  border: 2px solid rgba(170, 170, 170, 0.26);
+  transition: border-color 0.2s ease-in-out;
+  &:focus {
+    border-color: #333;
+  }
+  &:focus + ${StErrorMsg} {
+    visibility: visible;
+  }
+  ${({ hasError }: StInputProps) =>
+    hasError &&
+    `
+    border-color: red;
+  `}
+`;
+
+const Stinput2 = styled.input<StInputProps>`
   background: rgba(170, 170, 170, 0.26);
   border-radius: 40px;
   width: 400px;
@@ -341,6 +409,7 @@ const Stinput = styled.input<StInputProps>`
     border-color: red;
   `}
 `;
+
 const StEmailP = styled.p`
   font-family: 'Roboto';
   font-style: normal;
@@ -461,8 +530,12 @@ const StPicInfo = styled.div`
   border: 2px solid;
 `;
 const StSelect = styled.select`
-  width: 43%;
-  font-size: 15px;
+  background: rgba(170, 170, 170, 0.26);
+  border-radius: 40px;
+  width: 400px;
+  margin: 10px auto;
+  border: 2px solid rgba(170, 170, 170, 0.26);
+  transition: border-color 0.2s ease-in-out;
 `;
 const StBrandEmailInput = styled.input`
   background: #d3d3d3;

@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { setCookie } from '../util/cookie';
+import jwt_decode from 'jwt-decode';
 
 interface FormValues {
   email: string;
@@ -18,13 +20,21 @@ function Login() {
 
   const handleLogin = async (data: any) => {
     try {
-      const response = await axios
-        .post(`https://dev.sendingo-be.store/api/users/login`, data)
-        .then((res) => {
-          console.log(res);
-        });
+      const response = await axios.post(
+        `https://dev.sendingo-be.store/api/users/login`,
+        data
+      );
+      console.log(response);
+      let token = response.data.token;
+      setCookie('accessToken', token); // 쿠키에저장
+      const decodedUserInfo = jwt_decode(token);
+      console.log('decode', decodedUserInfo);
+      localStorage.setItem('userInfo', JSON.stringify(decodedUserInfo));
+      alert('로그인완료');
+      navigate('/');
     } catch (error) {
-      console.error(error);
+      console.log(error);
+      alert('다시 시도해주시기 바랍니다.');
     }
   };
 

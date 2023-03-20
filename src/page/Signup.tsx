@@ -14,6 +14,7 @@ interface FormValues {
   companyNumber: string;
   name?: string;
   phoneNumber: string;
+  role: number;
 }
 
 type StInputProps = {
@@ -41,6 +42,7 @@ const Signup = () => {
     companyNumber: '',
     name: '',
     phoneNumber: '',
+    role: 0,
   });
 
   const Password = useRef<string>();
@@ -51,9 +53,7 @@ const Signup = () => {
   const EmailValidation: Validate<string, FormValues> = (value) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const fullEmail = value + '@' + formData.emailProvider;
-    return emailRegex.test(fullEmail)
-      ? true
-      : 'Please enter a valid email address';
+    return emailRegex.test(fullEmail) ? true : '올바른 주소를 입력하세요';
   };
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -61,6 +61,7 @@ const Signup = () => {
     setFormData((prevState: FormValues) => ({
       ...prevState,
       [name]: value,
+      role: value === '관리자' ? 0 : 1,
     }));
   };
 
@@ -251,7 +252,19 @@ const Signup = () => {
               </StErrorMsg>
             )}
           </StContectNumberInputWrapper>
+          <StPicRole>
+            <label>역할:</label>
+            <select
+              {...register('role')}
+              defaultValue="normal"
+              onChange={handleSelectChange}
+            >
+              <option value="normal">일반</option>
+              <option value="admin">관리자</option>
+            </select>
+          </StPicRole>
         </StPicInfo>
+
         <StPw>
           <StPwP>비밀번호</StPwP>
           <StPwinput
@@ -460,3 +473,5 @@ const StBrandEmailInput = styled.input`
   justify-content: left;
   width: 500px;
 `;
+
+const StPicRole = styled.div``;

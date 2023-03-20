@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   height: 100vh;
-  padding-left: 200px;
+  padding-left: 250px;
   gap: 30px;
 `;
 const LogoText = styled.div`

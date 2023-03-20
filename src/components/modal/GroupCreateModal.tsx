@@ -178,7 +178,7 @@ const GroupCreateModal = ({ title, memo, coin, closeModal }: Props) => {
             pageRangeDisplayed={5}
             prevPageText={"<"}
             nextPageText={">"}
-            totalItemsCount={count}
+            totalItemsCount={userList.length}
             onChange={setPage}/>
           </PaginationBox>
         </PagingContainer>

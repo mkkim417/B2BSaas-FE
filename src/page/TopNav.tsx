@@ -19,11 +19,11 @@ const TopNav = () => {
           title="SendingGo"
           contents={
             <div>
-              <ul>
+              <Ul>
                 <Li>Mneu1</Li>
                 <Li>Mneu2</Li>
                 <Li>Mneu3</Li>
-              </ul>
+              </Ul>
             </div>
           }
         />
@@ -53,9 +53,14 @@ const TopNav = () => {
     </>
   );
 };
-const Li = styled.div`
+const Ul = styled.ul`
+  border-top: 1px solid #909090;
+  background-color: #fbfbfb;
+`;
+const Li = styled.li`
   margin-left: 30px;
   padding: 10px 0px;
+  color: #909090;
 `;
 const Header = styled.div`
   display: flex;
@@ -72,12 +77,12 @@ const Header = styled.div`
 `;
 const Wrapper = styled.div`
   padding-top: 80px;
-  width: 200px;
+  width: 250px;
   height: 100vh;
   position: fixed;
   /* left: 0%; */
   top: 70px;
-  background-color: black;
+  background-color: #f2f2f2;
 `;
 const UserContatiner = styled.div`
   display: flex;

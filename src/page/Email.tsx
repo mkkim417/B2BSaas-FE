@@ -11,13 +11,11 @@ import SelectBoxs from '../components/SelectBoxs';
 import { EMAIL_TEMPLATE } from '../constants/emailTemplates';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 function Email() {
   const location = useLocation();
-  console.log(location.state.id);
-  const [editorState, setEditorState] = useState<EditorState | undefined>(
-    undefined
-  );
+  const [editorState, setEditorState] = useState<EditorState | any>(undefined);
   const handleSave = () => {
     if (editorState) {
       // fetch('/api',{
@@ -29,12 +27,15 @@ function Email() {
       //     )
       //   })
       // })
+      // console.log(
+      //   JSON.stringify(convertToRaw(editorState.getCurrentContent()))
+      // );
       console.log(
-        JSON.stringify(convertToRaw(editorState.getCurrentContent()))
+        'editorState =>',
+        draftToHtml(convertToRaw(editorState.getCurrentContent()))
       );
     }
   };
-
   const htmlToEditor = `<pre>const editorToHtml = 
   draftToHtml(convertToRaw(editorState.getCurrentContent()));</pre>
   <p style="text-align:center;"><strong>ㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇ
@@ -45,23 +46,25 @@ function Email() {
     contentBlocks,
     entityMap
   );
+
   const editorStateSecond = EditorState.createWithContent(contentState);
   useEffect(() => {
     if (location.state.id !== null) {
       if (!editorState) {
         setEditorState(
-          // EditorState.createWithContent(
-          //   convertFromRaw(
-          //     JSON.parse(EMAIL_TEMPLATE[location.state.id]['text'] as any)
-          //   )
-          // )
-          editorStateSecond
+          EditorState.createWithContent(
+            convertFromRaw(
+              JSON.parse(EMAIL_TEMPLATE[location.state.id]['text'] as any)
+            )
+          )
+          // editorStateSecond
         );
       } else {
         setEditorState(EditorState.createEmpty());
       }
     }
   }, []);
+
   return (
     <Wrapper>
       {/* <LeftContents>

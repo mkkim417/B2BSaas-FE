@@ -27,7 +27,7 @@
 .App-link {
   color: #61dafb;
 }
-.rdw-editor-toolbar {
+/* .rdw-editor-toolbar {
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -54,7 +54,7 @@
   top: 50% !important;
   left: 50% !important;
   position: fixed !important;
-}
+} */
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

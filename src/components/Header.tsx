@@ -31,7 +31,7 @@ const LogoContainer = styled.div`
   margin-left: 30px;
   padding: 10px;
   margin: 20px;
-  background-color: antiquewhite;
+  border: 1px solid #000;
   cursor: pointer;
 `;
 

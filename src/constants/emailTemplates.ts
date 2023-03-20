@@ -25,7 +25,7 @@ export const EMAIL_TEMPLATE = [
     name: '5번템플릿',
     contents: '5번템플릿 내용입니다.',
     src: 'https://resource.stibee.com/templates/thumbnail/tem_news08.png',
-    text: '5번템플릿관련된 컨텐츠인데 lorem',
+    text: '',
   },
   {
     id: 5,

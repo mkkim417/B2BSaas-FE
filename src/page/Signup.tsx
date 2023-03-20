@@ -23,6 +23,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const [isEmailChecked, setIsEmailChecked] = useState(false);
   const {
     register,
     formState: { errors, isValid },
@@ -48,13 +49,11 @@ const Signup = () => {
   ConfirmPw.current = watch('ConfirmPw');
 
   const EmailValidation: Validate<string, FormValues> = (value) => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+/;
-    const email = value.split('@')[0];
-    const emailProvider = formData.emailProvider;
-    const fullEmail = email + '@' + emailProvider;
-    return emailRegex.test(email) && emailProvider
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const fullEmail = value + '@' + formData.emailProvider;
+    return emailRegex.test(fullEmail)
       ? true
-      : 'Please enter a valid email format';
+      : 'Please enter a valid email address';
   };
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -92,17 +91,13 @@ const Signup = () => {
   const nameRegex = /^[a-zA-Z ]+$/;
   const onSubmit = async (data: any) => {
     console.log(data);
-    // let {
-    //   companyName : data,
-    //   companyNumber : data.BrandNumber,
-    //   email : data.Email,
-    //   password : data.Password,
-    //   userName : data.PicName,
-    //   phoneNumber : data.PicNumber,
-    // } = newData;
-    // console.log(newData);
+
     if (!isValid) {
       setAlertMessage('모든 항목을 입력하세요');
+      return;
+    }
+    if (!isEmailChecked) {
+      setAlertMessage('이메일 중복확인을 해주세요.');
       return;
     }
     try {
@@ -112,15 +107,6 @@ const Signup = () => {
           console.log(res);
         });
       console.log(response);
-      // if (response.status === 200) {
-      //   setIsSubmitted(true);
-      //   setAlertMessage('Your registration is complete.');
-      //   alert('Your registration is complete.');
-      //   navigate('/login');
-      // } else {
-      //   setAlertMessage('Registration failed.');
-      //   alert('Login failed.');
-      // }
     } catch (error: any) {
       // console.error('Error during axios call', error);
       // if (error.response) {
@@ -134,6 +120,26 @@ const Signup = () => {
       // alert('Login failed.');
     }
   };
+
+  const handleDuplicateCheck = async () => {
+    try {
+      const response = await axios.post(
+        `https://dev.sendingo-be.store/api/users/signup/existemail`,
+        { email: formData.email }
+      );
+
+      if (response.data.exists) {
+        setAlertMessage('해당 이메일은 사용중인 이메일입니다.');
+      } else {
+        setAlertMessage('사용가능한 이메일 주소입니다.');
+        setIsEmailChecked(true);
+      }
+    } catch (error) {
+      console.error('이메일 중복 확인에 실패하셨습니다', error);
+      setAlertMessage('이메일 중복 확인에 실패하셨습니다');
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Wrapper>
@@ -156,7 +162,9 @@ const Signup = () => {
               {errors.email.message || '이메일을 입력해주시기 바랍니다.'}
             </StErrorMsg>
           )}
-          <StEmailCheckButton>중복확인</StEmailCheckButton>
+          <StEmailCheckButton onClick={handleDuplicateCheck}>
+            중복확인
+          </StEmailCheckButton>
         </StEmail>
         <StBrand>
           <StBrandP>소속명</StBrandP>
@@ -289,6 +297,7 @@ const Signup = () => {
   );
 };
 export default Signup;
+
 const StInputWrapper = styled.div`
   position: relative;
   margin: 10px;

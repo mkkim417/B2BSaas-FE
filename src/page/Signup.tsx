@@ -5,9 +5,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useForm, SubmitHandler, Validate } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-
 interface FormValues {
   email: string;
+  emailProvider: string;
   password: string;
   ConfirmPw: string;
   companyName: string;
@@ -19,7 +19,6 @@ interface FormValues {
 type StInputProps = {
   hasError?: boolean;
 } & React.InputHTMLAttributes<HTMLInputElement>;
-
 const Signup = () => {
   const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -32,6 +31,16 @@ const Signup = () => {
   } = useForm<FormValues>({
     mode: 'onChange',
   });
+  const [formData, setFormData] = useState<FormValues>({
+    email: '',
+    emailProvider: '',
+    password: '',
+    ConfirmPw: '',
+    companyName: '',
+    companyNumber: '',
+    name: '',
+    phoneNumber: '',
+  });
 
   const Password = useRef<string>();
   Password.current = watch('password');
@@ -39,21 +48,48 @@ const Signup = () => {
   ConfirmPw.current = watch('ConfirmPw');
 
   const EmailValidation: Validate<string, FormValues> = (value) => {
-    const emailRegex = /^\S+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
-    return emailRegex.test(value) || '올바른 이메일 형식이 아닙니다';
+    const emailRegex = /^[a-zA-Z0-9._%+-]+/;
+    const email = value.split('@')[0];
+    const emailProvider = formData.emailProvider;
+    const fullEmail = email + '@' + emailProvider;
+    return emailRegex.test(email) && emailProvider
+      ? true
+      : 'Please enter a valid email format';
   };
 
-  const PasswordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,20}$/;
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    setFormData((prevState: FormValues) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
-  const PhoneNumberValidation = (value: string) => {
-    const phoneRegex = /^\d{10,11}$/;
+  const selectbox = () => {
     return (
-      phoneRegex.test(value.toString()) || 'Please enter a 10-11 digit number.'
+      <StSelect
+        name="emailProvider"
+        value={formData.emailProvider}
+        onChange={handleSelectChange}
+      >
+        <option value="">이메일 공급자를 선택하세요</option>
+        <option value="gmail.com">gmail.com</option>
+        <option value="naver.com">naver.com</option>
+        <option value="kakao.com">kakao.com</option>
+        <option value="outlook.com">outlook.com</option>
+      </StSelect>
     );
   };
 
+  const PasswordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,20}$/;
+  const PhoneNumberValidation = (value: string) => {
+    const phoneRegex = /^\d{10,11}$/;
+    return (
+      phoneRegex.test(value.toString()) ||
+      '10-11자리 숫자를 입력하시기 바랍니다.'
+    );
+  };
   const nameRegex = /^[a-zA-Z ]+$/;
-
   const onSubmit = async (data: any) => {
     console.log(data);
     // let {
@@ -64,19 +100,16 @@ const Signup = () => {
     //   userName : data.PicName,
     //   phoneNumber : data.PicNumber,
     // } = newData;
-
+    // console.log(newData);
     if (!isValid) {
       setAlertMessage('모든 항목을 입력하세요');
       return;
     }
-
     try {
       const response = await axios
         .post('https://dev.sendingo-be.store/api/users/signup', data)
         .then((res) => {
           console.log(res);
-          alert('회원가입완료');
-          navigate('/Login');
         });
       console.log(response);
       // if (response.status === 200) {
@@ -89,7 +122,7 @@ const Signup = () => {
       //   alert('Login failed.');
       // }
     } catch (error: any) {
-      console.error('Error during axios call', error);
+      // console.error('Error during axios call', error);
       // if (error.response) {
       //   console.error('API Response Error:', error.response);
       // } else if (error.request) {
@@ -97,11 +130,10 @@ const Signup = () => {
       // } else {
       //   console.error('API Request Error:', error.message);
       // }
-      setAlertMessage('Registration failed.');
-      alert('Login failed.');
+      // setAlertMessage('Registration failed.');
+      // alert('Login failed.');
     }
   };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Wrapper>
@@ -110,7 +142,7 @@ const Signup = () => {
         <StEmail>
           <StEmailP>이메일</StEmailP>
           <Stinput
-            type="email"
+            type="text"
             {...register('email', {
               required: '해당 항목은 필수입니다',
               validate: EmailValidation,
@@ -118,7 +150,7 @@ const Signup = () => {
             name="email"
             required
           />
-
+          @{selectbox()}
           {errors.email && (
             <StErrorMsg>
               {errors.email.message || '이메일을 입력해주시기 바랍니다.'}
@@ -126,10 +158,8 @@ const Signup = () => {
           )}
           <StEmailCheckButton>중복확인</StEmailCheckButton>
         </StEmail>
-
         <StBrand>
           <StBrandP>소속명</StBrandP>
-
           <StBrandInput
             type="text"
             {...register('companyName', {
@@ -162,8 +192,8 @@ const Signup = () => {
               {errors.companyNumber.message || '대표 번호가 필요합니다'}
             </StErrorMsg>
           )}
-          <StBrandNumberP>대표 이메일</StBrandNumberP>
-          {/* <StBrandEmailInput
+          {/* <StBrandNumberP>대표 이메일</StBrandNumberP>
+          <StBrandEmailInput
             type="text"
             placeholder="대표 이메일(발신용 이메일)을 입력해주세요"
             {...register('BrandNumber', {
@@ -174,7 +204,6 @@ const Signup = () => {
             required
           /> */}
         </StBrand>
-
         <StPicInfo>
           <h1>담당자 이름</h1>
           <StBrandInput
@@ -195,7 +224,6 @@ const Signup = () => {
               {errors.name.message || '담당자 이름이 필요합니다'}
             </StErrorMsg>
           )}
-
           <StContectNumberInputWrapper>
             <h1>담당자 번호</h1>
             <StBrandInput
@@ -216,7 +244,6 @@ const Signup = () => {
             )}
           </StContectNumberInputWrapper>
         </StPicInfo>
-
         <StPw>
           <StPwP>비밀번호</StPwP>
           <StPwinput
@@ -250,25 +277,22 @@ const Signup = () => {
           />
           {errors.ConfirmPw &&
             errors.ConfirmPw.type === 'required' &&
-            '이 항목을 입력해주세요'}
+            'this field is required'}
           {errors.ConfirmPw &&
             errors.ConfirmPw.type === 'validate' &&
-            '암호가 일치하지 않습니다'}
+            'The Passwords do not matched'}
         </StPw>
-        <StSignupButton onClick={onSubmit}>회원가입</StSignupButton>
+        <StSignupButton type="submit">회원가입</StSignupButton>
         <Link to="/login">이미 계정이 있으신가요? 여기서 로그인 하세요</Link>
       </Wrapper>
     </form>
   );
 };
-
 export default Signup;
-
 const StInputWrapper = styled.div`
   position: relative;
   margin: 10px;
 `;
-
 const StErrorMsg = styled.span`
   position: absolute;
   top: 100%;
@@ -276,7 +300,6 @@ const StErrorMsg = styled.span`
   font-size: 14px;
   color: red;
 `;
-
 const Stinput = styled.input<StInputProps>`
   background: rgba(170, 170, 170, 0.26);
   border-radius: 40px;
@@ -296,7 +319,6 @@ const Stinput = styled.input<StInputProps>`
     border-color: red;
   `}
 `;
-
 const StEmailP = styled.p`
   font-family: 'Roboto';
   font-style: normal;
@@ -308,15 +330,12 @@ const StEmailP = styled.p`
   color: #000000;
   mix-blend-mode: darken;
 `;
-
 const StEmail = styled(StInputWrapper)``;
-
 const StEmailCheckButton = styled.button`
   background: #d3d3d3;
   border-radius: 40px;
   margin: 10px;
 `;
-
 const StBrandP = styled.p`
   font-family: 'Roboto';
   font-style: normal;
@@ -326,13 +345,11 @@ const StBrandP = styled.p`
   color: #000000;
   mix-blend-mode: darken;
 `;
-
 const StBrand = styled.div`
   border: 2px solid;
   text-align: center;
   width: 600px;
 `;
-
 const StBrandInput = styled.input<StInputProps>`
   background: #d3d3d3;
   border-radius: 40px;
@@ -341,7 +358,6 @@ const StBrandInput = styled.input<StInputProps>`
   justify-content: left;
   width: 500px;
 `;
-
 const StBrandNumberInput = styled.input<StInputProps>`
   background: #d3d3d3;
   border-radius: 40px;
@@ -352,13 +368,11 @@ const StBrandNumberInput = styled.input<StInputProps>`
   justify-content: left;
   width: 500px;
 `;
-
 const StContectNumberInputWrapper = styled.div<StInputProps>`
   background: #d3d3d3;
   margin-right: 20px;
   border-color: ${({ hasError }) => (hasError ? 'red' : 'inherit')};
 `;
-
 const StBrandNumberP = styled.p`
   font-family: 'Roboto';
   font-style: normal;
@@ -367,12 +381,10 @@ const StBrandNumberP = styled.p`
   text-align: center;
   color: #000000;
 `;
-
 const StPw = styled(StInputWrapper)`
   width: 600px;
   border: 2px solid;
 `;
-
 const StPwP = styled.p`
   font-family: 'Roboto';
   font-style: normal;
@@ -384,7 +396,6 @@ const StPwP = styled.p`
   color: #000000;
   mix-blend-mode: darken;
 `;
-
 const StPwinput = styled.input<StInputProps>`
   background: #d3d3d3;
   border-radius: 40px;
@@ -408,7 +419,6 @@ const StPwinput = styled.input<StInputProps>`
     border-color: red;
   `}
 `;
-
 const StSignupButton = styled.button`
   background-color: #f57c00;
   color: white;
@@ -424,17 +434,14 @@ const StSignupButton = styled.button`
     background-color: #e65100;
   }
 `;
-
 const StPicInfo = styled.div`
   width: 600px;
   border: 2px solid;
 `;
-
 const StSelect = styled.select`
   width: 43%;
   font-size: 15px;
 `;
-
 const StBrandEmailInput = styled.input`
   background: #d3d3d3;
   border-radius: 40px;

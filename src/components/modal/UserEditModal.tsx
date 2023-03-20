@@ -1,25 +1,29 @@
-import axios from 'axios';
-import React, { useState } from 'react'
-import { useMutation } from 'react-query';
-import styled from 'styled-components'
-import { postClientCreate } from '../../axios/api';
+import axios from "axios";
+import { useState } from "react";
+import styled from "styled-components";
 
 type Props = {
-  title?: string;
-  memo?: string;
+  clientId?: any;
+  clientName?: string;
+  clientContact?: any;
   coin?: number | string;
   closeModal?: () => void;
 };
-const UserCreateModal = ({ title, memo, closeModal }: Props) => {
+const UserEditModal = ({ clientId, clientName, clientContact, closeModal }: Props) => {
 
   // input 추가를 위한 변수들
   
   const initialData = {
-    clientName : '',
-    contact : ''
+    clientName : clientName,
+    contact : clientContact
   }
   const [ data, setData ] = useState(initialData);
 
+  // const { postMutate : any } = useMutation(postClientCreate, {
+  //   onSuccess : () => {
+  //     alert('클라이언트 생성 성공!')
+  //   }
+  // })
   // 입력변화 상태값
   const onChangeHandler = (e:any) => {
     const { name, value } = e.target;
@@ -39,13 +43,14 @@ const UserCreateModal = ({ title, memo, closeModal }: Props) => {
     
     // 빈칸 확인 조건처리
     if ( !(data.clientName === "" && data.contact === "") ) {
-      // 빈칸 없으면 저장 post
-      axios.post('https://dev.sendingo-be.store/api/clients', {
+      // 빈칸 없으면 수정 patch
+      axios.patch(`https://dev.sendingo-be.store/api/clients/${clientId}`, {
       clientName : data.clientName,
       contact : _contact
       });
       alert('저장 성공!')
       closeModal()
+      window.location.reload()
       
     } else {
       alert('빈칸을 채워주세요!')
@@ -57,10 +62,10 @@ const UserCreateModal = ({ title, memo, closeModal }: Props) => {
       <ModalBackGround/>
       <ModalContainer>
         <div>
-          {title}
+          {clientName}
         </div>
         <div>
-          {memo}
+          {clientContact}
         </div>
         <InputContainer>
           <div>
@@ -146,4 +151,4 @@ const ButtonBox = styled.button`
   font-size: 24px;
 `
 
-export default UserCreateModal;
+export default UserEditModal;

@@ -27,30 +27,40 @@ const Router = () => {
   const userInfo = getUser();
   return (
     <BrowserRouter>
-      <Header />
-      <TopNav />
+      {/* <TopNav /> */}
       <AnimatePresence>
         <Routes>
-          {/* <Route element={<TopNav />}> */}
-
-          <Route path="/uploadpage" element={<UploadPage />} />
-          <Route path="/noticepersonallist" element={<NoticePersonalList />} />
-          <Route path="/noticesendcreate" element={<NoticeSendCreate />} />
-          <Route path="/noticesendlist" element={<NoticeSendList />} />
-          <Route path="/userdatacreate" element={<UserDataCreate />} />
-          <Route path="/usergroupcreate" element={<UserGroupCreate />} />
-          <Route path="/usergrouplist" element={<UserGroupList />} />
-          <Route path="/userlist" element={<UserList />} />
-          <Route path="/statistics" element={<Statistics />} />
-          <Route path="/alarmtalk" element={<Alarmtalk />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/email" element={<Email />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/mypage" element={<Mypage />} />
-          <Route path="/splitservicepage" element={<SplitServicePage />} />
-          <Route path="/groupinuserlist/:id" element={<GroupInUserList />} />
-          <Route path="/emailtemplates" element={<EmailTemplates />} />
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<TopNav />}>
+            <Route path="/uploadpage" element={<UploadPage />} />
+            <Route
+              path="/noticepersonallist"
+              element={<NoticePersonalList />}
+            />
+            <Route path="/noticesendcreate" element={<NoticeSendCreate />} />
+            <Route path="/noticesendlist" element={<NoticeSendList />} />
+            <Route path="/userdatacreate" element={<UserDataCreate />} />
+            <Route path="/usergroupcreate" element={<UserGroupCreate />} />
+            <Route path="/usergrouplist" element={<UserGroupList />} />
+            <Route path="/userlist" element={<UserList />} />
+            <Route path="/statistics" element={<Statistics />} />
+            <Route path="/alarmtalk" element={<Alarmtalk />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/email" element={<Email />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/mypage" element={<Mypage />} />
+            <Route path="/splitservicepage" element={<SplitServicePage />} />
+            <Route path="/groupinuserlist/:id" element={<GroupInUserList />} />
+            <Route path="/emailtemplates" element={<EmailTemplates />} />
+          </Route>
+          <Route
+            path="/home"
+            element={
+              <>
+                <Header />
+                <Home />
+              </>
+            }
+          />
         </Routes>
       </AnimatePresence>
     </BrowserRouter>

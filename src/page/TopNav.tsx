@@ -7,6 +7,7 @@ import Accordion from '../components/Accordion';
 const TopNav = () => {
   const Uploadpage = useMatch('/uploadpage');
   const usergrouplist = useMatch('/usergrouplist');
+  const statistics = useMatch('/statistics');
   const Home = useMatch('/');
 
   console.log('Uploadpage : ', Uploadpage);
@@ -33,10 +34,16 @@ const TopNav = () => {
                   {Uploadpage ? (
                     <LiBlue>이메일작성</LiBlue>
                   ) : (
-                    <Li>이메일작성</Li>
+                    <Li>이메일 작성</Li>
                   )}
                 </Link>
-                <Li>전송결과조회</Li>
+                <Link to={'/statistics'}>
+                  {statistics ? (
+                    <LiBlue>전송결과조회</LiBlue>
+                  ) : (
+                    <Li>전송결과조회</Li>
+                  )}
+                </Link>
               </Ul>
             </div>
           }
@@ -107,8 +114,8 @@ const Wrapper = styled.div`
   height: 100vh;
   position: fixed;
   /* left: 0%; */
-  top: 70px;
   background-color: #f2f2f2;
+  z-index: 1;
 `;
 const UserContatiner = styled.div`
   display: flex;

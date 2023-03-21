@@ -151,7 +151,6 @@ function UserGroupList() {
 
   return (
     <motion.div
-      /* 2. 원하는 애니메이션으로 jsx를 감싸준다 */
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -226,7 +225,7 @@ export const Wrapper = styled.div`
   /* justify-content: center; */
   height: 100vh;
   padding-top: 70px;
-  padding-left: 200px;
+  padding-left: 250px;
   /* gap: 30px; */
   background-color: yellow;
 `;

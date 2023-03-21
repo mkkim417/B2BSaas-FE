@@ -118,10 +118,10 @@ function UploadPage() {
         if (refatoringFunc(keyData, '이름') === false) return;
         if (refatoringFunc(keyData, '전화번호') === false) return;
         if (refatoringFunc(keyData, '이메일') === false) return;
-        console.log('rows : ', rows);
-        console.log('jsonData : ', jsonData);
-        console.log('pareData : ', pareData);
-        console.log('keyData : ', keyData);
+        // console.log('rows : ', rows);
+        // console.log('jsonData : ', jsonData);
+        // console.log('pareData : ', pareData);
+        // console.log('keyData : ', keyData);
         setKeyData(keyData);
         setData(pareData);
       });
@@ -129,16 +129,18 @@ function UploadPage() {
     reader.readAsBinaryString(input.files[0]);
   }
   const ClentBulkFetch = async () => {
-    let data = [
-      {
-        clientName: '박연진',
-        contact: '01012341234',
-        clientEmail: 'test@naver.com',
-      },
-    ];
+    let totalData = [] as any;
+    isData.map((el: any) =>
+      totalData.push({
+        clientName: `${el.이름}`,
+        contact: `${el.전화번호.replace(/-/gi, '')}`,
+        clientEmail: `${el.이메일}`,
+      })
+    );
+    console.log(totalData);
     try {
       const response = await axios
-        .post(`https://dev.sendingo-be.store/api/clients/bulk`, data)
+        .post(`https://dev.sendingo-be.store/api/clients/bulk`, totalData)
         .then((res) => {
           console.log(res);
         });
@@ -205,7 +207,7 @@ function UploadPage() {
                           </Td>
                         ) : null}
                         {isKeyData.map((li: any, idx: number) =>
-                          el[li].includes('-') ? (
+                          el[li].includes('-') && li === '전화번호' ? (
                             el[li].replace(/-/gi, '')
                           ) : (
                             <Td key={idx}>{el[li]}</Td>
@@ -244,8 +246,8 @@ function UploadPage() {
             {!isOpen ? (
               <Button
                 onClick={() => {
-                  NextBtnHandler(isData, isKeyData);
-                  // ClentBulkFetch();
+                  // NextBtnHandler(isData, isKeyData);
+                  ClentBulkFetch();
                 }}
               >
                 다음

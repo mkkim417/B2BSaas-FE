@@ -30,7 +30,6 @@ const Router = () => {
       <Routes>
         {/* <Route element={<TopNav />}> */}
 
-        <Route path="/" element={<Home />} />
         <Route path="/uploadpage" element={<UploadPage />} />
         <Route path="/noticepersonallist" element={<NoticePersonalList />} />
         <Route path="/noticesendcreate" element={<NoticeSendCreate />} />
@@ -48,6 +47,7 @@ const Router = () => {
         <Route path="/splitservicepage" element={<SplitServicePage />} />
         <Route path="/groupinuserlist/:id" element={<GroupInUserList />} />
         <Route path="/emailtemplates" element={<EmailTemplates />} />
+        <Route path="/" element={<Home />} />
       </Routes>
     </BrowserRouter>
   );

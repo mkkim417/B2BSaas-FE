@@ -118,7 +118,10 @@ function UploadPage() {
         if (refatoringFunc(keyData, '이름') === false) return;
         if (refatoringFunc(keyData, '전화번호') === false) return;
         if (refatoringFunc(keyData, '이메일') === false) return;
-
+        console.log('rows : ', rows);
+        console.log('jsonData : ', jsonData);
+        console.log('pareData : ', pareData);
+        console.log('keyData : ', keyData);
         setKeyData(keyData);
         setData(pareData);
       });
@@ -201,9 +204,13 @@ function UploadPage() {
                             />
                           </Td>
                         ) : null}
-                        {isKeyData.map((li: any, idx: number) => (
-                          <Td key={idx}>{el[li]}</Td>
-                        ))}
+                        {isKeyData.map((li: any, idx: number) =>
+                          el[li].includes('-') ? (
+                            el[li].replace(/-/gi, '')
+                          ) : (
+                            <Td key={idx}>{el[li]}</Td>
+                          )
+                        )}
                       </tr>
                     ))}
                 </tbody>

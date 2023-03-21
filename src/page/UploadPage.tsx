@@ -7,6 +7,8 @@ import { useDispatch } from 'react-redux';
 import { sendListCreate } from '../redux/modules/sendList';
 import { sendKeyCreate } from '../redux/modules/sendKey';
 import { sendGroupNameCreate } from '../redux/modules/sendGroupName';
+import { motion } from 'framer-motion';
+import axios from 'axios';
 interface IData {
   id: number;
   name: string;
@@ -82,6 +84,21 @@ function UploadPage() {
     },
     [checkedList]
   );
+  const DummyDeleteFuction = () => {
+    onClearAttachment();
+    setData(false);
+    setGroupName('');
+    setOpen(false);
+    setKeyData('');
+    setCheckedList([]);
+  };
+  const refatoringFunc = (keyData: string[], name: string) => {
+    if (keyData.includes(`${name}`) === false) {
+      DummyDeleteFuction();
+      alert(`${name} 값은 필수입니다.`);
+      return false;
+    }
+  };
   //엑셀읽는함수
   function readExcel(event: any) {
     let input = event.target;
@@ -98,12 +115,43 @@ function UploadPage() {
         const jsonData = JSON.stringify(rows);
         const pareData = JSON.parse(jsonData);
         const keyData = Object.keys(pareData[0]);
+        if (refatoringFunc(keyData, '이름') === false) return;
+        if (refatoringFunc(keyData, '전화번호') === false) return;
+        if (refatoringFunc(keyData, '이메일') === false) return;
+        // console.log('rows : ', rows);
+        // console.log('jsonData : ', jsonData);
+        // console.log('pareData : ', pareData);
+        // console.log('keyData : ', keyData);
         setKeyData(keyData);
         setData(pareData);
       });
     };
     reader.readAsBinaryString(input.files[0]);
   }
+  const ClentBulkFetch = async () => {
+    let totalData = [] as any;
+    isData.map((el: any) =>
+      totalData.push({
+        clientName: `${el.이름}`,
+        contact: `${el.전화번호.replace(/-/gi, '')}`,
+        clientEmail: `${el.이메일}`,
+      })
+    );
+    console.log(totalData);
+    try {
+      const response = await axios
+        .post(`https://dev.sendingo-be.store/api/clients/bulk`, totalData)
+        .then((res) => {
+          console.log(res);
+        });
+      console.log(response);
+      alert('전송완료');
+      // navigate('/');
+    } catch (error) {
+      console.log(error);
+      // alert('다시 시도해주시기 바랍니다.');
+    }
+  };
   // console.log('csv넣은대상', isData)
   // console.log('취소된대상:', checkedList)
   // console.log(
@@ -111,89 +159,104 @@ function UploadPage() {
   //   isData && isData.filter((x: any) => !checkedList.includes(x))
   // )
   return (
-    <Wrapper>
-      <ContentsWrap>
-        <TopContents>
-          <Input
-            type="text"
-            placeholder="그룹명"
-            value={isGroupName}
-            onChange={groupName}
-          />
-          <InputFile
-            type="file"
-            accept=".csv,.xlsx"
-            onChange={readExcel}
-            ref={fileInput}
-          ></InputFile>
-        </TopContents>
-        {isData && isData ? (
-          <MapWrapper>
-            <Table>
-              <thead style={{ fontWeight: 'bold', fontSize: '18px' }}>
-                <tr>
-                  {isOpen && isOpen ? <th>선택</th> : null}
-                  {isKeyData &&
-                    isKeyData.map((li: any, idx: number) => (
-                      <th key={idx}>{li}</th>
-                    ))}
-                </tr>
-              </thead>
-              <tbody style={{ textAlign: 'center' }}>
-                {isData &&
-                  isData.map((el: any, idx: number) => (
-                    <tr key={idx}>
-                      {isOpen && isOpen ? (
-                        <Td>
-                          <input
-                            type="checkbox"
-                            key={idx}
-                            checked={checkedList.includes(el)}
-                            onChange={(e) => checkHandler(e, el)}
-                          />
-                        </Td>
-                      ) : null}
-                      {isKeyData.map((li: any, idx: number) => (
-                        <Td key={idx}>{el[li]}</Td>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <Wrapper>
+        <ContentsWrap>
+          <TopContents>
+            <Input
+              type="text"
+              placeholder="그룹명"
+              value={isGroupName}
+              onChange={groupName}
+            />
+            <InputFile
+              type="file"
+              accept=".csv,.xlsx"
+              onChange={readExcel}
+              ref={fileInput}
+            ></InputFile>
+          </TopContents>
+          {isData && isData ? (
+            <MapWrapper>
+              <Table>
+                <thead style={{ fontWeight: 'bold', fontSize: '18px' }}>
+                  <tr>
+                    {isOpen && isOpen ? <th>선택</th> : null}
+                    {isKeyData &&
+                      isKeyData.map((li: any, idx: number) => (
+                        <th key={idx}>{li}</th>
                       ))}
-                    </tr>
-                  ))}
-              </tbody>
-            </Table>
-          </MapWrapper>
-        ) : (
-          //   <Pagination page={activePage} onChange={setPage} total={total} />
-          <BottomContents>
-            <div>생성된 고객이 없습니다. CSV 파일을 넣어주세요.</div>
-          </BottomContents>
-        )}
-        <BtnWrap>
-          {!isOpen ? (
-            <Button onClick={() => setOpen((prev) => !prev) as any}>
-              선택삭제
+                  </tr>
+                </thead>
+                <tbody style={{ textAlign: 'center' }}>
+                  {isData &&
+                    isData.map((el: any, idx: number) => (
+                      <tr key={idx}>
+                        {isOpen && isOpen ? (
+                          <Td>
+                            <input
+                              type="checkbox"
+                              key={idx}
+                              checked={checkedList.includes(el)}
+                              onChange={(e) => checkHandler(e, el)}
+                            />
+                          </Td>
+                        ) : null}
+                        {isKeyData.map((li: any, idx: number) =>
+                          el[li].includes('-') && li === '전화번호' ? (
+                            el[li].replace(/-/gi, '')
+                          ) : (
+                            <Td key={idx}>{el[li]}</Td>
+                          )
+                        )}
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
+            </MapWrapper>
+          ) : (
+            //   <Pagination page={activePage} onChange={setPage} total={total} />
+            <BottomContents>
+              <div>생성된 고객이 없습니다. CSV 파일을 넣어주세요.</div>
+            </BottomContents>
+          )}
+          <BtnWrap>
+            {!isOpen ? (
+              <Button onClick={() => setOpen((prev) => !prev) as any}>
+                선택삭제
+              </Button>
+            ) : null}
+            <Button
+              onClick={() => [
+                onClearAttachment(),
+                setData(false),
+                setGroupName(''),
+                setOpen(false),
+                setKeyData(''),
+                setCheckedList([]),
+              ]}
+            >
+              취소
             </Button>
-          ) : null}
-          <Button
-            onClick={() => [
-              onClearAttachment(),
-              setData(false),
-              setGroupName(''),
-              setOpen(false),
-              setKeyData(''),
-              setCheckedList([]),
-            ]}
-          >
-            취소
-          </Button>
-          {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
-          {!isOpen ? (
-            <Button onClick={() => NextBtnHandler(isData, isKeyData)}>
-              다음
-            </Button>
-          ) : null}
-        </BtnWrap>
-      </ContentsWrap>
-    </Wrapper>
+            {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
+            {!isOpen ? (
+              <Button
+                onClick={() => {
+                  // NextBtnHandler(isData, isKeyData);
+                  ClentBulkFetch();
+                }}
+              >
+                다음
+              </Button>
+            ) : null}
+          </BtnWrap>
+        </ContentsWrap>
+      </Wrapper>
+    </motion.div>
   );
 }
 
@@ -240,7 +303,6 @@ const Input = styled.input`
 `;
 const Wrapper = styled.div`
   padding-left: 200px;
-  margin-top: 60px;
   display: flex;
   gap: 30px;
   justify-content: center;

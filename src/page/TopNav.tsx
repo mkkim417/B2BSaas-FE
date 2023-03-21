@@ -1,10 +1,17 @@
 import React from 'react';
 import { Outlet } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, useMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import Accordion from '../components/Accordion';
 
 const TopNav = () => {
+  const Uploadpage = useMatch('/uploadpage');
+  const usergrouplist = useMatch('/usergrouplist');
+  const statistics = useMatch('/statistics');
+  const Home = useMatch('/');
+
+  console.log('Uploadpage : ', Uploadpage);
+  console.log('Home : ', Home);
   return (
     <>
       {/* <Header>
@@ -15,27 +22,50 @@ const TopNav = () => {
           <UserButton>마이페이지</UserButton>
           <UserButton>로그아웃</UserButton>
         </UserContatiner>
+        <Link to={'/'}>
+          <Accordion title="이용현황" />
+        </Link>
         <Accordion
-          title="SendingGo"
+          title="이메일전송"
           contents={
             <div>
               <Ul>
-                <Li>Mneu1</Li>
-                <Li>Mneu2</Li>
-                <Li>Mneu3</Li>
+                <Link to={'/uploadpage'}>
+                  {Uploadpage ? (
+                    <LiBlue>이메일작성</LiBlue>
+                  ) : (
+                    <Li>이메일 작성</Li>
+                  )}
+                </Link>
+                <Link to={'/statistics'}>
+                  {statistics ? (
+                    <LiBlue>전송결과조회</LiBlue>
+                  ) : (
+                    <Li>전송결과조회</Li>
+                  )}
+                </Link>
               </Ul>
             </div>
           }
         />
-        <Link to={'/'}>
-          <Accordion title="Home" />
-        </Link>
-        <Link to={'/usergrouplist'}>
-          <Accordion title="usergrouplist" />
-        </Link>
-        <Link to={'/userlist'}>
-          <Accordion title="User" />
-        </Link>
+        <Accordion
+          title="고객관리"
+          contents={
+            <div>
+              <Ul>
+                <Li>고객등록</Li>
+                <Link to={'/usergrouplist'}>
+                  {usergrouplist ? (
+                    <LiBlue>그룹관리</LiBlue>
+                  ) : (
+                    <Li>그룹관리</Li>
+                  )}
+                  <Li>그룹관리</Li>
+                </Link>
+              </Ul>
+            </div>
+          }
+        />
         <Link to={'/uploadpage'}>
           <Accordion title="대량발송" />
         </Link>
@@ -62,6 +92,9 @@ const Li = styled.li`
   padding: 10px 0px;
   color: #909090;
 `;
+const LiBlue = styled(Li)`
+  color: #007bff;
+`;
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -81,8 +114,8 @@ const Wrapper = styled.div`
   height: 100vh;
   position: fixed;
   /* left: 0%; */
-  top: 70px;
   background-color: #f2f2f2;
+  z-index: 1;
 `;
 const UserContatiner = styled.div`
   display: flex;

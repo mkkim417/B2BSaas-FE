@@ -143,8 +143,8 @@ function Alarmtalk() {
           <Button onClick={() => navigate(-1)}>취소</Button>
           <Button
             onClick={() => {
-              //setAutoModal((prev) => !prev);
-              kakaoSaveFetch();
+              setAutoModal((prev) => !prev);
+              // kakaoSaveFetch();
             }}
           >
             다음

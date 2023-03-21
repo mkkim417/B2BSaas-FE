@@ -8,6 +8,7 @@ import { sendListCreate } from '../redux/modules/sendList';
 import { sendKeyCreate } from '../redux/modules/sendKey';
 import { sendGroupNameCreate } from '../redux/modules/sendGroupName';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 interface IData {
   id: number;
   name: string;
@@ -83,6 +84,21 @@ function UploadPage() {
     },
     [checkedList]
   );
+  const DummyDeleteFuction = () => {
+    onClearAttachment();
+    setData(false);
+    setGroupName('');
+    setOpen(false);
+    setKeyData('');
+    setCheckedList([]);
+  };
+  const refatoringFunc = (keyData: string[], name: string) => {
+    if (keyData.includes(`${name}`) === false) {
+      DummyDeleteFuction();
+      alert(`${name} 값은 필수입니다.`);
+      return false;
+    }
+  };
   //엑셀읽는함수
   function readExcel(event: any) {
     let input = event.target;
@@ -99,12 +115,38 @@ function UploadPage() {
         const jsonData = JSON.stringify(rows);
         const pareData = JSON.parse(jsonData);
         const keyData = Object.keys(pareData[0]);
+        if (refatoringFunc(keyData, '이름') === false) return;
+        if (refatoringFunc(keyData, '전화번호') === false) return;
+        if (refatoringFunc(keyData, '이메일') === false) return;
+
         setKeyData(keyData);
         setData(pareData);
       });
     };
     reader.readAsBinaryString(input.files[0]);
   }
+  const ClentBulkFetch = async () => {
+    let data = [
+      {
+        clientName: '박연진',
+        contact: '01012341234',
+        clientEmail: 'test@naver.com',
+      },
+    ];
+    try {
+      const response = await axios
+        .post(`https://dev.sendingo-be.store/api/clients/bulk`, data)
+        .then((res) => {
+          console.log(res);
+        });
+      console.log(response);
+      alert('전송완료');
+      // navigate('/');
+    } catch (error) {
+      console.log(error);
+      // alert('다시 시도해주시기 바랍니다.');
+    }
+  };
   // console.log('csv넣은대상', isData)
   // console.log('취소된대상:', checkedList)
   // console.log(
@@ -193,7 +235,12 @@ function UploadPage() {
             </Button>
             {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
             {!isOpen ? (
-              <Button onClick={() => NextBtnHandler(isData, isKeyData)}>
+              <Button
+                onClick={() => {
+                  NextBtnHandler(isData, isKeyData);
+                  // ClentBulkFetch();
+                }}
+              >
                 다음
               </Button>
             ) : null}

@@ -45,7 +45,7 @@ const CotentsTxt = styled.div`
   gap: 10px;
 `;
 const VideoBox = styled.video`
-  width: 300px;
+  width: 500px;
   height: 300px;
 `;
 export default Home;

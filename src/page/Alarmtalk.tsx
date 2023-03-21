@@ -43,23 +43,25 @@ function Alarmtalk() {
   };
 
   const kakaoSaveFetch = async () => {
-    const data = {
-      clientId: 99,
-      organizationName: '센딩고',
-      orderNumber: '10230192393',
-      region: '항해99배위',
-      regionDetail: '101호실',
-      deliveryDate: '2023-03-21',
-      paymentPrice: 50000,
-      deliveryCompany: '항해택배',
-      deliveryTime: '오후 5시 30분경',
-      deliveryNumber: '항해-12039123090',
-      templateCode: 'TM_2048',
-    };
+    const data = [
+      {
+        clientId: 1,
+        organizationName: '센딩고',
+        orderNumber: '10230192393',
+        region: '항해99배위',
+        regionDetail: '101호실',
+        deliveryDate: '2023-03-21',
+        paymentPrice: 50000,
+        deliveryCompany: '항해택배',
+        deliveryTime: '오후 5시 30분경',
+        deliveryNumber: '항해-12039123090',
+        templateCode: 'TM_2048',
+      },
+    ];
     console.log(data);
     try {
       const response = await axios
-        .post(`https://dev.sendingo-be.store/api/talk/contents`, data)
+        .post(`https://dev.sendingo-be.store/api/talk/contents`, { data })
         .then((res) => {
           console.log(res);
         });

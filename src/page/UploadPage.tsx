@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { sendListCreate } from '../redux/modules/sendList';
 import { sendKeyCreate } from '../redux/modules/sendKey';
 import { sendGroupNameCreate } from '../redux/modules/sendGroupName';
+import { motion } from 'framer-motion';
 interface IData {
   id: number;
   name: string;
@@ -111,89 +112,96 @@ function UploadPage() {
   //   isData && isData.filter((x: any) => !checkedList.includes(x))
   // )
   return (
-    <Wrapper>
-      <ContentsWrap>
-        <TopContents>
-          <Input
-            type="text"
-            placeholder="그룹명"
-            value={isGroupName}
-            onChange={groupName}
-          />
-          <InputFile
-            type="file"
-            accept=".csv,.xlsx"
-            onChange={readExcel}
-            ref={fileInput}
-          ></InputFile>
-        </TopContents>
-        {isData && isData ? (
-          <MapWrapper>
-            <Table>
-              <thead style={{ fontWeight: 'bold', fontSize: '18px' }}>
-                <tr>
-                  {isOpen && isOpen ? <th>선택</th> : null}
-                  {isKeyData &&
-                    isKeyData.map((li: any, idx: number) => (
-                      <th key={idx}>{li}</th>
-                    ))}
-                </tr>
-              </thead>
-              <tbody style={{ textAlign: 'center' }}>
-                {isData &&
-                  isData.map((el: any, idx: number) => (
-                    <tr key={idx}>
-                      {isOpen && isOpen ? (
-                        <Td>
-                          <input
-                            type="checkbox"
-                            key={idx}
-                            checked={checkedList.includes(el)}
-                            onChange={(e) => checkHandler(e, el)}
-                          />
-                        </Td>
-                      ) : null}
-                      {isKeyData.map((li: any, idx: number) => (
-                        <Td key={idx}>{el[li]}</Td>
+    <motion.div
+      /* 2. 원하는 애니메이션으로 jsx를 감싸준다 */
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <Wrapper>
+        <ContentsWrap>
+          <TopContents>
+            <Input
+              type="text"
+              placeholder="그룹명"
+              value={isGroupName}
+              onChange={groupName}
+            />
+            <InputFile
+              type="file"
+              accept=".csv,.xlsx"
+              onChange={readExcel}
+              ref={fileInput}
+            ></InputFile>
+          </TopContents>
+          {isData && isData ? (
+            <MapWrapper>
+              <Table>
+                <thead style={{ fontWeight: 'bold', fontSize: '18px' }}>
+                  <tr>
+                    {isOpen && isOpen ? <th>선택</th> : null}
+                    {isKeyData &&
+                      isKeyData.map((li: any, idx: number) => (
+                        <th key={idx}>{li}</th>
                       ))}
-                    </tr>
-                  ))}
-              </tbody>
-            </Table>
-          </MapWrapper>
-        ) : (
-          //   <Pagination page={activePage} onChange={setPage} total={total} />
-          <BottomContents>
-            <div>생성된 고객이 없습니다. CSV 파일을 넣어주세요.</div>
-          </BottomContents>
-        )}
-        <BtnWrap>
-          {!isOpen ? (
-            <Button onClick={() => setOpen((prev) => !prev) as any}>
-              선택삭제
+                  </tr>
+                </thead>
+                <tbody style={{ textAlign: 'center' }}>
+                  {isData &&
+                    isData.map((el: any, idx: number) => (
+                      <tr key={idx}>
+                        {isOpen && isOpen ? (
+                          <Td>
+                            <input
+                              type="checkbox"
+                              key={idx}
+                              checked={checkedList.includes(el)}
+                              onChange={(e) => checkHandler(e, el)}
+                            />
+                          </Td>
+                        ) : null}
+                        {isKeyData.map((li: any, idx: number) => (
+                          <Td key={idx}>{el[li]}</Td>
+                        ))}
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
+            </MapWrapper>
+          ) : (
+            //   <Pagination page={activePage} onChange={setPage} total={total} />
+            <BottomContents>
+              <div>생성된 고객이 없습니다. CSV 파일을 넣어주세요.</div>
+            </BottomContents>
+          )}
+          <BtnWrap>
+            {!isOpen ? (
+              <Button onClick={() => setOpen((prev) => !prev) as any}>
+                선택삭제
+              </Button>
+            ) : null}
+            <Button
+              onClick={() => [
+                onClearAttachment(),
+                setData(false),
+                setGroupName(''),
+                setOpen(false),
+                setKeyData(''),
+                setCheckedList([]),
+              ]}
+            >
+              취소
             </Button>
-          ) : null}
-          <Button
-            onClick={() => [
-              onClearAttachment(),
-              setData(false),
-              setGroupName(''),
-              setOpen(false),
-              setKeyData(''),
-              setCheckedList([]),
-            ]}
-          >
-            취소
-          </Button>
-          {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
-          {!isOpen ? (
-            <Button onClick={() => NextBtnHandler(isData, isKeyData)}>
-              다음
-            </Button>
-          ) : null}
-        </BtnWrap>
-      </ContentsWrap>
-    </Wrapper>
+            {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
+            {!isOpen ? (
+              <Button onClick={() => NextBtnHandler(isData, isKeyData)}>
+                다음
+              </Button>
+            ) : null}
+          </BtnWrap>
+        </ContentsWrap>
+      </Wrapper>
+    </motion.div>
   );
 }
 

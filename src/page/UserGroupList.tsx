@@ -125,17 +125,16 @@ function UserGroupList() {
     // 선택 삭제하기 전 한번 더 cofirm창
     if (window.confirm('해당 그룹들을 삭제하시겠습니까?')) {
       // 확인을 눌렀을 때
-      alert('삭제가 완료되었습니다.');
-      // const urls = checkedArr.map((groupId) => `http://localhost:4000/grouplist/${groupId}`)
-      // console.log(urls)
-      // axios.all(urls.map(url => axios.delete(url)))
-      //   .then(response => {
-      //     console.log(response)
-      //     alert('삭제가 완료되었습니다')
-      //   }).catch(error => {
-      //     console.log(error.response)
-      //     alert('삭제를 실패하였습니다.')
-      //   })
+      const urls = checkedArr.map((groupId) => `https://dev.sendingo-be.store/api/groups/${groupId}`)
+      console.log(urls)
+      axios.all(urls.map(url => axios.delete(url)))
+        .then(response => {
+          console.log(response)
+          alert('삭제가 완료되었습니다')
+        }).catch(error => {
+          console.log(error.response)
+          alert('삭제를 실패하였습니다.')
+        })
     } else {
       // confirm창에서 취소를 눌렀을 때 아무일도 발생하지 않는다.
     }

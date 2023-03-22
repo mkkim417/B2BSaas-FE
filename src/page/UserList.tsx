@@ -119,6 +119,7 @@ function UserList() {
   // 페이지 렌더링하자마자 데이터 get
   useEffect(() => {
     getUserData();
+    console.log('api', getUserData())
 
     // setCount(userList.length);
     setIndexOfLastPost(currentPage * postPerPage);

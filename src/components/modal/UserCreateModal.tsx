@@ -1,8 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react'
-import { useMutation } from 'react-query';
 import styled from 'styled-components'
-import { postClientCreate } from '../../axios/api';
 
 type Props = {
   title?: string;
@@ -16,6 +14,7 @@ const UserCreateModal = ({ title, memo, closeModal }: Props) => {
   
   const initialData = {
     clientName : '',
+    clientEmail: '',
     contact : ''
   }
   const [ data, setData ] = useState(initialData);
@@ -40,8 +39,9 @@ const UserCreateModal = ({ title, memo, closeModal }: Props) => {
     // 빈칸 확인 조건처리
     if ( !(data.clientName === "" && data.contact === "") ) {
       // 빈칸 없으면 저장 post
-      axios.post('https://dev.sendingo-be.store/api/clients', {
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/clients`, {
       clientName : data.clientName,
+      clientEmail : data.clientEmail,
       contact : _contact
       });
       alert('저장 성공!')
@@ -77,6 +77,13 @@ const UserCreateModal = ({ title, memo, closeModal }: Props) => {
               name="contact"
               value={data.contact}
               placeholder="연락처"
+              onChange={onChangeHandler}/>
+          </div>
+          <div>이메일
+            <input 
+              name="clientEmail"
+              value={data.clientEmail}
+              placeholder="이메일"
               onChange={onChangeHandler}/>
           </div>
         </InputContainer>

@@ -22,6 +22,8 @@ import SplitServicePage from '../page/SplitServicePage';
 import EmailTemplates from '../page/EmailTemplates';
 import { motion } from 'framer-motion';
 import { AnimatePresence } from 'framer-motion';
+import SingleUserCreate from '../page/SingleUserCreate';
+import ClientRegistration from '../page/ClientRegistration';
 
 const Router = () => {
   const userInfo = getUser();
@@ -51,6 +53,9 @@ const Router = () => {
             <Route path="/splitservicepage" element={<SplitServicePage />} />
             <Route path="/groupinuserlist/:id" element={<GroupInUserList />} />
             <Route path="/emailtemplates" element={<EmailTemplates />} />
+            <Route path="/singleusercreate" element={<SingleUserCreate />} />
+            <Route path="/clientregistration" element={<ClientRegistration />} />
+
           </Route>
           <Route
             path="/home"

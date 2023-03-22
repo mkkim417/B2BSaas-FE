@@ -10,6 +10,9 @@ const TopNav = () => {
   const statistics = useMatch('/statistics');
   const Home = useMatch('/');
 
+  const clientCreate = useMatch('/singleusercreate');
+  const clientRegistration = useMatch('/clientregistration')
+
   console.log('Uploadpage : ', Uploadpage);
   console.log('Home : ', Home);
   return (
@@ -53,14 +56,20 @@ const TopNav = () => {
           contents={
             <div>
               <Ul>
-                <Li>고객등록</Li>
+                <Link to={'/clientRegistration'}>
+                  {clientRegistration ? (
+                    <LiBlue>고객등록</LiBlue>
+                  ) : (
+                    <Li>고객등록</Li>
+                  )}
+                </Link>
                 <Link to={'/usergrouplist'}>
                   {usergrouplist ? (
                     <LiBlue>그룹관리</LiBlue>
                   ) : (
                     <Li>그룹관리</Li>
                   )}
-                  <Li>그룹관리</Li>
+                  {/* <Li>그룹관리</Li> */}
                 </Link>
               </Ul>
             </div>

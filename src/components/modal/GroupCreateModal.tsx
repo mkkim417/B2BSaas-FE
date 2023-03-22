@@ -12,6 +12,22 @@ type Props = {
 };
 const GroupCreateModal = ({ title, memo, coin, closeModal }: Props) => {
 
+  // group input 변수들
+  const initialData = {
+    groupName : '',
+    groupDescription : ''
+  }
+  const [ data, setData ] = useState(initialData);
+
+  // 입력변화 상태값
+  const onChangeHandler = (e:any) => {
+    const { name, value } = e.target;
+    setData({
+      ...data,
+      [name]: value,
+    });
+  };
+  
   // 유저리스트 데이터 state
   const [ userList, setUserList ] = useState([] as any)
 
@@ -95,8 +111,17 @@ const GroupCreateModal = ({ title, memo, coin, closeModal }: Props) => {
   
   // submit button handler
   const submitHandler = async (e:any, closeModal : any) => {
+    alert(`groupName : ${data.groupName}, groupDes : ${data.groupDescription}`)
     // e.preventDefault();
-    alert('저장!')
+    // alert('저장!')
+    if (!(data.groupName === "")) {
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/groups`, data)
+
+      alert('저장 성공!')
+      closeModal()
+    } else {
+      alert('그룹명을 입력해주세요.')
+    }
   }
 
   // 검색필터 useEffect
@@ -128,17 +153,27 @@ const GroupCreateModal = ({ title, memo, coin, closeModal }: Props) => {
               {title}
             </LineContainer>
             <LineContainer height="25%" position="center" bc="purple">
-              그룹명 : <input placeholder='그룹명'/>
+              그룹명 : <input
+                name="groupName"
+                type="text"
+                value={data.groupName}
+                placeholder='그룹명'
+                onChange={onChangeHandler}/>
             </LineContainer>
             <LineContainer height="25%" position="center" bc="green">
-              그룹설명 : <input placeholder='그룹설명'/>
+              그룹설명 : <input 
+                name="groupDescription"
+                type="text"
+                value={data.groupDescription}
+                placeholder='그룹설명'
+                onChange={onChangeHandler}/>
             </LineContainer>
             <LineContainer height="25%" position="end" bc="skyblue">
                예정 등록인원 : {checkedArr.length} 명
               <input placeholder='검색' onChange={inputChange}/>
             </LineContainer>
           </ContentHeader>
-          <ContentBody>
+          {/* <ContentBody>
             <BodyHeader>
               <BodyHeaderPercentage width="15%">전체 체크
                 <input 
@@ -168,7 +203,7 @@ const GroupCreateModal = ({ title, memo, coin, closeModal }: Props) => {
           )
         }
             </BodyContent>
-          </ContentBody>
+          </ContentBody> */}
         </ContentContainer>
         <PagingContainer>
           <PaginationBox>

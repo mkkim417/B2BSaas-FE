@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Wrapper } from './Home';
+// import { Wrapper } from './Home';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
@@ -12,11 +12,10 @@ interface FormValues {
   ConfirmPw: string;
   companyName: string;
   companyNumber: string;
+  companyEmail: string;
   name?: string;
   phoneNumber: string;
   role: number;
-  emailPrefix: string;
-  emailSuffix: string;
 }
 
 interface Option {
@@ -38,10 +37,9 @@ interface StInputProps {
 }
 
 const Signup = () => {
-  const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [isEmailChecked, setIsEmailChecked] = useState(false);
+
   const [directInput, setDirectInput] = useState(false);
 
   const {
@@ -52,18 +50,18 @@ const Signup = () => {
   } = useForm<FormValues>({
     mode: 'onChange',
   });
+
   const [formData, setFormData] = useState<FormValues>({
     email: '',
-    emailProvider: '',
+    emailProvider: 'gmail.com',
     password: '',
     ConfirmPw: '',
     companyName: '',
     companyNumber: '',
+    companyEmail: '',
     name: '',
     phoneNumber: '',
-    role: 0,
-    emailPrefix: '',
-    emailSuffix: '',
+    role: 1,
   });
 
   const Password = useRef<string>();
@@ -77,12 +75,34 @@ const Signup = () => {
     return emailRegex.test(fullEmail) ? true : '올바른 주소를 입력하세요';
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    if (name === 'email') {
+      setFormData({
+        ...formData,
+        email: value,
+      });
+    } else if (name === 'emailProvider') {
+      setFormData({
+        ...formData,
+        emailProvider: value,
+        email: formData.email + '@' + value,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const emailProvider = e.target.value;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      emailProvider,
     });
-    if (e.target.value === 'direct') {
+    if (emailProvider === 'direct') {
       setDirectInput(true);
     } else {
       setDirectInput(false);
@@ -98,55 +118,55 @@ const Signup = () => {
     );
   };
   const nameRegex = /^[a-zA-Z ]+$/;
-  const onSubmit = async (data: any) => {
-    console.log(data);
+
+  const onSubmit = async (data: FormValues) => {
+    // console.log(data);
 
     if (!isValid) {
-      setAlertMessage('모든 항목을 입력하세요');
+      setAlertMessage('모든 항목을 입력하시길 바랍니다');
       return;
     }
-    if (!isEmailChecked) {
-      setAlertMessage('이메일 중복확인을 해주세요.');
-      return;
-    }
-    try {
-      const response = await axios
-        .post('https://dev.sendingo-be.store/api/users/signup', data)
-        .then((res) => {
-          console.log(res);
-        });
-      console.log(response);
-    } catch (error: any) {
-      // console.error('Error during axios call', error);
-      // if (error.response) {
-      //   console.error('API Response Error:', error.response);
-      // } else if (error.request) {
-      //   console.error('No API Response:', error.request);
-      // } else {
-      //   console.error('API Request Error:', error.message);
-      // }
-      // setAlertMessage('Registration failed.');
-      // alert('Login failed.');
-    }
-  };
 
-  const handleDuplicateCheck = async () => {
-    try {
-      const response = await axios.post(
-        `https://dev.sendingo-be.store/api/users/signup/existemail`,
-        { email: formData.email }
-      );
+    const email = `${data.email}@${formData.emailProvider}`;
+    const email2 = `${data.companyEmail}@${formData.emailProvider}`;
 
-      if (response.data.exists) {
-        setAlertMessage('해당 이메일은 사용중인 이메일입니다.');
-      } else {
-        setAlertMessage('사용가능한 이메일 주소입니다.');
-        setIsEmailChecked(true);
-      }
-    } catch (error) {
-      console.error('이메일 중복 확인에 실패하셨습니다', error);
-      setAlertMessage('이메일 중복 확인에 실패하셨습니다');
-    }
+    const requestBody = {
+      email: EmailValidation(formData.email, formData),
+      password: data.password,
+      name: data.name,
+      phoneNumber: data.phoneNumber,
+      companyName: data.companyName,
+      companyNumber: data.companyNumber,
+      role: 1,
+    };
+    const sendEmail = email + formData.email;
+    const sendEmail2 = email2 + formData.companyEmail;
+
+    await axios.post('https://dev.sendingo-be.store/api/users/signup', {
+      email: sendEmail,
+      password: data.password,
+      name: data.name,
+      phoneNumber: data.phoneNumber,
+      companyName: data.companyName,
+      companyNumber: data.companyNumber,
+      companyEmail: sendEmail2,
+      role: '1',
+    });
+    // try {
+    //   const response = console.log(response);
+    // } catch (error: any) {
+    //   console.error(error);
+
+    // console.error('Error during axios call', error);
+    // if (error.response) {
+    //   console.error('API Response Error:', error.response);
+    // } else if (error.request) {
+    //   console.error('No API Response:', error.request);
+    // } else {
+    //   console.error('API Request Error:', error.message);
+    // }
+    // setAlertMessage('Registration failed.');
+    // alert('Login failed.');
   };
 
   return (
@@ -155,67 +175,59 @@ const Signup = () => {
         {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
         {alertMessage && <p>{alertMessage}</p>}
         <StEmail>
-          <StEmailP>Email</StEmailP>
-          {formData.emailProvider === 'direct' ? (
-            <>
+          <StEmailP>Email</StEmailP>         
+          <StInput
+            type="text"
+            {...register('email', {
+              required: '이 항목은 필수입니다',
+              validate: EmailValidation,
+            })}
+            name="email"
+            required
+          />
+          <span>@</span>
+          {directInput ? (
+            <StInputWrapper>
+               
               <StInput
                 type="text"
-                {...register('emailPrefix', {
+                {...register('emailProvider', {
                   required: '이 항목은 필수입니다',
                 })}
-                name="emailPrefix"
-                required
-              />
-              @
-              <StInput
-                type="text"
-                {...register('emailSuffix', {
-                  required: '이 항목은 필수입니다',
-                  validate: (value) => {
-                    const regex = /^[A-Za-z0-9._%+-]+$/;
-                    return regex.test(value) || '이메일 공급자를 입력해주세요';
-                  },
-                })}
-                name="emailSuffix"
-                required
-              />
-              .com
-            </>
-          ) : (
-            <>
-              <StInput
-                type="text"
-                {...register('email', {
-                  required: '이 항목은 필수입니다',
-                  validate: EmailValidation,
-                })}
-                name="email"
-                required
-              />
-              <StSelect
                 name="emailProvider"
                 value={formData.emailProvider}
-                onChange={handleSelectChange}
-              >
-                {options.map(({ value, label }) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </StSelect>
-            </>
+                onChange={handleInputChange}
+                onBlur={() => {
+                  if (!formData.emailProvider) {
+                    setDirectInput(false);
+                  }
+                }}
+                required
+              />
+            </StInputWrapper>
+          ) : (
+            <StSelect
+              name="emailProvider"
+              value={formData.emailProvider || 'gmail.com'}
+              onChange={handleSelectChange}
+            >
+              {options.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </StSelect>
           )}
-          {errors.email || errors.emailPrefix || errors.emailSuffix ? (
+                   
+          {errors.email || errors.emailProvider ? (
             <StErrorMsg>
+               
               {errors.email?.message ||
-                errors.emailPrefix?.message ||
-                errors.emailSuffix?.message ||
+                errors.emailProvider?.message ||
                 'Please enter your email.'}
             </StErrorMsg>
           ) : null}
-          <StEmailCheckButton onClick={handleDuplicateCheck}>
-            double check
-          </StEmailCheckButton>
+                 
         </StEmail>
         <StBrand>
           <StBrandP>소속명</StBrandP>
@@ -251,17 +263,6 @@ const Signup = () => {
               {errors.companyNumber.message || '대표 번호가 필요합니다'}
             </StErrorMsg>
           )}
-          {/* <StBrandNumberP>대표 이메일</StBrandNumberP>
-          <StBrandEmailInput
-            type="text"
-            placeholder="대표 이메일(발신용 이메일)을 입력해주세요"
-            {...register('BrandNumber', {
-              required: true,
-              validate: PhoneNumberValidation,
-            })}
-            name="BrandNumber"
-            required
-          /> */}
         </StBrand>
         <StPicInfo>
           <h1>담당자 이름</h1>
@@ -302,7 +303,59 @@ const Signup = () => {
               </StErrorMsg>
             )}
           </StContectNumberInputWrapper>
-          <StPicRole>
+          <StBrandNumberP>대표 이메일</StBrandNumberP>
+          <StInput2
+            type="text"
+            {...register('email', {
+              required: '이 항목은 필수입니다',
+              validate: EmailValidation,
+            })}
+            name="email"
+            required
+          />
+          <span>@</span>
+          {directInput ? (
+            <StInputWrapper>
+               
+              <StInput2
+                type="text"
+                {...register('emailProvider', {
+                  required: '이 항목은 필수입니다',
+                })}
+                name="emailProvider"
+                value={formData.emailProvider}
+                onChange={handleInputChange}
+                onBlur={() => {
+                  if (!formData.emailProvider) {
+                    setDirectInput(false);
+                  }
+                }}
+                required
+              />
+            </StInputWrapper>
+          ) : (
+            <StSelect2
+              name="emailProvider"
+              value={formData.emailProvider || 'gmail.com'}
+              onChange={handleSelectChange}
+            >
+              {options.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </StSelect2>
+          )}
+                   
+          {errors.email || errors.emailProvider ? (
+            <StErrorMsg>
+               
+              {errors.email?.message ||
+                errors.emailProvider?.message ||
+                'Please enter your email.'}
+            </StErrorMsg>
+          ) : null}
+          {/* <StPicRole>
             <label>역할:</label>
             <select
               {...register('role')}
@@ -312,7 +365,7 @@ const Signup = () => {
               <option value="normal">일반</option>
               <option value="admin">관리자</option>
             </select>
-          </StPicRole>
+          </StPicRole> */}
         </StPicInfo>
 
         <StPw>
@@ -390,7 +443,7 @@ const StInput = styled.input<StInputProps>`
   `}
 `;
 
-const Stinput2 = styled.input<StInputProps>`
+const StInput2 = styled.input<StInputProps>`
   background: rgba(170, 170, 170, 0.26);
   border-radius: 40px;
   width: 400px;
@@ -408,6 +461,15 @@ const Stinput2 = styled.input<StInputProps>`
     `
     border-color: red;
   `}
+`;
+
+const Wrapper = styled.div`  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 30px;
 `;
 
 const StEmailP = styled.p`
@@ -537,6 +599,16 @@ const StSelect = styled.select`
   border: 2px solid rgba(170, 170, 170, 0.26);
   transition: border-color 0.2s ease-in-out;
 `;
+
+const StSelect2 = styled.select`
+  background: rgba(170, 170, 170, 0.26);
+  border-radius: 40px;
+  width: 400px;
+  margin: 10px auto;
+  border: 2px solid rgba(170, 170, 170, 0.26);
+  transition: border-color 0.2s ease-in-out;
+`;
+
 const StBrandEmailInput = styled.input`
   background: #d3d3d3;
   border-radius: 40px;

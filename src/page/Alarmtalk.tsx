@@ -73,7 +73,7 @@ function Alarmtalk() {
       // alert('다시 시도해주시기 바랍니다.');
     }
   };
-  const highFunction = useCallback(
+  const messagePreviewFunc = useCallback(
     (text: string, target: string) => {
       const obj_n = document.getElementById(`${target}`)?.innerHTML;
       const targetData = document.getElementById(`${obj_n}`)?.innerHTML;
@@ -120,7 +120,7 @@ function Alarmtalk() {
               <SelectBoxs
                 currentCategoryValue={currentValue}
                 className={`obj_${idx}`}
-                propFunction={highFunction}
+                propFunction={messagePreviewFunc}
                 optionData={(sendKeyData && sendKeyData[0]) || ['빈값입니다.']}
               ></SelectBoxs>
             </div>

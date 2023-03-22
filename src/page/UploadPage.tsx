@@ -129,18 +129,18 @@ function UploadPage() {
     reader.readAsBinaryString(input.files[0]);
   }
   const ClentBulkFetch = async () => {
-    let totalData = [] as any;
+    let data = [] as any;
     isData.map((el: any) =>
-      totalData.push({
+      data.push({
         clientName: `${el.이름}`,
         contact: `${el.전화번호.replace(/-/gi, '')}`,
         clientEmail: `${el.이메일}`,
       })
     );
-    console.log(totalData);
+    console.log(data);
     try {
       const response = await axios
-        .post(`https://dev.sendingo-be.store/api/clients/bulk`, totalData)
+        .post(`https://dev.sendingo-be.store/api/clients/bulk`, { data })
         .then((res) => {
           console.log(res);
         });

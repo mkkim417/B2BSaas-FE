@@ -19,8 +19,9 @@ const AutoModal = (props: any) => {
   const onSubmit = () => {
     if (isGorupDesc === undefined || null || '') {
       alert('그룹설명을 해주세요');
+      return;
     }
-    navigate('/group');
+    navigate('/usergrouplist');
   };
   console.log(props.currentValue);
   console.log(props.isAllData);

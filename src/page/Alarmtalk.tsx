@@ -9,6 +9,7 @@ import AutoModal, {
   WhiteWrap,
   YellowWrap,
 } from '../components/Automodal';
+import axios from 'axios';
 function Alarmtalk() {
   const navigate = useNavigate();
   const sendKeyData = useSelector((state: any) => {
@@ -41,6 +42,37 @@ function Alarmtalk() {
     setCurrentValue(e.target.value);
   };
 
+  const kakaoSaveFetch = async () => {
+    const data = [
+      {
+        clientId: 1,
+        organizationName: '센딩고',
+        orderNumber: '10230192393',
+        region: '항해99배위',
+        regionDetail: '101호실',
+        deliveryDate: '2023-03-21',
+        paymentPrice: 50000,
+        deliveryCompany: '항해택배',
+        deliveryTime: '오후 5시 30분경',
+        deliveryNumber: '항해-12039123090',
+        templateCode: 'TM_2048',
+      },
+    ];
+    console.log(data);
+    try {
+      const response = await axios
+        .post(`https://dev.sendingo-be.store/api/talk/contents`, { data })
+        .then((res) => {
+          console.log(res);
+        });
+      console.log(response);
+      alert('전송완료');
+      // navigate('/');
+    } catch (error) {
+      console.log(error);
+      // alert('다시 시도해주시기 바랍니다.');
+    }
+  };
   const highFunction = useCallback(
     (text: string, target: string) => {
       const obj_n = document.getElementById(`${target}`)?.innerHTML;
@@ -109,7 +141,14 @@ function Alarmtalk() {
         </ContnetDataWrap>
         <ButtonWrap>
           <Button onClick={() => navigate(-1)}>취소</Button>
-          <Button onClick={() => setAutoModal((prev) => !prev)}>다음</Button>
+          <Button
+            onClick={() => {
+              setAutoModal((prev) => !prev);
+              // kakaoSaveFetch();
+            }}
+          >
+            다음
+          </Button>
         </ButtonWrap>
       </RightContents>
       {isAutoModal && isAutoModal ? (

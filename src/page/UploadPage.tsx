@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { sendListCreate } from '../redux/modules/sendList';
 import { sendKeyCreate } from '../redux/modules/sendKey';
 import { sendGroupNameCreate } from '../redux/modules/sendGroupName';
+import { clientsIdCreate } from '../redux/modules/clientsId';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 interface IData {
@@ -142,10 +143,9 @@ function UploadPage() {
       const response = await axios
         .post(`https://dev.sendingo-be.store/api/clients/bulk`, { data })
         .then((res) => {
-          console.log(res);
+          dispatch(clientsIdCreate(res?.data?.newClients));
         });
       console.log(response);
-      alert('전송완료');
       // navigate('/');
     } catch (error) {
       console.log(error);
@@ -246,7 +246,7 @@ function UploadPage() {
             {!isOpen ? (
               <Button
                 onClick={() => {
-                  // NextBtnHandler(isData, isKeyData);
+                  NextBtnHandler(isData, isKeyData);
                   ClentBulkFetch();
                 }}
               >

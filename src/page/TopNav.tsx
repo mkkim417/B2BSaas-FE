@@ -9,9 +9,6 @@ const TopNav = () => {
   const usergrouplist = useMatch('/usergrouplist');
   const statistics = useMatch('/statistics');
   const Home = useMatch('/');
-
-  console.log('Uploadpage : ', Uploadpage);
-  console.log('Home : ', Home);
   return (
     <>
       {/* <Header>

@@ -55,7 +55,6 @@ const H1 = styled.span`
   padding: 10px;
 `;
 const Wrapper = styled.div`
-  padding-left: 200px;
-  margin-top: 70px;
+  padding-left: 250px;
 `;
 export default EmailTemplates;

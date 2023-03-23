@@ -12,7 +12,9 @@ function Header() {
           </Logo>
           <LeftContainer>
             <Li>소개</Li>
-            <Li>요금제</Li>
+            <Li>
+              <Link to={'/pricepoicy'}>요금제</Link>
+            </Li>
             <Li>가이드</Li>
           </LeftContainer>
         </TwiceWraper>

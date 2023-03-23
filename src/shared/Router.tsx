@@ -25,6 +25,8 @@ import { AnimatePresence } from 'framer-motion';
 import SingleUserCreate from '../page/SingleUserCreate';
 import ClientRegistration from '../page/ClientRegistration';
 import GroupManageList from '../page/GroupManageList';
+import KakaoResultList from '../page/KakaoResultList';
+import PricePoicy from '../page/PricePoicy';
 
 const Router = () => {
   const userInfo = getUser();
@@ -60,6 +62,8 @@ const Router = () => {
               element={<ClientRegistration />}
             />
             <Route path="/groupmanageList" element={<GroupManageList />} />
+            <Route path="/kakaoresultlist" element={<KakaoResultList />} />
+            <Route path="/pricepoicy" element={<PricePoicy />} />
           </Route>
           <Route
             path="/home"

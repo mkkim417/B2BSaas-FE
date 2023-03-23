@@ -11,10 +11,7 @@ import { clientsIdCreate } from '../redux/modules/clientsId';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import ClientHeader from '../components/ClientHeader';
-interface IData {
-  id: number;
-  name: string;
-}
+
 function UploadPage() {
   const [isData, setData] = useState<any>();
   const [isKeyData, setKeyData] = useState<any>();
@@ -26,7 +23,17 @@ function UploadPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const mutation = useMutation(addTodos)
+  const dragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    // console.log({ e });
+  };
+  const onDropFiles = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    console.log(file);
+    readExcel(e);
+  };
+
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
       console.log('fileInput : ', fileInput.current.files[0]);
@@ -86,6 +93,7 @@ function UploadPage() {
     },
     [checkedList]
   );
+  //초기화더미함수
   const DummyDeleteFuction = () => {
     onClearAttachment();
     setData(false);
@@ -223,7 +231,7 @@ function UploadPage() {
             </MapWrapper>
           ) : (
             //   <Pagination page={activePage} onChange={setPage} total={total} />
-            <BottomContents>
+            <BottomContents onDrop={onDropFiles} onDragOver={dragOver}>
               <div>생성된 고객이 없습니다. CSV 파일을 넣어주세요.</div>
             </BottomContents>
           )}

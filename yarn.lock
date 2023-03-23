@@ -8859,7 +8859,7 @@ react-router-dom@^6.9.0:
     "@remix-run/router" "1.4.0"
     react-router "6.9.0"
 
-react-router@6.9.0:
+react-router@6.9.0, react-router@^6.9.0:
   version "6.9.0"
   resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.9.0.tgz#0f503d9becbc62d9e4ddc0f9bd4026e0fd29fbf5"
   integrity sha512-51lKevGNUHrt6kLuX3e/ihrXoXCa9ixY/nVWRLlob4r/l0f45x3SzBvYJe3ctleLUQQ5fVa4RGgJOTH7D9Umhw==

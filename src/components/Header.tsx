@@ -17,9 +17,9 @@ function Header() {
           </LeftContainer>
         </TwiceWraper>
         <SignupContainer>
-          <Link to={'login'}>로그인</Link>
+          <Link to={'/login'}>로그인</Link>
           <BlackBox>
-            <Link to={'signup'}>무료로 시작하기</Link>
+            <Link to={'/signup'}>무료로 시작하기</Link>
           </BlackBox>
         </SignupContainer>
       </ContentsWrapper>
@@ -35,9 +35,10 @@ const BlackBox = styled.div`
 const TwiceWraper = styled.div`
   display: flex;
 `;
-const Logo = styled.li`
+export const Logo = styled.li`
   width: 150px;
   border: 1px solid #909090;
+  height: 60px;
   color: #909090;
   box-sizing: border-box;
   display: flex;

@@ -476,13 +476,13 @@ const StInput2 = styled.input<StInputProps>`
   `}
 `;
 
-const Wrapper = styled.div`  
+const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  gap: 30px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 30px;
 `;
 
 const StEmailP = styled.p`

@@ -109,15 +109,39 @@ function UploadPage() {
       return false;
     }
   };
-  //엑셀읽는함수
+  const csvFileToArray = (string: any) => {
+    const csvHeader = string.slice(0, string.indexOf('\n')).split(',');
+    const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
+
+    const array = csvRows.map((i: any) => {
+      const values = i.split(',');
+      const obj = csvHeader.reduce((object: any, header: any, index: any) => {
+        object[header] = values[index];
+        return object;
+      }, {});
+      return obj;
+    });
+    setData(array);
+    setKeyData(Object.keys(Object.assign({}, ...array)));
+  };
   function readExcel(event: any) {
     let input = event.target;
     let reader = new FileReader();
-    reader.onload = function () {
+    reader.onload = async function () {
       let data = reader.result;
       let workBook = XLSX.read(data, { type: 'binary' });
-      if (workBook.bookType !== 'xlsx' && workBook.bookType !== 'csv') {
-        alert('csv, xlsx형식을 넣어주세요.');
+      if (workBook.bookType !== 'xlsx') {
+        // csv
+        let file = event.target.files[0];
+        if (file) {
+          reader.onload = function (event: any) {
+            const text = event.target.result;
+            console.log(text);
+            csvFileToArray(text);
+          };
+
+          reader.readAsText(file);
+        }
         return;
       }
       workBook.SheetNames.forEach(function (sheetName) {
@@ -134,6 +158,8 @@ function UploadPage() {
         // console.log('keyData : ', keyData);
         setKeyData(keyData);
         setData(pareData);
+        console.log('keyData : ', keyData);
+        console.log('pareData : ', pareData);
       });
     };
     reader.readAsBinaryString(input.files[0]);
@@ -168,6 +194,7 @@ function UploadPage() {
   //   '차집합 :',
   //   isData && isData.filter((x: any) => !checkedList.includes(x))
   // )
+  console.log('isData: ', isData);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -186,7 +213,7 @@ function UploadPage() {
             />
             <InputFile
               type="file"
-              accept=".csv,.xlsx"
+              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
               onChange={readExcel}
               ref={fileInput}
             ></InputFile>
@@ -217,13 +244,14 @@ function UploadPage() {
                             />
                           </Td>
                         ) : null}
-                        {isKeyData.map((li: any, idx: number) =>
-                          el[li].includes('-') && li === '전화번호' ? (
-                            el[li].replace(/-/gi, '')
-                          ) : (
-                            <Td key={idx}>{el[li]}</Td>
-                          )
-                        )}
+                        {isKeyData &&
+                          isKeyData.map((li: any, idx: number) =>
+                            li === '전화번호' && el[li].includes('-') ? (
+                              el[li].replace(/-/gi, '')
+                            ) : (
+                              <Td key={idx}>{el[li]}</Td>
+                            )
+                          )}
                       </tr>
                     ))}
                 </tbody>
@@ -272,7 +300,7 @@ function UploadPage() {
 }
 
 const Table = styled.table`
-  width: 800px;
+  width: 100%;
   border: 1px solid #333333;
 `;
 const MapWrapper = styled.div`
@@ -313,7 +341,7 @@ const Input = styled.input`
   height: 30px;
 `;
 const Wrapper = styled.div`
-  padding-left: 200px;
+  padding-left: 250px;
   display: flex;
   gap: 30px;
   justify-content: center;

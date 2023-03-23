@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useForm, SubmitHandler, Validate } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+
 interface FormValues {
   email: string;
   emailProvider: string;
@@ -13,6 +14,7 @@ interface FormValues {
   companyName: string;
   companyNumber: string;
   companyEmail: string;
+  companyEmailProvider: string;
   name?: string;
   phoneNumber: string;
   role: number;
@@ -39,9 +41,7 @@ interface StInputProps {
 const Signup = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-
   const [directInput, setDirectInput] = useState(false);
-
   const {
     register,
     formState: { errors, isValid },
@@ -59,6 +59,7 @@ const Signup = () => {
     companyName: '',
     companyNumber: '',
     companyEmail: '',
+    companyEmailProvider: 'gmail.com',
     name: '',
     phoneNumber: '',
     role: 1,
@@ -78,34 +79,46 @@ const Signup = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     if (name === 'email') {
-      setFormData({
-        ...formData,
+      setFormData((prevFormData) => ({
+        ...prevFormData,
         email: value,
-      });
+      }));
     } else if (name === 'emailProvider') {
-      setFormData({
-        ...formData,
+      setFormData((prevFormData) => ({
+        ...prevFormData,
         emailProvider: value,
-        email: formData.email + '@' + value,
-      });
+        email: prevFormData.email + '@' + value,
+      }));
     } else {
-      setFormData({
-        ...formData,
+      setFormData((prevFormData) => ({
+        ...prevFormData,
         [name]: value,
-      });
+      }));
     }
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const emailProvider = e.target.value;
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       emailProvider,
-    });
+    }));
     if (emailProvider === 'direct') {
       setDirectInput(true);
     } else {
       setDirectInput(false);
+    }
+    // companyEmailProvider를 직접 수정하는 경우를 추가
+    if (emailProvider === 'gmail.com') {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        companyEmailProvider: 'gmail.com',
+      }));
+    } else if (emailProvider === 'gmail.com') {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        companyEmailProvider: 'gmail.com',
+      }));
     }
   };
 
@@ -128,17 +141,17 @@ const Signup = () => {
     }
 
     const email = `${data.email}@${formData.emailProvider}`;
-    const email2 = `${data.companyEmail}@${formData.emailProvider}`;
+    const email2 = `${data.companyEmail}@${formData.companyEmailProvider}`;
 
-    const requestBody = {
-      email: EmailValidation(formData.email, formData),
-      password: data.password,
-      name: data.name,
-      phoneNumber: data.phoneNumber,
-      companyName: data.companyName,
-      companyNumber: data.companyNumber,
-      role: 1,
-    };
+    // const requestBody = {
+    //   email: EmailValidation(formData.email, formData),
+    //   password: data.password,
+    //   name: data.name,
+    //   phoneNumber: data.phoneNumber,
+    //   companyName: data.companyName,
+    //   companyNumber: data.companyNumber,
+    //   role: 1,
+    // };
     const sendEmail = email + formData.email;
     const sendEmail2 = email2 + formData.companyEmail;
 
@@ -306,11 +319,11 @@ const Signup = () => {
           <StBrandNumberP>대표 이메일</StBrandNumberP>
           <StInput2
             type="text"
-            {...register('email', {
+            {...register('companyEmail', {
               required: '이 항목은 필수입니다',
               validate: EmailValidation,
             })}
-            name="email"
+            name="companyEmail"
             required
           />
           <span>@</span>
@@ -319,10 +332,10 @@ const Signup = () => {
                
               <StInput2
                 type="text"
-                {...register('emailProvider', {
+                {...register('companyEmailProvider', {
                   required: '이 항목은 필수입니다',
                 })}
-                name="emailProvider"
+                name="companyEmailProvider"
                 value={formData.emailProvider}
                 onChange={handleInputChange}
                 onBlur={() => {
@@ -335,7 +348,7 @@ const Signup = () => {
             </StInputWrapper>
           ) : (
             <StSelect2
-              name="emailProvider"
+              name="companyEmailProvider"
               value={formData.emailProvider || 'gmail.com'}
               onChange={handleSelectChange}
             >
@@ -484,11 +497,7 @@ const StEmailP = styled.p`
   mix-blend-mode: darken;
 `;
 const StEmail = styled(StInputWrapper)``;
-const StEmailCheckButton = styled.button`
-  background: #d3d3d3;
-  border-radius: 40px;
-  margin: 10px;
-`;
+
 const StBrandP = styled.p`
   font-family: 'Roboto';
   font-style: normal;

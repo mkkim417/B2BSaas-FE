@@ -55,7 +55,7 @@ function UserList() {
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
   const [count, setCount] = useState(0); // 아이템 총 갯수
   // const [ product, setProduct ] = useState([])  // 리스트에 담아낼 아이템들
-  const [postPerPage] = useState(5); // 한 페이지에 보여질 아이템 수
+  const [postPerPage] = useState(14); // 한 페이지에 보여질 아이템 수
   const [indexOfLastPost, setIndexOfLastPost] = useState(0); // 현재 페이지의 마지막 아이템 인덱스
   const [indexOfFirstPost, setIndexOfFirstPost] = useState(0); // 현재 페이지의 첫번째 아이템 인덱스
   const [currentPosts, setCurrentPosts] = useState(0); // 현재 페이지에서 보여지는 아이템들
@@ -342,7 +342,7 @@ export const PaginationBox = styled.div`
     display: inline-block;
     width: 30px;
     height: 30px;
-    border: 1px solid #e2e2e2;
+    /* border: 1px solid #e2e2e2; */
     display: flex;
     justify-content: center;
     align-items: center;

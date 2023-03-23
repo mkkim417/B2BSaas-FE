@@ -44,7 +44,7 @@ const Router = () => {
             {/* <Route path="/userdatacreate" element={<UserDataCreate />} /> */}
             {/* <Route path="/usergroupcreate" element={<UserGroupCreate />} /> */}
             {/* <Route path="/usergrouplist" element={<UserGroupList />} /> */}
-            {/* <Route path="/userlist" element={<UserList />} /> */}
+            <Route path="/userlist" element={<UserList />} />
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/alarmtalk" element={<Alarmtalk />} />
             <Route path="/signup" element={<Signup />} />

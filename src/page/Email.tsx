@@ -70,7 +70,23 @@ function Email() {
       {/* <LeftContents>
         <SelectBoxs></SelectBoxs>
       </LeftContents> */}
-      <H1>이메일 발송하기</H1>
+      <TopWrapper>
+        <H1>이메일 작성</H1>
+        <TopWrapper>
+          <ButtonSecond>미리보기</ButtonSecond>
+          <Button>발송</Button>
+        </TopWrapper>
+      </TopWrapper>
+      <div>
+        <div>
+          <div>받는사람</div>
+          <div></div>
+        </div>
+        <div>
+          <div>제목</div>
+          <div></div>
+        </div>
+      </div>
       <RightContents>
         {editorState != null && (
           <CustomEditor
@@ -83,6 +99,30 @@ function Email() {
     </Wrapper>
   );
 }
+
+const TopWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+`;
+const Button = styled.div`
+  height: 30px;
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const ButtonSecond = styled.div`
+  height: 30px;
+  background-color: #fff;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #000;
+`;
 const H1 = styled.h1`
   margin: 30px 0px;
   font-weight: bold;
@@ -91,9 +131,7 @@ const H1 = styled.h1`
 const Wrapper = styled.div`
   flex-direction: column;
   display: flex;
-  padding-top: 80px;
-  padding-left: 350px;
+  padding-left: 250px;
   width: 100%;
-  margin: 100px auto;
 `;
 export default Email;

@@ -1,44 +1,54 @@
 import axios from 'axios';
 import React, { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useDetectClose from '../hook/useDetectClose';
+import { kakaoGroupIdCreate } from '../redux/modules/kakaoGroupId';
 const AutoModal = (props: any) => {
   const dropDownRef = useRef();
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false); //커스텀훅
   const [isGorupDesc, setGorupDesc] = useState();
+  const [isGorupName, setGorupName] = useState(props.groupName[0]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const isGorupDescChage = (e: any) => {
     setGorupDesc(e.target.value);
   };
+
+  const ClientsIdData = useSelector((state: any) => {
+    return state.clientsId.clientsId[0];
+  });
   const ClientListData = useSelector((state: any) => {
     return state.sendList.sendList;
   });
+
   console.log('ClientListData : ', ClientListData);
-  const onSubmit = () => {
+  console.log('ClientsIdData : ', ClientsIdData);
+  const onSubmit = async () => {
+    console.log('props.groupName : ', props.groupName);
     if (isGorupDesc === undefined || null || '') {
       alert('그룹설명을 해주세요');
       return;
     }
-    navigate('/usergrouplist');
+    let clientIds = ClientsIdData;
+    console.log('clientIds : ', clientIds);
+    try {
+      const response = await axios
+        .post(`https://dev.sendingo-be.store/api/batch/groups`, {
+          clientIds: ClientsIdData,
+          groupName: isGorupName,
+          groupDescription: isGorupDesc,
+        })
+        .then((res) => {
+          console.log(res.data);
+          dispatch(kakaoGroupIdCreate(res.data.groupId));
+          navigate('/groupmanageList');
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
-  console.log(props.currentValue);
-  console.log(props.isAllData);
-  let body = {
-    groupName: props.groupName[0],
-    groupDescription: isGorupDesc,
-    groupTagName: '신규',
-    groupList: ClientListData[0],
-  };
-  //클라이언트 그룹 생성 post api요청
-  const res = axios.post(
-    '/api/clients/groups',
-    {
-      body,
-    },
-    { withCredentials: true }
-  );
   return (
     <Container>
       <Background
@@ -53,7 +63,13 @@ const AutoModal = (props: any) => {
               <Strong>
                 그룹명<Red>*</Red>
               </Strong>
-              <Input type="text" defaultValue={props.groupName} />
+              <Input
+                type="text"
+                defaultValue={props.groupName}
+                onChange={(e) => {
+                  setGorupName(e.target.value);
+                }}
+              />
             </Flex>
             <Flex width="50%">
               <Strong>유저수</Strong> {props.userNum}
@@ -110,15 +126,6 @@ const AutoModal = (props: any) => {
               </Button>
             </div>
             <ButtonGap>
-              <Button
-                width="100px"
-                height="40px"
-                bgColor="#fff"
-                border="3px solid #000"
-                color="#000"
-              >
-                임시저장
-              </Button>
               <Button
                 width="100px"
                 height="40px"

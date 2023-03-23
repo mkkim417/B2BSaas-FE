@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Wrapper } from './Home';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { setCookie } from '../util/cookie';
@@ -26,7 +26,7 @@ function Login() {
       );
       console.log(response);
       let token = response.data.token;
-      setCookie('accessToken', token); // 쿠키에저장
+      setCookie('accessToken', token);
       const decodedUserInfo = jwt_decode(token);
       console.log('decode', decodedUserInfo);
       localStorage.setItem('userInfo', JSON.stringify(decodedUserInfo));

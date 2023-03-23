@@ -1,16 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import SelectBoxs from '../components/SelectBoxs';
 import { ALAERMTALK_TEMPLATE } from '../constants/alarmtalk';
+import { kakaoSendDataCreate } from '../redux/modules/kakaoSendData';
 import AutoModal, {
   KakaoBox,
   WhiteWrap,
   YellowWrap,
 } from '../components/Automodal';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 function Alarmtalk() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const sendKeyData = useSelector((state: any) => {
     return state.sendKey.sendKey;
@@ -45,99 +48,101 @@ function Alarmtalk() {
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
   };
-  const refactoringFunc = (isAllData: any, TM_CODE: any) => {
+  const refactoringFunc = (TM_CODE: any) => {
     console.log(isAllData); //
     console.log('TM_CODE : ', TM_CODE); //현재성택된 템플릿명
     console.log(sendListData); //엑셀데이터
     // const targetData = document.getElementById(`${isTarget}`)?.innerHTML;
     // console.log('targetData : ', targetData);
     console.log('isTarget : ', isTarget);
-
+    const labelObj = document.getElementsByTagName('label');
+    let labelArr = [] as any;
+    for (let i = 0; i < labelObj.length; i++) {
+      labelArr.push(labelObj[i].innerHTML);
+    }
+    console.log(sendListData[0]);
+    console.log(clientIdData);
     let data = [] as any;
-    isAllData.map((el: any, idx: number) =>
-      data.push({
-        clientId: clientIdData[idx],
-        organizationName: '',
-        customerName: '',
-        orderNumber: '',
-        region: '',
-        regionDetail: '',
-        deliveryDate: '',
-        paymentPrice: '',
-        deliveryCompany: '',
-        deliveryTime: '',
-        deliveryNumber: '',
-        templateCode: `${currentValue}`,
-      })
-    );
+    if (TM_CODE === 'TM_2223') {
+      sendListData[0]?.map((el: any, idx: number) => {
+        data.push({
+          clientId: clientIdData[0][idx],
+          customerName: el[labelArr[0]],
+          organizationName: el[labelArr[1]],
+          templateCode: TM_CODE,
+        });
+      });
+    } else if (TM_CODE === 'TM_2222') {
+      sendListData[0]?.map((el: any, idx: number) => {
+        data.push({
+          clientId: clientIdData[0][idx],
+          customerName: el[labelArr[0]],
+          templateCode: TM_CODE,
+        });
+      });
+    } else if (TM_CODE === 'TM_2220') {
+      sendListData[0]?.map((el: any, idx: number) => {
+        data.push({
+          clientId: clientIdData[0][idx],
+          customerName: el[labelArr[0]],
+          templateCode: TM_CODE,
+        });
+      });
+    } else if (TM_CODE === 'TM_2217') {
+      sendListData[0]?.map((el: any, idx: number) => {
+        data.push({
+          clientId: clientIdData[0][idx],
+          organizationName: el[labelArr[0]],
+          orderNumber: el[labelArr[1]],
+          region: el[labelArr[2]],
+          regionDetail: el[labelArr[3]],
+          deliveryDate: el[labelArr[4]],
+          paymentPrice: el[labelArr[5]],
+          templateCode: TM_CODE,
+        });
+      });
+    } else if (TM_CODE === 'TM_2216') {
+      sendListData[0]?.map((el: any, idx: number) => {
+        data.push({
+          clientId: clientIdData[0][idx],
+          organizationName: el[labelArr[0]],
+          deliveryCompany: el[labelArr[1]],
+          deliveryTime: el[labelArr[2]],
+          deliveryNumber: el[labelArr[3]],
+          templateCode: TM_CODE,
+        });
+      });
+    } else if (TM_CODE === 'TM_2048') {
+      sendListData[0]?.map((el: any, idx: number) => {
+        data.push({
+          clientId: clientIdData[0][idx],
+          organizationName: el[labelArr[0]],
+          orderNumber: el[labelArr[1]],
+          region: el[labelArr[2]],
+          regionDetail: el[labelArr[3]],
+          deliveryDate: el[labelArr[4]],
+          paymentPrice: el[labelArr[5]],
+          templateCode: TM_CODE,
+        });
+      });
+    }
+    return data;
   };
+
   const kakaoSaveFetch = async () => {
-    refactoringFunc(isAllData, currentValue);
-    let data = [] as any;
-    // isData.map((el: any) =>
-    //   data.push({
-    //     clientName: `${el.이름}`,
-    //     contact: `${el.전화번호.replace(/-/gi, '')}`,
-    //     clientEmail: `${el.이메일}`,
-
-    //     clientId: '',
-    //     organizationName: '',
-    //     orderNumber: '',
-    //     region: '',
-    //     regionDetail: '',
-    //     deliveryDate: '',
-    //     paymentPrice: '',
-    //     deliveryCompany: '',
-    //     deliveryTime: '',
-    //     deliveryNumber: '',
-    //     templateCode: `${currentValue}`,
-    //   })
-    // );
-    //템플릿마다 넣어주는 값이 다름.
-    console.log(isAllData);
-    // if (isAllData.tmpCode === 'TM_2220') {
-    //   data.push({
-    //     clientId: `${isAllData.clientId}`,
-    //     organizationName: `${isAllData.organizationName}`,
-    //     orderNumber: `${isAllData.orderNumber}`,
-    //     region: `${isAllData.region}`,
-    //     regionDetail: `${isAllData.regionDetail}`,
-    //     deliveryDate: `${isAllData.deliveryDate}`,
-    //     paymentPrice: `${isAllData.paymentPrice}`,
-    //     deliveryCompany: `${isAllData.deliveryCompany}`,
-    //     deliveryTime: `${isAllData.deliveryTime}`,
-    //     deliveryNumber: `${isAllData.deliveryNumber}`,
-    //     templateCode: `${currentValue}`,
-    //   });
-    // }
-    //real data
-    // const data = [
-    //   {
-    //     clientId: 1,
-    //     organizationName: '센딩고',
-    //     orderNumber: '10230192393',
-    //     region: '항해99배위',
-    //     regionDetail: '101호실',
-    //     deliveryDate: '2023-03-21',
-    //     paymentPrice: 50000,
-    //     deliveryCompany: '항해택배',
-    //     deliveryTime: '오후 5시 30분경',
-    //     deliveryNumber: '항해-12039123090',
-    //     templateCode: 'TM_2048',
-    //   },
-    // ];
-
-    // try {
-    //   const response = await axios
-    //     .post(`https://dev.sendingo-be.store/api/talk/contents`, { data })
-    //     .then((res) => {
-    //       console.log(res);
-    //     });
-    //   // navigate('/');
-    // } catch (error) {
-    //   console.log(error);
-    //   // alert('다시 시도해주시기 바랍니다.');
-    // }
+    let data = refactoringFunc(isAllData.tmpCode);
+    try {
+      const response = await axios
+        .post(`https://dev.sendingo-be.store/api/talk/contents`, { data })
+        .then((res) => {
+          console.log(res.data);
+          dispatch(kakaoSendDataCreate(res.data.data));
+        });
+      // navigate('/');
+    } catch (error) {
+      console.log(error);
+      // alert('다시 시도해주시기 바랍니다.');
+    }
   };
   const messagePreviewFunc = useCallback(
     (text: string, target: string) => {
@@ -171,64 +176,78 @@ function Alarmtalk() {
     }
   }, [currentValue]);
   return (
-    <Wrapper>
-      <LeftContents>
-        <>
-          <H1>알림톡 대량발송하기</H1>
-          <select name="" id="" onChange={(e) => handleOnChangeSelectValue(e)}>
-            {TemplatesNameDummy().map((el, idx) => (
-              <option key={idx} value={el}>
-                {el}
-              </option>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <Wrapper>
+        <LeftContents>
+          <>
+            <H1>알림톡 대량발송하기</H1>
+            <select
+              name=""
+              id=""
+              onChange={(e) => handleOnChangeSelectValue(e)}
+            >
+              {TemplatesNameDummy().map((el, idx) => (
+                <option key={idx} value={el}>
+                  {el}
+                </option>
+              ))}
+            </select>
+            {isAllData.reqData.map((el: any, idx: any) => (
+              <div key={idx}>
+                <div id={`obj_${idx}`}>{el}</div>
+                <SelectBoxs
+                  currentCategoryValue={currentValue}
+                  className={`obj_${idx}`}
+                  propFunction={messagePreviewFunc}
+                  optionData={
+                    (sendKeyData && sendKeyData[0]) || ['빈값입니다.']
+                  }
+                ></SelectBoxs>
+              </div>
             ))}
-          </select>
-          {isAllData.reqData.map((el: any, idx: any) => (
-            <div key={idx}>
-              <div id={`obj_${idx}`}>{el}</div>
-              <SelectBoxs
-                currentCategoryValue={currentValue}
-                className={`obj_${idx}`}
-                propFunction={messagePreviewFunc}
-                optionData={(sendKeyData && sendKeyData[0]) || ['빈값입니다.']}
-              ></SelectBoxs>
-            </div>
-          ))}
-        </>
-      </LeftContents>
-      <RightContents>
-        <ContnetDataWrap>
-          <KakaoBox>
-            <YellowWrap>
-              {currentValue === null ? '택배번호 안내' : currentValue}
-            </YellowWrap>
-            <WhiteWrap
-              id="view"
-              dangerouslySetInnerHTML={{ __html: isViewData }}
-            ></WhiteWrap>
-          </KakaoBox>
-        </ContnetDataWrap>
-        <ButtonWrap>
-          <Button onClick={() => navigate(-1)}>취소</Button>
-          <Button
-            onClick={() => {
-              //setAutoModal((prev) => !prev);
-              kakaoSaveFetch();
-            }}
-          >
-            다음
-          </Button>
-        </ButtonWrap>
-      </RightContents>
-      {isAutoModal && isAutoModal ? (
-        <AutoModal
-          closeModal={setAutoModal}
-          userNum={sendListData && sendListData[0]?.length}
-          groupName={sendGroupNameData && sendGroupNameData[0]}
-          isAllData={isViewData}
-          currentValue={currentValue === null ? '택배번호 안내' : currentValue}
-        />
-      ) : null}
-    </Wrapper>
+          </>
+        </LeftContents>
+        <RightContents>
+          <ContnetDataWrap>
+            <KakaoBox>
+              <YellowWrap>
+                {currentValue === null ? '택배번호 안내' : currentValue}
+              </YellowWrap>
+              <WhiteWrap
+                id="view"
+                dangerouslySetInnerHTML={{ __html: isViewData }}
+              ></WhiteWrap>
+            </KakaoBox>
+          </ContnetDataWrap>
+          <ButtonWrap>
+            <Button onClick={() => navigate(-1)}>취소</Button>
+            <Button
+              onClick={() => {
+                setAutoModal((prev) => !prev);
+                kakaoSaveFetch();
+              }}
+            >
+              다음
+            </Button>
+          </ButtonWrap>
+        </RightContents>
+        {isAutoModal && isAutoModal ? (
+          <AutoModal
+            closeModal={setAutoModal}
+            userNum={sendListData && sendListData[0]?.length}
+            groupName={sendGroupNameData && sendGroupNameData[0]}
+            isAllData={isViewData}
+            currentValue={
+              currentValue === null ? '택배번호 안내' : currentValue
+            }
+          />
+        ) : null}
+      </Wrapper>
+    </motion.div>
   );
 }
 
@@ -253,7 +272,6 @@ const Button = styled.button`
 `;
 export const Wrapper = styled.div`
   padding-left: 200px;
-  margin-top: 60px;
   display: flex;
   gap: 30px;
   -webkit-box-pack: center;

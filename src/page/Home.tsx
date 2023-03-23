@@ -1,22 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
+import { motion } from 'framer-motion';
 function Home() {
   return (
-    <Wrapper>
-      <LeftContnets>
-        <LogoText>
-          <div>SendinGo 관련 두줄</div>
-          <div>소개글 작성</div>
-        </LogoText>
-        <CotentsTxt>
-          <div>이메일을 보내도 답변이 없으셔서 막막하셨나요? </div>
-          <div>SendinGo와 함께 간편학게고객관리를 해보세요!</div>
-        </CotentsTxt>
-      </LeftContnets>
-      <VideoBox controls />
-    </Wrapper>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <Wrapper>
+        <LeftContnets>
+          <LogoText>
+            <div>SendinGo 관련 두줄</div>
+            <div>소개글 작성</div>
+          </LogoText>
+          <CotentsTxt>
+            <div>이메일을 보내도 답변이 없으셔서 막막하셨나요? </div>
+            <div>SendinGo와 함께 간편학게고객관리를 해보세요!</div>
+          </CotentsTxt>
+        </LeftContnets>
+        <VideoBox controls />
+      </Wrapper>
+    </motion.div>
   );
 }
 const LeftContnets = styled.div`

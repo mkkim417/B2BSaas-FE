@@ -10,10 +10,8 @@ import { sendGroupNameCreate } from '../redux/modules/sendGroupName';
 import { clientsIdCreate } from '../redux/modules/clientsId';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-interface IData {
-  id: number;
-  name: string;
-}
+import ClientHeader from '../components/ClientHeader';
+
 function UploadPage() {
   const [isData, setData] = useState<any>();
   const [isKeyData, setKeyData] = useState<any>();
@@ -25,7 +23,17 @@ function UploadPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const mutation = useMutation(addTodos)
+  const dragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    // console.log({ e });
+  };
+  const onDropFiles = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    console.log(file);
+    readExcel(e);
+  };
+
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
       console.log('fileInput : ', fileInput.current.files[0]);
@@ -85,6 +93,7 @@ function UploadPage() {
     },
     [checkedList]
   );
+  //초기화더미함수
   const DummyDeleteFuction = () => {
     onClearAttachment();
     setData(false);
@@ -143,6 +152,7 @@ function UploadPage() {
       const response = await axios
         .post(`https://dev.sendingo-be.store/api/clients/bulk`, { data })
         .then((res) => {
+          console.log('api/clients/bulk : ', res.data);
           dispatch(clientsIdCreate(res?.data?.newClients));
         });
       console.log(response);
@@ -164,6 +174,7 @@ function UploadPage() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
+      <ClientHeader />
       <Wrapper>
         <ContentsWrap>
           <TopContents>
@@ -220,7 +231,7 @@ function UploadPage() {
             </MapWrapper>
           ) : (
             //   <Pagination page={activePage} onChange={setPage} total={total} />
-            <BottomContents>
+            <BottomContents onDrop={onDropFiles} onDragOver={dragOver}>
               <div>생성된 고객이 없습니다. CSV 파일을 넣어주세요.</div>
             </BottomContents>
           )}

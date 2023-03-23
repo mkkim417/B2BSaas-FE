@@ -3,7 +3,7 @@ import { off } from 'process';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+
 function UserGroupList() {
   const navigate = useNavigate();
 
@@ -35,19 +35,19 @@ function UserGroupList() {
     const idArray = [] as any;
     if (isChecked) {
       groupList.forEach((item: any) => {
-        console.log('grouplist', item);
+        console.log('grouplist', item)
         if (idArray.includes(item.groupId)) {
           // check 배열에 전체선택 품목 중 포함되어있는 것이 있다면 빼고 push
         } else {
           // checkedArr.push(el.id);
-          idArray.push(item.groupId);
+          idArray.push(item.groupId)
           setCheckedArr(idArray);
         }
       });
     } else {
       setCheckedArr([]);
     }
-    console.log('checkArr', checkedArr);
+    console.log('checkArr', checkedArr)
   };
 
   // 체크아이템 변수에 담는 핸들러
@@ -65,11 +65,9 @@ function UserGroupList() {
   //yarn json-server --watch grouplist.json --port 4000
 
   const getGroupData = useCallback(async () => {
-    const response = await axios.get(
-      'https://dev.sendingo-be.store/api/groups'
-    );
-    console.log('grouplist', response.data.data);
-    setGroupList(response.data.data);
+    const response = await axios.get('https://dev.sendingo-be.store/api/groups');
+    console.log('grouplist', response.data.data)
+    setGroupList(response.data.data );
     setMonsters(response.data.data);
     setCopy(response.data.data);
   }, []);
@@ -127,16 +125,17 @@ function UserGroupList() {
     // 선택 삭제하기 전 한번 더 cofirm창
     if (window.confirm('해당 그룹들을 삭제하시겠습니까?')) {
       // 확인을 눌렀을 때
-      const urls = checkedArr.map((groupId) => `https://dev.sendingo-be.store/api/groups/${groupId}`)
-      console.log(urls)
-      axios.all(urls.map(url => axios.delete(url)))
-        .then(response => {
-          console.log(response)
-          alert('삭제가 완료되었습니다')
-        }).catch(error => {
-          console.log(error.response)
-          alert('삭제를 실패하였습니다.')
-        })
+      alert('삭제가 완료되었습니다.');
+      // const urls = checkedArr.map((groupId) => `http://localhost:4000/grouplist/${groupId}`)
+      // console.log(urls)
+      // axios.all(urls.map(url => axios.delete(url)))
+      //   .then(response => {
+      //     console.log(response)
+      //     alert('삭제가 완료되었습니다')
+      //   }).catch(error => {
+      //     console.log(error.response)
+      //     alert('삭제를 실패하였습니다.')
+      //   })
     } else {
       // confirm창에서 취소를 눌렀을 때 아무일도 발생하지 않는다.
     }
@@ -149,71 +148,56 @@ function UserGroupList() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <Wrapper>
-        <HeaderBar>
-          <div>유저 그룹 리스트</div>
-          <div>체크 갯수 : {checkedArr.length}</div>
-          <input placeholder="검색" onChange={inputChange} />
-          <Button onClick={messageSendHandler}>그룹생성</Button>
-          <Button onClick={messageSendHandler}>메세지 보내기</Button>
-          <Button onClick={individualDeleteHandler}> 선택 삭제 </Button>
-          <Button onClick={groupDeleteHandler}> 전체 삭제 </Button>
-        </HeaderBar>
-        <CardHeader>
-          <Percentage width="10%">
-            전체선택
-            <input
-              type="checkbox"
-              onChange={(e: any) => allCheckHandler(e.target.checked)}
-              checked={checkedArr.length === groupList.length ? true : false}
-            />
-          </Percentage>
-          <Percentage width="20%">생성일</Percentage>
-          <Percentage width="50%">그룹명</Percentage>
-          <Percentage width="20%">유저수</Percentage>
-        </CardHeader>
-        <ContentContainer>
-          <CardContainer>
-            {groupList?.map((item: any) => {
-              return (
-                <CardInBox key={item.groupId}>
-                  <Percentage width="10%">
-                    <input
-                      type="checkbox"
-                      checked={checkedArr.includes(item.groupId)}
-                      onChange={(e: any) => checkHandler(e, item.groupId)}
-                    />
-                  </Percentage>
-                  <Percentage
-                    width="20%"
-                    onClick={() => moveInUserList(item.groupId)}
-                  >
-                    {item.createdAt}
-                  </Percentage>
-                  <Percentage
-                    width="50%"
-                    onClick={() => moveInUserList(item.groupName)}
-                  >
-                    {item.groupName}
-                  </Percentage>
-                  <Percentage
-                    width="20%"
-                    onClick={() => moveInUserList(item.groupId)}
-                  >
-                    {/* {item.customerlist.length} */}
-                  </Percentage>
-                </CardInBox>
-              );
-            })}
-          </CardContainer>
-        </ContentContainer>
-      </Wrapper>
-    </motion.div>
+    <Wrapper>
+      <HeaderBar>
+        <div>유저 그룹 리스트</div>
+        <div>체크 갯수 : {checkedArr.length}</div>
+        <input placeholder="검색" onChange={inputChange} />
+        <Button onClick={messageSendHandler}>그룹생성</Button>
+        <Button onClick={messageSendHandler}>메세지 보내기</Button>
+        <Button onClick={individualDeleteHandler}> 선택 삭제 </Button>
+        <Button onClick={groupDeleteHandler}> 전체 삭제 </Button>
+      </HeaderBar>
+      <CardHeader>
+        <Percentage width="10%">
+          전체선택
+          <input
+            type="checkbox"
+            onChange={(e: any) => allCheckHandler(e.target.checked)}
+            checked={checkedArr.length === groupList.length ? true : false}
+          />
+        </Percentage>
+        <Percentage width="20%">생성일</Percentage>
+        <Percentage width="50%">그룹명</Percentage>
+        <Percentage width="20%">유저수</Percentage>
+      </CardHeader>
+      <ContentContainer>
+        <CardContainer>
+          {groupList?.map((item: any) => {
+            return (
+              <CardInBox key={item.groupId}>
+                <Percentage width="10%">
+                  <input
+                    type="checkbox"
+                    checked={checkedArr.includes(item.groupId)}
+                    onChange={(e: any) => checkHandler(e, item.groupId)}
+                  />
+                </Percentage>
+                <Percentage width="20%" onClick={() => moveInUserList(item.groupId)}>
+                  {item.createdAt}
+                </Percentage>
+                <Percentage width="50%" onClick={() => moveInUserList(item.groupName)}>
+                  {item.groupName}
+                </Percentage>
+                <Percentage width="20%" onClick={() => moveInUserList(item.groupId)}>
+                  {/* {item.customerlist.length} */}
+                </Percentage>
+              </CardInBox>
+            );
+          })}
+        </CardContainer>
+      </ContentContainer>
+    </Wrapper>
   );
 }
 
@@ -224,7 +208,7 @@ export const Wrapper = styled.div`
   /* justify-content: center; */
   height: 100vh;
   padding-top: 70px;
-  padding-left: 250px;
+  padding-left: 200px;
   /* gap: 30px; */
   background-color: yellow;
 `;

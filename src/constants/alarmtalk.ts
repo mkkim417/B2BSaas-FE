@@ -5,6 +5,7 @@ export const ALAERMTALK_TEMPLATE = {
     <span id="#{택배배송시간}">#{택배배송시간데이터}</span> 택배를 배달할 예정입니다.
     등기번호(운송장번호) : <span id="#{송장번호}">#{송장번호데이터}</span>`,
     reqData: ['#{고객명}', '#{택배회사명}', '#{택배배송시간}', '#{송장번호}'],
+    tmpCode: 'TM_2216',
   },
   '주문완료 안내': {
     id: 2,
@@ -21,6 +22,7 @@ export const ALAERMTALK_TEMPLATE = {
       '#{월일}',
       '#{결제금액}',
     ],
+    tmpCode: 'TM_2217',
   },
   '사용법 안내': {
     id: 3,
@@ -29,6 +31,7 @@ export const ALAERMTALK_TEMPLATE = {
     구매하신 제품의 사용(이용)법을
     확인해 보세요.`,
     reqData: ['#{고객명}'],
+    tmpCode: 'TM_2220',
   },
   '배송완료 안내': {
     id: 4,
@@ -36,6 +39,7 @@ export const ALAERMTALK_TEMPLATE = {
     배송완료 되었습니다.
     구매확정 부탁드립니다.`,
     reqData: ['#{고객명}'],
+    tmpCode: 'TM_2222',
   },
   '회원가입완료 안내': {
     id: 5,
@@ -44,5 +48,6 @@ export const ALAERMTALK_TEMPLATE = {
     #{회사명}에 회원가입 해주셔서
     진심으로 감사드립니다~`,
     reqData: ['#{고객명}', '#{회사명}'],
+    tmpCode: 'TM_2223',
   },
 };

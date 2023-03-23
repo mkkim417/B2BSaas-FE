@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { sendListCreate } from '../redux/modules/sendList';
 import { sendKeyCreate } from '../redux/modules/sendKey';
 import { sendGroupNameCreate } from '../redux/modules/sendGroupName';
+import { clientsIdCreate } from '../redux/modules/clientsId';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import ClientHeader from '../components/ClientHeader';
@@ -130,23 +131,23 @@ function UploadPage() {
     reader.readAsBinaryString(input.files[0]);
   }
   const ClentBulkFetch = async () => {
-    let totalData = [] as any;
+    let data = [] as any;
     isData.map((el: any) =>
-      totalData.push({
+      data.push({
         clientName: `${el.이름}`,
         contact: `${el.전화번호.replace(/-/gi, '')}`,
         clientEmail: `${el.이메일}`,
       })
     );
-    console.log(totalData);
+    console.log(data);
     try {
       const response = await axios
-        .post(`https://dev.sendingo-be.store/api/clients/bulk`, totalData)
+        .post(`https://dev.sendingo-be.store/api/clients/bulk`, { data })
         .then((res) => {
-          console.log(res);
+          console.log('api/clients/bulk : ', res.data);
+          dispatch(clientsIdCreate(res?.data?.newClients));
         });
       console.log(response);
-      alert('전송완료');
       // navigate('/');
     } catch (error) {
       console.log(error);
@@ -248,7 +249,7 @@ function UploadPage() {
             {!isOpen ? (
               <Button
                 onClick={() => {
-                  // NextBtnHandler(isData, isKeyData);
+                  NextBtnHandler(isData, isKeyData);
                   ClentBulkFetch();
                 }}
               >

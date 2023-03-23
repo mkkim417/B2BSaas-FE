@@ -55,7 +55,10 @@ const Router = () => {
             <Route path="/groupinuserlist/:id" element={<GroupInUserList />} />
             <Route path="/emailtemplates" element={<EmailTemplates />} />
             <Route path="/singleusercreate" element={<SingleUserCreate />} />
-            <Route path="/clientregistration" element={<ClientRegistration />} />
+            <Route
+              path="/clientregistration"
+              element={<ClientRegistration />}
+            />
             <Route path="/groupmanageList" element={<GroupManageList />} />
           </Route>
           <Route

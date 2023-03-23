@@ -11,8 +11,8 @@ const TopNav = () => {
   const Home = useMatch('/');
 
   const clientCreate = useMatch('/singleusercreate');
-  const clientRegistration = useMatch('/clientregistration')
-  const groupManageList = useMatch('/groupmanageList')
+  const clientRegistration = useMatch('/clientregistration');
+  const groupManageList = useMatch('/groupmanageList');
 
   console.log('Uploadpage : ', Uploadpage);
   console.log('Home : ', Home);

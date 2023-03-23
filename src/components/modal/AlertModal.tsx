@@ -1,19 +1,17 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
 
 type Props = {
-  title? : string;
+  title?: string;
   content?: string;
   closeModal?: () => void;
-}
-function AlertModal({ title, content, closeModal} : Props) {
+};
+function AlertModal({ title, content, closeModal }: Props) {
   return (
     <ModalWrap>
       <ModalBackGround>
         <ModalContainer>
-          <InputContainer>
-            {content}
-          </InputContainer>
+          <InputContainer>{content}</InputContainer>
           <ButtonContainer>
             {/* <ButtonBox>아니오</ButtonBox> */}
             <ButtonBox onClick={closeModal}>확인</ButtonBox>
@@ -21,7 +19,7 @@ function AlertModal({ title, content, closeModal} : Props) {
         </ModalContainer>
       </ModalBackGround>
     </ModalWrap>
-  )
+  );
 }
 
 // 전체 모달 감싸주는 컴포넌틑
@@ -35,7 +33,7 @@ const ModalBackGround = styled.div`
   background-color: rgba(0, 0, 0, 0.6);
   width: 100%;
   height: 100vh;
-  position: absolute; 
+  position: absolute;
   bottom: 0;
   left: 0;
 `;
@@ -67,7 +65,7 @@ const InputContainer = styled.div`
   margin-top: 40px;
   flex-direction: row;
   font-size: 24px;
-`
+`;
 const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
@@ -75,12 +73,12 @@ const ButtonContainer = styled.div`
   flex-direction: row;
   margin-right: 20px;
   gap: 30px;
-`
+`;
 const ButtonBox = styled.button`
-  border: 1px solid yellowgreen; 
+  border: 1px solid yellowgreen;
   /* background-color: yellowgreen; */
   padding: 10px;
   font-size: 18px;
-`
+`;
 
-export default AlertModal
+export default AlertModal;

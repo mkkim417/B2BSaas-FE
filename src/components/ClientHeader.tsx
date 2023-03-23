@@ -1,14 +1,14 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useMatch } from 'react-router-dom'
-import styled from 'styled-components'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useMatch } from 'react-router-dom';
+import styled from 'styled-components';
 
 function ClientHeader() {
   // 단건, 다건 등록 경로
   // 처음 경로
-  const clientRegistration = useMatch('/clientregistration')
-  const singleCreate = useMatch('/singleusercreate')
-  const multieCreate = useMatch('/uploadpage')
+  const clientRegistration = useMatch('/clientregistration');
+  const singleCreate = useMatch('/singleusercreate');
+  const multieCreate = useMatch('/uploadpage');
   return (
     <HeaderContainer>
       <ButtonContainer>
@@ -28,7 +28,7 @@ function ClientHeader() {
         </Link>
       </ButtonContainer>
     </HeaderContainer>
-  )
+  );
 }
 
 const HeaderContainer = styled.div`
@@ -39,12 +39,12 @@ const HeaderContainer = styled.div`
   gap: 30px;
   /* margin-top: 30px; */
   /* background-color: salmon; */
-`
+`;
 const ButtonContainer = styled.div`
   display: flex;
   align-items: flex-end;
   /* background-color: beige; */
-`
+`;
 const DefaultButton = styled.button`
   font-size: 18px;
   font-weight: 700;
@@ -52,10 +52,10 @@ const DefaultButton = styled.button`
   padding: 15px;
   padding-left: 15px;
   padding-right: 15px;
-  border-bottom: 2px solid #D9D9D9;
-`
+  border-bottom: 2px solid #d9d9d9;
+`;
 const ColorButton = styled(DefaultButton)`
-  color: #4A72FF;
-  border-bottom: 2px solid #4A72FF;
-`
-export default ClientHeader
+  color: #4a72ff;
+  border-bottom: 2px solid #4a72ff;
+`;
+export default ClientHeader;

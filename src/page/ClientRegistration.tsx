@@ -1,7 +1,7 @@
-import React from 'react'
-import styled from 'styled-components'
-import ClientHeader from '../components/ClientHeader'
-import SingleUserCreate from './SingleUserCreate'
+import React from 'react';
+import styled from 'styled-components';
+import ClientHeader from '../components/ClientHeader';
+import SingleUserCreate from './SingleUserCreate';
 
 function ClientRegistration() {
   return (
@@ -9,8 +9,7 @@ function ClientRegistration() {
       <ClientHeader />
       <SingleUserCreate />
     </Container>
-
-  )
+  );
 }
 
 const Container = styled.div`
@@ -19,6 +18,6 @@ const Container = styled.div`
   /* height: 100vh; */
   padding-left: 250px;
   /* background-color: sandybrown; */
-`
+`;
 
-export default ClientRegistration
+export default ClientRegistration;

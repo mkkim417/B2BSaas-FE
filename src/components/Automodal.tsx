@@ -12,33 +12,36 @@ const AutoModal = (props: any) => {
   const isGorupDescChage = (e: any) => {
     setGorupDesc(e.target.value);
   };
+
+  const ClientsIdData = useSelector((state: any) => {
+    return state.clientsId.clientsId[0];
+  });
   const ClientListData = useSelector((state: any) => {
     return state.sendList.sendList;
   });
+
   console.log('ClientListData : ', ClientListData);
-  const onSubmit = () => {
+  console.log('ClientsIdData : ', ClientsIdData);
+  const onSubmit = async () => {
     if (isGorupDesc === undefined || null || '') {
       alert('그룹설명을 해주세요');
       return;
     }
-    navigate('/usergrouplist');
+    let clientIds = ClientsIdData;
+    console.log('clientIds : ', clientIds);
+    try {
+      const response = await axios
+        .post(`https://dev.sendingo-be.store/api/batch/groups/1`, {
+          clientIds: ClientsIdData,
+        })
+        .then((res) => {
+          console.log(res.data);
+          navigate('/usergrouplist');
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
-  console.log(props.currentValue);
-  console.log(props.isAllData);
-  let body = {
-    groupName: props.groupName[0],
-    groupDescription: isGorupDesc,
-    groupTagName: '신규',
-    groupList: ClientListData[0],
-  };
-  //클라이언트 그룹 생성 post api요청
-  const res = axios.post(
-    '/api/clients/groups',
-    {
-      body,
-    },
-    { withCredentials: true }
-  );
   return (
     <Container>
       <Background
@@ -110,15 +113,6 @@ const AutoModal = (props: any) => {
               </Button>
             </div>
             <ButtonGap>
-              <Button
-                width="100px"
-                height="40px"
-                bgColor="#fff"
-                border="3px solid #000"
-                color="#000"
-              >
-                임시저장
-              </Button>
               <Button
                 width="100px"
                 height="40px"

@@ -143,6 +143,7 @@ function UploadPage() {
       const response = await axios
         .post(`https://dev.sendingo-be.store/api/clients/bulk`, { data })
         .then((res) => {
+          console.log('api/clients/bulk : ', res.data);
           dispatch(clientsIdCreate(res?.data?.newClients));
         });
       console.log(response);

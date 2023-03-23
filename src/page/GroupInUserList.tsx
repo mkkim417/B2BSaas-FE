@@ -5,13 +5,18 @@ import { useEffect } from 'react';
 import Pagination from 'react-js-pagination';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { CardContainer, CardInBox, ContentContainer, HeaderBar, Percentage } from './UserGroupList';
+import {
+  CardContainer,
+  CardInBox,
+  ContentContainer,
+  HeaderBar,
+  Percentage,
+} from './UserGroupList';
 import { PaginationBox } from './UserList';
 
 function GroupInUserList() {
-
   // 선택 그룹의 id
-  const { id } = useParams()
+  const { id } = useParams();
 
   // 유저리스트 데이터 state
   const [groupUserList, setGroupUserList] = useState([] as any);
@@ -64,8 +69,8 @@ function GroupInUserList() {
         } else {
           checkedArr.push(el.id);
           setCheckedArr(checkedArr);
-          idArray.push(el.id)
-          setCheckedArr(idArray)
+          idArray.push(el.id);
+          setCheckedArr(idArray);
         }
       });
     } else {
@@ -99,7 +104,7 @@ function GroupInUserList() {
     indexOfLastPost,
     indexOfFirstPost,
     postPerPage,
-    getUserData
+    getUserData,
   ]);
 
   // 검색필터 useEffect
@@ -175,7 +180,7 @@ function GroupInUserList() {
   return (
     <Wrapper>
       <HeaderBar>
-        <div>{ id }번 그룹의 유저리스트</div>
+        <div>{id}번 그룹의 유저리스트</div>
         <div>체크 갯수 : {checkedArr.length}</div>
         <div>그룹설명란</div>
         <input placeholder="검색" onChange={inputChange} />
@@ -192,7 +197,9 @@ function GroupInUserList() {
             <input
               type="checkbox"
               onChange={(e: any) => allCheckHandler(e.target.checked)}
-              checked={checkedArr.length === groupUserList.length ? true : false}
+              checked={
+                checkedArr.length === groupUserList.length ? true : false
+              }
             />
           </Percentage>
           <Percentage width="20%">고객명</Percentage>

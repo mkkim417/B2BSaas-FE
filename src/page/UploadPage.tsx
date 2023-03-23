@@ -10,6 +10,7 @@ import { sendGroupNameCreate } from '../redux/modules/sendGroupName';
 import { clientsIdCreate } from '../redux/modules/clientsId';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import ClientHeader from '../components/ClientHeader';
 interface IData {
   id: number;
   name: string;
@@ -165,6 +166,7 @@ function UploadPage() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
+      <ClientHeader />
       <Wrapper>
         <ContentsWrap>
           <TopContents>

@@ -73,9 +73,9 @@ function SingleUserCreate() {
   return (
     <Container>
       <ContentContainer>
+      <FormContainer onSubmit={submitHandler}>
         <TableContainer>
-          <div>
-          <FormContainer onSubmit={submitHandler}>
+            <tbody>
             <tr>
               <th>이름</th>
               <td>
@@ -110,9 +110,10 @@ function SingleUserCreate() {
                   onChange={onInputChange}/>
               </td>
             </tr>
-          </FormContainer>
-          </div>
+            </tbody>
+          
         </TableContainer>
+        </FormContainer>
         <SubmitContatiner>
           <SubmitButton onClick={submitHandler}>등록</SubmitButton>
         </SubmitContatiner>

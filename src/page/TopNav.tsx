@@ -12,6 +12,7 @@ const TopNav = () => {
 
   const clientCreate = useMatch('/singleusercreate');
   const clientRegistration = useMatch('/clientregistration')
+  const groupManageList = useMatch('/groupmanageList')
 
   console.log('Uploadpage : ', Uploadpage);
   console.log('Home : ', Home);
@@ -63,8 +64,8 @@ const TopNav = () => {
                     <Li>고객등록</Li>
                   )}
                 </Link>
-                <Link to={'/usergrouplist'}>
-                  {usergrouplist ? (
+                <Link to={'/groupmanageList'}>
+                  {groupManageList ? (
                     <LiBlue>그룹관리</LiBlue>
                   ) : (
                     <Li>그룹관리</Li>

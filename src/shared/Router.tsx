@@ -24,6 +24,7 @@ import { motion } from 'framer-motion';
 import { AnimatePresence } from 'framer-motion';
 import SingleUserCreate from '../page/SingleUserCreate';
 import ClientRegistration from '../page/ClientRegistration';
+import GroupManageList from '../page/GroupManageList';
 
 const Router = () => {
   const userInfo = getUser();
@@ -40,10 +41,10 @@ const Router = () => {
             />
             <Route path="/noticesendcreate" element={<NoticeSendCreate />} />
             <Route path="/noticesendlist" element={<NoticeSendList />} />
-            <Route path="/userdatacreate" element={<UserDataCreate />} />
-            <Route path="/usergroupcreate" element={<UserGroupCreate />} />
-            <Route path="/usergrouplist" element={<UserGroupList />} />
-            <Route path="/userlist" element={<UserList />} />
+            {/* <Route path="/userdatacreate" element={<UserDataCreate />} /> */}
+            {/* <Route path="/usergroupcreate" element={<UserGroupCreate />} /> */}
+            {/* <Route path="/usergrouplist" element={<UserGroupList />} /> */}
+            {/* <Route path="/userlist" element={<UserList />} /> */}
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/alarmtalk" element={<Alarmtalk />} />
             <Route path="/signup" element={<Signup />} />
@@ -55,7 +56,7 @@ const Router = () => {
             <Route path="/emailtemplates" element={<EmailTemplates />} />
             <Route path="/singleusercreate" element={<SingleUserCreate />} />
             <Route path="/clientregistration" element={<ClientRegistration />} />
-
+            <Route path="/groupmanageList" element={<GroupManageList />} />
           </Route>
           <Route
             path="/home"

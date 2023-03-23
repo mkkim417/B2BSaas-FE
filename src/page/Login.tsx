@@ -7,6 +7,8 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { setCookie } from '../util/cookie';
 import jwt_decode from 'jwt-decode';
+import { useMutation } from 'react-query';
+import { postLogin } from '../axios/api';
 
 interface FormValues {
   email: string;
@@ -18,24 +20,36 @@ function Login() {
   const [alertMessage, setAlertMessage] = useState('');
   const { register, handleSubmit } = useForm<FormValues>();
 
-  const handleLogin = async (data: any) => {
+  const { mutate } = useMutation(postLogin, {
+    onSuccess: (data) => {
+      console.log(data);
+      const { cookies } = data;
+      setCookie('userCookie', cookies);
+      alert('로그인이 완료되었습니다.');
+      navigate('/');
+    },
+    onError: () => {
+      alert('로그인을 실패하였습니다.');
+    },
+  });
+
+  const handleLogin = async (data: FormValues) => {
     try {
-      const response = await axios.post(
-        `https://dev.sendingo-be.store/api/users/login`,
-        data
-      );
+      const response = await postLogin(data);
+
       console.log(response);
-      let token = response.data.token;
-      setCookie('accessToken', token);
-      const decodedUserInfo = jwt_decode(token);
-      console.log('decode', decodedUserInfo);
-      localStorage.setItem('userInfo', JSON.stringify(decodedUserInfo));
-      alert('로그인완료');
+      setCookie('userCookie', response.cookies);
+      alert('로그인이 완료되었습니다.');
+
       navigate('/');
     } catch (error) {
       console.log(error);
       alert('다시 시도해주시기 바랍니다.');
     }
+  };
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    mutate(data);
   };
 
   return (

@@ -6,24 +6,15 @@ interface Login {
   password: string;
 }
 
+console.log(`REACT_DEPLOY_SERVER value: ${process.env.REACT_DEPLOY_SERVER}`);
+
 const instance = axios.create({
-  // baseURL: `REACT_APP_SERVER_URL`,
   baseURL: `${process.env.REACT_DEPLOY_SERVER}`,
   withCredentials: true,
-});
-
-instance.interceptors.request.use(
-  (config) => {
-    const cookie = document.cookie;
-    if (cookie) {
-      config.headers.Cookie = cookie;
-    }
-    return config;
+  headers: {
+    authorization: `Bearer ${getCookie('accessToken')}`,
   },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+});
 
 const postLogin = async (login: Login) => {
   const response = await instance.post(
@@ -31,11 +22,9 @@ const postLogin = async (login: Login) => {
     login
   );
 
-  const cookies = response.headers.authorization;
-  console.log('response:', response);
-
+  const cookies = response.headers.Authorization;
   const token = response.data.accessToken;
-  console.log('token', token);
+  console.log(token);
 
   return { response: response.data, cookies: cookies, token: token };
 };

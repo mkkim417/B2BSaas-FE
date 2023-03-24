@@ -23,8 +23,9 @@ function Login() {
   const { mutate } = useMutation(postLogin, {
     onSuccess: (data) => {
       console.log(data);
-      const { cookies } = data;
+      const { cookies, token } = data;
       setCookie('userCookie', cookies);
+      setCookie('userToken', token);
       alert('로그인이 완료되었습니다.');
       navigate('/');
     },
@@ -35,10 +36,12 @@ function Login() {
 
   const handleLogin = async (data: FormValues) => {
     try {
-      const response = await postLogin(data);
+      const { response, cookies, token } = await postLogin(data);
 
       console.log(response);
-      setCookie('userCookie', response.cookies);
+      setCookie('userCookie', cookies);
+      setCookie('userToken', token);
+
       alert('로그인이 완료되었습니다.');
 
       navigate('/');

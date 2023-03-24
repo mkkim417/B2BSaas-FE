@@ -2,9 +2,8 @@ import React, { useRef, useState } from 'react';
 // import { Wrapper } from './Home';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useNavigate } from 'react-router';
 import { useForm, SubmitHandler, Validate } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface FormValues {
   email: string;
@@ -42,6 +41,7 @@ const Signup = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [directInput, setDirectInput] = useState(false);
+  const navigate = useNavigate();
   const {
     register,
     formState: { errors, isValid },
@@ -165,6 +165,9 @@ const Signup = () => {
       companyEmail: sendEmail2,
       role: '1',
     });
+    setIsSubmitted(true);
+    navigate('/');
+
     // try {
     //   const response = console.log(response);
     // } catch (error: any) {

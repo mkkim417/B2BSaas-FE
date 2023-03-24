@@ -33,6 +33,14 @@ const options: Option[] = [
   { value: 'direct', label: '직접입력' },
 ];
 
+const companyEmailOptions: Option[] = [
+  { value: 'gmail.com', label: 'gmail.com' },
+  { value: 'naver.com', label: 'naver.com' },
+  { value: 'kakao.com', label: 'kakao.com' },
+  { value: 'outlook.com', label: 'outlook.com' },
+  { value: 'direct', label: '직접입력' },
+];
+
 interface StInputProps {
   hasError?: boolean;
 }
@@ -41,6 +49,7 @@ const Signup = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [directInput, setDirectInput] = useState(false);
+  const [companyDirectInput, setCompanyDirectInput] = useState(false);
   const navigate = useNavigate();
   const {
     register,
@@ -97,28 +106,79 @@ const Signup = () => {
     }
   };
 
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const emailProvider = e.target.value;
+  const companyHandleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    if (name === 'companyEmail') {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        email: value,
+      }));
+    } else if (name === 'comapnyEmailProvider') {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        emailProvider: value,
+        email: prevFormData.companyEmail + '@' + value,
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleEmailProviderChange = (emailprovider: string) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      emailProvider,
+      emailProvider: emailprovider,
     }));
-    if (emailProvider === 'direct') {
+    if (emailprovider === 'direct') {
       setDirectInput(true);
     } else {
       setDirectInput(false);
     }
-    // companyEmailProvider를 직접 수정하는 경우를 추가
-    if (emailProvider === 'gmail.com') {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        companyEmailProvider: 'gmail.com',
-      }));
-    } else if (emailProvider === 'gmail.com') {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        companyEmailProvider: 'gmail.com',
-      }));
+  };
+
+  const handleCompanyEmailProviderChange = (companyEmailProvider: string) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      companyEmailProvider: companyEmailProvider,
+    }));
+    if (companyEmailProvider === 'direct') {
+      setCompanyDirectInput(true);
+    } else {
+      setCompanyDirectInput(false);
+    }
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const emailProvider = e.target.value;
+    handleEmailProviderChange(emailProvider);
+  };
+
+  const handleCompanySelectChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const companyEmailProvider = e.target.value;
+    handleCompanyEmailProviderChange(companyEmailProvider);
+  };
+
+  const checkEmailDuplication = async (email: string) => {
+    console.log('email', email);
+    try {
+      const response = await axios
+        .post('https://dev.sendingo-be.store/api/users/signup/existemail', {
+          email: email,
+        })
+        .then((res) => {
+          console.log(res);
+          return res;
+        });
+      console.log('sent', email);
+      console.log('receive', response.data);
+      return response.data.exists;
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -167,22 +227,6 @@ const Signup = () => {
     });
     setIsSubmitted(true);
     navigate('/');
-
-    // try {
-    //   const response = console.log(response);
-    // } catch (error: any) {
-    //   console.error(error);
-
-    // console.error('Error during axios call', error);
-    // if (error.response) {
-    //   console.error('API Response Error:', error.response);
-    // } else if (error.request) {
-    //   console.error('No API Response:', error.request);
-    // } else {
-    //   console.error('API Request Error:', error.message);
-    // }
-    // setAlertMessage('Registration failed.');
-    // alert('Login failed.');
   };
 
   return (
@@ -240,11 +284,25 @@ const Signup = () => {
                
               {errors.email?.message ||
                 errors.emailProvider?.message ||
-                'Please enter your email.'}
+                '이메일을 입력해 주십시오.'}
             </StErrorMsg>
           ) : null}
+          <button
+            onClick={() => {
+              checkEmailDuplication(formData.email).then((exists) => {
+                if (exists) {
+                  alert('이미 존재하는 이메일입니다.');
+                } else {
+                  alert('사용가능한 이메일입니다.');
+                }
+              });
+            }}
+          >
+            중복확인
+          </button>{' '}
                  
         </StEmail>
+
         <StBrand>
           <StBrandP>소속명</StBrandP>
           <StBrandInput
@@ -330,20 +388,21 @@ const Signup = () => {
             required
           />
           <span>@</span>
-          {directInput ? (
+          {companyDirectInput ? (
             <StInputWrapper>
                
               <StInput2
                 type="text"
                 {...register('companyEmailProvider', {
                   required: '이 항목은 필수입니다',
+                  validate: EmailValidation,
                 })}
                 name="companyEmailProvider"
-                value={formData.emailProvider}
-                onChange={handleInputChange}
+                value={formData.companyEmailProvider}
+                onChange={companyHandleInputChange}
                 onBlur={() => {
-                  if (!formData.emailProvider) {
-                    setDirectInput(false);
+                  if (!formData.companyEmailProvider) {
+                    setCompanyDirectInput(false);
                   }
                 }}
                 required
@@ -352,10 +411,10 @@ const Signup = () => {
           ) : (
             <StSelect2
               name="companyEmailProvider"
-              value={formData.emailProvider || 'gmail.com'}
-              onChange={handleSelectChange}
+              value={formData.companyEmailProvider || 'gmail.com'}
+              onChange={handleCompanySelectChange}
             >
-              {options.map(({ value, label }) => (
+              {companyEmailOptions.map(({ value, label }) => (
                 <option key={value} value={value}>
                   {label}
                 </option>
@@ -368,7 +427,7 @@ const Signup = () => {
                
               {errors.email?.message ||
                 errors.emailProvider?.message ||
-                'Please enter your email.'}
+                '이메일을 입력해 주십시오.'}
             </StErrorMsg>
           ) : null}
           {/* <StPicRole>

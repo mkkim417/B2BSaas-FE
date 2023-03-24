@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { PaginationBox } from './UserList';
 
 function GroupManageList() {
-  
+
   // 조건 상태 분기
   // 전체 클라이언트 리스트 호출시 true, 그룹 내 클라이언트 호출시 false 상태로 호출진행
   const [isClientState, setIsClientState] = useState(true);
@@ -34,13 +34,14 @@ function GroupManageList() {
   // 그룹 클릭시 그룹 내 클라이언트리스트 호출
   const getClientInGroup = useCallback(async (id: any, name: any) => {
     setIsClientState(false);
+    console.log('IsClientState', isClientState)
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}`
     );
     // console.log('getClientInGroup Response', response.data.data)
     setGroupClient(response.data.data);
     setGroupName(name);
-  }, []);
+  }, [isClientState]);
 
   /*************************************************************************************
     유저리스트 관련 코드
@@ -64,6 +65,7 @@ function GroupManageList() {
   // 유저리스트 GET API
   const getUserData = useCallback(async () => {
     setIsClientState(true);
+    console.log('IsClientState', isClientState)
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/clients`
     );

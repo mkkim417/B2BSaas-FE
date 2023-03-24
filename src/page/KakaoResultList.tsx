@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { PaginationBox } from './UserList';
 import Pagination from 'react-js-pagination';
+import axios from 'axios';
 function KakaoResultList() {
   //페이지네이션
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
@@ -108,6 +109,31 @@ function KakaoResultList() {
       percent: '33%',
     },
   ];
+  const [isGroupList, setGroupList] = useState([]);
+  const [isGroupClient, setGroupClient] = useState([]);
+  const [currentValue, setCurrentValue] = useState(null);
+  const getGroupData = useCallback(async () => {
+    // https://dev.sendingo-be.store/api/groups
+    const response = await axios.get(
+      `${process.env.REACT_APP_SERVER_URL}/api/groups`
+    );
+    console.log('GroupList API', response.data.data);
+    setGroupList(response.data.data);
+  }, []);
+  const getClientInGroup = useCallback(async (id: any, name: any) => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}`
+    );
+    // console.log('getClientInGroup Response', response.data.data)
+    setGroupClient(response.data.data);
+  }, []);
+  const handleOnChangeSelectValue = (e: any) => {
+    setCurrentValue(e.target.value);
+    console.log(e.target.value);
+  };
+  useEffect(() => {
+    getGroupData();
+  }, [getGroupData]);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -118,9 +144,14 @@ function KakaoResultList() {
         <H1>전송결과조회</H1>
         <FlexWrap>
           <GrayWrap>고객그룹</GrayWrap>
-          <select name="" id="">
-            <option value="1">1</option>
-            <option value="2">2</option>
+          <select name="" id="" onChange={(e) => handleOnChangeSelectValue(e)}>
+            {isGroupList?.map((item: any, idx: number) => {
+              return (
+                <option key={item.groupId} value={item.groupName}>
+                  {item.groupName}({item.clientCount})
+                </option>
+              );
+            })}
           </select>
         </FlexWrap>
         <FlexWrap>

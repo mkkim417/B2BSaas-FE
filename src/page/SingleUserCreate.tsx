@@ -74,52 +74,37 @@ function SingleUserCreate() {
   };
   return (
     <Container>
-      <ContentContainer>
-        <FormContainer onSubmit={submitHandler}>
-          <TableContainer>
-            <tbody>
-              <tr>
-                <th>이름</th>
-                <td>
-                  <InputBox
-                    name="clientName"
-                    type="text"
-                    value={inputData.clientName}
-                    placeholder="성함"
-                    onChange={onInputChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <th>연락처</th>
-                <td>
-                  <InputBox
-                    name="clientContact"
-                    type="text"
-                    value={inputData.clientContact}
-                    placeholder="연락처"
-                    onChange={onInputChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <th>이메일</th>
-                <td>
-                  <InputBox
-                    name="clientEmail"
-                    type="text"
-                    value={inputData.clientEmail}
-                    placeholder="이메일"
-                    onChange={onInputChange}
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </TableContainer>
-        </FormContainer>
-        <SubmitContatiner>
-          <SubmitButton onClick={submitHandler}>등록</SubmitButton>
-        </SubmitContatiner>
+      <ContentContainer onSubmit={submitHandler}>
+        <RowContatiner>
+          <NameContainer>성함</NameContainer>
+          <InputContainer 
+            name="clientName"
+            type="text"
+            value={inputData.clientName}
+            placeholder="성함"
+            onChange={onInputChange}/>
+        </RowContatiner>
+        <RowContatiner>
+          <NameContainer>연락처</NameContainer>
+          <InputContainer 
+            name="clientContact"
+            type="text"
+            value={inputData.clientContact}
+            placeholder="연락처"
+            onChange={onInputChange}/>
+        </RowContatiner>
+        <RowContatiner>
+          <NameContainer>이메일</NameContainer>
+          <InputContainer
+            name="clientEmail"
+            type="text"
+            value={inputData.clientEmail}
+            placeholder="이메일"
+            onChange={onInputChange}/>
+        </RowContatiner>
+        <ButtonContainer>
+          <SubmitButton type="submit" onClick={submitHandler}>등록</SubmitButton>
+        </ButtonContainer>
       </ContentContainer>
       {isSuccessModal && (
         <AlertModal closeModal={closeSuccessModal} content="등록 성공!" />
@@ -136,36 +121,52 @@ const Container = styled.div`
   flex-direction: column;
   height: 100vh;
 `;
-const ContentContainer = styled.div`
-  height: 100%;
+const ContentContainer = styled.form`
+  width: 50%;
+  height: 40%;
   margin: 100px 300px;
+  /* background-color: red; */
 `;
-const TableContainer = styled.table`
-  height: auto;
-  width: 100%;
-  border: 2px solid #d8d8d8;
 
-  th {
-    height: 80px;
-    vertical-align: middle;
-    width: 20%;
-    border: 2px solid #d8d8d8;
-  }
-  td {
-    vertical-align: middle;
-    width: 80%;
-    border: 2px solid #d8d8d8;
-  }
+const RowContatiner = styled.div`
+  width: 100%;
+  height: 25%;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  /* background-color: beige; */
 `;
+const NameContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  border: 1px solid black;
+`;
+const InputContainer = styled.input`
+  display: flex;
+
+  width: 80%;
+`;
+const ButtonContainer = styled.div`
+  width: 100%;
+  height: 25%;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+`
 const FormContainer = styled.form``;
 const SubmitContatiner = styled.div`
+  width: 100%;
+  height: 25%;
   display: flex;
   justify-content: right;
   height: 10%;
-  margin: 10px 0px 10px 10px;
+  margin: 0px 10px 10px 0px;
 `;
 const SubmitButton = styled.button`
   width: 100px;
+  height: 50px;
   background-color: blanchedalmond;
 `;
 const InputBox = styled.input`

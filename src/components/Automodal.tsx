@@ -1,14 +1,17 @@
 import axios from 'axios';
 import React, { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useDetectClose from '../hook/useDetectClose';
+import { kakaoGroupIdCreate } from '../redux/modules/kakaoGroupId';
 const AutoModal = (props: any) => {
   const dropDownRef = useRef();
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false); //커스텀훅
   const [isGorupDesc, setGorupDesc] = useState();
+  const [isGorupName, setGorupName] = useState(props.groupName[0]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const isGorupDescChage = (e: any) => {
     setGorupDesc(e.target.value);
   };
@@ -23,6 +26,7 @@ const AutoModal = (props: any) => {
   console.log('ClientListData : ', ClientListData);
   console.log('ClientsIdData : ', ClientsIdData);
   const onSubmit = async () => {
+    console.log('props.groupName : ', props.groupName);
     if (isGorupDesc === undefined || null || '') {
       alert('그룹설명을 해주세요');
       return;
@@ -31,12 +35,15 @@ const AutoModal = (props: any) => {
     console.log('clientIds : ', clientIds);
     try {
       const response = await axios
-        .post(`https://dev.sendingo-be.store/api/batch/groups/1`, {
+        .post(`https://dev.sendingo-be.store/api/batch/groups`, {
           clientIds: ClientsIdData,
+          groupName: isGorupName,
+          groupDescription: isGorupDesc,
         })
         .then((res) => {
           console.log(res.data);
-          navigate('/usergrouplist');
+          dispatch(kakaoGroupIdCreate(res.data.groupId));
+          navigate('/groupmanageList');
         });
     } catch (error) {
       console.log(error);
@@ -56,7 +63,13 @@ const AutoModal = (props: any) => {
               <Strong>
                 그룹명<Red>*</Red>
               </Strong>
-              <Input type="text" defaultValue={props.groupName} />
+              <Input
+                type="text"
+                defaultValue={props.groupName}
+                onChange={(e) => {
+                  setGorupName(e.target.value);
+                }}
+              />
             </Flex>
             <Flex width="50%">
               <Strong>유저수</Strong> {props.userNum}

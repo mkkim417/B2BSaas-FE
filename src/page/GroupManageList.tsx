@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { PaginationBox } from './UserList';
 
 function GroupManageList() {
-
   // 조건 상태 분기
   // 전체 클라이언트 리스트 호출시 true, 그룹 내 클라이언트 호출시 false 상태로 호출진행
   const [isClientState, setIsClientState] = useState(true);
@@ -32,16 +31,19 @@ function GroupManageList() {
   const [groupClient, setGroupClient] = useState([] as any);
 
   // 그룹 클릭시 그룹 내 클라이언트리스트 호출
-  const getClientInGroup = useCallback(async (id: any, name: any) => {
-    setIsClientState(false);
-    console.log('IsClientState', isClientState)
-    const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}`
-    );
-    // console.log('getClientInGroup Response', response.data.data)
-    setGroupClient(response.data.data);
-    setGroupName(name);
-  }, [isClientState]);
+  const getClientInGroup = useCallback(
+    async (id: any, name: any) => {
+      setIsClientState(false);
+      console.log('IsClientState', isClientState);
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}`
+      );
+      // console.log('getClientInGroup Response', response.data.data)
+      setGroupClient(response.data.data);
+      setGroupName(name);
+    },
+    [isClientState]
+  );
 
   /*************************************************************************************
     유저리스트 관련 코드
@@ -65,16 +67,60 @@ function GroupManageList() {
   // 유저리스트 GET API
   const getUserData = useCallback(async () => {
     setIsClientState(true);
-    console.log('IsClientState', isClientState)
+    console.log('IsClientState', isClientState);
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/clients`
     );
-    // console.log('UserList API', response.data.data);
-    setUserList(response.data.data);
+    console.log('UserList API', response.data);
+    setUserList(response.data.data.clients);
+    setAllclients(response.data.data.clientCount);
   }, []);
 
   // 처음 렌더링시 전체고객리스트로 focus
   const allUserRef = useRef<HTMLButtonElement>(null);
+  // 전체고객리스트 숫자
+  const [isAllclients, setAllclients] = useState();
+
+  // 체크박스관련
+  //******************************************************************************
+
+  const [checkedList, setCheckedList] = useState<string[]>([]);
+  const [isChecked, setIsChecked] = useState(false);
+  const [isOpen, setOpen] = useState(false);
+  //선택취소함수
+  const checkedItemHandler = (value: string, isChecked: boolean) => {
+    if (isChecked) {
+      setCheckedList((prev) => [...prev, value]);
+      return;
+    }
+    if (!isChecked && checkedList.includes(value)) {
+      setCheckedList(checkedList.filter((item) => item !== value));
+      return;
+    }
+    return;
+  };
+  //체크박스저장함수
+  const checkHandler = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    value: string
+  ) => {
+    setIsChecked(!isChecked);
+    checkedItemHandler(value, e.target.checked);
+  };
+  //저장함수
+  const onDelete = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      // console.log('checkedList:', checkedList)
+      // isData && isData.filter((x: any) => !checkedList.includes(x))
+      setGroupClient(groupClient.filter((x: any) => !checkedList.includes(x)));
+      setOpen(false);
+    },
+    [checkedList]
+  );
+  const kakaoAlertSend = () => {
+    alert('카카오알람톡 전송준비중');
+  };
   // 그룹리스트 useEffect
   useEffect(() => {
     getGroupData();
@@ -108,11 +154,12 @@ function GroupManageList() {
         <GroupContainer>
           <GroupContentBox>
             <GroupContentItem onClick={getUserData} ref={allUserRef}>
-              전체 고객리스트{userList.length}
+              전체 고객리스트{isAllclients}
             </GroupContentItem>
             {groupList?.map((item: any) => {
               return (
                 <GroupContentItem
+                  key={item.groupId}
                   onClick={() => getClientInGroup(item.groupId, item.groupName)}
                 >
                   {item.groupName}({item.clientCount})
@@ -128,12 +175,16 @@ function GroupManageList() {
         <ClientContainer>
           <ClientHeaderBox>
             <NameBox>그룹명</NameBox> <TextArea value={groupName} />
+            {isClientState ? null : (
+              <GroupButton onClick={kakaoAlertSend}>알림톡전송</GroupButton>
+            )}
           </ClientHeaderBox>
           <ClientContentHeader>
             <CardHeader>
-              <Percentage width="6%">
-                <input type="checkbox" />
-              </Percentage>
+              {!isClientState && isOpen ? (
+                <Percentage width="6%">선택</Percentage>
+              ) : null}
+
               <Percentage width="23%">그룹명</Percentage>
               <Percentage width="12%">이름</Percentage>
               <Percentage width="22%">연락처</Percentage>
@@ -149,9 +200,6 @@ function GroupManageList() {
                   .map((item: any) => {
                     return (
                       <CardHeader>
-                        <Percentage width="6%">
-                          <input type="checkbox" />
-                        </Percentage>
                         <Percentage width="23%">소속 그룹명</Percentage>
                         <Percentage width="12%">{item.clientName}</Percentage>
                         <Percentage width="22%">{item.contact}</Percentage>
@@ -170,10 +218,17 @@ function GroupManageList() {
                 .slice(indexOfFirstPost, indexOfLastPost)
                 .map((item: any) => {
                   return (
-                    <CardHeader>
-                      <Percentage width="6%">
-                        <input type="checkbox" />
-                      </Percentage>
+                    <CardHeader key={item.clientId}>
+                      {isOpen ? (
+                        <Percentage width="6%">
+                          <input
+                            type="checkbox"
+                            checked={checkedList.includes(item)}
+                            onChange={(e) => checkHandler(e, item)}
+                          />
+                        </Percentage>
+                      ) : null}
+
                       <Percentage width="23%">소속 그룹명</Percentage>
                       <Percentage width="12%">{item.clientName}</Percentage>
                       <Percentage width="22%">{item.contact}</Percentage>
@@ -213,6 +268,23 @@ function GroupManageList() {
             </PaginationBox>
           </ClientPageBox>
           <ButtonBox>
+            {isClientState ? null : (
+              <>
+                {isOpen && isOpen ? (
+                  <GroupButton onClick={onDelete}>삭제</GroupButton>
+                ) : null}
+                {!isOpen ? (
+                  <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
+                    선택삭제
+                  </GroupButton>
+                ) : (
+                  <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
+                    선택취소
+                  </GroupButton>
+                )}
+              </>
+            )}
+
             <GroupButton>그룹 추가</GroupButton>
             <GroupButton>그룹 삭제</GroupButton>
             <ClientButton>그룹에서 삭제</ClientButton>

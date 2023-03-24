@@ -3,6 +3,7 @@ import { Outlet } from 'react-router';
 import { Link, useMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import Accordion from '../components/Accordion';
+import { Logo } from '../components/Header';
 
 const TopNav = () => {
   const Uploadpage = useMatch('/uploadpage');
@@ -18,13 +19,25 @@ const TopNav = () => {
   console.log('Home : ', Home);
   return (
     <>
-      {/* <Header>
-        <Link to={'/'}>Logo</Link>
-      </Header> */}
       <Wrapper>
         <UserContatiner>
-          <UserButton>마이페이지</UserButton>
-          <UserButton>로그아웃</UserButton>
+          <div style={{ marginBottom: '40px' }}>
+            <Logo>
+              <Link to={'/home'}>Logo</Link>
+            </Logo>
+          </div>
+          <UserWrap>
+            <CompanyComp>소속회사명</CompanyComp>
+            <Display>
+              <NameComp>김샌드</NameComp>
+              <LevelComp>관리자레벨명</LevelComp>
+            </Display>
+          </UserWrap>
+          <FlexWrap>
+            <UserButton>마이페이지</UserButton>
+            <UserButton>|</UserButton>
+            <UserButton>로그아웃</UserButton>
+          </FlexWrap>
         </UserContatiner>
         <Link to={'/'}>
           <Accordion title="이용현황" />
@@ -93,6 +106,34 @@ const TopNav = () => {
     </>
   );
 };
+const NameComp = styled.div`
+  color: #555;
+  font-weight: bold;
+  font-size: 18px;
+  margin-right: 10px;
+`;
+const Display = styled.div`
+  display: flex;
+  align-items: end;
+  margin: 10px 0px 20px;
+`;
+const CompanyComp = styled.div`
+  color: rgb(144, 144, 144);
+  font-weight: bold;
+`;
+const LevelComp = styled(CompanyComp)`
+  font-size: 12px;
+`;
+const UserWrap = styled.div`
+  margin-left: 30px;
+`;
+const FlexWrap = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 40px;
+  font-size: 14px;
+  font-weight: bold;
+`;
 const Ul = styled.ul`
   border-top: 1px solid #909090;
   background-color: #fbfbfb;
@@ -119,7 +160,6 @@ const Header = styled.div`
   z-index: 1;
 `;
 const Wrapper = styled.div`
-  padding-top: 80px;
   width: 250px;
   height: 100vh;
   position: fixed;
@@ -129,13 +169,16 @@ const Wrapper = styled.div`
 `;
 const UserContatiner = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
-  gap: 20px;
 `;
-const UserButton = styled.button`
-  background-color: beige;
+const UserButton = styled.div`
+  color: #909090;
+  text-decoration: underline;
   cursor: pointer;
+  :nth-of-type(2) {
+    font-weight: 100;
+  }
 `;
 
 export default TopNav;

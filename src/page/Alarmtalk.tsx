@@ -272,7 +272,6 @@ const Button = styled.button`
 `;
 export const Wrapper = styled.div`
   padding-left: 200px;
-  margin-top: 60px;
   display: flex;
   gap: 30px;
   -webkit-box-pack: center;

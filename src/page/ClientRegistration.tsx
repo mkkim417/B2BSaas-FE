@@ -2,13 +2,19 @@ import React from 'react';
 import styled from 'styled-components';
 import ClientHeader from '../components/ClientHeader';
 import SingleUserCreate from './SingleUserCreate';
-
+import { motion } from 'framer-motion';
 function ClientRegistration() {
   return (
-    <Container>
-      <ClientHeader />
-      <SingleUserCreate />
-    </Container>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <Container>
+        <ClientHeader />
+        <SingleUserCreate />
+      </Container>
+    </motion.div>
   );
 }
 

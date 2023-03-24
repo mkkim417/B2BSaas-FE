@@ -365,6 +365,7 @@ const GroupContentBox = styled.div`
   /* width: 100%; */
   height: 90%;
   border: 2px solid burlywood;
+  overflow: auto;
   /* margin: 0px 30px 0px 30px; */
 `;
 const GroupContentItem = styled.button`

@@ -1,16 +1,23 @@
 import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import styled from 'styled-components';
 import { PaginationBox } from './UserList';
 
 function GroupManageList() {
+  
+  // 조건 상태 분기
+  // 전체 클라이언트 리스트 호출시 true, 그룹 내 클라이언트 호출시 false 상태로 호출진행
+  const [isClientState, setIsClientState] = useState(true);
+
   /*************************************************************************************
     그룹리스트 관련 코드
   ************************************************************************************ */
 
   // 그룹리스트 담는 변수
   const [groupList, setGroupList] = useState([] as any);
+  // 그룹리스트 이름 textarea 변수
+  const [groupName, setGroupName] = useState('');
   // 그룹리스트 GET API
   const getGroupData = useCallback(async () => {
     // https://dev.sendingo-be.store/api/groups
@@ -21,6 +28,20 @@ function GroupManageList() {
     setGroupList(response.data.data);
   }, []);
 
+  // 그룹리스트 내 클라이언트 변수
+  const [groupClient, setGroupClient] = useState([] as any);
+
+  // 그룹 클릭시 그룹 내 클라이언트리스트 호출
+  const getClientInGroup = useCallback(async (id: any, name: any) => {
+    setIsClientState(false);
+    const response = await axios.get(
+      `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}`
+    );
+    // console.log('getClientInGroup Response', response.data.data)
+    setGroupClient(response.data.data);
+    setGroupName(name);
+  }, []);
+
   /*************************************************************************************
     유저리스트 관련 코드
   ************************************************************************************ */
@@ -29,29 +50,33 @@ function GroupManageList() {
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
   // const [count, setCount] = useState(0); // 아이템 총 갯수
   // const [ product, setProduct ] = useState([])  // 리스트에 담아낼 아이템들
-  const [postPerPage] = useState(14); // 한 페이지에 보여질 아이템 수
+  const [postPerPage] = useState(15); // 한 페이지에 보여질 아이템 수
   const [indexOfLastPost, setIndexOfLastPost] = useState(0); // 현재 페이지의 마지막 아이템 인덱스
   const [indexOfFirstPost, setIndexOfFirstPost] = useState(0); // 현재 페이지의 첫번째 아이템 인덱스
   const [currentPosts, setCurrentPosts] = useState(0); // 현재 페이지에서 보여지는 아이템들
   // const userData = userList.slice(indexOfFirstPost, indexOfLastPost)
-  const setPage = (error: any) => {
-    setCurrentPage(error);
+  const setPage = (page: any) => {
+    setCurrentPage(page);
   };
 
   // 유저리스트 담는 변수
   const [userList, setUserList] = useState([] as any);
   // 유저리스트 GET API
   const getUserData = useCallback(async () => {
+    setIsClientState(true);
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/clients`
     );
-    console.log('UserList API', response.data.data);
+    // console.log('UserList API', response.data.data);
     setUserList(response.data.data);
   }, []);
 
+  // 처음 렌더링시 전체고객리스트로 focus
+  const allUserRef = useRef<HTMLButtonElement>(null);
   // 그룹리스트 useEffect
   useEffect(() => {
     getGroupData();
+    allUserRef.current?.focus();
   }, [getGroupData]);
 
   // 유저리스트 useEffect
@@ -61,7 +86,11 @@ function GroupManageList() {
     // setCount(userList.length);
     setIndexOfLastPost(currentPage * postPerPage);
     setIndexOfFirstPost(indexOfLastPost - postPerPage);
-    setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
+    if (isClientState === true) {
+      setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
+    } else {
+      setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
+    }
   }, [
     currentPage,
     indexOfLastPost,
@@ -76,13 +105,18 @@ function GroupManageList() {
       <ContentContainer>
         <GroupContainer>
           <GroupContentBox>
-          <GroupContentItem>전체 고객리스트</GroupContentItem>
+            <GroupContentItem onClick={getUserData} ref={allUserRef}>
+              전체 고객리스트{userList.length}
+            </GroupContentItem>
             {groupList?.map((item: any) => {
-              return <GroupContentItem>{item.groupName}</GroupContentItem>;
+              return (
+                <GroupContentItem
+                  onClick={() => getClientInGroup(item.groupId, item.groupName)}
+                >
+                  {item.groupName}({item.clientCount})
+                </GroupContentItem>
+              );
             })}
-            {/* <GroupContentItem>그룹리스트1</GroupContentItem>
-            <GroupContentItem>그룹리스트1</GroupContentItem>
-            <GroupContentItem>그룹리스트1</GroupContentItem> */}
           </GroupContentBox>
           <ButtonBox>
             <GroupButton>그룹 추가</GroupButton>
@@ -91,22 +125,46 @@ function GroupManageList() {
         </GroupContainer>
         <ClientContainer>
           <ClientHeaderBox>
-            <NameBox>그룹명</NameBox> <TextArea />
+            <NameBox>그룹명</NameBox> <TextArea value={groupName} />
           </ClientHeaderBox>
-          <ClientContentBox>
+          <ClientContentHeader>
             <CardHeader>
               <Percentage width="6%">
                 <input type="checkbox" />
               </Percentage>
-              {/* <Percentage width="7%">번호</Percentage> */}
               <Percentage width="23%">그룹명</Percentage>
               <Percentage width="12%">이름</Percentage>
               <Percentage width="22%">연락처</Percentage>
               <Percentage width="37%">이메일</Percentage>
             </CardHeader>
-            {userList.slice(indexOfFirstPost, indexOfLastPost) &&
-            userList.length > 0 ? (
-              userList
+          </ClientContentHeader>
+          <ClientContentBox>
+            {isClientState ? (
+              userList.slice(indexOfFirstPost, indexOfLastPost) &&
+              userList.length > 0 ? (
+                userList
+                  .slice(indexOfFirstPost, indexOfLastPost)
+                  .map((item: any) => {
+                    return (
+                      <CardHeader>
+                        <Percentage width="6%">
+                          <input type="checkbox" />
+                        </Percentage>
+                        <Percentage width="23%">소속 그룹명</Percentage>
+                        <Percentage width="12%">{item.clientName}</Percentage>
+                        <Percentage width="22%">{item.contact}</Percentage>
+                        <Percentage width="37%">이메일</Percentage>
+                      </CardHeader>
+                    );
+                  })
+              ) : (
+                <CenterContent>
+                  추가된 고객 목록이 없습니다. 고객을 추가해주세요.
+                </CenterContent>
+              )
+            ) : groupClient.slice(indexOfFirstPost, indexOfLastPost) &&
+              groupClient.length > 0 ? (
+              groupClient
                 .slice(indexOfFirstPost, indexOfLastPost)
                 .map((item: any) => {
                   return (
@@ -114,7 +172,6 @@ function GroupManageList() {
                       <Percentage width="6%">
                         <input type="checkbox" />
                       </Percentage>
-                      {/* <Percentage width="7%">{item.clientId}</Percentage> */}
                       <Percentage width="23%">소속 그룹명</Percentage>
                       <Percentage width="12%">{item.clientName}</Percentage>
                       <Percentage width="22%">{item.contact}</Percentage>
@@ -123,20 +180,34 @@ function GroupManageList() {
                   );
                 })
             ) : (
-              <div>No Post. </div>
+              <CenterContent>
+                추가된 고객 목록이 없습니다. 고객을 추가해주세요.
+              </CenterContent>
             )}
           </ClientContentBox>
           <ClientPageBox>
             <PaginationBox>
-              <Pagination
-                activePage={currentPage}
-                itemsCountPerPage={10}
-                pageRangeDisplayed={10}
-                prevPageText={'<'}
-                nextPageText={'>'}
-                totalItemsCount={userList.length}
-                onChange={setPage}
-              />
+              {isClientState ? (
+                <Pagination
+                  activePage={currentPage}
+                  itemsCountPerPage={10}
+                  pageRangeDisplayed={10}
+                  prevPageText={'<'}
+                  nextPageText={'>'}
+                  totalItemsCount={userList.length}
+                  onChange={setPage}
+                />
+              ) : (
+                <Pagination
+                  activePage={currentPage}
+                  itemsCountPerPage={10}
+                  pageRangeDisplayed={10}
+                  prevPageText={'<'}
+                  nextPageText={'>'}
+                  totalItemsCount={groupClient.length}
+                  onChange={setPage}
+                />
+              )}
             </PaginationBox>
           </ClientPageBox>
           <ButtonBox>
@@ -188,11 +259,18 @@ const GroupContentBox = styled.div`
   border: 2px solid burlywood;
   /* margin: 0px 30px 0px 30px; */
 `;
-const GroupContentItem = styled.div`
+const GroupContentItem = styled.button`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   height: 50px;
   padding: 10px;
   border: 1px solid burlywood;
+  cursor: pointer;
   /* background-color: burlywood; */
+  :focus {
+    color: blue;
+  }
 `;
 const ButtonBox = styled.div`
   height: 10%;
@@ -232,10 +310,14 @@ const TextArea = styled.textarea`
   width: 400px;
 `;
 const ClientContentBox = styled.div`
-  height: 74%;
+  height: 69%;
   /* border: 2px solid blue; */
   overflow: scroll;
   /* margin: 0px 30px 0px 0px; */
+`;
+
+const ClientContentHeader = styled.div`
+  height: 5%;
 `;
 const CardHeader = styled.div`
   /* width: 100%; */
@@ -268,5 +350,14 @@ const ClientButton = styled.button`
   width: 120px;
   height: 40px;
   border: 2px solid black;
+`;
+const CenterContent = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* margin: 0 auto; */
 `;
 export default GroupManageList;

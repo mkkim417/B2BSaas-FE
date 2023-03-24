@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Pagination from 'react-js-pagination';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { PaginationBox } from './UserList';
 
@@ -118,8 +119,41 @@ function GroupManageList() {
     },
     [checkedList]
   );
-  const kakaoAlertSend = () => {
+  // 카카오알림톡전송관련
+  // **********************************************************************
+  const kakaoSendData = useSelector((state: any) => {
+    return state.kakaoSendData.kakaoSendData[0];
+    //talkContentId,clientId,talkTemplateId
+  });
+  const kakaoGroupIdData = useSelector((state: any) => {
+    return state.kakaoGroupId.kakaoGroupId[0];
+    //talkContentId,clientId,talkTemplateId
+  });
+  console.log('kakaoGroupIdData : ', kakaoGroupIdData);
+  const kakaoAlertSend = async () => {
     alert('카카오알람톡 전송준비중');
+    console.log('kakaoSendData : ', kakaoSendData);
+    let data = [] as any;
+    kakaoSendData.map((el: any) =>
+      data.push({
+        talkContentId: el.talkContentId,
+        clientId: el.clientId,
+        talkTemplateId: el.talkTemplateId,
+        groupId: kakaoGroupIdData,
+      })
+    );
+    console.log('kakaoGroupIdData data', data);
+    try {
+      const response = await axios
+        .post(`${process.env.REACT_APP_SERVER_URL}/api/talk/sends`, { data })
+        .then((res) => {
+          console.log('kakaoAlertSend : ', res.data);
+        });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      alert('다시 시도해주시기 바랍니다.');
+    }
   };
   // 그룹리스트 useEffect
   useEffect(() => {
@@ -331,6 +365,7 @@ const GroupContentBox = styled.div`
   /* width: 100%; */
   height: 90%;
   border: 2px solid burlywood;
+  overflow: auto;
   /* margin: 0px 30px 0px 30px; */
 `;
 const GroupContentItem = styled.button`

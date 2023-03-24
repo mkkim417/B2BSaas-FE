@@ -105,7 +105,7 @@ function Alarmtalk() {
       sendListData[0]?.map((el: any, idx: number) => {
         data.push({
           clientId: clientIdData[0][idx],
-          organizationName: el[labelArr[0]],
+          customerName: el[labelArr[0]],
           deliveryCompany: el[labelArr[1]],
           deliveryTime: el[labelArr[2]],
           deliveryNumber: el[labelArr[3]],

@@ -21,11 +21,12 @@ function Login() {
   const { register, handleSubmit } = useForm<FormValues>();
   const { mutate } = useMutation(postLogin, {
     onSuccess: (data) => {
-      console.log(data);
+      console.log(data); //
       alert('로그인 성공.');
       const token = getCookie('userToken'); // 쿠키에서 토큰을 가져옴
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // 토큰을 헤더에 담아서 보내줌
-      console.log(token);
+
+      console.log(token); //
       navigate('/home');
     },
     onError: (error) => {

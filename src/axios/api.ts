@@ -19,14 +19,19 @@ instance.interceptors.request.use(function (config) {
   return config;
 });
 
-export const postLogin = async (data: any) => {
+export const postLogin = async (data: Login) => {
   const response = await axios.post(
-    ' https://dev.sendingo-be.store/api/users/login',
-    data
+    'https://dev.sendingo-be.store/api/users/login',
+    data,
+    {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${getCookie('userToken')}`,
+      },
+    }
   );
-  const authHeader =
-    response.headers.authorization || response.headers.Authorization;
-  const token = authHeader.split(' ')[1];
+  const authHeader = response.headers.authorization;
+  const token = authHeader ? authHeader.split(' ')[1] : null;
   return { response, token };
 };
 

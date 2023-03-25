@@ -166,17 +166,23 @@ const Signup = () => {
     handleCompanyEmailProviderChange(companyEmailProvider);
   };
 
-  const checkDuplicateEmail = async (email: string) => {
-    const res = await fetch(
-      `${process.env.REACT_APP_API_URL}/users/email/${email}`
-    );
-    const data = await res.json();
-
-    if (data.exist) {
-      setDuplicate(true);
-    } else {
-      setDuplicate(false);
-      alert('This email is available!');
+  const checkDuplicateEmail = async (email: string): Promise<boolean> => {
+    try {
+      const response = await fetch(
+        'https://dev.sendingo-be.store/api/users/signup/existemail',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+      const data = await response.json();
+      return data.exists;
+    } catch (error) {
+      console.error('Error checking for duplicate email:', error);
+      return false;
     }
   };
 

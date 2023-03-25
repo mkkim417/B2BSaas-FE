@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { setCookie } from '../util/cookie';
+import { getCookie } from '../cookies/cookies';
 import jwt_decode from 'jwt-decode';
 import { useMutation } from 'react-query';
 import { postLogin } from '../axios/api';
@@ -19,37 +19,20 @@ function Login() {
   const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState('');
   const { register, handleSubmit } = useForm<FormValues>();
-
   const { mutate } = useMutation(postLogin, {
     onSuccess: (data) => {
       console.log(data);
-      const { cookies, token } = data;
-      setCookie('userCookie', cookies);
-      setCookie('userToken', token);
-      alert('로그인이 완료되었습니다.');
-      navigate('/');
+      alert('로그인 성공.');
+      const token = getCookie('userToken'); // 쿠키에서 토큰을 가져옴
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // 토큰을 헤더에 담아서 보내줌
+      console.log(token);
+      navigate('/home');
     },
-    onError: () => {
-      alert('로그인을 실패하였습니다.');
+    onError: (error) => {
+      console.error(error);
+      alert('로그인 실패.');
     },
   });
-
-  const handleLogin = async (data: FormValues) => {
-    try {
-      const { response, cookies, token } = await postLogin(data);
-
-      console.log(response);
-      setCookie('userCookie', cookies);
-      setCookie('userToken', token);
-
-      alert('로그인이 완료되었습니다.');
-
-      navigate('/');
-    } catch (error) {
-      console.log(error);
-      alert('다시 시도해주시기 바랍니다.');
-    }
-  };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     mutate(data);
@@ -57,11 +40,11 @@ function Login() {
 
   return (
     <Wrapper>
-      <form onSubmit={handleSubmit(handleLogin)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         {alertMessage && <p>{alertMessage}</p>}
         <StEmail>
-          <StLogin>로그인</StLogin>
-          <h1>아이디(이메일)</h1>
+          <StLogin>Login</StLogin>
+          <h1>ID (email)</h1>
           <Stinput
             type="email"
             {...register('email', { required: true })}
@@ -70,16 +53,16 @@ function Login() {
           />
         </StEmail>
         <StPw>
-          <h1>비밀번호</h1>
+          <h1>Password</h1>
           <StPwinput
             type="password"
             {...register('password', { required: true })}
             name="password"
-            placeholder="암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리"
+            placeholder="비밀번호는 8~20자리입니다."
           />
         </StPw>
-        <StLoginButton type="submit">로그인</StLoginButton>
-        <Link to="/signup">계정이 없으신가요? 여기서 회원가입 하세요</Link>
+        <StLoginButton type="submit">Log in</StLoginButton>
+        <Link to="/signup">계정이 없으신가요? 여기서 가입하세요.</Link>
       </form>
     </Wrapper>
   );

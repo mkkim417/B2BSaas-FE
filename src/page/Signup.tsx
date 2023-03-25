@@ -484,10 +484,10 @@ const Signup = () => {
           />
           {errors.ConfirmPw &&
             errors.ConfirmPw.type === 'required' &&
-            'this field is required'}
+            '이 항목은 필수입니다'}
           {errors.ConfirmPw &&
             errors.ConfirmPw.type === 'validate' &&
-            'The Passwords do not matched'}
+            '암호가 일치하지 않습니다'}
         </StPw>
         <StSignupButton type="submit">회원가입</StSignupButton>
         <Link to="/login">이미 계정이 있으신가요? 여기서 로그인 하세요</Link>

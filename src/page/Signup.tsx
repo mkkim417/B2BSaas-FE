@@ -166,19 +166,18 @@ const Signup = () => {
   const checkEmailDuplication = async (email: string) => {
     console.log('email', email);
     try {
-      const response = await axios
-        .post('https://dev.sendingo-be.store/api/users/signup/existemail', {
+      const response = await axios.post(
+        'https://dev.sendingo-be.store/api/users/signup/existemail',
+        {
           email: email,
-        })
-        .then((res) => {
-          console.log(res);
-          return res;
-        });
+        }
+      );
       console.log('sent', email);
       console.log('receive', response.data);
       return response.data.exists;
     } catch (error) {
       console.error(error);
+      return false;
     }
   };
 
@@ -248,6 +247,7 @@ const Signup = () => {
           <span>@</span>
           {directInput ? (
             <StInputWrapper>
+              {' '}
                
               <StInput
                 type="text"
@@ -255,7 +255,11 @@ const Signup = () => {
                   required: '이 항목은 필수입니다',
                 })}
                 name="emailProvider"
-                value={formData.emailProvider}
+                value={
+                  formData.emailProvider === 'direct'
+                    ? ''
+                    : formData.emailProvider
+                }
                 onChange={handleInputChange}
                 onBlur={() => {
                   if (!formData.emailProvider) {
@@ -299,7 +303,7 @@ const Signup = () => {
             }}
           >
             중복확인
-          </button>{' '}
+          </button>
                  
         </StEmail>
 
@@ -398,7 +402,11 @@ const Signup = () => {
                   validate: EmailValidation,
                 })}
                 name="companyEmailProvider"
-                value={formData.companyEmailProvider}
+                value={
+                  formData.companyEmailProvider === 'direct'
+                    ? ''
+                    : formData.companyEmailProvider
+                }
                 onChange={companyHandleInputChange}
                 onBlur={() => {
                   if (!formData.companyEmailProvider) {
@@ -538,13 +546,13 @@ const StInput2 = styled.input<StInputProps>`
   `}
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div`  
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  gap: 30px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 30px;
 `;
 
 const StEmailP = styled.p`

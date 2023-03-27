@@ -35,6 +35,22 @@ function Login() {
     },
   });
 
+  const handlelogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const email = event.currentTarget.email.value;
+    const password = event.currentTarget.password.value;
+
+    try {
+      const { response } = await postLogin({ email, password });
+
+      localStorage.setItem('token', response.data.token);
+      window.location.href = '/home';
+    } catch (error) {
+      // Handle errors
+    }
+  };
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     mutate(data);
   };

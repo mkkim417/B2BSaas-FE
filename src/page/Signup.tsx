@@ -50,8 +50,9 @@ const Signup = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [directInput, setDirectInput] = useState(false);
   const [duplicate, setDuplicate] = useState(false);
+  const [duplicateAvailable, setDuplicateAvailable] = useState(false);
   const [email, setEmail] = useState('');
-  const [emailprovider, setEmailprovider] = useState('');
+  const [emailValue, setEmailValue] = useState<string>('');
   const [companyDirectInput, setCompanyDirectInput] = useState(false);
   const navigate = useNavigate();
   const {
@@ -166,23 +167,19 @@ const Signup = () => {
     handleCompanyEmailProviderChange(companyEmailProvider);
   };
 
-  const checkDuplicateEmail = async (email: string): Promise<boolean> => {
+  const checkDuplicateEmail = async () => {
     try {
-      const response = await fetch(
+      const response = await axios.post(
         'https://dev.sendingo-be.store/api/users/signup/existemail',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
-        }
+        { email: emailValue }
       );
-      const data = await response.json();
-      return data.exists;
+      if (response.data === 'available') {
+        setDuplicateAvailable(true);
+      } else {
+        setDuplicateAvailable(false);
+      }
     } catch (error) {
-      console.error('Error checking for duplicate email:', error);
-      return false;
+      console.error('Error checking duplicate:', error);
     }
   };
 
@@ -250,7 +247,12 @@ const Signup = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={(e: any) => {
+        e.preventDefault();
+        handleSubmit(e as SubmitHandler<FormValues>);
+      }}
+    >
       <Wrapper>
         {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
         {alertMessage && <p>{alertMessage}</p>}
@@ -312,9 +314,7 @@ const Signup = () => {
                 '이메일을 입력해 주십시오.'}
             </StErrorMsg>
           ) : null}
-          <button type="button" onClick={() => checkDuplicateEmail(email)}>
-            중복 확인
-          </button>
+          <button onClick={checkDuplicateEmail}>중복 확인</button>
           {duplicate && <span>해당 이메일은 이미 사용중입니다</span>}       
         </StEmail>
 

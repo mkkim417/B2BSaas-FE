@@ -44,7 +44,7 @@ function Login() {
     try {
       const { response } = await postLogin({ email, password });
 
-      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('token', response.data.token); // 로컬스토리지에 토큰 저장
       window.location.href = '/home';
     } catch (error) {
       // Handle errors

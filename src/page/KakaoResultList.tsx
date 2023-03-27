@@ -1,139 +1,102 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { PaginationBox } from './UserList';
 import Pagination from 'react-js-pagination';
 import axios from 'axios';
+import { Group } from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
+import Callander from '../asset/svg/Callander';
+import useDetectClose from '../hook/useDetectClose';
 function KakaoResultList() {
   //페이지네이션
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
-  const [count, setCount] = useState(0); // 아이템 총 갯수
+  const [total, setTotal] = useState<number>(0);
   // const [ product, setProduct ] = useState([])  // 리스트에 담아낼 아이템들
   const [postPerPage] = useState(5); // 한 페이지에 보여질 아이템 수
   const [indexOfLastPost, setIndexOfLastPost] = useState(0); // 현재 페이지의 마지막 아이템 인덱스
   const [indexOfFirstPost, setIndexOfFirstPost] = useState(0); // 현재 페이지의 첫번째 아이템 인덱스
-  const [currentPosts, setCurrentPosts] = useState(0); // 현재 페이지에서 보여지는 아이템들
-  // const userData = userList.slice(indexOfFirstPost, indexOfLastPost)
-  const setPage = (error: any) => {
-    setCurrentPage(error);
-  };
-  const kakaoResultList = [
-    {
-      id: 1,
-      day: '2023.03.02',
-      text: '신규가입자를 위한 이벤트',
-      title: '3월신규가입자',
-      reaction: '128',
-      nope: '-',
-      percent: '33%',
-    },
-    {
-      id: 2,
-      day: '2023.03.02',
-      text: '신규가입자를 위한 이벤트',
-      title: '3월신규가입자',
-      reaction: '128',
-      nope: '-',
-      percent: '33%',
-    },
-    {
-      id: 3,
-      day: '2023.03.02',
-      text: '신규가입자를 위한 이벤트',
-      title: '3월신규가입자',
-      reaction: '128',
-      nope: '-',
-      percent: '33%',
-    },
-    {
-      id: 4,
-      day: '2023.03.02',
-      text: '신규가입자를 위한 이벤트',
-      title: '3월신규가입자',
-      reaction: '128',
-      nope: '-',
-      percent: '33%',
-    },
-    {
-      id: 5,
-      day: '2023.03.02',
-      text: '신규가입자를 위한 이벤트',
-      title: '3월신규가입자',
-      reaction: '128',
-      nope: '-',
-      percent: '33%',
-    },
-    {
-      id: 6,
-      day: '2023.03.02',
-      text: '신규가입자를 위한 이벤트',
-      title: '3월신규가입자',
-      reaction: '128',
-      nope: '-',
-      percent: '33%',
-    },
-    {
-      id: 7,
-      day: '2023.03.02',
-      text: '신규가입자를 위한 이벤트',
-      title: '3월신규가입자',
-      reaction: '128',
-      nope: '-',
-      percent: '33%',
-    },
-    {
-      id: 8,
-      day: '2023.03.02',
-      text: '신규가입자를 위한 이벤트',
-      title: '3월신규가입자',
-      reaction: '128',
-      nope: '-',
-      percent: '33%',
-    },
-    {
-      id: 9,
-      day: '2023.03.02',
-      text: '신규가입자를 위한 이벤트',
-      title: '3월신규가입자',
-      reaction: '128',
-      nope: '-',
-      percent: '33%',
-    },
-    {
-      id: 10,
-      day: '2023.03.02',
-      text: '신규가입자를 위한 이벤트',
-      title: '3월신규가입자',
-      reaction: '128',
-      nope: '-',
-      percent: '33%',
-    },
-  ];
+  const [currentPosts, setCurrentPosts] = useState(0); //
+  const dropDownRef = useRef();
+
+  const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false); //커스텀훅
+  const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
+  const [isScheduleOpen, setScheduleOpen] = useState(false);
+
   const [isGroupList, setGroupList] = useState([]);
   const [isGroupClient, setGroupClient] = useState([]);
   const [currentValue, setCurrentValue] = useState(null);
+  //그룹리스트
   const getGroupData = useCallback(async () => {
-    // https://dev.sendingo-be.store/api/groups
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/groups`
     );
     console.log('GroupList API', response.data.data);
     setGroupList(response.data.data);
   }, []);
-  const getClientInGroup = useCallback(async (id: any, name: any) => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}`
-    );
-    // console.log('getClientInGroup Response', response.data.data)
-    setGroupClient(response.data.data);
+  //발송조회리스트
+  const kakaoResultListFetch = useCallback(
+    async (groupId?: any, startDay?: string, endData?: string) => {
+      ///api/talk/results/list?groupId={groupId}&startdate={YYYYMMDD:string}&enddate={YYYYMMDD:string}
+      const skip = postPerPage * (currentPage - 1);
+      const response = await axios
+        // .get(`${process.env.REACT_APP_SERVER_URL}/api/talk/results/list`)
+        .get(
+          `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}&startdate=${startDay}&enddate=${endData}`
+        )
+        .then((res) => {
+          console.log(res.data);
+          setGroupClient(res.data.data.list);
+
+          //그룹마다 다르게 세팅될때 useEffect 따로빼야함
+          setTotal(res.data.data.list.length);
+        });
+    },
+    []
+  );
+  //발송상세조회
+  const KakaoDetailBtn = useCallback(async (groupId: any) => {
+    const response = await axios
+      .get(
+        `${process.env.REACT_APP_SERVER_URL}/api/talk/results/detail/${groupId}`
+      )
+      .then((res) => {
+        console.log(res.data);
+      });
   }, []);
+  //yyyymmdd date변환 gkatn
+  function formatDate(dateString: any) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return year + month + day;
+  }
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
     console.log(e.target.value);
   };
   useEffect(() => {
     getGroupData();
+    kakaoResultListFetch(currentValue);
   }, [getGroupData]);
+
+  useEffect(() => {
+    if (currentValue !== null) {
+      // kakaoResultListFetch(currentValue);
+    }
+    //캘린더 선택시
+    if (value[0] !== null && value[1] !== null) {
+      console.log(currentValue);
+      console.log(formatDate(value[0]));
+      console.log(formatDate(value[1]));
+      kakaoResultListFetch(
+        currentValue,
+        formatDate(value[0]),
+        formatDate(value[1])
+      );
+    }
+  }, [value, currentValue]);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -147,7 +110,7 @@ function KakaoResultList() {
           <select name="" id="" onChange={(e) => handleOnChangeSelectValue(e)}>
             {isGroupList?.map((item: any, idx: number) => {
               return (
-                <option key={item.groupId} value={item.groupName}>
+                <option key={item.groupId} value={item.groupId}>
                   {item.groupName}({item.clientCount})
                 </option>
               );
@@ -156,58 +119,55 @@ function KakaoResultList() {
         </FlexWrap>
         <FlexWrap>
           <GrayWrap>조회기간</GrayWrap>
+          <CallanderWrap ref={dropDownRef as any}>
+            {isOpen ? (
+              <Group position="center">
+                <Group position="center">
+                  <DatePicker type="range" value={value} onChange={setValue} />
+                </Group>
+              </Group>
+            ) : null}
+            <div onClick={() => setIsOpen((prev: any) => !prev) as any}>
+              <Callander />
+            </div>
+          </CallanderWrap>
         </FlexWrap>
-        <Button>조회</Button>
+        {/* <Button onClick={SubmitBtnHandler}>조회</Button> */}
         <Table>
           <thead style={{ fontWeight: 'bold' }}>
             <tr>
-              <Th>발송일자</Th>
-              <Th>제목</Th>
-              <Th>그룹명</Th>
-              <Th>인원수</Th>
-              <Th>발송상태</Th>
-              <Th>오픈율(%)</Th>
+              <Th>groupId</Th>
+              <Th>groupName</Th>
+              <Th>mid</Th>
+              <Th>msgCount</Th>
+              <Th>sendDate</Th>
+              <Th>sendState</Th>
+              <Th>talkSendId</Th>
+              <Th>detail</Th>
             </tr>
           </thead>
           <tbody style={{ textAlign: 'center' }}>
-            {/* {kakaoResultList &&
-              kakaoResultList.map((el: any, idx: number) => (
+            {isGroupClient &&
+              isGroupClient.map((el: any, idx: number) => (
                 <tr key={idx}>
-                  <td>{el}</td>
+                  <Td>{el.groupId}</Td>
+                  <Td>{el.groupName}</Td>
+                  <Td>{el.mid}</Td>
+                  <Td>{el.msgCount}</Td>
+                  <Td>{el.sendDate}</Td>
+                  <Td>{el.sendState}</Td>
+                  <Td>{el.talkSendId}</Td>
+                  <Td>
+                    <StlyeBtn
+                      onClick={() => {
+                        KakaoDetailBtn(el.groupId);
+                      }}
+                    >
+                      상세보기
+                    </StlyeBtn>
+                  </Td>
                 </tr>
-              ))} */}
-            <tr>
-              <Td>2023.03.02</Td>
-              <Td>신규가입자를 위한 이벤트</Td>
-              <Td>3월신규가입자</Td>
-              <Td>128</Td>
-              <Td>-</Td>
-              <Td>33%</Td>
-            </tr>
-            <tr>
-              <Td>2023.03.02</Td>
-              <Td>신규가입자를 위한 이벤트</Td>
-              <Td>3월신규가입자</Td>
-              <Td>128</Td>
-              <Td>-</Td>
-              <Td>33%</Td>
-            </tr>
-            <tr>
-              <Td>2023.03.02</Td>
-              <Td>신규가입자를 위한 이벤트</Td>
-              <Td>3월신규가입자</Td>
-              <Td>128</Td>
-              <Td>-</Td>
-              <Td>33%</Td>
-            </tr>
-            <tr>
-              <Td>2023.03.02</Td>
-              <Td>신규가입자를 위한 이벤트</Td>
-              <Td>3월신규가입자</Td>
-              <Td>128</Td>
-              <Td>-</Td>
-              <Td>33%</Td>
-            </tr>
+              ))}
           </tbody>
         </Table>
       </Wrapper>
@@ -218,13 +178,22 @@ function KakaoResultList() {
           pageRangeDisplayed={5}
           prevPageText={'<'}
           nextPageText={'>'}
-          totalItemsCount={kakaoResultList.length}
-          onChange={setPage}
+          totalItemsCount={total}
+          onChange={setCurrentPage}
         />
       </PaginationBox>
     </motion.div>
   );
 }
+const CallanderIconWrap = styled.div`
+  display: flex;
+  align-content: center;
+  justify-content: center;
+`;
+const StlyeBtn = styled.span`
+  background-color: #000;
+  color: #fff;
+`;
 const Th = styled.th`
   border: 1px solid black;
   background-color: #f2f2f2;
@@ -242,6 +211,12 @@ const Td = styled.td`
   }
 `;
 
+const CallanderWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 5px;
+`;
 const Table = styled.table`
   border: 1px solid black;
   width: 100%;

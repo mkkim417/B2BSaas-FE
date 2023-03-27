@@ -45,7 +45,7 @@ export const ALAERMTALK_TEMPLATE = {
     id: 5,
     text: `안녕하세요. <span id="#{고객명}">#{고객명}</span>님!
     <span id="#{회사명}">#{회사명}</span>
-    #{회사명}에 회원가입 해주셔서
+    에 회원가입 해주셔서
     진심으로 감사드립니다~`,
     reqData: ['#{고객명}', '#{회사명}'],
     tmpCode: 'TM_2223',

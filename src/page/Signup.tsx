@@ -179,7 +179,7 @@ const Signup = () => {
         setDuplicateAvailable(false);
       }
     } catch (error) {
-      console.error('Error checking duplicate:', error);
+      console.error('중복확인 중 오류 발생', error);
     }
   };
 
@@ -210,8 +210,6 @@ const Signup = () => {
   const nameRegex = /^[a-zA-Z ]+$/;
 
   const onSubmit = async (data: FormValues) => {
-    // console.log(data);
-
     if (!isValid) {
       setAlertMessage('모든 항목을 입력하시길 바랍니다');
       return;
@@ -220,39 +218,43 @@ const Signup = () => {
     const email = `${data.email}@${formData.emailProvider}`;
     const email2 = `${data.companyEmail}@${formData.companyEmailProvider}`;
 
-    // const requestBody = {
-    //   email: EmailValidation(formData.email, formData),
-    //   password: data.password,
-    //   name: data.name,
-    //   phoneNumber: data.phoneNumber,
-    //   companyName: data.companyName,
-    //   companyNumber: data.companyNumber,
-    //   role: 1,
-    // };
     const sendEmail = email + formData.email;
     const sendEmail2 = email2 + formData.companyEmail;
 
-    await axios.post('https://dev.sendingo-be.store/api/users/signup', {
-      email: sendEmail,
-      password: data.password,
-      name: data.name,
-      phoneNumber: data.phoneNumber,
-      companyName: data.companyName,
-      companyNumber: data.companyNumber,
-      companyEmail: sendEmail2,
-      role: '1',
-    });
-    setIsSubmitted(true);
-    navigate('/');
+    try {
+      const response = await axios.post(
+        'https://dev.sendingo-be.store/api/users/signup/existemail',
+        { email: `${data.email}@${formData.emailProvider}` }
+      );
+      if (response.data !== 'available') {
+        setAlertMessage('이미 가입된 이메일입니다.');
+        return;
+      }
+    } catch (error) {
+      console.error('이메일 중복 확인 중 오류 발생', error);
+      return;
+    }
+    try {
+      await axios.post('https://dev.sendingo-be.store/api/users/signup', {
+        email: sendEmail,
+        password: data.password,
+        name: data.name,
+        phoneNumber: data.phoneNumber,
+        companyName: data.companyName,
+        companyNumber: data.companyNumber,
+        companyEmail: sendEmail2,
+        role: '1',
+      });
+      setIsSubmitted(true);
+      navigate('/');
+    } catch (error) {
+      console.error('회원가입 중 오류 발생', error);
+      return;
+    }
   };
 
   return (
-    <form
-      onSubmit={(e: any) => {
-        e.preventDefault();
-        handleSubmit(e as SubmitHandler<FormValues>);
-      }}
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Wrapper>
         {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
         {alertMessage && <p>{alertMessage}</p>}

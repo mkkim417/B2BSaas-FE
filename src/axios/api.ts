@@ -1,42 +1,41 @@
 import axios from 'axios';
-import { getCookie } from '../cookies/cookies';
+import { setCookie, getCookie, getTokens } from '../cookies/cookies';
+
 interface Login {
   email: string;
   password: string;
 }
+
 const instance = axios.create({
-  baseURL: `${process.env.REACT_DEPLOY_SERVER}`,
+  baseURL: `https://dev.sendingo-be.store`,
   withCredentials: true,
-  headers: {
-    Authorization: `Bearer ${getCookie('userToken')}`,
-  },
 });
+
 instance.interceptors.request.use(function (config) {
-  const token = getCookie('userToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const { accessToken, userToken } = getTokens();
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+  if (userToken) {
+    config.headers.userToken = userToken;
   }
   return config;
 });
 
 export const postLogin = async (data: Login) => {
-  const response = await axios.post(
-    'https://dev.sendingo-be.store/api/users/login',
-    data,
-    {
-      withCredentials: true,
-      headers: {
-        Authorization: `Bearer ${getCookie('userToken')}`,
-      },
-    }
-  );
+  try {
+    const response = await instance.post('/api/users/login', data);
 
-  const authHeader = response.headers.authorization;
-  const token = authHeader ? authHeader.split(' ')[1] : null;
-  localStorage.setItem('토큰', token);
+    const authHeader =
+      response.headers.authorization || response.headers.Authorization;
+    const token = authHeader ? authHeader.split(' ')[1] : null;
+    localStorage.setItem('토큰', token);
 
-  console.log(response);
-  return { response, token };
+    return { response, token, data: response.data };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export { instance };

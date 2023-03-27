@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { getCookie } from '../cookies/cookies';
+import { setCookie, getCookie } from '../cookies/cookies';
 import jwt_decode from 'jwt-decode';
 import { useMutation } from 'react-query';
 import { postLogin } from '../axios/api';
@@ -19,14 +19,24 @@ function Login() {
   const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState('');
   const { register, handleSubmit } = useForm<FormValues>();
-  const { mutate } = useMutation(postLogin, {
-    onSuccess: (data) => {
-      console.log(data); //
-      alert('로그인 성공.');
-      const token = getCookie('userToken'); // 쿠키에서 토큰을 가져옴
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // 토큰을 헤더에 담아서 보내줌
 
-      console.log(token); //
+  const token = getCookie('userToken');
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
+
+  const { mutate } = useMutation(postLogin, {
+    onSuccess: (response) => {
+      console.log(response); //
+      alert('로그인 성공.');
+      console.log(document.cookie);
+
+      const token = response.data.token;
+      setCookie('userToken', token, 7); // 쿠키에 토큰을 저장
+
+      // const token = getCookie('userToken'); // 쿠키에서 토큰을 가져옴
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      console.log(`accessToken=${token}; userToken=${getCookie('userToken')}`);
       navigate('/home');
     },
     onError: (error) => {
@@ -36,6 +46,7 @@ function Login() {
   });
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
+    setCookie('userToken', data.email, 7);
     mutate(data);
   };
 
@@ -62,7 +73,7 @@ function Login() {
             placeholder="비밀번호는 8~20자리입니다."
           />
         </StPw>
-        <StLoginButton type="submit">Log in</StLoginButton>
+        <StLoginButton type="submit">로그인</StLoginButton>
         <Link to="/signup">계정이 없으신가요? 여기서 가입하세요.</Link>
       </form>
     </Wrapper>

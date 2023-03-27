@@ -44,11 +44,12 @@ function Login() {
     try {
       const { response } = await postLogin({ email, password });
 
-      localStorage.setItem('token', response.data.token); // 로컬스토리지에 토큰 저장
+      localStorage.setItem('token', response.data.token);
+      const token = localStorage.getItem('token');
+      console.log(response.data.token);
+      console.log(token);
       window.location.href = '/home';
-    } catch (error) {
-      // Handle errors
-    }
+    } catch (error) {}
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {

@@ -32,6 +32,7 @@ export const postLogin = async (data: Login) => {
   );
   const authHeader = response.headers.authorization;
   const token = authHeader ? authHeader.split(' ')[1] : null;
+  console.log(response);
   return { response, token };
 };
 

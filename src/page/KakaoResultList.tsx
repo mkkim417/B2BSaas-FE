@@ -8,6 +8,7 @@ import { Group } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import Callander from '../asset/svg/Callander';
 import useDetectClose from '../hook/useDetectClose';
+import { Link } from 'react-router-dom';
 function KakaoResultList() {
   //페이지네이션
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
@@ -64,10 +65,10 @@ function KakaoResultList() {
     []
   );
   //발송상세조회
-  const KakaoDetailBtn = useCallback(async (groupId: any) => {
+  const KakaoDetailBtn = useCallback(async (talkSendId: string) => {
     const response = await axios
       .get(
-        `${process.env.REACT_APP_SERVER_URL}/api/talk/results/detail/${groupId}`
+        `${process.env.REACT_APP_SERVER_URL}/api/talk/results/detail/${talkSendId}`
       )
       .then((res) => {
         console.log(res.data);
@@ -83,7 +84,7 @@ function KakaoResultList() {
   }
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
-    console.log(e.target.value);
+    setValue([null, null]);
   };
   useEffect(() => {
     getGroupData();
@@ -91,7 +92,7 @@ function KakaoResultList() {
 
   useEffect(() => {
     if (currentValue !== null) {
-      if (value[0] !== null && value[1] !== null) {
+      if (value[0] !== null) {
         kakaoResultListFetch(
           currentValue,
           formatDate(value[0]),
@@ -142,11 +143,14 @@ function KakaoResultList() {
         <Table>
           <thead style={{ fontWeight: 'bold' }}>
             <tr>
-              <Th>그룹id</Th>
-              <Th>그룹이름</Th>
-              <Th>메시지수</Th>
+              <Th>그룹ID</Th>
+              <Th>그룹명</Th>
+              <Th>성공건수</Th>
+              <Th>실패건수</Th>
+              <Th>총메시지</Th>
+              <Th>총성공률</Th>
+              <Th>전송상태</Th>
               <Th>보낸날짜</Th>
-              <Th>발송상태</Th>
               <Th>상세</Th>
             </tr>
           </thead>
@@ -156,16 +160,21 @@ function KakaoResultList() {
                 <tr key={idx}>
                   <Td>{el.groupId}</Td>
                   <Td>{el.groupName}</Td>
+                  <Td>{el.scnt}</Td>
+                  <Td>{el.fcnt}</Td>
                   <Td>{el.msgCount}</Td>
-                  <Td>{el.sendDate}</Td>
+                  <Td>{(el.scnt / el.msgCount) * 100}%</Td>
                   <Td>{el.sendState}</Td>
+                  <Td>{el.sendDate}</Td>
                   <Td>
                     <StlyeBtn
-                      onClick={() => {
-                        KakaoDetailBtn(el.groupId);
-                      }}
+                    // onClick={() => {
+                    //   KakaoDetailBtn(el.talkSendId);
+                    // }}
                     >
-                      상세보기
+                      <Link to={`/kakaodetailList/${el.talkSendId}`}>
+                        상세보기
+                      </Link>
                     </StlyeBtn>
                   </Td>
                 </tr>
@@ -194,7 +203,12 @@ const CallanderIconWrap = styled.div`
 `;
 const StlyeBtn = styled.span`
   background-color: #000;
+  height: 30px;
+  display: block;
   color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const Th = styled.th`
   border: 1px solid black;

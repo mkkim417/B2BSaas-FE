@@ -79,6 +79,8 @@ const Signup = () => {
   const ConfirmPw = useRef<string>();
   ConfirmPw.current = watch('ConfirmPw');
 
+  const [isEmail, setEmail] = useState();
+
   const EmailValidation: Validate<string, FormValues> = (value) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const fullEmail = value + '@' + formData.emailProvider;
@@ -164,19 +166,17 @@ const Signup = () => {
   };
 
   const checkEmailDuplication = async (email: string) => {
-    console.log('email', email);
+    console.log('formData.emailProvider : ', formData.emailProvider);
+    console.log('isEmail', isEmail);
+    console.log('isEmail', isEmail + formData.emailProvider);
+
     try {
-      const response = await axios.post(
-        'https://dev.sendingo-be.store/api/users/signup/existemail',
-        {
-          email: email,
-        }
-      );
-      console.log('sent', email);
-      console.log('receive', response.data);
-      return response.data.exists;
+      const response = await axios
+        .post('https://dev.sendingo-be.store/api/users/signup/existemail', {
+          email: isEmail + '@' + formData.emailProvider,
+        })
+        .then((res) => {});
     } catch (error) {
-      console.error(error);
       return false;
     }
   };
@@ -243,6 +243,8 @@ const Signup = () => {
             })}
             name="email"
             required
+            value={isEmail}
+            onChange={(e: any) => setEmail(e.target.value)}
           />
           <span>@</span>
           {directInput ? (
@@ -293,13 +295,14 @@ const Signup = () => {
           ) : null}
           <button
             onClick={() => {
-              checkEmailDuplication(formData.email).then((exists) => {
-                if (exists) {
-                  alert('이미 존재하는 이메일입니다.');
-                } else {
-                  alert('사용가능한 이메일입니다.');
-                }
-              });
+              checkEmailDuplication(formData.email);
+              // checkEmailDuplication(formData.email).then((exists) => {
+              //   if (exists) {
+              //     alert('이미 존재하는 이메일입니다.');
+              //   } else {
+              //     alert('사용가능한 이메일입니다.');
+              //   }
+              // });
             }}
           >
             중복확인
@@ -546,13 +549,13 @@ const StInput2 = styled.input<StInputProps>`
   `}
 `;
 
-const Wrapper = styled.div`  
+const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  gap: 30px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 30px;
 `;
 
 const StEmailP = styled.p`

@@ -39,18 +39,27 @@ function KakaoResultList() {
     async (groupId?: any, startDay?: string, endData?: string) => {
       ///api/talk/results/list?groupId={groupId}&startdate={YYYYMMDD:string}&enddate={YYYYMMDD:string}
       const skip = postPerPage * (currentPage - 1);
-      const response = await axios
-        // .get(`${process.env.REACT_APP_SERVER_URL}/api/talk/results/list`)
-        .get(
-          `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}&startdate=${startDay}&enddate=${endData}`
-        )
-        .then((res) => {
-          console.log(res.data);
-          setGroupClient(res.data.data.list);
-
-          //그룹마다 다르게 세팅될때 useEffect 따로빼야함
-          setTotal(res.data.data.list.length);
-        });
+      if (startDay === undefined) {
+        const response = await axios
+          .get(
+            `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}`
+          )
+          .then((res) => {
+            console.log(res.data);
+            setGroupClient(res.data.data.list);
+            setTotal(res.data.data.list.length);
+          });
+      } else {
+        const response = await axios
+          .get(
+            `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}&startdate=${startDay}&enddate=${endData}`
+          )
+          .then((res) => {
+            console.log(res.data);
+            setGroupClient(res.data.data.list);
+            setTotal(res.data.data.list.length);
+          });
+      }
     },
     []
   );
@@ -78,24 +87,21 @@ function KakaoResultList() {
   };
   useEffect(() => {
     getGroupData();
-    kakaoResultListFetch(currentValue);
   }, [getGroupData]);
 
   useEffect(() => {
     if (currentValue !== null) {
-      // kakaoResultListFetch(currentValue);
+      if (value[0] !== null && value[1] !== null) {
+        kakaoResultListFetch(
+          currentValue,
+          formatDate(value[0]),
+          formatDate(value[1])
+        );
+      } else {
+        kakaoResultListFetch(currentValue);
+      }
     }
     //캘린더 선택시
-    if (value[0] !== null && value[1] !== null) {
-      console.log(currentValue);
-      console.log(formatDate(value[0]));
-      console.log(formatDate(value[1]));
-      kakaoResultListFetch(
-        currentValue,
-        formatDate(value[0]),
-        formatDate(value[1])
-      );
-    }
   }, [value, currentValue]);
   return (
     <motion.div
@@ -136,14 +142,12 @@ function KakaoResultList() {
         <Table>
           <thead style={{ fontWeight: 'bold' }}>
             <tr>
-              <Th>groupId</Th>
-              <Th>groupName</Th>
-              <Th>mid</Th>
-              <Th>msgCount</Th>
-              <Th>sendDate</Th>
-              <Th>sendState</Th>
-              <Th>talkSendId</Th>
-              <Th>detail</Th>
+              <Th>그룹id</Th>
+              <Th>그룹이름</Th>
+              <Th>메시지수</Th>
+              <Th>보낸날짜</Th>
+              <Th>발송상태</Th>
+              <Th>상세</Th>
             </tr>
           </thead>
           <tbody style={{ textAlign: 'center' }}>
@@ -152,11 +156,9 @@ function KakaoResultList() {
                 <tr key={idx}>
                   <Td>{el.groupId}</Td>
                   <Td>{el.groupName}</Td>
-                  <Td>{el.mid}</Td>
                   <Td>{el.msgCount}</Td>
                   <Td>{el.sendDate}</Td>
                   <Td>{el.sendState}</Td>
-                  <Td>{el.talkSendId}</Td>
                   <Td>
                     <StlyeBtn
                       onClick={() => {

@@ -175,9 +175,13 @@ const Signup = () => {
         .post('https://dev.sendingo-be.store/api/users/signup/existemail', {
           email: isEmail + '@' + formData.emailProvider,
         })
-        .then((res) => {});
+        .then((res) => {
+          console.log(res);
+          // alert('사용가능합니다.');
+        });
+      // alert('중복된 이메일입니다.');
     } catch (error) {
-      return false;
+      console.log('error : ', error);
     }
   };
 

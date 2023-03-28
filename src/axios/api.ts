@@ -24,7 +24,8 @@ const postLogin = async (login: Login) => {
 
   const cookies = response.headers.Authorization;
   const token = response.data.accessToken;
-  console.log(token);
+  console.log('cookies : ', cookies);
+  console.log('token : ', token);
 
   return { response: response.data, cookies: cookies, token: token };
 };

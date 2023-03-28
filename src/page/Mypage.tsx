@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Wrapper } from './Home';
 import styled from 'styled-components';
+import axios from 'axios';
 
 function Mypage() {
+  let userId = '332';
+  const myPageDataFetch = useCallback(async () => {
+    const response = await axios
+      .get(`${process.env.REACT_APP_SERVER_URL}/api/users/${userId}`)
+      .then((res) => {
+        console.log('res : ', res);
+      });
+  }, []);
+  useEffect(() => {
+    myPageDataFetch();
+  }, [myPageDataFetch]);
   return (
     <Wrapper>
       <StMyinfo>내 정보</StMyinfo>

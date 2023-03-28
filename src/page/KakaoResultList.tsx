@@ -46,7 +46,6 @@ function KakaoResultList() {
             `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}`
           )
           .then((res) => {
-            console.log(res.data);
             setGroupClient(res.data.data.list);
             setTotal(res.data.data.list.length);
           });
@@ -56,7 +55,6 @@ function KakaoResultList() {
             `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}&startdate=${startDay}&enddate=${endData}`
           )
           .then((res) => {
-            console.log(res.data);
             setGroupClient(res.data.data.list);
             setTotal(res.data.data.list.length);
           });
@@ -172,7 +170,16 @@ function KakaoResultList() {
                     //   KakaoDetailBtn(el.talkSendId);
                     // }}
                     >
-                      <Link to={`/kakaodetailList/${el.talkSendId}`}>
+                      <Link
+                        to={`/kakaodetaillist/${el.talkSendId}`}
+                        state={{
+                          groupName: `${el.groupName}`,
+                          sendState: `${el.sendState}`,
+                          fcnt: `${el.fcnt}`,
+                          success: `${(el.scnt / el.msgCount) * 100}`,
+                          sendDate: `${el.sendDate}`,
+                        }}
+                      >
                         상세보기
                       </Link>
                     </StlyeBtn>
@@ -210,7 +217,7 @@ const StlyeBtn = styled.span`
   align-items: center;
   justify-content: center;
 `;
-const Th = styled.th`
+export const Th = styled.th`
   border: 1px solid black;
   background-color: #f2f2f2;
   border: 1px solid #c7c7c7;
@@ -218,8 +225,9 @@ const Th = styled.th`
   font-weight: bold;
   padding: 15px;
 `;
-const Td = styled.td`
+export const Td = styled.td`
   border-bottom: 1px solid black;
+  vertical-align: middle;
   color: #555;
   padding: 15px;
   :nth-of-type(2) {
@@ -233,13 +241,13 @@ const CallanderWrap = styled.div`
   align-items: center;
   padding-left: 5px;
 `;
-const Table = styled.table`
+export const Table = styled.table`
   border: 1px solid black;
   width: 100%;
   border-collapse: seperate;
   border-spacing: 20px 30px;
 `;
-const GrayWrap = styled.div`
+export const GrayWrap = styled.div`
   background-color: #f2f2f2;
   border: 1px solid #c7c7c7;
   color: #555;
@@ -259,7 +267,7 @@ const Button = styled.div`
   align-items: center;
   justify-content: center;
 `;
-const FlexWrap = styled.div`
+export const FlexWrap = styled.div`
   display: flex;
   border: 1px solid #e7e7e7;
   height: 50px;
@@ -272,7 +280,7 @@ export const Wrapper = styled.div`
   gap: 30px;
   justify-content: center;
 `;
-const H1 = styled.div`
+export const H1 = styled.div`
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 20px;

@@ -65,6 +65,7 @@ const Router = () => {
             <Route path="/groupmanageList" element={<GroupManageList />} />
             <Route path="/kakaoresultlist" element={<KakaoResultList />} />
             <Route path="/pricepolicy" element={<PricePoicy />} />
+            <Route path="/kakaodetaillist/:id" element={<KakaoDetailList />} />
           </Route>
           <Route
             path="/home"

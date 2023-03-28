@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
-import { PaginationBox } from './UserList';
+import { PaginationBox } from '../components/NotUsedPages/UserList';
 import Pagination from 'react-js-pagination';
 function KakaoResultList() {
   //페이지네이션

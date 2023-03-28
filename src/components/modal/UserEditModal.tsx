@@ -6,10 +6,10 @@ type Props = {
   clientId?: any;
   clientName?: string;
   clientContact?: any;
-  coin?: number | string;
+  clientEmail?: string;
   closeModal?: () => void;
 };
-const UserEditModal = ({ clientId, clientName, clientContact, closeModal }: Props) => {
+const UserEditModal = ({ clientId, clientName, clientContact, clientEmail, closeModal }: Props) => {
 
   // input 추가를 위한 변수들
   

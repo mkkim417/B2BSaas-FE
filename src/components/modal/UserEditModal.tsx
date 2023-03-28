@@ -1,23 +1,28 @@
-import axios from "axios";
-import { useState } from "react";
-import styled from "styled-components";
+import axios from 'axios';
+import { useState } from 'react';
+import styled from 'styled-components';
 
 type Props = {
   clientId?: any;
   clientName?: string;
   clientContact?: any;
-  coin?: number | string;
+  clientEmail?: string;
   closeModal?: () => void;
 };
-const UserEditModal = ({ clientId, clientName, clientContact, closeModal }: Props) => {
-
+const UserEditModal = ({
+  clientId,
+  clientName,
+  clientContact,
+  clientEmail,
+  closeModal,
+}: Props) => {
   // input 추가를 위한 변수들
-  
+
   const initialData = {
-    clientName : clientName,
-    contact : clientContact
-  }
-  const [ data, setData ] = useState(initialData);
+    clientName: clientName,
+    contact: clientContact,
+  };
+  const [data, setData] = useState(initialData);
 
   // const { postMutate : any } = useMutation(postClientCreate, {
   //   onSuccess : () => {
@@ -25,7 +30,7 @@ const UserEditModal = ({ clientId, clientName, clientContact, closeModal }: Prop
   //   }
   // })
   // 입력변화 상태값
-  const onChangeHandler = (e:any) => {
+  const onChangeHandler = (e: any) => {
     const { name, value } = e.target;
     setData({
       ...data,
@@ -34,61 +39,60 @@ const UserEditModal = ({ clientId, clientName, clientContact, closeModal }: Prop
   };
 
   // submit button handler
-  const submitHandler = async (e:any, closeModal : any) => {
+  const submitHandler = async (e: any, closeModal: any) => {
     e.preventDefault();
 
-    // 연락처에서 '-' 제거 
+    // 연락처에서 '-' 제거
     const _contact = data.contact.replace(/-/g, '');
     alert(`name: ${data.clientName}, contact : ${_contact}`);
-    
+
     // 빈칸 확인 조건처리
-    if ( !(data.clientName === "" && data.contact === "") ) {
+    if (!(data.clientName === '' && data.contact === '')) {
       // 빈칸 없으면 수정 patch
       axios.patch(`https://dev.sendingo-be.store/api/clients/${clientId}`, {
-      clientName : data.clientName,
-      contact : _contact
+        clientName: data.clientName,
+        contact: _contact,
       });
-      alert('저장 성공!')
-      closeModal()
-      window.location.reload()
-      
+      alert('저장 성공!');
+      closeModal();
+      window.location.reload();
     } else {
-      alert('빈칸을 채워주세요!')
+      alert('빈칸을 채워주세요!');
     }
-    
-  }
+  };
   return (
     <ModalWrap>
-      <ModalBackGround/>
+      <ModalBackGround />
       <ModalContainer>
-        <div>
-          {clientName}
-        </div>
-        <div>
-          {clientContact}
-        </div>
+        <div>{clientName}</div>
+        <div>{clientContact}</div>
         <InputContainer>
           <div>
             이름
-            <input 
+            <input
               name="clientName"
               type="text"
               value={data.clientName}
               placeholder="성명"
-              onChange={onChangeHandler}/>
+              onChange={onChangeHandler}
+            />
           </div>
-          <div>연락처
-            <input 
+          <div>
+            연락처
+            <input
               name="contact"
               value={data.contact}
               placeholder="연락처"
-              onChange={onChangeHandler}/>
+              onChange={onChangeHandler}
+            />
           </div>
         </InputContainer>
-          <ButtonContainer>
-            <ButtonBox onClick={closeModal}>아니오</ButtonBox>
-            <ButtonBox onClick={(e) => submitHandler(e, closeModal)}>네</ButtonBox>
-          </ButtonContainer>
+        <ButtonContainer>
+          <ButtonBox onClick={closeModal}>아니오</ButtonBox>
+          <ButtonBox onClick={(e) => submitHandler(e, closeModal)}>
+            네
+          </ButtonBox>
+        </ButtonContainer>
       </ModalContainer>
     </ModalWrap>
   );
@@ -105,7 +109,7 @@ const ModalBackGround = styled.div`
   background-color: rgba(0, 0, 0, 0.6);
   width: 100%;
   height: 100vh;
-  position: absolute; 
+  position: absolute;
   bottom: 0;
   left: 0;
 `;
@@ -134,7 +138,7 @@ const InputContainer = styled.div`
   flex-direction: row;
   background-color: yellow;
   /* padding: 50px; */
-`
+`;
 const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
@@ -144,11 +148,11 @@ const ButtonContainer = styled.div`
   /* padding: 50px; */
   /* margin: 50px; */
   gap: 100px;
-`
+`;
 const ButtonBox = styled.button`
   background-color: yellowgreen;
   padding: 10px;
   font-size: 24px;
-`
+`;
 
 export default UserEditModal;

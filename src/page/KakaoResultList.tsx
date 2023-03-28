@@ -1,7 +1,7 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
-import { PaginationBox } from './UserList';
+import { PaginationBox } from '../components/NotUsedPages/UserList';
 import Pagination from 'react-js-pagination';
 import axios from 'axios';
 import { Group } from '@mantine/core';

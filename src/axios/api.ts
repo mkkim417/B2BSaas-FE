@@ -29,7 +29,7 @@ export const postLogin = async (data: Login) => {
     const authHeader =
       response.headers.authorization || response.headers.Authorization;
     const token = authHeader ? authHeader.split(' ')[1] : null;
-
+    localStorage.setItem('토큰', token);
     return { response, token, data: response.data };
   } catch (error) {
     console.error(error);

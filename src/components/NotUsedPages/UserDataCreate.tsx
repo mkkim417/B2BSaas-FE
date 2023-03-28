@@ -1,14 +1,13 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import GroupCreateModal from '../components/modal/GroupCreateModal';
-import UserCreateModal from '../components/modal/UserCreateModal';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import GroupCreateModal from '../modal/GroupCreateModal';
+import UserCreateModal from '../modal/UserCreateModal';
 
 function UserDataCreate() {
-
   // Modal 변수들
 
   // 클라이언트 모달
-  const [ clientOpenModal, setClientOpenModal] = useState(false);
+  const [clientOpenModal, setClientOpenModal] = useState(false);
   const clickClientModal = () => {
     setClientOpenModal(true);
   };
@@ -17,7 +16,7 @@ function UserDataCreate() {
   };
 
   // 그룹 모달
-  const [ groupOpenModal, setGroupModal ] = useState(false);
+  const [groupOpenModal, setGroupModal] = useState(false);
   const clickGroupModal = () => {
     setGroupModal(true);
   };
@@ -36,15 +35,9 @@ function UserDataCreate() {
           memo="클라이언트 생성하는 모달"
         />
       )}
-      {groupOpenModal && (
-        <GroupCreateModal
-          closeModal={closeGroupModal}
-          title="그룹 생성"
-          memo="그룹 생성하는 모달"
-        />
-      )}
+      {groupOpenModal && <GroupCreateModal closeModal={closeGroupModal} />}
     </Wrapper>
-  )
+  );
 }
 export const Wrapper = styled.div`
   display: flex;
@@ -54,11 +47,11 @@ export const Wrapper = styled.div`
   height: 100vh;
   padding-left: 200px;
   gap: 30px;
-`
+`;
 const ButtonBox = styled.button`
   background-color: beige;
   font-size: 28px;
   padding: 10px;
-`
+`;
 
-export default UserDataCreate
+export default UserDataCreate;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBicycle,
@@ -11,6 +12,7 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+
 
 function PricePolicy() {
   const onClickPayment = (price: number) => {
@@ -62,6 +64,7 @@ function PricePolicy() {
               <H1>Free Trial</H1>
               <Stp>SendingGo의 서비스를 무료로 체험 해 보세요</Stp>
             </Textdiv>
+
             <IconDiv>
               <Stp>prcie: 0/month</Stp>
 
@@ -76,6 +79,7 @@ function PricePolicy() {
                 결제하기
               </Stbutton>
               <FontAwesomeIcon
+
                 icon={faPaperPlane}
                 style={{ color: '#256be4' }}
                 display="flex"
@@ -83,6 +87,7 @@ function PricePolicy() {
                 align-items="center"
                 flex-direction="column"
                 size="2x"
+
               />
             </IconDiv>
             <Stp>✔ 팀원 1명 권한 부여 가능</Stp>
@@ -126,6 +131,7 @@ function PricePolicy() {
             </Textdiv2>
             <IconDiv>
               <Stp>prcie (1month) 30000</Stp>
+
               <Stbutton
                 type="button"
                 id="purchase-button"
@@ -394,7 +400,7 @@ const Stbutton = styled.button`
   outline: 0;
   color: #fff;
   background-color: #3368fa;
-  border-color: #3368fa
+  border-color: #3368fa;
   box-shadow: 0 2px 4px 0 #c8d7ee;
   transition: all 0.2s ease-in-out;
 `;

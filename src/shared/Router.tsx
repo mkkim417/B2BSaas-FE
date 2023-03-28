@@ -6,17 +6,14 @@ import UploadPage from '../page/UploadPage';
 import NoticePersonalList from '../page/NoticePersonalList';
 import NoticeSendCreate from '../page/NoticeSendCreate';
 import NoticeSendList from '../page/NoticeSendList';
-import UserDataCreate from '../page/UserDataCreate';
-import UserGroupCreate from '../page/UserGroupCreate';
-import UserGroupList from '../page/UserGroupList';
-import UserList from '../page/UserList';
+import UserList from '../components/NotUsedPages/UserList';
 import Statistics from '../page/Statistics';
 import Alarmtalk from '../page/Alarmtalk';
 import Header from '../components/Header';
 import Signup from '../page/Signup';
 import Login from '../page/Login';
 import Mypage from '../page/Mypage';
-import GroupInUserList from '../page/GroupInUserList';
+import GroupInUserList from '../components/NotUsedPages/GroupInUserList';
 import Email from '../page/Email';
 import SplitServicePage from '../page/SplitServicePage';
 import EmailTemplates from '../page/EmailTemplates';
@@ -26,7 +23,8 @@ import SingleUserCreate from '../page/SingleUserCreate';
 import ClientRegistration from '../page/ClientRegistration';
 import GroupManageList from '../page/GroupManageList';
 import KakaoResultList from '../page/KakaoResultList';
-import PricePolicy from '../page/PricePolicy';
+import KakaoDetailList from '../page/KakaoDetailList';
+import PricePoicy from '../page/PricePolicy';
 
 const Router = () => {
   const userInfo = getUser();
@@ -63,7 +61,8 @@ const Router = () => {
             />
             <Route path="/groupmanageList" element={<GroupManageList />} />
             <Route path="/kakaoresultlist" element={<KakaoResultList />} />
-            <Route path="/pricepolicy" element={<PricePolicy />} />
+            <Route path="/pricepolicy" element={<PricePoicy />} />
+            <Route path="/kakaodetaillist/:id" element={<KakaoDetailList />} />
           </Route>
           <Route
             path="/home"

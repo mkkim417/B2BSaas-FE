@@ -49,6 +49,10 @@ const Signup = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [directInput, setDirectInput] = useState(false);
+  const [duplicate, setDuplicate] = useState(false);
+  const [duplicateAvailable, setDuplicateAvailable] = useState(false);
+  const [email, setEmail] = useState('');
+  const [emailValue, setEmailValue] = useState<string>('');
   const [companyDirectInput, setCompanyDirectInput] = useState(false);
   const navigate = useNavigate();
   const {
@@ -163,21 +167,35 @@ const Signup = () => {
     handleCompanyEmailProviderChange(companyEmailProvider);
   };
 
-  const checkEmailDuplication = async (email: string) => {
-    console.log('email', email);
+  const checkDuplicateEmail = async () => {
     try {
       const response = await axios.post(
         'https://dev.sendingo-be.store/api/users/signup/existemail',
-        {
-          email: email,
-        }
+        { email: emailValue }
       );
-      console.log('sent', email);
-      console.log('receive', response.data);
-      return response.data.exists;
+      if (response.data === 'available') {
+        setDuplicateAvailable(true);
+      } else {
+        setDuplicateAvailable(false);
+      }
     } catch (error) {
-      console.error(error);
-      return false;
+      console.error('중복확인 중 오류 발생', error);
+    }
+  };
+
+  const createUser = async (email: string, emailProvider: string) => {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, emailProvider }),
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      alert('User created!');
+      navigate('/login');
+    } else {
+      alert('Failed to create user!');
     }
   };
 
@@ -192,8 +210,6 @@ const Signup = () => {
   const nameRegex = /^[a-zA-Z ]+$/;
 
   const onSubmit = async (data: FormValues) => {
-    // console.log(data);
-
     if (!isValid) {
       setAlertMessage('모든 항목을 입력하시길 바랍니다');
       return;
@@ -202,30 +218,39 @@ const Signup = () => {
     const email = `${data.email}@${formData.emailProvider}`;
     const email2 = `${data.companyEmail}@${formData.companyEmailProvider}`;
 
-    // const requestBody = {
-    //   email: EmailValidation(formData.email, formData),
-    //   password: data.password,
-    //   name: data.name,
-    //   phoneNumber: data.phoneNumber,
-    //   companyName: data.companyName,
-    //   companyNumber: data.companyNumber,
-    //   role: 1,
-    // };
     const sendEmail = email + formData.email;
     const sendEmail2 = email2 + formData.companyEmail;
 
-    await axios.post('https://dev.sendingo-be.store/api/users/signup', {
-      email: sendEmail,
-      password: data.password,
-      name: data.name,
-      phoneNumber: data.phoneNumber,
-      companyName: data.companyName,
-      companyNumber: data.companyNumber,
-      companyEmail: sendEmail2,
-      role: '1',
-    });
-    setIsSubmitted(true);
-    navigate('/');
+    try {
+      const response = await axios.post(
+        'https://dev.sendingo-be.store/api/users/signup/existemail',
+        { email: `${data.email}@${formData.emailProvider}` }
+      );
+      if (response.data !== 'available') {
+        setAlertMessage('이미 가입된 이메일입니다.');
+        return;
+      }
+    } catch (error) {
+      console.error('이메일 중복 확인 중 오류 발생', error);
+      return;
+    }
+    try {
+      await axios.post('https://dev.sendingo-be.store/api/users/signup', {
+        email: sendEmail,
+        password: data.password,
+        name: data.name,
+        phoneNumber: data.phoneNumber,
+        companyName: data.companyName,
+        companyNumber: data.companyNumber,
+        companyEmail: sendEmail2,
+        role: '1',
+      });
+      setIsSubmitted(true);
+      navigate('/');
+    } catch (error) {
+      console.error('회원가입 중 오류 발생', error);
+      return;
+    }
   };
 
   return (
@@ -291,20 +316,8 @@ const Signup = () => {
                 '이메일을 입력해 주십시오.'}
             </StErrorMsg>
           ) : null}
-          <button
-            onClick={() => {
-              checkEmailDuplication(formData.email).then((exists) => {
-                if (exists) {
-                  alert('이미 존재하는 이메일입니다.');
-                } else {
-                  alert('사용가능한 이메일입니다.');
-                }
-              });
-            }}
-          >
-            중복확인
-          </button>
-                 
+          <button onClick={checkDuplicateEmail}>중복 확인</button>
+          {duplicate && <span>해당 이메일은 이미 사용중입니다</span>}       
         </StEmail>
 
         <StBrand>
@@ -484,12 +497,14 @@ const Signup = () => {
           />
           {errors.ConfirmPw &&
             errors.ConfirmPw.type === 'required' &&
-            'this field is required'}
+            '이 항목은 필수입니다'}
           {errors.ConfirmPw &&
             errors.ConfirmPw.type === 'validate' &&
-            'The Passwords do not matched'}
+            '암호가 일치하지 않습니다'}
         </StPw>
-        <StSignupButton type="submit">회원가입</StSignupButton>
+        <StSignupButton type="button" onClick={() => createUser(email, email)}>
+          회원가입
+        </StSignupButton>
         <Link to="/login">이미 계정이 있으신가요? 여기서 로그인 하세요</Link>
       </Wrapper>
     </form>

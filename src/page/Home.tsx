@@ -17,7 +17,7 @@ function Home() {
           </LogoText>
           <CotentsTxt>
             <div>이메일을 보내도 답변이 없으셔서 막막하셨나요? </div>
-            <div>SendinGo와 함께 간편학게고객관리를 해보세요!</div>
+            <div>SendinGo와 함께 간편하게 고객관리를 해보세요!</div>
           </CotentsTxt>
         </LeftContnets>
         <VideoBox controls />

@@ -13,7 +13,7 @@ function Header() {
           <LeftContainer>
             <Li>소개</Li>
             <Li>
-              <Link to={'/pricepoicy'}>요금제</Link>
+              <Link to={'/pricepolicy'}>요금제</Link>
             </Li>
             <Li>가이드</Li>
           </LeftContainer>

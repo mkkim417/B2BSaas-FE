@@ -26,8 +26,8 @@ import SingleUserCreate from '../page/SingleUserCreate';
 import ClientRegistration from '../page/ClientRegistration';
 import GroupManageList from '../page/GroupManageList';
 import KakaoResultList from '../page/KakaoResultList';
-import PricePoicy from '../page/PricePoicy';
 import KakaoDetailList from '../page/KakaoDetailList';
+import PricePoicy from '../page/PricePolicy';
 
 const Router = () => {
   const userInfo = getUser();
@@ -64,8 +64,7 @@ const Router = () => {
             />
             <Route path="/groupmanageList" element={<GroupManageList />} />
             <Route path="/kakaoresultlist" element={<KakaoResultList />} />
-            <Route path="/kakaodetaillist/:id" element={<KakaoDetailList />} />
-            <Route path="/pricepoicy" element={<PricePoicy />} />
+            <Route path="/pricepolicy" element={<PricePoicy />} />
           </Route>
           <Route
             path="/home"

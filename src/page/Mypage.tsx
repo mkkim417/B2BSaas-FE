@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Wrapper } from './Home';
 import styled from 'styled-components';
 import axios from 'axios';

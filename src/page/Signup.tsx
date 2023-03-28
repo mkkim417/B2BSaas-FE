@@ -49,6 +49,7 @@ const Signup = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [directInput, setDirectInput] = useState(false);
+  const [isDupliEmail, setDupliEmail] = useState(false);
   const [companyDirectInput, setCompanyDirectInput] = useState(false);
   const navigate = useNavigate();
   const {
@@ -176,11 +177,12 @@ const Signup = () => {
           email: isEmail + '@' + formData.emailProvider,
         })
         .then((res) => {
-          console.log(res);
-          // alert('사용가능합니다.');
+          alert(res.data.message);
+          setDupliEmail(true);
         });
       // alert('중복된 이메일입니다.');
-    } catch (error) {
+    } catch (error: any) {
+      alert(error.response.data.message);
       console.log('error : ', error);
     }
   };
@@ -197,6 +199,9 @@ const Signup = () => {
 
   const onSubmit = async (data: FormValues) => {
     // console.log(data);
+    if (!isDupliEmail) {
+      alert('이메일 중복을 확인해주세요');
+    }
 
     if (!isValid) {
       setAlertMessage('모든 항목을 입력하시길 바랍니다');
@@ -238,7 +243,7 @@ const Signup = () => {
         {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
         {alertMessage && <p>{alertMessage}</p>}
         <StEmail>
-          <StEmailP>Email</StEmailP>         
+          <StEmailP>Email</StEmailP>
           <StInput
             type="text"
             {...register('email', {
@@ -254,7 +259,6 @@ const Signup = () => {
           {directInput ? (
             <StInputWrapper>
               {' '}
-               
               <StInput
                 type="text"
                 {...register('emailProvider', {
@@ -288,10 +292,9 @@ const Signup = () => {
               ))}
             </StSelect>
           )}
-                   
+
           {errors.email || errors.emailProvider ? (
             <StErrorMsg>
-               
               {errors.email?.message ||
                 errors.emailProvider?.message ||
                 '이메일을 입력해 주십시오.'}
@@ -311,7 +314,6 @@ const Signup = () => {
           >
             중복확인
           </button>
-                 
         </StEmail>
 
         <StBrand>
@@ -401,7 +403,6 @@ const Signup = () => {
           <span>@</span>
           {companyDirectInput ? (
             <StInputWrapper>
-               
               <StInput2
                 type="text"
                 {...register('companyEmailProvider', {
@@ -436,10 +437,9 @@ const Signup = () => {
               ))}
             </StSelect2>
           )}
-                   
+
           {errors.email || errors.emailProvider ? (
             <StErrorMsg>
-               
               {errors.email?.message ||
                 errors.emailProvider?.message ||
                 '이메일을 입력해 주십시오.'}

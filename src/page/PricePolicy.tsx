@@ -76,7 +76,8 @@ function PricePolicy() {
               </Stbutton>
             </div>
             <p>✔ 무료 체험 기간: 1개월</p>
-            <p>✔ 무료 체험 기간: 1개월</p>
+            <p>✔ 템플릿 제공</p>
+            <p>✔ 이메일 전송 관련 인사이트</p>
           </Trial>
           <Standard>
             prcie (1month) 30000

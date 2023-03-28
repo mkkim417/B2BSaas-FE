@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import GroupCreateModal from '../components/modal/GroupCreateModal';
-import UserCreateModal from '../components/modal/UserCreateModal';
+import GroupCreateModal from '../modal/GroupCreateModal';
+import UserCreateModal from '../modal/UserCreateModal';
 
 function UserDataCreate() {
 
@@ -39,8 +39,6 @@ function UserDataCreate() {
       {groupOpenModal && (
         <GroupCreateModal
           closeModal={closeGroupModal}
-          title="그룹 생성"
-          memo="그룹 생성하는 모달"
         />
       )}
     </Wrapper>

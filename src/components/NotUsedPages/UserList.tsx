@@ -2,8 +2,8 @@ import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import styled from 'styled-components';
-import UserCreateModal from '../components/modal/UserCreateModal';
-import UserEditModal from '../components/modal/UserEditModal';
+import UserCreateModal from '../modal/UserCreateModal';
+import UserEditModal from '../modal/UserEditModal';
 import {
   Button,
   CardContainer,
@@ -330,7 +330,7 @@ export const PaginationBox = styled.div`
   .pagination {
     display: flex;
     justify-content: center;
-    /* margin-top: 15px; */
+    margin-top: 10px;
   }
 
   ul {

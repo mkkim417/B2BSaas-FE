@@ -1,38 +1,40 @@
 import axios from 'axios';
-import { getCookie } from '../util/cookie';
+import { setCookie, getCookie, getTokens } from '../cookies/cookies';
 
 interface Login {
   email: string;
   password: string;
 }
 
-console.log(`REACT_DEPLOY_SERVER value: ${process.env.REACT_DEPLOY_SERVER}`);
-
 const instance = axios.create({
-  baseURL: `${process.env.REACT_DEPLOY_SERVER}`,
+  baseURL: `https://dev.sendingo-be.store`,
   withCredentials: true,
-  headers: {
-    authorization: `Bearer ${getCookie('accessToken')}`,
-  },
 });
 
-const postLogin = async (login: Login) => {
-  const response = await instance.post(
-    'https://dev.sendingo-be.store/api/users/login',
-    login
-  );
+instance.interceptors.request.use(function (config) {
+  const { accessToken, userToken } = getTokens();
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+  if (userToken) {
+    config.headers.userToken = userToken;
+  }
+  return config;
+});
 
-  const cookies = response.headers.Authorization;
-  const token = response.data.accessToken;
-  console.log(token);
+export const postLogin = async (data: Login) => {
+  try {
+    const response = await instance.post('/api/users/login', data);
 
-  // 클라이언트 고객 삭제
-  const deleteClient = async () => {
-    // const response = await instance.post()
-  } 
-
-  return { response: response.data, cookies: cookies, token: token };
+    const authHeader =
+      response.headers.authorization || response.headers.Authorization;
+    const token = authHeader ? authHeader.split(' ')[1] : null;
+    localStorage.setItem('토큰', token);
+    return { response, token, data: response.data };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
-
-export { instance, postLogin };
+export { instance };

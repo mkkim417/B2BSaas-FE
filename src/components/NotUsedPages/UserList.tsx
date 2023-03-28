@@ -22,17 +22,19 @@ function UserList() {
   const [filterList, setFilterList] = useState([] as any);
 
   // 유저 수정 state
-  const [ editUser, setEditUser ] = useState({
-    'clientId' : '',
-    'clientName' : '',
-    'clientContact' : ''
-  })
+  const [editUser, setEditUser] = useState({
+    clientId: '',
+    clientName: '',
+    clientContact: '',
+  });
   // 유저리스트 get API
   const getUserData = useCallback(async () => {
-    const response = await axios.get('https://dev.sendingo-be.store/api/clients');
+    const response = await axios.get(
+      'https://dev.sendingo-be.store/api/clients'
+    );
     setUserList(response.data.data);
     setFilterList(response.data.data);
-    console.log('userlist', response.data.data)
+    console.log('userlist', response.data.data);
   }, []);
 
   // Modal 변수들
@@ -44,13 +46,13 @@ function UserList() {
     setIsOpenModal(false);
   };
 
-  const [ editModal, setEditModal ] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const clickEditModal = () => {
     setEditModal(true);
-  }
+  };
   const closeEditModal = () => {
-    setEditModal(false)
-  }
+    setEditModal(false);
+  };
   // Pagination 처리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
   const [count, setCount] = useState(0); // 아이템 총 갯수
@@ -68,14 +70,14 @@ function UserList() {
 
   // 개별 항목을 체크했을 때의 state
   const [isCheckingBox, setIsCheckingBox] = useState(false);
-  
+
   // 체크항목 저장하는 변수 state
   const [checkedArr, setCheckedArr] = useState<String[]>([]);
-  
+
   // 수정 항목의 변수 state
-  const [ editName, setEditName ] = useState('')
-  const [ editEmail, setEditEmail ] = useState('')
-  const [ editContact, setEditContact ] = useState('')
+  const [editName, setEditName] = useState('');
+  const [editEmail, setEditEmail] = useState('');
+  const [editContact, setEditContact] = useState('');
   // 개별 체크표시 핸들러
   const checkHandler = (e: React.ChangeEvent<HTMLInputElement>, id: any) => {
     console.log('타켓 checked값 : ', e.target.checked, '타켓 Id값 :', id);
@@ -88,7 +90,7 @@ function UserList() {
     if (isChecked) {
       const idArray = [] as any;
       userList.forEach((item: any) => {
-        console.log('allchecked handler', userList)
+        console.log('allchecked handler', userList);
         if (idArray.includes(item.clientId)) {
           // check 배열에 전체선택 품목 중 포함되어있는 것이 있다면 빼고 push
         } else {
@@ -101,7 +103,7 @@ function UserList() {
     } else {
       setCheckedArr([]);
     }
-    console.log('allcheck checkedArr', checkedArr)
+    console.log('allcheck checkedArr', checkedArr);
   };
   // 체크아이템 변수에 담는 핸들러
   const checkedItemHandler = (isChecked: any, id: any) => {
@@ -119,17 +121,22 @@ function UserList() {
   // 페이지 렌더링하자마자 데이터 get
   useEffect(() => {
     getUserData();
-    console.log('api', getUserData())
+    console.log('api', getUserData());
 
     // setCount(userList.length);
     setIndexOfLastPost(currentPage * postPerPage);
     setIndexOfFirstPost(indexOfLastPost - postPerPage);
     setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
-
-  }, [currentPage, indexOfLastPost, indexOfFirstPost, postPerPage, getUserData]);
+  }, [
+    currentPage,
+    indexOfLastPost,
+    indexOfFirstPost,
+    postPerPage,
+    getUserData,
+  ]);
   // currentPage, indexOfLastPost, indexOfFirstPost, userList, postPerPage
   // 검색필터 useEffect
-  useEffect(() => {    
+  useEffect(() => {
     // 필터 bar
     setUserList(
       // 조건 검색 여기서 설정 => 현재는 그룹명만 설정
@@ -148,16 +155,20 @@ function UserList() {
     // 선택 삭제하기 전 한번 더 cofirm창
     if (window.confirm('해당 유저를 삭제하시겠습니까?')) {
       // 확인을 눌렀을 때
-      const urls = checkedArr.map((groupId) => `https://dev.sendingo-be.store/api/clients/${groupId}`)
-      console.log(urls)
-      axios.all(urls.map(url => axios.delete(url)))
-        .then(response => {
-          console.log(response)
-          alert('삭제가 완료되었습니다')
-        }).catch(error => {
-          console.log(error.response)
-          alert('삭제를 실패하였습니다.')
+      const urls = checkedArr.map(
+        (groupId) => `https://dev.sendingo-be.store/api/clients/${groupId}`
+      );
+      console.log(urls);
+      axios
+        .all(urls.map((url) => axios.delete(url)))
+        .then((response) => {
+          console.log(response);
+          alert('삭제가 완료되었습니다');
         })
+        .catch((error) => {
+          console.log(error.response);
+          alert('삭제를 실패하였습니다.');
+        });
     } else {
       // confirm창에서 취소를 눌렀을 때 아무일도 발생하지 않는다.
     }
@@ -197,33 +208,35 @@ function UserList() {
 
   const editButtonHandler = () => {
     if (checkedArr.length > 1) {
-      alert('한 개만 체크해주세요.')
+      alert('한 개만 체크해주세요.');
     } else {
       // edit object
-      userList.map((item : any) => {
-        if ( item.clientId === checkedArr[0]) {
-          console.log('값들어오ㅏ?', item.clientId)
-          setEditUser({...editUser,
-          'clientId' : item.clientId,
-          'clientName' : item.clientName,
-          'clientContact' : item.contact})
+      userList.map((item: any) => {
+        if (item.clientId === checkedArr[0]) {
+          console.log('값들어오ㅏ?', item.clientId);
+          setEditUser({
+            ...editUser,
+            clientId: item.clientId,
+            clientName: item.clientName,
+            clientContact: item.contact,
+          });
 
-          setEditName(item.clientName)
+          setEditName(item.clientName);
           // setEdit.clientId = item.clientId
           // editArr.clientName = item.ClientName
           // editArr.clientContact = item.contact
         }
-      })
+      });
       // editArr.push(userList.filter((item :any) => item.clientId === checkedArr[0]))
       // console.log('eidtArr', editArr)
       // console.log('filter', userList.filter((item :any) => item.clientId === checkedArr[0]))
-      console.log('eidtArr', editUser)
-      console.log('eidtArr', editName)
+      console.log('eidtArr', editUser);
+      console.log('eidtArr', editName);
       // setEditName(editArr[0].clientName)
-      clickEditModal()
+      clickEditModal();
     }
     // console.log(editName)
-  }
+  };
   return (
     <Wrapper>
       <HeaderBar>
@@ -295,11 +308,12 @@ function UserList() {
         />
       )}
       {editModal && (
-        <UserEditModal 
+        <UserEditModal
           closeModal={closeEditModal}
           clientId={editUser.clientId}
           clientName={editUser.clientName}
-          clientContact={editUser.clientContact}/>
+          clientContact={editUser.clientContact}
+        />
       )}
     </Wrapper>
   );

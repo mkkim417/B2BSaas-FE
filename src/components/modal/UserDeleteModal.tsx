@@ -8,45 +8,49 @@ type Props = {
   closeModal: () => void;
 };
 function UserDeleteModal({ title, checkValue, closeModal }: Props) {
-
-  const deleteDataHandler = (e:any) => {
+  const deleteDataHandler = (e: any) => {
     e.preventDefault();
     // 확인 눌렀을 때
     // const urls = content.map((item : any) => `${item.clientId}`)
-    const urls = checkValue.map((item : any) => `${process.env.REACT_APP_SERVER_URL}/api/clients/${item.clientId}`)
-    console.log(urls)
-    axios.all(urls.map((url:any) => axios.delete(url)))
-      .then(response => {
-        console.log(response)
-        alert('삭제가 완료되었습니다')
-        closeModal()
-      }).catch(error => {
-        console.log(error.response)
-        alert('삭제를 실패하였습니다.')
+    const urls = checkValue.map(
+      (item: any) =>
+        `${process.env.REACT_APP_SERVER_URL}/api/clients/${item.clientId}`
+    );
+    console.log(urls);
+    axios
+      .all(urls.map((url: any) => axios.delete(url)))
+      .then((response) => {
+        console.log(response);
+        alert('삭제가 완료되었습니다');
+        closeModal();
       })
-  }
+      .catch((error) => {
+        console.log(error.response);
+        alert('삭제를 실패하였습니다.');
+      });
+  };
   return (
     <ModalWrap>
       <ModalBackGround>
         <ModalContainer>
           <ContentContainer>
-          <TitleContainer>{title}</TitleContainer>
-          <DataHeader>
-            <RowPercent width="20%">이름</RowPercent>
-            <RowPercent width="30%">연락처</RowPercent>
-            <RowPercent width="50%">이메일</RowPercent>
-          </DataHeader>
-          <DataContainer>
-            {checkValue.map((item: any ) => {
-              return (
-                <DataHeader>
-                <RowPercent width="20%">{item.clientName}</RowPercent>
-                <RowPercent width="30%">{item.contact}</RowPercent>
-                <RowPercent width="50%">{item.clientEmail}</RowPercent>
-                </DataHeader>
-              )
-            })}
-          </DataContainer>
+            <TitleContainer>{title}</TitleContainer>
+            <DataHeader>
+              <RowPercent width="20%">이름</RowPercent>
+              <RowPercent width="30%">연락처</RowPercent>
+              <RowPercent width="50%">이메일</RowPercent>
+            </DataHeader>
+            <DataContainer>
+              {checkValue.map((item: any) => {
+                return (
+                  <DataHeader>
+                    <RowPercent width="20%">{item.clientName}</RowPercent>
+                    <RowPercent width="30%">{item.contact}</RowPercent>
+                    <RowPercent width="50%">{item.clientEmail}</RowPercent>
+                  </DataHeader>
+                );
+              })}
+            </DataContainer>
           </ContentContainer>
           <ButtonContainer>
             {/* <ButtonBox>아니오</ButtonBox> */}
@@ -114,21 +118,21 @@ const TitleContainer = styled.div`
   align-items: center;
   justify-content: center;
   background-color: beige;
-`
+`;
 const DataHeader = styled.div`
   width: 100%;
   height: 8%;
   display: flex;
   flex-direction: row;
   /* background-color: darkgreen; */
-`
-const RowPercent = styled.div<{ width: any}>`
+`;
+const RowPercent = styled.div<{ width: any }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width : ${(item : any) => item.width};
+  width: ${(item: any) => item.width};
   border: 1px solid black;
-`
+`;
 const DataContainer = styled.div`
   width: 100%;
   height: 80%;
@@ -136,7 +140,7 @@ const DataContainer = styled.div`
   flex-direction: column;
   overflow: scroll;
   /* background-color: blueviolet; */
-`
+`;
 const ButtonContainer = styled.div`
   width: 100%;
   display: flex;

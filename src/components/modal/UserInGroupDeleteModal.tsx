@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
 
 type Props = {
@@ -7,33 +7,31 @@ type Props = {
   closeModal: () => void;
 };
 function UserInGroupDeleteModal({ title, checkValue, closeModal }: Props) {
-
   const deleteDataHandler = (e: any) => {
     e.preventDefault();
-    
-  }
+  };
   return (
     <ModalWrap>
       <ModalBackGround>
         <ModalContainer>
           <ContentContainer>
-          <TitleContainer>{title}</TitleContainer>
-          <DataHeader>
-            <RowPercent width="20%">이름</RowPercent>
-            <RowPercent width="30%">연락처</RowPercent>
-            <RowPercent width="50%">이메일</RowPercent>
-          </DataHeader>
-          <DataContainer>
-            {checkValue.map((item: any ) => {
-              return (
-                <DataHeader>
-                <RowPercent width="20%">{item.clientName}</RowPercent>
-                <RowPercent width="30%">{item.contact}</RowPercent>
-                <RowPercent width="50%">{item.clientEmail}</RowPercent>
-                </DataHeader>
-              )
-            })}
-          </DataContainer>
+            <TitleContainer>{title}</TitleContainer>
+            <DataHeader>
+              <RowPercent width="20%">이름</RowPercent>
+              <RowPercent width="30%">연락처</RowPercent>
+              <RowPercent width="50%">이메일</RowPercent>
+            </DataHeader>
+            <DataContainer>
+              {checkValue.map((item: any) => {
+                return (
+                  <DataHeader>
+                    <RowPercent width="20%">{item.clientName}</RowPercent>
+                    <RowPercent width="30%">{item.contact}</RowPercent>
+                    <RowPercent width="50%">{item.clientEmail}</RowPercent>
+                  </DataHeader>
+                );
+              })}
+            </DataContainer>
           </ContentContainer>
           <ButtonContainer>
             {/* <ButtonBox>아니오</ButtonBox> */}
@@ -43,7 +41,7 @@ function UserInGroupDeleteModal({ title, checkValue, closeModal }: Props) {
         </ModalContainer>
       </ModalBackGround>
     </ModalWrap>
-  )
+  );
 }
 
 // 전체 모달 감싸주는 컴포넌틑
@@ -101,21 +99,21 @@ const TitleContainer = styled.div`
   align-items: center;
   justify-content: center;
   background-color: beige;
-`
+`;
 const DataHeader = styled.div`
   width: 100%;
   height: 8%;
   display: flex;
   flex-direction: row;
   /* background-color: darkgreen; */
-`
-const RowPercent = styled.div<{ width: any}>`
+`;
+const RowPercent = styled.div<{ width: any }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width : ${(item : any) => item.width};
+  width: ${(item: any) => item.width};
   border: 1px solid black;
-`
+`;
 const DataContainer = styled.div`
   width: 100%;
   height: 80%;
@@ -123,7 +121,7 @@ const DataContainer = styled.div`
   flex-direction: column;
   overflow: scroll;
   /* background-color: blueviolet; */
-`
+`;
 const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
@@ -140,4 +138,4 @@ const ButtonBox = styled.button`
   font-size: 18px;
 `;
 
-export default UserInGroupDeleteModal
+export default UserInGroupDeleteModal;

@@ -50,7 +50,7 @@ function GroupManageList() {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}`
       );
-      console.log('getClientInGroup Response', response.data.data)
+      console.log('getClientInGroup Response', response.data.data);
       setGroupClient(response.data.data);
       setGroupName(name);
     },
@@ -76,21 +76,21 @@ function GroupManageList() {
 
   // 모달
   // 유저리스트 선택 유저 수정 조건모달
-  const [ userConditionModal, setUserConditionModal ] = useState(false);
+  const [userConditionModal, setUserConditionModal] = useState(false);
   const clickUserConditionModal = () => {
     setUserConditionModal(true);
-  }
+  };
   const closeUserConditionModal = () => {
     setUserConditionModal(false);
-  }
+  };
   // 유저 선택 유저 수정 모달
-  const [ userEditModal, setUserEditModal ] = useState(false);
+  const [userEditModal, setUserEditModal] = useState(false);
   const clickUserEditModal = () => {
-    setUserEditModal(true)
-  }
+    setUserEditModal(true);
+  };
   const closeUserEditModal = () => {
-    setUserEditModal(false)
-  }
+    setUserEditModal(false);
+  };
   // 유저리스트 선택 유저 삭제 모달
   const [userDeleteModal, setUserDeleteModal] = useState(false);
   const clickUserDeleteModal = () => {
@@ -107,7 +107,6 @@ function GroupManageList() {
   const closeGroupCreateModal = () => {
     setGroupCreateModal(false);
   };
-
 
   // 그룹리스트 내 유저 복사 모달
   const [groupUserCopyModal, setGroupUserCopyModal] = useState(false);
@@ -149,14 +148,14 @@ function GroupManageList() {
     setUserList(response.data.data.clients);
     setAllclients(response.data.data.clientCount);
   }, []);
-  
+
   // 유저 수정 state
-  const [ editUser, setEditUser ] = useState({
-    'clientId' : '',
-    'clientName' : '',
-    'clientContact' : '',
-    'clientEmail': ''
-  })
+  const [editUser, setEditUser] = useState({
+    clientId: '',
+    clientName: '',
+    clientContact: '',
+    clientEmail: '',
+  });
 
   // 처음 렌더링시 전체고객리스트로 focus
   const allUserRef = useRef<HTMLButtonElement>(null);
@@ -196,18 +195,20 @@ function GroupManageList() {
   // 고객 수정 버튼
   const userEditHandler = () => {
     if (checkedArr.length > 1) {
-      alert('한 개만 체크해주세요!')
+      alert('한 개만 체크해주세요!');
     } else {
       checkedArr.map((item: any) => {
-        setEditUser({...editUser,
-        'clientId' : item.clientId,
-        'clientName' : item.clientName,
-        'clientContact' : item.contact,
-        'clientEmail': item.clientEmail})
-      })
+        setEditUser({
+          ...editUser,
+          clientId: item.clientId,
+          clientName: item.clientName,
+          clientContact: item.contact,
+          clientEmail: item.clientEmail,
+        });
+      });
     }
-    clickUserEditModal()
-  }
+    clickUserEditModal();
+  };
 
   // 체크박스관련
   //******************************************************************************
@@ -292,7 +293,6 @@ function GroupManageList() {
   // 유저리스트 useEffect
   useEffect(() => {
     getUserData();
-    
 
     // setCount(userList.length);
     setIndexOfLastPost(currentPage * postPerPage);
@@ -476,14 +476,24 @@ function GroupManageList() {
                     선택취소
                   </GroupButton>
                 )} */}
-                <ClientButton onClick={() => alert('선택된 그룹안에서 누른 버튼이고, 이 모달에서는 고객리스트뜨게하기?')}>고객 등록</ClientButton>
+                <ClientButton
+                  onClick={() =>
+                    alert(
+                      '선택된 그룹안에서 누른 버튼이고, 이 모달에서는 고객리스트뜨게하기?'
+                    )
+                  }
+                >
+                  고객 등록
+                </ClientButton>
                 <ClientButton onClick={() => clickUserCopyModal()}>
                   복사
                 </ClientButton>
                 <ClientButton onClick={() => clickUserMoveModal()}>
                   이동
                 </ClientButton>
-                <ClientButton onClick={() => clickUserDelteModal()}>그룹에서 삭제</ClientButton>
+                <ClientButton onClick={() => clickUserDelteModal()}>
+                  그룹에서 삭제
+                </ClientButton>
                 {/* {!isOpen ? <ClientButton>고객 등록</ClientButton> : null}
                 {!isOpen ? <ClientButton>이동</ClientButton> : null}
                 {!isOpen ? <ClientButton>복사</ClientButton> : null} */}
@@ -494,11 +504,13 @@ function GroupManageList() {
       </ContentContainer>
       {/* 고객 수정 모달 */}
       {userEditModal && (
-        <UserEditModal closeModal={closeUserEditModal}
+        <UserEditModal
+          closeModal={closeUserEditModal}
           clientId={editUser.clientId}
           clientName={editUser.clientName}
           clientContact={editUser.clientContact}
-          clientEmail={editUser.clientEmail}/>
+          clientEmail={editUser.clientEmail}
+        />
       )}
       {/* 고객정보삭제 모달 */}
       {userDeleteModal && (
@@ -509,13 +521,33 @@ function GroupManageList() {
         />
       )}
       {/* 그룹 생성 모달 */}
-      { groupCreateModal && <GroupCreateModal closeModal={closeGroupCreateModal} />}
+      {groupCreateModal && (
+        <GroupCreateModal closeModal={closeGroupCreateModal} />
+      )}
       {/* 그룹 내 고객 복사 모달 */}
-      {groupUserCopyModal && <UserCopyModal group={groupList} content={checkedArr} closeModal={closeUserCopyModal} />}
+      {groupUserCopyModal && (
+        <UserCopyModal
+          group={groupList}
+          content={checkedArr}
+          closeModal={closeUserCopyModal}
+        />
+      )}
       {/* 그룹 내 고객 이동 모달 */}
-      {groupUserMoveModal && <UserMoveModal group={groupList} content={checkedArr} closeModal={closeUserMoveModal} />}
+      {groupUserMoveModal && (
+        <UserMoveModal
+          group={groupList}
+          content={checkedArr}
+          closeModal={closeUserMoveModal}
+        />
+      )}
       {/* 그룹 내 고객 삭제 모달 */}
-      {groupUserDeleteModal && <UserInGroupDeleteModal title="정말 삭제하시겠습니까?" checkValue={checkedArr} closeModal={closeGroupUserDeleteModal} />}
+      {groupUserDeleteModal && (
+        <UserInGroupDeleteModal
+          title="정말 삭제하시겠습니까?"
+          checkValue={checkedArr}
+          closeModal={closeGroupUserDeleteModal}
+        />
+      )}
     </Container>
   );
 }

@@ -35,19 +35,19 @@ function UserGroupList() {
     const idArray = [] as any;
     if (isChecked) {
       groupList.forEach((item: any) => {
-        console.log('grouplist', item)
+        console.log('grouplist', item);
         if (idArray.includes(item.groupId)) {
           // check 배열에 전체선택 품목 중 포함되어있는 것이 있다면 빼고 push
         } else {
           // checkedArr.push(el.id);
-          idArray.push(item.groupId)
+          idArray.push(item.groupId);
           setCheckedArr(idArray);
         }
       });
     } else {
       setCheckedArr([]);
     }
-    console.log('checkArr', checkedArr)
+    console.log('checkArr', checkedArr);
   };
 
   // 체크아이템 변수에 담는 핸들러
@@ -65,9 +65,11 @@ function UserGroupList() {
   //yarn json-server --watch grouplist.json --port 4000
 
   const getGroupData = useCallback(async () => {
-    const response = await axios.get('https://dev.sendingo-be.store/api/groups');
-    console.log('grouplist', response.data.data)
-    setGroupList(response.data.data );
+    const response = await axios.get(
+      'https://dev.sendingo-be.store/api/groups'
+    );
+    console.log('grouplist', response.data.data);
+    setGroupList(response.data.data);
     setMonsters(response.data.data);
     setCopy(response.data.data);
   }, []);
@@ -183,13 +185,22 @@ function UserGroupList() {
                     onChange={(e: any) => checkHandler(e, item.groupId)}
                   />
                 </Percentage>
-                <Percentage width="20%" onClick={() => moveInUserList(item.groupId)}>
+                <Percentage
+                  width="20%"
+                  onClick={() => moveInUserList(item.groupId)}
+                >
                   {item.createdAt}
                 </Percentage>
-                <Percentage width="50%" onClick={() => moveInUserList(item.groupName)}>
+                <Percentage
+                  width="50%"
+                  onClick={() => moveInUserList(item.groupName)}
+                >
                   {item.groupName}
                 </Percentage>
-                <Percentage width="20%" onClick={() => moveInUserList(item.groupId)}>
+                <Percentage
+                  width="20%"
+                  onClick={() => moveInUserList(item.groupId)}
+                >
                   {/* {item.customerlist.length} */}
                 </Percentage>
               </CardInBox>

@@ -1,46 +1,43 @@
 import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react';
 import Pagination from 'react-js-pagination';
-import styled from 'styled-components'
+import styled from 'styled-components';
 import { PaginationBox } from '../NotUsedPages/UserList';
 
 type Props = {
   closeModal?: () => void;
 };
 const GroupCreateModal = ({ closeModal }: Props) => {
-
   // group input 변수들
   const initialData = {
-    groupName : '',
-    groupDescription : ''
-  }
-  const [ data, setData ] = useState(initialData);
+    groupName: '',
+    groupDescription: '',
+  };
+  const [data, setData] = useState(initialData);
 
   // 입력변화 상태값
-  const onChangeHandler = (e:any) => {
+  const onChangeHandler = (e: any) => {
     const { name, value } = e.target;
     setData({
       ...data,
       [name]: value,
     });
   };
-  
 
   // submit button handler
-  const submitHandler = async (e:any, closeModal : any) => {
-    alert(`groupName : ${data.groupName}, groupDes : ${data.groupDescription}`)
+  const submitHandler = async (e: any, closeModal: any) => {
+    alert(`groupName : ${data.groupName}, groupDes : ${data.groupDescription}`);
     // e.preventDefault();
     // alert('저장!')
-    if (!(data.groupName === "" && data.groupDescription === "")) {
-      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/groups`, data)
+    if (!(data.groupName === '' && data.groupDescription === '')) {
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/groups`, data);
 
-      alert('저장 성공!')
-      closeModal()
+      alert('저장 성공!');
+      closeModal();
     } else {
-      alert('빈칸을 채워주세요.')
+      alert('빈칸을 채워주세요.');
     }
-  }
-
+  };
 
   return (
     <ModalWrap>
@@ -59,19 +56,23 @@ const GroupCreateModal = ({ closeModal }: Props) => {
               type="text"
               value={data.groupName}
               placeholder="그룹명을 입력해주세요"
-              onChange={onChangeHandler}/>
+              onChange={onChangeHandler}
+            />
             <InputBox>그룹설명</InputBox>
             <InputContainer
               name="groupDescription"
               type="text"
               value={data.groupDescription}
               placeholder="그룹설명을 입력해주세요"
-              onChange={onChangeHandler}/>
+              onChange={onChangeHandler}
+            />
           </DataContainer>
           <ButtonContainer>
             {/* <ButtonBox>아니오</ButtonBox> */}
             <ButtonBox onClick={closeModal}>취소</ButtonBox>
-            <ButtonBox onClick={(e) => submitHandler(e, closeModal)}>확인</ButtonBox>
+            <ButtonBox onClick={(e) => submitHandler(e, closeModal)}>
+              확인
+            </ButtonBox>
           </ButtonContainer>
         </ModalContainer>
       </ModalBackGround>
@@ -134,21 +135,21 @@ const TitleContainer = styled.div`
   align-items: center;
   justify-content: center;
   /* background-color: beige; */
-`
+`;
 const DataHeader = styled.div`
   width: 100%;
   height: 8%;
   display: flex;
   flex-direction: row;
   /* background-color: darkgreen; */
-`
-const RowPercent = styled.div<{ width: any}>`
+`;
+const RowPercent = styled.div<{ width: any }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width : ${(item : any) => item.width};
+  width: ${(item: any) => item.width};
   border: 1px solid black;
-`
+`;
 const DataContainer = styled.div`
   width: 100%;
   height: 80%;
@@ -160,22 +161,22 @@ const DataContainer = styled.div`
   padding: 0px 150px 0px 150px;
   /* overflow: scroll; */
   /* background-color: blueviolet; */
-`
+`;
 const InputBox = styled.div`
   /* height: 28px; */
   font-weight: 500;
   font-size: 20px;
-`
+`;
 const TitleBox = styled.div`
   /* height: 28px; */
   font-weight: 900;
   font-size: 24px;
-`
+`;
 const InputContainer = styled.input`
   height: 32px;
-  border: 2px solid #4A72FF;
+  border: 2px solid #4a72ff;
   border-radius: 10px;
-`
+`;
 const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
@@ -186,12 +187,11 @@ const ButtonContainer = styled.div`
   /* background-color: aqua; */
 `;
 const ButtonBox = styled.button`
-  border: 2px solid #4A72FF;
+  border: 2px solid #4a72ff;
   border-radius: 10px;
   /* background-color: yellowgreen; */
   padding: 10px;
   font-size: 18px;
 `;
-
 
 export default GroupCreateModal;

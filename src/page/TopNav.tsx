@@ -14,6 +14,7 @@ const TopNav = () => {
   const clientCreate = useMatch('/singleusercreate');
   const clientRegistration = useMatch('/clientregistration');
   const groupManageList = useMatch('/groupmanageList');
+  const kakaoresultlist = useMatch('/kakaoresultlist');
 
   console.log('Uploadpage : ', Uploadpage);
   console.log('Home : ', Home);
@@ -54,12 +55,15 @@ const TopNav = () => {
                     <Li>이메일 작성</Li>
                   )}
                 </Link>
-                <Link to={'/statistics'}>
-                  {statistics ? (
-                    <LiBlue>전송결과조회</LiBlue>
+                <Link to={'/KakaoResultList'}>
+                  {kakaoresultlist ? (
+                    <LiBlue>전송결과</LiBlue>
                   ) : (
-                    <Li>전송결과조회</Li>
+                    <Li>전송결과</Li>
                   )}
+                </Link>
+                <Link to={'/statistics'}>
+                  {statistics ? <LiBlue>그래프</LiBlue> : <Li>그래프</Li>}
                 </Link>
               </Ul>
             </div>

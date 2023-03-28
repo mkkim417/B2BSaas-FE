@@ -49,10 +49,7 @@ const Signup = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [directInput, setDirectInput] = useState(false);
-  const [duplicate, setDuplicate] = useState(false);
-  const [duplicateAvailable, setDuplicateAvailable] = useState(false);
-  const [email, setEmail] = useState('');
-  const [emailValue, setEmailValue] = useState<string>('');
+  const [isDupliEmail, setDupliEmail] = useState(false);
   const [companyDirectInput, setCompanyDirectInput] = useState(false);
   const navigate = useNavigate();
   const {
@@ -82,6 +79,8 @@ const Signup = () => {
   Password.current = watch('password');
   const ConfirmPw = useRef<string>();
   ConfirmPw.current = watch('ConfirmPw');
+
+  const [isEmail, setEmail] = useState();
 
   const EmailValidation: Validate<string, FormValues> = (value) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -167,35 +166,24 @@ const Signup = () => {
     handleCompanyEmailProviderChange(companyEmailProvider);
   };
 
-  const checkDuplicateEmail = async () => {
+  const checkEmailDuplication = async (email: string) => {
+    console.log('formData.emailProvider : ', formData.emailProvider);
+    console.log('isEmail', isEmail);
+    console.log('isEmail', isEmail + formData.emailProvider);
+
     try {
-      const response = await axios.post(
-        'https://dev.sendingo-be.store/api/users/signup/existemail',
-        { email: emailValue }
-      );
-      if (response.data === 'available') {
-        setDuplicateAvailable(true);
-      } else {
-        setDuplicateAvailable(false);
-      }
-    } catch (error) {
-      console.error('중복확인 중 오류 발생', error);
-    }
-  };
-
-  const createUser = async (email: string, emailProvider: string) => {
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/users`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, emailProvider }),
-    });
-    const data = await res.json();
-
-    if (data.success) {
-      alert('User created!');
-      navigate('/login');
-    } else {
-      alert('Failed to create user!');
+      const response = await axios
+        .post('https://dev.sendingo-be.store/api/users/signup/existemail', {
+          email: isEmail + '@' + formData.emailProvider,
+        })
+        .then((res) => {
+          alert(res.data.message);
+          setDupliEmail(true);
+        });
+      // alert('중복된 이메일입니다.');
+    } catch (error: any) {
+      alert(error.response.data.message);
+      console.log('error : ', error);
     }
   };
 
@@ -210,6 +198,11 @@ const Signup = () => {
   const nameRegex = /^[a-zA-Z ]+$/;
 
   const onSubmit = async (data: FormValues) => {
+    // console.log(data);
+    if (!isDupliEmail) {
+      alert('이메일 중복을 확인해주세요');
+    }
+
     if (!isValid) {
       setAlertMessage('모든 항목을 입력하시길 바랍니다');
       return;
@@ -218,39 +211,30 @@ const Signup = () => {
     const email = `${data.email}@${formData.emailProvider}`;
     const email2 = `${data.companyEmail}@${formData.companyEmailProvider}`;
 
+    // const requestBody = {
+    //   email: EmailValidation(formData.email, formData),
+    //   password: data.password,
+    //   name: data.name,
+    //   phoneNumber: data.phoneNumber,
+    //   companyName: data.companyName,
+    //   companyNumber: data.companyNumber,
+    //   role: 1,
+    // };
     const sendEmail = email + formData.email;
     const sendEmail2 = email2 + formData.companyEmail;
 
-    try {
-      const response = await axios.post(
-        'https://dev.sendingo-be.store/api/users/signup/existemail',
-        { email: `${data.email}@${formData.emailProvider}` }
-      );
-      if (response.data !== 'available') {
-        setAlertMessage('이미 가입된 이메일입니다.');
-        return;
-      }
-    } catch (error) {
-      console.error('이메일 중복 확인 중 오류 발생', error);
-      return;
-    }
-    try {
-      await axios.post('https://dev.sendingo-be.store/api/users/signup', {
-        email: sendEmail,
-        password: data.password,
-        name: data.name,
-        phoneNumber: data.phoneNumber,
-        companyName: data.companyName,
-        companyNumber: data.companyNumber,
-        companyEmail: sendEmail2,
-        role: '1',
-      });
-      setIsSubmitted(true);
-      navigate('/');
-    } catch (error) {
-      console.error('회원가입 중 오류 발생', error);
-      return;
-    }
+    await axios.post('https://dev.sendingo-be.store/api/users/signup', {
+      email: sendEmail,
+      password: data.password,
+      name: data.name,
+      phoneNumber: data.phoneNumber,
+      companyName: data.companyName,
+      companyNumber: data.companyNumber,
+      companyEmail: sendEmail2,
+      role: '1',
+    });
+    setIsSubmitted(true);
+    navigate('/');
   };
 
   return (
@@ -259,7 +243,7 @@ const Signup = () => {
         {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
         {alertMessage && <p>{alertMessage}</p>}
         <StEmail>
-          <StEmailP>Email</StEmailP>         
+          <StEmailP>Email</StEmailP>
           <StInput
             type="text"
             {...register('email', {
@@ -268,12 +252,13 @@ const Signup = () => {
             })}
             name="email"
             required
+            value={isEmail}
+            onChange={(e: any) => setEmail(e.target.value)}
           />
           <span>@</span>
           {directInput ? (
             <StInputWrapper>
               {' '}
-               
               <StInput
                 type="text"
                 {...register('emailProvider', {
@@ -307,17 +292,28 @@ const Signup = () => {
               ))}
             </StSelect>
           )}
-                   
+
           {errors.email || errors.emailProvider ? (
             <StErrorMsg>
-               
               {errors.email?.message ||
                 errors.emailProvider?.message ||
                 '이메일을 입력해 주십시오.'}
             </StErrorMsg>
           ) : null}
-          <button onClick={checkDuplicateEmail}>중복 확인</button>
-          {duplicate && <span>해당 이메일은 이미 사용중입니다</span>}       
+          <button
+            onClick={() => {
+              checkEmailDuplication(formData.email);
+              // checkEmailDuplication(formData.email).then((exists) => {
+              //   if (exists) {
+              //     alert('이미 존재하는 이메일입니다.');
+              //   } else {
+              //     alert('사용가능한 이메일입니다.');
+              //   }
+              // });
+            }}
+          >
+            중복확인
+          </button>
         </StEmail>
 
         <StBrand>
@@ -407,7 +403,6 @@ const Signup = () => {
           <span>@</span>
           {companyDirectInput ? (
             <StInputWrapper>
-               
               <StInput2
                 type="text"
                 {...register('companyEmailProvider', {
@@ -442,10 +437,9 @@ const Signup = () => {
               ))}
             </StSelect2>
           )}
-                   
+
           {errors.email || errors.emailProvider ? (
             <StErrorMsg>
-               
               {errors.email?.message ||
                 errors.emailProvider?.message ||
                 '이메일을 입력해 주십시오.'}
@@ -497,14 +491,12 @@ const Signup = () => {
           />
           {errors.ConfirmPw &&
             errors.ConfirmPw.type === 'required' &&
-            '이 항목은 필수입니다'}
+            'this field is required'}
           {errors.ConfirmPw &&
             errors.ConfirmPw.type === 'validate' &&
-            '암호가 일치하지 않습니다'}
+            'The Passwords do not matched'}
         </StPw>
-        <StSignupButton type="button" onClick={() => createUser(email, email)}>
-          회원가입
-        </StSignupButton>
+        <StSignupButton type="submit">회원가입</StSignupButton>
         <Link to="/login">이미 계정이 있으신가요? 여기서 로그인 하세요</Link>
       </Wrapper>
     </form>
@@ -561,13 +553,13 @@ const StInput2 = styled.input<StInputProps>`
   `}
 `;
 
-const Wrapper = styled.div`  
+const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  gap: 30px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 30px;
 `;
 
 const StEmailP = styled.p`

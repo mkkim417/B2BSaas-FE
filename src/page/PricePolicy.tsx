@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 function PricePolicy() {
   const onClickPayment = (price: number) => {
@@ -55,7 +55,7 @@ function PricePolicy() {
             </Textdiv>
             <div>
               prcie: 0/month
-              <FontAwesomeIcon
+              {/* <FontAwesomeIcon
                 icon={faPaperPlane}
                 style={{ color: '#256be4' }}
                 display="flex"
@@ -63,7 +63,7 @@ function PricePolicy() {
                 align-items="center"
                 flex-direction="column"
                 size="2x"
-              />
+              /> */}
               <Stbutton
                 type="button"
                 id="purchase-button"
@@ -201,7 +201,7 @@ const Stbutton = styled.button`
   outline: 0;
   color: #fff;
   background-color: #3368fa;
-  border-color: #3368fa
+  border-color: #3368fa;
   box-shadow: 0 2px 4px 0 #c8d7ee;
   transition: all 0.2s ease-in-out;
 `;

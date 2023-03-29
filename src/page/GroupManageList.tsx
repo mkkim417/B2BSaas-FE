@@ -26,15 +26,17 @@ function GroupManageList() {
 
   // 그룹리스트 담는 변수
   const [groupList, setGroupList] = useState([] as any);
+  // 그룹리스트 onClick 아이디 변수
+  const [groupId, setGroupId] = useState('');
   // 그룹리스트 이름 textarea 변수
   const [groupName, setGroupName] = useState('');
   // 그룹리스트 GET API
   const getGroupData = useCallback(async () => {
-    // https://dev.sendingo-be.store/api/groups
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/groups`
     );
-    console.log('GroupList API', response.data.data);
+    // console.log('GroupList API', response.data.data);
+    console.log('GroupList API 렌더링');
     setGroupList(response.data.data);
   }, []);
 
@@ -42,20 +44,18 @@ function GroupManageList() {
   const [groupClient, setGroupClient] = useState([] as any);
 
   // 그룹 클릭시 그룹 내 클라이언트리스트 호출
-  const getClientInGroup = useCallback(
-    async (id: any, name: any) => {
+  const getClientInGroup = useCallback(async (id: any, name: any, page: any) => {
+      console.log('getClientInGroup 호출')
       setCheckedArr([]);
       setIsClientState(false);
-      // console.log('IsClientState', isClientState);
+      console.log('IsClientState', isClientState);
       const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}`
+        `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}&index=${page}`
       );
-      console.log('getClientInGroup Response', response.data.data);
       setGroupClient(response.data.data);
+      setGroupId(id);
       setGroupName(name);
-    },
-    [isClientState]
-  );
+  },[]);
 
   /*************************************************************************************
     유저리스트 관련 코드
@@ -63,16 +63,25 @@ function GroupManageList() {
 
   // Pagination 처리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
+  const [currentPage1, setCurrentPage1] = useState(1); // 현재 페이지 default값으로
   // const [count, setCount] = useState(0); // 아이템 총 갯수
   // const [ product, setProduct ] = useState([])  // 리스트에 담아낼 아이템들
-  const [postPerPage] = useState(20); // 한 페이지에 보여질 아이템 수
+  const [postPerPage] = useState(15); // 한 페이지에 보여질 아이템 수
   const [indexOfLastPost, setIndexOfLastPost] = useState(0); // 현재 페이지의 마지막 아이템 인덱스
   const [indexOfFirstPost, setIndexOfFirstPost] = useState(0); // 현재 페이지의 첫번째 아이템 인덱스
   const [currentPosts, setCurrentPosts] = useState(0); // 현재 페이지에서 보여지는 아이템들
   // const userData = userList.slice(indexOfFirstPost, indexOfLastPost)
-  const setPage = (page: any) => {
+  const setPage1 = async(page: any) => {
+    console.log('page1', page)
     setCurrentPage(page);
-  };
+    getUserData(page)
+  }
+
+  const setPage2 = async(page: any) => {
+    console.log('page2', page)
+    setCurrentPage1(page);
+    getClientInGroup(groupId, groupName, page)
+  }
 
   // 모달
   // 유저리스트 선택 유저 수정 조건모달
@@ -136,18 +145,18 @@ function GroupManageList() {
   // 유저리스트 담는 변수
   const [userList, setUserList] = useState([] as any);
   // 유저리스트 GET API
-  const getUserData = useCallback(async () => {
+  const getUserData = useCallback(async (page : any) => {
     setCheckedArr([]);
     setIsClientState(true);
     // console.log('IsClientState', isClientState);
     // `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${1}`
     const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${8}`
+      `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${page}`
     );
-    console.log('UserList API-페이지1', response);
+    console.log('UserList API');
     setUserList(response.data.data.clients);
     setAllclients(response.data.data.clientCount);
-  }, []);
+  },[]);
 
   // 유저 수정 state
   const [editUser, setEditUser] = useState({
@@ -160,7 +169,7 @@ function GroupManageList() {
   // 처음 렌더링시 전체고객리스트로 focus
   const allUserRef = useRef<HTMLButtonElement>(null);
   // 전체고객리스트 숫자
-  const [isAllclients, setAllclients] = useState();
+  const [isAllclients, setAllclients] = useState<any>();
 
   // 체크박스 관련 state
 
@@ -196,7 +205,9 @@ function GroupManageList() {
   const userEditHandler = () => {
     if (checkedArr.length > 1) {
       alert('한 개만 체크해주세요!');
-    } else {
+    } else if (checkedArr.length === 0) {
+      alert('수정할 고객을 선택해주세요!')
+    }else {
       checkedArr.map((item: any) => {
         setEditUser({
           ...editUser,
@@ -206,8 +217,8 @@ function GroupManageList() {
           clientEmail: item.clientEmail,
         });
       });
+      clickUserEditModal();
     }
-    clickUserEditModal();
   };
 
   // 체크박스관련
@@ -258,7 +269,7 @@ function GroupManageList() {
     return state.kakaoGroupId.kakaoGroupId[0];
     //talkContentId,clientId,talkTemplateId
   });
-  console.log('kakaoGroupIdData : ', kakaoGroupIdData);
+  // console.log('kakaoGroupIdData : ', kakaoGroupIdData);
   const kakaoAlertSend = async () => {
     alert('카카오알람톡 전송준비중');
     console.log('kakaoSendData : ', kakaoSendData);
@@ -284,6 +295,7 @@ function GroupManageList() {
       alert('다시 시도해주시기 바랍니다.');
     }
   };
+
   // 그룹리스트 useEffect
   useEffect(() => {
     getGroupData();
@@ -292,23 +304,34 @@ function GroupManageList() {
 
   // 유저리스트 useEffect
   useEffect(() => {
-    getUserData();
+    if (isClientState === true) {
+      getUserData(currentPage);
+    } else {
+      setCurrentPage1(1)
+      getClientInGroup(groupId, groupName, currentPage)
+    }
 
     // setCount(userList.length);
-    setIndexOfLastPost(currentPage * postPerPage);
-    setIndexOfFirstPost(indexOfLastPost - postPerPage);
-    if (isClientState === true) {
-      setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
-    } else {
-      setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
-    }
+    // setIndexOfLastPost(currentPage * postPerPage);
+    // setIndexOfFirstPost(indexOfLastPost - postPerPage);
+    // if (isClientState === true) {
+    //   setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
+    // } else {
+    //   setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
+    // }
   }, [
     currentPage,
-    indexOfLastPost,
-    indexOfFirstPost,
-    postPerPage,
+    isClientState,
+    // indexOfLastPost,
+    // indexOfFirstPost,
+    // postPerPage,
     getUserData,
+    getClientInGroup
   ]);
+  // 그룹리스트 내 클라이언트 useEffect
+  // useEffect(() => {
+  //   getClientInGroup(groupId, groupName, currentPage)
+  // }, [])
 
   return (
     <Container>
@@ -317,14 +340,14 @@ function GroupManageList() {
         {/* 그룹리스트 공간 */}
         <GroupContainer>
           <GroupContentBox>
-            <GroupContentItem onClick={getUserData} ref={allUserRef}>
-              전체 고객리스트{isAllclients}
+            <GroupContentItem onClick={() => getUserData(1)} ref={allUserRef}>
+              전체 고객리스트({isAllclients})
             </GroupContentItem>
             {groupList?.map((item: any) => {
               return (
                 <GroupContentItem
                   key={item.groupId}
-                  onClick={() => getClientInGroup(item.groupId, item.groupName)}
+                  onClick={() => getClientInGroup(item.groupId, item.groupName, 1)}
                 >
                   {item.groupName}({item.clientCount})
                 </GroupContentItem>
@@ -356,37 +379,36 @@ function GroupManageList() {
             </CardHeader>
           </ClientContentHeader>
           <ClientContentBox>
-            {isClientState ? (
-              userList.slice(indexOfFirstPost, indexOfLastPost) &&
-              userList.length > 0 ? (
-                userList
-                  .slice(indexOfFirstPost, indexOfLastPost)
-                  .map((item: any) => {
-                    return (
-                      <CardHeader key={item.clientId}>
-                        <Percentage width="6%">
-                          <input
-                            type="checkbox"
-                            checked={checkedArr.includes(item)}
-                            onChange={(e: any) => checkUserHandler(e, item)}
-                          />
-                        </Percentage>
-                        <Percentage width="23%">{item.groupName}</Percentage>
-                        <Percentage width="12%">{item.clientName}</Percentage>
-                        <Percentage width="22%">{item.contact}</Percentage>
-                        <Percentage width="37%">{item.clientEmail}</Percentage>
-                      </CardHeader>
-                    );
-                  })
-              ) : (
-                <CenterContent>
-                  추가된 고객 목록이 없습니다. 고객을 추가해주세요.
-                </CenterContent>
-              )
-            ) : groupClient.slice(indexOfFirstPost, indexOfLastPost) &&
-              groupClient.length > 0 ? (
+              {isClientState ? (
+                // userList.slice(indexOfFirstPost, indexOfLastPost) &&
+                userList.length > 0 ? (
+                  userList
+                    // .slice(indexOfFirstPost, indexOfLastPost)
+                    .map((item: any) => {
+                      return (
+                        <CardHeader key={item.clientId}>
+                          <Percentage width="6%">
+                            <input
+                              type="checkbox"
+                              checked={checkedArr.includes(item)}
+                              onChange={(e: any) => checkUserHandler(e, item)}
+                            />
+                          </Percentage>
+                          <Percentage width="23%">{item.groupName}</Percentage>
+                          <Percentage width="12%">{item.clientName}</Percentage>
+                          <Percentage width="22%">{item.contact}</Percentage>
+                          <Percentage width="37%">{item.clientEmail}</Percentage>
+                        </CardHeader>
+                      );
+                    })
+                ) : (
+                  <CenterContent>
+                    더 이상 고객목록이 없습니다.
+                  </CenterContent>
+                )
+            ) : groupClient.length > 0 ? (
               groupClient
-                .slice(indexOfFirstPost, indexOfLastPost)
+                // .slice(indexOfFirstPost, indexOfLastPost)
                 .map((item: any) => {
                   return (
                     <CardHeader key={item.clientId}>
@@ -432,22 +454,22 @@ function GroupManageList() {
               {isClientState ? (
                 <Pagination
                   activePage={currentPage}
-                  itemsCountPerPage={14}
+                  // itemsCountPerPage={15}
                   pageRangeDisplayed={10}
                   prevPageText={'<'}
                   nextPageText={'>'}
-                  totalItemsCount={userList.length}
-                  onChange={setPage}
+                  totalItemsCount={isAllclients}
+                  onChange={setPage1}
                 />
               ) : (
                 <Pagination
-                  activePage={currentPage}
-                  itemsCountPerPage={14}
+                  activePage={currentPage1}
+                  // itemsCountPerPage={15}
                   pageRangeDisplayed={10}
                   prevPageText={'<'}
                   nextPageText={'>'}
-                  totalItemsCount={groupClient.length}
-                  onChange={setPage}
+                  totalItemsCount={100}
+                  onChange={setPage2}
                 />
               )}
             </PaginationBox>

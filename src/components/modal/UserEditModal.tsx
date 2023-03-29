@@ -21,15 +21,10 @@ const UserEditModal = ({
   const initialData = {
     clientName: clientName,
     contact: clientContact,
+    clientEmail : clientEmail
   };
   const [data, setData] = useState(initialData);
-
-  // const { postMutate : any } = useMutation(postClientCreate, {
-  //   onSuccess : () => {
-  //     alert('클라이언트 생성 성공!')
-  //   }
-  // })
-  // 입력변화 상태값
+  
   const onChangeHandler = (e: any) => {
     const { name, value } = e.target;
     setData({
@@ -47,11 +42,12 @@ const UserEditModal = ({
     alert(`name: ${data.clientName}, contact : ${_contact}`);
 
     // 빈칸 확인 조건처리
-    if (!(data.clientName === '' && data.contact === '')) {
+    if (!(data.clientName === '' || data.contact === '' || data.clientEmail === '')) {
       // 빈칸 없으면 수정 patch
       axios.patch(`https://dev.sendingo-be.store/api/clients/${clientId}`, {
         clientName: data.clientName,
         contact: _contact,
+        clientEmail : data.clientEmail
       });
       alert('저장 성공!');
       closeModal();
@@ -62,39 +58,77 @@ const UserEditModal = ({
   };
   return (
     <ModalWrap>
-      <ModalBackGround />
-      <ModalContainer>
-        <div>{clientName}</div>
-        <div>{clientContact}</div>
-        <InputContainer>
-          <div>
-            이름
-            <input
+      <ModalBackGround>
+        <ModalContainer>
+          <TitleContainer>
+            <TitleBox>고객 정보 수정</TitleBox>
+          </TitleContainer>
+
+          <DataContainer>
+            <InputBox>성함</InputBox>
+            <InputContainer
               name="clientName"
               type="text"
               value={data.clientName}
-              placeholder="성명"
               onChange={onChangeHandler}
             />
-          </div>
-          <div>
-            연락처
-            <input
-              name="contact"
-              value={data.contact}
-              placeholder="연락처"
+            <InputBox>연락처</InputBox>
+            <InputContainer
+                name="contact"
+                value={data.contact}
+                onChange={onChangeHandler}
+            />
+            <InputBox>이메일</InputBox>
+            <InputContainer
+              name="clientEmail"
+              type="text"
+              value={data.clientEmail}
               onChange={onChangeHandler}
             />
-          </div>
-        </InputContainer>
-        <ButtonContainer>
-          <ButtonBox onClick={closeModal}>아니오</ButtonBox>
-          <ButtonBox onClick={(e) => submitHandler(e, closeModal)}>
-            네
-          </ButtonBox>
-        </ButtonContainer>
-      </ModalContainer>
+          </DataContainer>
+          <ButtonContainer>
+            <ButtonBox onClick={closeModal}>취소</ButtonBox>
+            <ButtonBox onClick={(e) => submitHandler(e, closeModal)}>
+              확인
+            </ButtonBox>
+          </ButtonContainer>
+        </ModalContainer>
+      </ModalBackGround>
     </ModalWrap>
+    // <ModalWrap>
+    //   <ModalBackGround />
+    //   <ModalContainer>
+    //     <div>{clientName}</div>
+    //     <div>{clientContact}</div>
+    //     <InputContainer>
+    //       <div>
+    //         이름
+    //         <input
+    //           name="clientName"
+    //           type="text"
+    //           value={data.clientName}
+    //           placeholder="성명"
+    //           onChange={onChangeHandler}
+    //         />
+    //       </div>
+    //       <div>
+    //         연락처
+    //         <input
+    //           name="contact"
+    //           value={data.contact}
+    //           placeholder="연락처"
+    //           onChange={onChangeHandler}
+    //         />
+    //       </div>
+    //     </InputContainer>
+    //     <ButtonContainer>
+    //       <ButtonBox onClick={closeModal}>아니오</ButtonBox>
+    //       <ButtonBox onClick={(e) => submitHandler(e, closeModal)}>
+    //         네
+    //       </ButtonBox>
+    //     </ButtonContainer>
+    //   </ModalContainer>
+    // </ModalWrap>
   );
 };
 
@@ -120,39 +154,96 @@ const ModalContainer = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 2rem;
-  gap: 2rem;
-  padding: 3.6rem 0;
+  border-radius: 1rem;
+  gap: 1rem;
+  padding: 2rem 2rem 2rem 2rem;
   border: 1px solid var(--color-white);
   background-color: white;
   position: absolute;
-  left: 25%;
-  top: 25%;
-  width: 50%;
-  height: 50%;
+  left: 35%;
+  top: 20%;
+  width: 40%;
+  height: 60%;
 `;
-const InputContainer = styled.div`
-  width: auto;
+
+const ContentContainer = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
-  /* justify-content: space-around; */
+  gap: 10px;
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* margin-top: 30px; */
+  /* padding: 30px 10px 10px 10px; */
+  flex-direction: column;
+  font-size: 24px;
+  /* background-color: red; */
+`;
+
+const TitleContainer = styled.div`
+  width: 100%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* background-color: beige; */
+`;
+const DataHeader = styled.div`
+  width: 100%;
+  height: 8%;
+  display: flex;
   flex-direction: row;
-  background-color: yellow;
-  /* padding: 50px; */
+  /* background-color: darkgreen; */
+`;
+const RowPercent = styled.div<{ width: any }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${(item: any) => item.width};
+  border: 1px solid black;
+`;
+const DataContainer = styled.div`
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  /* margin: 0px 500px 0px 500px; */
+  padding: 0px 150px 0px 150px;
+  /* overflow: scroll; */
+  /* background-color: blueviolet; */
+`;
+const InputBox = styled.div`
+  /* height: 28px; */
+  font-weight: 500;
+  font-size: 20px;
+`;
+const TitleBox = styled.div`
+  /* height: 28px; */
+  font-weight: 900;
+  font-size: 24px;
+`;
+const InputContainer = styled.input`
+  height: 32px;
+  border: 2px solid #4a72ff;
+  border-radius: 10px;
 `;
 const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: end;
   flex-direction: row;
-  /* background-color: yellow; */
-  /* padding: 50px; */
-  /* margin: 50px; */
-  gap: 100px;
+  margin-right: 20px;
+  gap: 20px;
+  /* background-color: aqua; */
 `;
 const ButtonBox = styled.button`
-  background-color: yellowgreen;
+  border: 2px solid #4a72ff;
+  border-radius: 10px;
+  /* background-color: yellowgreen; */
   padding: 10px;
-  font-size: 24px;
+  font-size: 18px;
 `;
 
 export default UserEditModal;

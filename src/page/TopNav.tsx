@@ -50,9 +50,9 @@ const TopNav = () => {
               <Ul>
                 <Link to={'/uploadpage'}>
                   {Uploadpage ? (
-                    <LiBlue>이메일작성</LiBlue>
+                    <LiBlue>다건 생성</LiBlue>
                   ) : (
-                    <Li>이메일 작성</Li>
+                    <Li>다건 생성</Li>
                   )}
                 </Link>
                 <Link to={'/KakaoResultList'}>

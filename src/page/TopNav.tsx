@@ -16,8 +16,8 @@ const TopNav = () => {
   const groupManageList = useMatch('/groupmanageList');
   const kakaoresultlist = useMatch('/kakaoresultlist');
 
-  console.log('Uploadpage : ', Uploadpage);
-  console.log('Home : ', Home);
+  // console.log('Uploadpage : ', Uploadpage);
+  // console.log('Home : ', Home);
   return (
     <>
       <Wrapper>
@@ -40,21 +40,11 @@ const TopNav = () => {
             <UserButton>로그아웃</UserButton>
           </FlexWrap>
         </UserContatiner>
-        <Link to={'/'}>
-          <Accordion title="이용현황" />
-        </Link>
         <Accordion
-          title="이메일전송"
+          title="이용현황"
           contents={
             <div>
               <Ul>
-                <Link to={'/uploadpage'}>
-                  {Uploadpage ? (
-                    <LiBlue>이메일작성</LiBlue>
-                  ) : (
-                    <Li>이메일 작성</Li>
-                  )}
-                </Link>
                 <Link to={'/KakaoResultList'}>
                   {kakaoresultlist ? (
                     <LiBlue>전송결과</LiBlue>
@@ -74,6 +64,13 @@ const TopNav = () => {
           contents={
             <div>
               <Ul>
+                <Link to={'/uploadpage'}>
+                  {Uploadpage ? (
+                    <LiBlue>고객등록(다건)</LiBlue>
+                  ) : (
+                    <Li>고객등록(다건)</Li>
+                  )}
+                </Link>
                 <Link to={'/clientRegistration'}>
                   {clientRegistration ? (
                     <LiBlue>고객등록</LiBlue>

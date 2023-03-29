@@ -1,16 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import useDetectClose from '../hook/useDetectClose';
-
-interface Itodolist {
-  optionData: any;
-  placeholder: any;
-}
 const SelectBoxs = ({
-  optionData,
-  currentCategoryValue,
-  propFunction,
-  className,
+  optionData = '',
+  currentCategoryValue = '',
+  propFunction = '',
+  className = '',
 }: any): React.ReactElement => {
   const [currentValue, setCurrentValue] = useState(null);
   const selectInputRef = useRef(null);
@@ -112,5 +107,4 @@ const Option = styled.li`
     font-weight: bold;
   }
 `;
-
 export default React.memo(SelectBoxs);

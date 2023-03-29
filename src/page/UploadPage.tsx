@@ -11,6 +11,8 @@ import { clientsIdCreate } from '../redux/modules/clientsId';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import ClientHeader from '../components/ClientHeader';
+import { H1 } from './KakaoResultList';
+import SelectBoxs from '../components/SelectBoxs';
 
 function UploadPage() {
   const [isData, setData] = useState<any>();
@@ -18,6 +20,7 @@ function UploadPage() {
   const [checkedList, setCheckedList] = useState<string[]>([]);
   const [isOpen, setOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [groupList, setGroupList] = useState([] as any);
   const fileInput = useRef<any>();
   const [isGroupName, setGroupName] = useState('');
   const dispatch = useDispatch();
@@ -37,10 +40,10 @@ function UploadPage() {
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
       console.log('fileInput : ', fileInput.current.files[0]);
-      if (isGroupName === '') {
-        alert('그룹명을 입력해주세요');
-        return;
-      }
+      // if (isGroupName === '') {
+      //   alert('그룹명을 입력해주세요');
+      //   return;
+      // }
       if (fileInput.current.files[0] === undefined) {
         alert('파일을 선택해주세요');
       }
@@ -49,7 +52,7 @@ function UploadPage() {
       dispatch(sendListCreate(data));
       dispatch(sendKeyCreate(isKeyDataServe));
       dispatch(sendGroupNameCreate([isGroupName]));
-      navigate(`/splitservicepage`);
+      navigate(`/groupmanageList`);
     },
     // [mutation]
     [isGroupName, dispatch]
@@ -109,6 +112,15 @@ function UploadPage() {
       return false;
     }
   };
+  // const refatoringFunc = (keyData: string[], name: string[]) => {
+  //   name.map((el) => {
+  //     if (keyData.includes(`${el}`) === false) {
+  //       DummyDeleteFuction();
+  //       alert(`${el} 값은 필수입니다.`);
+  //       return false;
+  //     }
+  //   });
+  // };
   const csvFileToArray = (string: any) => {
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',');
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
@@ -149,9 +161,15 @@ function UploadPage() {
         const jsonData = JSON.stringify(rows);
         const pareData = JSON.parse(jsonData);
         const keyData = Object.keys(pareData[0]);
+        let requiredData = ['이름', '전화번호', '이메일'];
+        // if ((refatoringFunc(keyData, requiredData) as any) !== true) {
+        //   return;
+        // } else {
+        // }
         if (refatoringFunc(keyData, '이름') === false) return;
         if (refatoringFunc(keyData, '전화번호') === false) return;
         if (refatoringFunc(keyData, '이메일') === false) return;
+
         // console.log('rows : ', rows);
         // console.log('jsonData : ', jsonData);
         // console.log('pareData : ', pareData);
@@ -188,13 +206,22 @@ function UploadPage() {
       // alert('다시 시도해주시기 바랍니다.');
     }
   };
+  const getGroupData = useCallback(async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_SERVER_URL}/api/groups`
+    );
+    console.log('GroupList API', response.data.data);
+    setGroupList(response.data.data);
+  }, []);
+  useEffect(() => {
+    getGroupData();
+  }, [getGroupData]);
   // console.log('csv넣은대상', isData)
   // console.log('취소된대상:', checkedList)
   // console.log(
   //   '차집합 :',
   //   isData && isData.filter((x: any) => !checkedList.includes(x))
   // )
-  console.log('isData: ', isData);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -218,6 +245,16 @@ function UploadPage() {
               ref={fileInput}
             ></InputFile>
           </TopContents>
+          <TemplateWrap>
+            <TemplateDown>
+              <a href={'/oneTest.xlsx'} download>
+                템플릿다운로드
+              </a>
+            </TemplateDown>
+            <span>
+              템플릿 파일에 추가할 고객 목록을 작성하여 업로드 해주세요.
+            </span>
+          </TemplateWrap>
           {isData && isData ? (
             <MapWrapper>
               <Table>
@@ -247,7 +284,7 @@ function UploadPage() {
                         {isKeyData &&
                           isKeyData.map((li: any, idx: number) =>
                             li === '전화번호' && el[li].includes('-') ? (
-                              el[li].replace(/-/gi, '')
+                              <Td>{el[li].replace(/-/gi, '')}</Td>
                             ) : (
                               <Td key={idx}>{el[li]}</Td>
                             )
@@ -289,16 +326,41 @@ function UploadPage() {
                   ClentBulkFetch();
                 }}
               >
-                다음
+                등록
               </Button>
             ) : null}
           </BtnWrap>
+          <H1>고객 정보 그룹 지정</H1>
+          {/* {groupList && groupList.map((el: any, idx: any) => (
+              <div key={idx}>
+                <div id={`obj_${idx}`}>{el}</div>
+                <SelectBoxs
+                  currentCategoryValue={currentValue}
+                  className={`obj_${idx}`}
+                  propFunction={messagePreviewFunc}
+                  optionData={
+                    (sendKeyData && sendKeyData[0]) || ['빈값입니다.']
+                  }
+                ></SelectBoxs>
+              </div>
+            ))} */}
         </ContentsWrap>
       </Wrapper>
     </motion.div>
   );
 }
 
+const TemplateWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+`;
+const TemplateDown = styled.div`
+  text-align: center;
+  border: 1px solid #000;
+  padding: 15px;
+`;
 const Table = styled.table`
   width: 100%;
   border: 1px solid #333333;

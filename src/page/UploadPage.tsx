@@ -14,7 +14,7 @@ import ClientHeader from '../components/ClientHeader';
 import { H1 } from './KakaoResultList';
 import SelectBoxs from '../components/SelectBoxs';
 import useInput from '../hook/useInput';
-import { getGroupData, postLogin } from '../axios/api';
+import { postLogin } from '../axios/api';
 import { useMutation } from 'react-query';
 import { getTokens } from '../cookies/cookies';
 // import { clentBulkFetch } from '../axios/groupSave';
@@ -27,11 +27,12 @@ function UploadPage() {
   const [isChecked, setIsChecked] = useState(false);
   const [isGroupList, setGroupList] = useState([] as any);
   const fileInput = useRef<any>();
-  const [currentValue, setCurrentValue] = useState<any>(null);
+  const [currentValue, setCurrentValue] = useState(null);
   const [isNewGroupInput, setNewGroupInput] = useState(false);
   const [groupName, onChangeGroupName] = useInput();
   const [descName, onChangeDescName] = useInput();
   const [isClUpload, setClUpload] = useState(false);
+  const [isGroupIdObj, setGroupIdObj] = useState('');
   const nextRef = useRef<HTMLButtonElement>(null);
   const InputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
@@ -41,6 +42,9 @@ function UploadPage() {
   });
   const onNextClick = () => {
     nextRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  const handleOnChangeSelectValue = (e: any) => {
+    setCurrentValue(e.target.value);
   };
   const dragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -116,30 +120,22 @@ function UploadPage() {
     setGroupComp(false);
     setClUpload(false);
   };
-  // const refatoringFunc = (keyData: string[], name: string) => {
-  //   if (keyData.includes(`${name}`) === false) {
-  //     DummyDeleteFuction();
-  //     alert(`${name} 값은 필수입니다.`);
-  //     return false;
-  //   }
-  // };
-  const refatoringFunc = (keyData: string[], name: string[]) => {
-    // name.map((el) => {
-    //   if (keyData.includes(`${el}`) === false) {
-    //     DummyDeleteFuction();
-    //     alert(`${el} 값은 필수입니다.`);
-    //     return false;
-    //   }
-    // });
-    for (let el of name) {
-      if (keyData.includes(`${el}`) === false) {
-        DummyDeleteFuction();
-        alert(`${el} 값은 필수입니다.`);
-        return false;
-      }
+  const refatoringFunc = (keyData: string[], name: string) => {
+    if (keyData.includes(`${name}`) === false) {
+      DummyDeleteFuction();
+      alert(`${name} 값은 필수입니다.`);
+      return false;
     }
   };
-  const { accessToken, userToken } = getTokens();
+  // const refatoringFunc = (keyData: string[], name: string[]) => {
+  //   name.map((el) => {
+  //     if (keyData.includes(`${el}`) === false) {
+  //       DummyDeleteFuction();
+  //       alert(`${el} 값은 필수입니다.`);
+  //       return false;
+  //     }
+  //   });
+  // };
   const csvFileToArray = (string: any) => {
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',');
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
@@ -181,11 +177,22 @@ function UploadPage() {
         const pareData = JSON.parse(jsonData);
         const keyData = Object.keys(pareData[0]);
         let requiredData = ['이름', '전화번호', '이메일'];
-        if ((refatoringFunc(keyData, requiredData) as any) === false) {
-          return;
-        }
+        // if ((refatoringFunc(keyData, requiredData) as any) !== true) {
+        //   return;
+        // } else {
+        // }
+        if (refatoringFunc(keyData, '이름') === false) return;
+        if (refatoringFunc(keyData, '전화번호') === false) return;
+        if (refatoringFunc(keyData, '이메일') === false) return;
+
+        // console.log('rows : ', rows);
+        // console.log('jsonData : ', jsonData);
+        // console.log('pareData : ', pareData);
+        // console.log('keyData : ', keyData);
         setKeyData(keyData);
         setData(pareData);
+        console.log('keyData : ', keyData);
+        console.log('pareData : ', pareData);
       });
     };
     reader.readAsBinaryString(input.files[0]);
@@ -225,18 +232,18 @@ function UploadPage() {
     }
   };
   //그룹리스트
-
+  const { userToken } = getTokens();
   const getGroupData = useCallback(async () => {
-    const response = await axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/api/groups`, {
+    const response = await axios.get(
+      `${process.env.REACT_APP_SERVER_URL}/api/groups`,
+      {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
-      })
-      .then((res) => {
-        console.log(res);
-        setGroupList(res.data.data);
-      });
+      }
+    );
+    setGroupList(response.data.data);
+    console.log(response.data.data);
   }, []);
 
   //그룹저장
@@ -271,47 +278,69 @@ function UploadPage() {
   //   },
   //   [mutation]
   // );
-  const groupSaveFetch = async () => {
-    if (descName === '') {
-      alert('그룹설명을 해주세요');
-      return;
-    }
+  const groupSaveFetch = async (groupId: string) => {
+    // if (descName === '') {
+    //   alert('그룹설명을 해주세요');
+    //   return;
+    // }
     try {
-      const response = await axios
-        .post(
-          `https://dev.sendingo-be.store/api/batch/groups`,
-          {
-            clientIds: clientIdData,
-            groupName: isNewGroupInput === true ? groupName : currentValue,
-            groupDescription: descName,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${userToken}`,
+      if (isNewGroupInput) {
+        //신규그룹
+        const response = await axios
+          .post(
+            `https://dev.sendingo-be.store/api/batch/groups`,
+            {
+              clientIds: clientIdData,
+              groupName,
+              groupDescription: descName,
             },
-          }
-        )
-        .then((res) => {
-          console.log(res.data);
-          navigate('/groupmanageList');
-        });
+            {
+              headers: {
+                Authorization: `Bearer ${userToken}`,
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res.data);
+          });
+      } else {
+        //기존그룹
+        const response = await axios
+          .post(
+            `https://dev.sendingo-be.store/api/batch/groups/${groupId}`,
+            {
+              clientIds: clientIdData,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${userToken}`,
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res.data);
+          });
+      }
     } catch (error) {
       console.log(error);
     }
   };
   //selectBox 소통함수
-  const messagePreviewFunc = useCallback((text: string, target: string) => {
-    setCurrentValue(text);
-    if (text === '+ 새로운그룹추가' || text === '---그룹선택---') {
-      setNewGroupInput(true);
-      setTimeout(() => {
-        InputRef.current?.focus();
-      }, 500);
-    } else {
-      setNewGroupInput(false);
-    }
-    return;
-  }, []);
+  const messagePreviewFunc = useCallback(
+    (text: string, target: string, isGroupId: any) => {
+      setGroupIdObj(isGroupId);
+      if (text === '+ 새로운그룹추가') {
+        setNewGroupInput(true);
+        setTimeout(() => {
+          InputRef.current?.focus();
+        }, 500);
+      } else {
+        setNewGroupInput(false);
+      }
+      return;
+    },
+    []
+  );
   useEffect(() => {
     getGroupData();
   }, [getGroupData]);
@@ -321,7 +350,6 @@ function UploadPage() {
   //   '차집합 :',
   //   isData && isData.filter((x: any) => !checkedList.includes(x))
   // )
-  console.log(currentValue);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -436,6 +464,11 @@ function UploadPage() {
               </span>
               <SelectBoxs
                 placeholder={'---그룹선택---'}
+                className={[
+                  '0',
+                  '1',
+                  ...isGroupList.map((el: any) => el.groupId),
+                ]}
                 currentCategoryValue={currentValue}
                 propFunction={messagePreviewFunc}
                 optionData={
@@ -479,7 +512,7 @@ function UploadPage() {
                     //   groupName,
                     //   descName
                     // );
-                    groupSaveFetch();
+                    groupSaveFetch(isGroupIdObj);
                   }}
                 >
                   그룹저장

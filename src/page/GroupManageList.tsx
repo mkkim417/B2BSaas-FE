@@ -12,9 +12,11 @@ import UserEditModal from '../components/modal/UserEditModal';
 import UserInGroupDeleteModal from '../components/modal/UserInGroupDeleteModal';
 import UserMoveModal from '../components/modal/UserMoveModal';
 import { PaginationBox } from '../components/NotUsedPages/UserList';
+import { getTokens } from '../cookies/cookies';
 
 function GroupManageList() {
   // hook 변수 모음들
+  const { userToken: token } = getTokens();
   const navigate = useNavigate();
   // 조건 상태 분기
   // 전체 클라이언트 리스트 호출시 true, 그룹 내 클라이언트 호출시 false 상태로 호출진행
@@ -33,10 +35,11 @@ function GroupManageList() {
   // 그룹리스트 GET API
   const getGroupData = useCallback(async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/groups`
+      `${process.env.REACT_APP_SERVER_URL}/api/groups`,
+      { headers: { authorization: `Bearer ${token}` } }
     );
     // console.log('GroupList API', response.data.data);
-    console.log('GroupList API 렌더링');
+    console.log('GroupList API 렌더링', response);
     setGroupList(response.data.data);
   }, []);
 
@@ -51,21 +54,28 @@ function GroupManageList() {
       setIsClientState(false);
       console.log('IsClientState', isClientState);
       const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}&index=${page}`
+        `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}&index=${page}`,
+        { headers: { authorization: `Bearer ${token}` } }
       );
       //** 트러블 슈팅 함수형 업데이트로 변경.. 두번 클릭해야 불러오는 상황 발생
-      setGroupClient(() => {return response.data.data});
-      setGroupId((prev) => {return id});
+      setGroupClient(() => {
+        return response.data.data;
+      });
+      setGroupId((prev) => {
+        return id;
+      });
       setGroupName(name);
-      console.log(groupId)
+      console.log(groupId);
       // setIsGroupAllClients(response.data.data.length)
-      groupList.map((item:any) => {
-        if(item.groupId === id) {
+      groupList.map((item: any) => {
+        if (item.groupId === id) {
           // 그룹 내 클라이언트 갯수 저장 => 페이징처리 위함
-          setIsGroupAllClients(item.clientCount)
+          setIsGroupAllClients(item.clientCount);
         }
-      })
-  },[groupId]);
+      });
+    },
+    [groupId]
+  );
   /*************************************************************************************
     유저리스트 관련 코드
   ************************************************************************************ */
@@ -81,7 +91,7 @@ function GroupManageList() {
   const [currentPosts, setCurrentPosts] = useState(0); // 현재 페이지에서 보여지는 아이템들
   // const userData = userList.slice(indexOfFirstPost, indexOfLastPost)
   const setPage1 = (page: any) => {
-    console.log('page1', page)
+    console.log('page1', page);
     setCurrentPage(page);
     getUserData(page);
   };
@@ -90,8 +100,8 @@ function GroupManageList() {
     console.log('page2', page);
     setCurrentPage1(page);
 
-    getClientInGroup(groupId, groupName, page)
-    } 
+    getClientInGroup(groupId, groupName, page);
+  };
   // 모달
   // 유저리스트 선택 유저 수정 조건모달
   const [userConditionModal, setUserConditionModal] = useState(false);
@@ -160,9 +170,10 @@ function GroupManageList() {
     // console.log('IsClientState', isClientState);
     // `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${1}`
     const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${page}`
+      `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${page}`,
+      { headers: { authorization: `Bearer ${token}` } }
     );
-    console.log('UserList API');
+    console.log('UserList API', token);
     setUserList(response.data.data.clients);
     setAllclients(response.data.data.clientCount);
   }, []);
@@ -180,7 +191,7 @@ function GroupManageList() {
   // 전체고객리스트 숫자
   const [isAllclients, setAllclients] = useState<any>(0);
   // 그룹 내 클라이언트 숫자
-  const [ isGroupAllClients, setIsGroupAllClients ] = useState<any>(0);
+  const [isGroupAllClients, setIsGroupAllClients] = useState<any>(0);
   // 체크박스 관련 state
 
   // 개별 항목을 체크했을 때의 state
@@ -318,7 +329,7 @@ function GroupManageList() {
       getUserData(currentPage);
     } else {
       // setCurrentPage1(1)
-      getClientInGroup(groupId, groupName, currentPage)
+      getClientInGroup(groupId, groupName, currentPage);
     }
 
     // setCount(userList.length);
@@ -357,10 +368,10 @@ function GroupManageList() {
               return (
                 <GroupContentItem
                   key={item.groupId}
-                  onClick={
-                    () => {getClientInGroup(item.groupId, item.groupName, 1);
-                      setCurrentPage1(1);
-                    }}
+                  onClick={() => {
+                    getClientInGroup(item.groupId, item.groupName, 1);
+                    setCurrentPage1(1);
+                  }}
                 >
                   {item.groupName}({item.clientCount})
                 </GroupContentItem>

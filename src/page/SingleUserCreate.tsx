@@ -5,6 +5,7 @@ import ClientHeader from '../components/ClientHeader';
 import AlertModal from '../components/modal/AlertModal';
 
 function SingleUserCreate() {
+  const token = localStorage.getItem('Token');
   // Modal 변수들
 
   // 성공 모달
@@ -60,11 +61,15 @@ function SingleUserCreate() {
       )
     ) {
       //  이름, 이메일, 연락처 빈칸 없으면 등록
-      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/clients`, {
-        clientName: inputData.clientName,
-        clientEmail: inputData.clientEmail,
-        contact: _contact,
-      });
+      axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/api/clients`,
+        {
+          clientName: inputData.clientName,
+          clientEmail: inputData.clientEmail,
+          contact: _contact,
+        },
+        { headers: { authorization: `Bearer ${token}` } }
+      );
       // 성공 모달
       clickSuccessModal();
     } else {
@@ -77,21 +82,23 @@ function SingleUserCreate() {
       <ContentContainer onSubmit={submitHandler}>
         <RowContatiner>
           <NameContainer>성함</NameContainer>
-          <InputContainer 
+          <InputContainer
             name="clientName"
             type="text"
             value={inputData.clientName}
             placeholder="성함"
-            onChange={onInputChange}/>
+            onChange={onInputChange}
+          />
         </RowContatiner>
         <RowContatiner>
           <NameContainer>연락처</NameContainer>
-          <InputContainer 
+          <InputContainer
             name="clientContact"
             type="text"
             value={inputData.clientContact}
             placeholder="연락처"
-            onChange={onInputChange}/>
+            onChange={onInputChange}
+          />
         </RowContatiner>
         <RowContatiner>
           <NameContainer>이메일</NameContainer>
@@ -100,10 +107,13 @@ function SingleUserCreate() {
             type="text"
             value={inputData.clientEmail}
             placeholder="이메일"
-            onChange={onInputChange}/>
+            onChange={onInputChange}
+          />
         </RowContatiner>
         <ButtonContainer>
-          <SubmitButton type="submit" onClick={submitHandler}>등록</SubmitButton>
+          <SubmitButton type="submit" onClick={submitHandler}>
+            등록
+          </SubmitButton>
         </ButtonContainer>
       </ContentContainer>
       {isSuccessModal && (
@@ -154,7 +164,7 @@ const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: right;
-`
+`;
 const FormContainer = styled.form``;
 const SubmitContatiner = styled.div`
   width: 100%;

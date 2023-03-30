@@ -9,12 +9,14 @@ const SelectBoxs = ({
   className = '',
 }: any): React.ReactElement => {
   const [currentValue, setCurrentValue] = useState(null);
+  const [isGroupId, setGroupId] = useState<string>();
   const selectInputRef = useRef(null);
   const dropDownRef = useRef();
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false); //커스텀훅
   const handleOnChangeSelectValue = (e: any) => {
-    const { innerText } = e.target;
+    const { innerText, value } = e.target;
     setCurrentValue(innerText);
+    setGroupId(value);
   };
   // onChange setState비동기
   const ResetHandler = useCallback(() => {
@@ -22,9 +24,9 @@ const SelectBoxs = ({
   }, []);
   useEffect(() => {
     if (currentValue !== null) {
-      propFunction(currentValue, className);
+      propFunction(currentValue, className, isGroupId);
     }
-  }, [currentValue, propFunction]);
+  }, [currentValue, propFunction, isGroupId]);
   useEffect(() => {
     ResetHandler();
   }, [currentCategoryValue, ResetHandler]);
@@ -41,7 +43,7 @@ const SelectBoxs = ({
           {optionData.map((data: any, index: any) => (
             <Option
               key={index}
-              value={data}
+              value={`${className[index]}`}
               onClick={handleOnChangeSelectValue}
             >
               {data}

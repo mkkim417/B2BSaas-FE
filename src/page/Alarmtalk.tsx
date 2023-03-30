@@ -145,7 +145,7 @@ function Alarmtalk() {
     }
   };
   const messagePreviewFunc = useCallback(
-    (text: string, target: string) => {
+    (text: string, target: string, groupId: string) => {
       const obj_n = document.getElementById(`${target}`)?.innerHTML;
       setTarget(text);
       const targetData = document.getElementById(`${obj_n}`)?.innerHTML;

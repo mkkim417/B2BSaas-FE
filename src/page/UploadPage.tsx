@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Pagination } from '@mantine/core';
 import * as XLSX from 'xlsx';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { sendListCreate } from '../redux/modules/sendList';
 import { sendKeyCreate } from '../redux/modules/sendKey';
 import { sendGroupNameCreate } from '../redux/modules/sendGroupName';
@@ -14,7 +14,9 @@ import ClientHeader from '../components/ClientHeader';
 import { H1 } from './KakaoResultList';
 import SelectBoxs from '../components/SelectBoxs';
 import useInput from '../hook/useInput';
-
+import { postLogin } from '../axios/api';
+import { useMutation } from 'react-query';
+// import { clentBulkFetch } from '../axios/groupSave';
 function UploadPage() {
   const [isData, setData] = useState<any>();
   const [isKeyData, setKeyData] = useState<any>();
@@ -26,14 +28,16 @@ function UploadPage() {
   const fileInput = useRef<any>();
   const [currentValue, setCurrentValue] = useState(null);
   const [isNewGroupInput, setNewGroupInput] = useState(false);
-
   const [groupName, onChangeGroupName] = useInput();
   const [descName, onChangeDescName] = useInput();
-
+  const [isClUpload, setClUpload] = useState(false);
   const nextRef = useRef<HTMLButtonElement>(null);
   const InputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const clientIdData = useSelector((state: any) => {
+    return state.clientsId.clientsId;
+  });
   const onNextClick = () => {
     nextRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -42,7 +46,6 @@ function UploadPage() {
   };
   const dragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    // console.log({ e });
   };
   const onDropFiles = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -54,10 +57,6 @@ function UploadPage() {
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
       console.log('fileInput : ', fileInput.current.files[0]);
-      // if (isGroupName === '') {
-      //   alert('그룹명을 입력해주세요');
-      //   return;
-      // }
       if (fileInput.current.files[0] === undefined) {
         alert('파일을 선택해주세요');
         return;
@@ -67,11 +66,13 @@ function UploadPage() {
       setGroupComp(true);
       setTimeout(() => {
         onNextClick();
+        setClUpload((prev) => !prev);
       }, 1000);
     },
     // [mutation]
     [dispatch]
   );
+
   //파일초기화함수
   const onClearAttachment = () => {
     fileInput.current.value = '';
@@ -114,6 +115,8 @@ function UploadPage() {
     setOpen(false);
     setKeyData('');
     setCheckedList([]);
+    setGroupComp(false);
+    setClUpload(false);
   };
   const refatoringFunc = (keyData: string[], name: string) => {
     if (keyData.includes(`${name}`) === false) {
@@ -136,6 +139,7 @@ function UploadPage() {
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
     const array = csvRows.map((i: any) => {
       const values = i.split(',');
+      console.log(values);
       const obj = csvHeader.reduce((object: any, header: any, index: any) => {
         object[header] = values[index];
         return object;
@@ -193,7 +197,8 @@ function UploadPage() {
   }
 
   //클라이언트 대량등록
-  const ClentBulkFetch = async () => {
+  //들어갈값 isData,
+  const clentBulkFetch = async () => {
     let data = [] as any;
     isData.map((el: any) =>
       data.push({
@@ -223,6 +228,59 @@ function UploadPage() {
     );
     setGroupList(response.data.data);
   }, []);
+
+  //그룹저장
+  const mutation = useMutation(clentBulkFetch, {
+    onSuccess: (response) => {
+      console.log(response);
+    },
+    onError: (error) => {
+      console.error(error);
+      alert('로그인 실패.');
+    },
+  });
+  console.log('mutation: ', mutation);
+  const ClientBulkFetch = useCallback(
+    async (isData: any) => {
+      await mutation.mutateAsync(isData);
+    },
+    [mutation]
+  );
+  //그룹저장
+  // const mutationGroupSave = useMutation(groupSaveFetch as any, {
+  //   onSuccess: (response) => {
+  //     console.log(response);
+  //   },
+  //   onError: (error) => {
+  //     console.error(error);
+  //     alert('로그인 실패.');
+  //   },
+  // });
+  // const mutationGroupSaveQuery = useCallback(
+  //   async (isData: any, isData2: any, isData3: any) => {
+  //     await mutationGroupSave.mutateAsync({ isData, isData2, isData3 } as any);
+  //   },
+  //   [mutation]
+  // );
+  const groupSaveFetch = async () => {
+    if (descName === '') {
+      alert('그룹설명을 해주세요');
+      return;
+    }
+    try {
+      const response = await axios
+        .post(`https://dev.sendingo-be.store/api/batch/groups`, {
+          clientIds: clientIdData,
+          groupName,
+          groupDescription: descName,
+        })
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //selectBox 소통함수
   const messagePreviewFunc = useCallback((text: string, target: string) => {
     if (text === '+ 새로운그룹추가') {
@@ -321,7 +379,7 @@ function UploadPage() {
             </BottomContents>
           )}
           <BtnWrap>
-            {isData ? (
+            {isData && !isGroupComp ? (
               !isOpen ? (
                 <Button onClick={() => setOpen((prev) => !prev) as any}>
                   선택삭제
@@ -332,28 +390,22 @@ function UploadPage() {
                 </Button>
               )
             ) : null}
-            <Button
-              onClick={() => [
-                onClearAttachment(),
-                setData(false),
-                setOpen(false),
-                setKeyData(''),
-                setCheckedList([]),
-              ]}
-            >
-              취소
-            </Button>
+            {!isGroupComp ? (
+              <Button onClick={() => DummyDeleteFuction()}>취소</Button>
+            ) : null}
             {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
             {!isOpen ? (
-              <Button
-                ref={nextRef}
-                onClick={() => {
-                  NextBtnHandler(isData, isKeyData);
-                  ClentBulkFetch();
-                }}
-              >
-                고객업로드 등록
-              </Button>
+              !isClUpload ? (
+                <Button
+                  ref={nextRef}
+                  onClick={() => {
+                    NextBtnHandler(isData, isKeyData);
+                    ClientBulkFetch(isData);
+                  }}
+                >
+                  고객업로드 등록
+                </Button>
+              ) : null
             ) : null}
           </BtnWrap>
           {/* 그룹지정컨텐츠 */}
@@ -364,21 +416,21 @@ function UploadPage() {
                 그룹 선택을 하지 않으면, 미지정 그룹에 자동으로 들어갑니다.
               </span>
               <SelectBoxs
-                paddingStyle={'0px'}
+                placeholder={'---그룹선택---'}
                 currentCategoryValue={currentValue}
                 propFunction={messagePreviewFunc}
                 optionData={
                   [
                     '---그룹선택---',
-                    ...isGroupList.map((x: any) => x.groupName),
                     '+ 새로운그룹추가',
+                    ...isGroupList.map((x: any) => x.groupName),
                   ] || '빈값입니다'
                 }
               ></SelectBoxs>
               {isNewGroupInput && isNewGroupInput ? (
                 <>
                   <div>
-                    <input
+                    <Input
                       type="text"
                       name="groupName"
                       value={groupName}
@@ -388,7 +440,7 @@ function UploadPage() {
                     />
                   </div>
                   <div>
-                    <input
+                    <Input
                       type="text"
                       name="descName"
                       value={descName}
@@ -398,6 +450,22 @@ function UploadPage() {
                   </div>
                 </>
               ) : null}
+              <BtnWrap>
+                <Button onClick={() => DummyDeleteFuction()}>취소</Button>
+
+                <Button
+                  onClick={() => {
+                    // mutationGroupSaveQuery(
+                    //   mutation && mutation.variables,
+                    //   groupName,
+                    //   descName
+                    // );
+                    groupSaveFetch();
+                  }}
+                >
+                  그룹저장
+                </Button>
+              </BtnWrap>
             </BottomWrap>
           ) : null}
         </ContentsWrap>
@@ -461,10 +529,10 @@ const InputFile = styled.input`
   width: 300px;
 `;
 const Input = styled.input`
-  width: 300px;
-  border-radius: 15px;
+  width: 200px;
+  border-radius: 8px;
   padding: 5px 10px;
-  height: 30px;
+  height: 40px;
 `;
 const Wrapper = styled.div`
   padding-left: 250px;

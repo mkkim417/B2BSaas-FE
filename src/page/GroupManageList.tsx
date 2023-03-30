@@ -15,6 +15,7 @@ import { PaginationBox } from '../components/NotUsedPages/UserList';
 
 function GroupManageList() {
   // hook 변수 모음들
+  const token = localStorage.getItem('Token')
   const navigate = useNavigate();
   // 조건 상태 분기
   // 전체 클라이언트 리스트 호출시 true, 그룹 내 클라이언트 호출시 false 상태로 호출진행
@@ -33,10 +34,11 @@ function GroupManageList() {
   // 그룹리스트 GET API
   const getGroupData = useCallback(async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/groups`
+      `${process.env.REACT_APP_SERVER_URL}/api/groups`,
+      { headers : { authorization: `Bearer ${token}`}}
     );
     // console.log('GroupList API', response.data.data);
-    console.log('GroupList API 렌더링');
+    console.log('GroupList API 렌더링', response);
     setGroupList(response.data.data);
   }, []);
 
@@ -51,7 +53,8 @@ function GroupManageList() {
       setIsClientState(false);
       console.log('IsClientState', isClientState);
       const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}&index=${page}`
+        `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}&index=${page}`,
+        { headers : { authorization: `Bearer ${token}`}}
       );
       //** 트러블 슈팅 함수형 업데이트로 변경.. 두번 클릭해야 불러오는 상황 발생
       setGroupClient(() => {return response.data.data});
@@ -160,9 +163,10 @@ function GroupManageList() {
     // console.log('IsClientState', isClientState);
     // `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${1}`
     const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${page}`
+      `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${page}`,
+      { headers : { authorization: `Bearer ${token}`}}
     );
-    console.log('UserList API');
+    console.log('UserList API', token);
     setUserList(response.data.data.clients);
     setAllclients(response.data.data.clientCount);
   }, []);

@@ -5,8 +5,9 @@ import ClientHeader from '../components/ClientHeader';
 import AlertModal from '../components/modal/AlertModal';
 
 function SingleUserCreate() {
+  const token = localStorage.getItem('Token')
   // Modal 변수들
-
+  
   // 성공 모달
   const [isSuccessModal, setIsSuccessModal] = useState(false);
   const clickSuccessModal = () => {
@@ -64,7 +65,8 @@ function SingleUserCreate() {
         clientName: inputData.clientName,
         clientEmail: inputData.clientEmail,
         contact: _contact,
-      });
+        
+      }, { headers : { authorization: `Bearer ${token}`}});
       // 성공 모달
       clickSuccessModal();
     } else {

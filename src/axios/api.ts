@@ -29,12 +29,28 @@ export const postLogin = async (data: Login) => {
     const authHeader =
       response.headers.authorization || response.headers.Authorization;
     const token = authHeader ? authHeader.split(' ')[1] : null;
-    localStorage.setItem('토큰', token);
+    localStorage.setItem('Token', token);
     return { response, token, data: response.data };
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
+
+// 단건 클라이언트 생성
+export const postSingleClient = async(user : any) => {
+  const response = await instance.post('/api/clients', {
+    clientName: user.clientName,
+    clientEmail: user.clientEmail,
+    contact: user,
+  })
+}
+
+// 전체 클라이언트 리스트 불러오기
+export const getAllClientList = async (page : any) => {
+  const response = await instance.get(`/api/clients?index=${page}`)
+  return response
+}
+// 그룹 리스트 불러오기
 
 export { instance };

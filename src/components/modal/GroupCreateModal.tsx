@@ -8,6 +8,7 @@ type Props = {
   closeModal?: () => void;
 };
 const GroupCreateModal = ({ closeModal }: Props) => {
+  const token = localStorage.getItem('Token')
   // group input 변수들
   const initialData = {
     groupName: '',
@@ -30,7 +31,8 @@ const GroupCreateModal = ({ closeModal }: Props) => {
     // e.preventDefault();
     // alert('저장!')
     if (!(data.groupName === '' && data.groupDescription === '')) {
-      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/groups`, data);
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/groups`,
+        data, {headers : { authorization: `Bearer ${token}`}});
 
       alert('저장 성공!');
       closeModal();

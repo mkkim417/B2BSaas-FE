@@ -1,3 +1,4 @@
+import React, { useCallback } from 'react';
 import axios from 'axios';
 import { setCookie, getCookie, getTokens } from '../cookies/cookies';
 
@@ -37,4 +38,17 @@ export const postLogin = async (data: Login) => {
   }
 };
 
+export const getGroupData = async () => {
+  try {
+    const response = await axios
+      .get(`${process.env.REACT_APP_SERVER_URL}/api/groups`)
+      .then((res) => {
+        console.log(res);
+      });
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+  // setGroupList(response.data.data);
+};
 export { instance };

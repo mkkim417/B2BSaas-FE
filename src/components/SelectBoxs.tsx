@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import useDetectClose from '../hook/useDetectClose';
 const SelectBoxs = ({
+  placeholder = '',
   optionData = '',
   currentCategoryValue = '',
   propFunction = '',
@@ -32,7 +33,9 @@ const SelectBoxs = ({
       ref={dropDownRef}
       onClick={() => setIsOpen((prev: any) => !prev)}
     >
-      <Label ref={selectInputRef}>{currentValue}</Label>
+      <Label ref={selectInputRef}>
+        {currentValue === null ? placeholder : currentValue}
+      </Label>
       {isOpen && (
         <SelectOptions>
           {optionData.map((data: any, index: any) => (

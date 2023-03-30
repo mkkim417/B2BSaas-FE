@@ -35,6 +35,16 @@ function KakaoDetailList() {
       <H1>전송상세조회</H1>
       <FlexWrap>
         <Halfdiv>
+          <GrayWrapHeidght>보낸날짜</GrayWrapHeidght>
+          <ContentDiv>{location?.state?.sendDate}</ContentDiv>
+        </Halfdiv>
+        <Halfdiv>
+          <GrayWrapHeidght>총성공률(%)</GrayWrapHeidght>
+          <ContentDiv>{location?.state?.success}%</ContentDiv>
+        </Halfdiv>
+      </FlexWrap>
+      <FlexWrap>
+        <Halfdiv>
           <GrayWrapHeidght>그룹이름</GrayWrapHeidght>
           <ContentDiv>{location?.state?.groupName}</ContentDiv>
         </Halfdiv>
@@ -43,47 +53,25 @@ function KakaoDetailList() {
           <ContentDiv>{location?.state?.sendState}</ContentDiv>
         </Halfdiv>
       </FlexWrap>
-      <FlexWrap>
-        <Halfdiv>
-          <GrayWrapHeidght>실패건수</GrayWrapHeidght>
-          <ContentDiv>{location?.state?.fcnt}</ContentDiv>
-        </Halfdiv>
-        <Halfdiv>
-          <GrayWrapHeidght>성공률</GrayWrapHeidght>
-          <ContentDiv>{location?.state?.success}%</ContentDiv>
-        </Halfdiv>
-      </FlexWrap>
-      <FlexWrap>
-        <Halfdiv>
-          <GrayWrapHeidght>발송일자</GrayWrapHeidght>
-          <ContentDiv>{location?.state?.sendDate}</ContentDiv>
-        </Halfdiv>
-        <Halfdiv>
-          <GrayWrapHeidght>오픈율(%)</GrayWrapHeidght>
-          <ContentDiv>준비중</ContentDiv>
-        </Halfdiv>
-      </FlexWrap>
       <Table>
         <thead style={{ fontWeight: 'bold' }}>
           <tr>
-            <Th>고객ID</Th>
+            <Th>보낸날짜</Th>
             <Th>메시지</Th>
             <Th style={{ width: '100px' }}>이름</Th>
-            <Th style={{ width: '70px' }}>결과</Th>
             <Th style={{ width: '70px' }}>전화번호</Th>
-            <Th>보낸날짜</Th>
+            <Th style={{ width: '70px' }}>결과</Th>
           </tr>
         </thead>
         <tbody style={{ textAlign: 'center' }}>
           {isData &&
             isData.map((el: any, idx: number) => (
               <tr key={idx}>
-                <InitTd>{el.clientId}</InitTd>
+                <InitTd>{el.resultDate}</InitTd>
                 <InitTd>{el.msgContent}</InitTd>
                 <InitTd>{el.clientName}</InitTd>
-                <InitTd>{el.resultMessage}</InitTd>
                 <InitTd>{el.phone}</InitTd>
-                <InitTd>{el.resultDate}</InitTd>
+                <InitTd>{el.resultMessage}</InitTd>
               </tr>
             ))}
         </tbody>

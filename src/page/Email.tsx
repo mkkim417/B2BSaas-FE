@@ -7,7 +7,6 @@ import {
   ContentState,
 } from 'draft-js';
 import { LeftContents, RightContents } from './Alarmtalk';
-import SelectBoxs from '../components/SelectBoxs';
 import { EMAIL_TEMPLATE } from '../constants/emailTemplates';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
@@ -30,10 +29,10 @@ function Email() {
       // console.log(
       //   JSON.stringify(convertToRaw(editorState.getCurrentContent()))
       // );
-      console.log(
-        'editorState =>',
-        draftToHtml(convertToRaw(editorState.getCurrentContent()))
-      );
+      // console.log(
+      //   'editorState =>',
+      //   draftToHtml(convertToRaw(editorState.getCurrentContent()))
+      // );
     }
   };
   const htmlToEditor = `<pre>const editorToHtml = 
@@ -67,9 +66,6 @@ function Email() {
 
   return (
     <Wrapper>
-      {/* <LeftContents>
-        <SelectBoxs></SelectBoxs>
-      </LeftContents> */}
       <TopWrapper>
         <H1>이메일 작성</H1>
         <TopWrapper>

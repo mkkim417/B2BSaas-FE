@@ -44,8 +44,9 @@ function GroupManageList() {
   const [groupClient, setGroupClient] = useState([] as any);
 
   // 그룹 클릭시 그룹 내 클라이언트리스트 호출
-  const getClientInGroup = useCallback(async (id: any, name: any, page: any) => {
-      console.log('getClientInGroup 호출')
+  const getClientInGroup = useCallback(
+    async (id: any, name: any, page: any) => {
+      console.log('getClientInGroup 호출');
       setCheckedArr([]);
       setIsClientState(false);
       console.log('IsClientState', isClientState);
@@ -65,7 +66,6 @@ function GroupManageList() {
         }
       })
   },[groupId]);
-
   /*************************************************************************************
     유저리스트 관련 코드
   ************************************************************************************ */
@@ -83,15 +83,15 @@ function GroupManageList() {
   const setPage1 = (page: any) => {
     console.log('page1', page)
     setCurrentPage(page);
-    getUserData(page)
-  }
+    getUserData(page);
+  };
 
-  const setPage2 = async(page: any) => {
-    console.log('page2', page)
+  const setPage2 = async (page: any) => {
+    console.log('page2', page);
     setCurrentPage1(page);
+
     getClientInGroup(groupId, groupName, page)
     } 
-
   // 모달
   // 유저리스트 선택 유저 수정 조건모달
   const [userConditionModal, setUserConditionModal] = useState(false);
@@ -154,7 +154,7 @@ function GroupManageList() {
   // 유저리스트 담는 변수
   const [userList, setUserList] = useState([] as any);
   // 유저리스트 GET API
-  const getUserData = useCallback(async (page : any) => {
+  const getUserData = useCallback(async (page: any) => {
     setCheckedArr([]);
     setIsClientState(true);
     // console.log('IsClientState', isClientState);
@@ -165,7 +165,7 @@ function GroupManageList() {
     console.log('UserList API');
     setUserList(response.data.data.clients);
     setAllclients(response.data.data.clientCount);
-  },[]);
+  }, []);
 
   // 유저 수정 state
   const [editUser, setEditUser] = useState({
@@ -216,8 +216,8 @@ function GroupManageList() {
     if (checkedArr.length > 1) {
       alert('한 개만 체크해주세요!');
     } else if (checkedArr.length === 0) {
-      alert('수정할 고객을 선택해주세요!')
-    }else {
+      alert('수정할 고객을 선택해주세요!');
+    } else {
       checkedArr.map((item: any) => {
         setEditUser({
           ...editUser,
@@ -336,7 +336,7 @@ function GroupManageList() {
     // indexOfFirstPost,
     // postPerPage,
     getUserData,
-    getClientInGroup
+    getClientInGroup,
   ]);
   // 그룹리스트 내 클라이언트 useEffect
   // useEffect(() => {
@@ -392,33 +392,31 @@ function GroupManageList() {
             </CardHeader>
           </ClientContentHeader>
           <ClientContentBox>
-              {isClientState ? (
-                // userList.slice(indexOfFirstPost, indexOfLastPost) &&
-                userList.length > 0 ? (
-                  userList
-                    // .slice(indexOfFirstPost, indexOfLastPost)
-                    .map((item: any) => {
-                      return (
-                        <CardHeader key={item.clientId}>
-                          <Percentage width="6%">
-                            <input
-                              type="checkbox"
-                              checked={checkedArr.includes(item)}
-                              onChange={(e: any) => checkUserHandler(e, item)}
-                            />
-                          </Percentage>
-                          <Percentage width="23%">{item.groupName}</Percentage>
-                          <Percentage width="12%">{item.clientName}</Percentage>
-                          <Percentage width="22%">{item.contact}</Percentage>
-                          <Percentage width="37%">{item.clientEmail}</Percentage>
-                        </CardHeader>
-                      );
-                    })
-                ) : (
-                  <CenterContent>
-                    더 이상 고객목록이 없습니다.
-                  </CenterContent>
-                )
+            {isClientState ? (
+              // userList.slice(indexOfFirstPost, indexOfLastPost) &&
+              userList.length > 0 ? (
+                userList
+                  // .slice(indexOfFirstPost, indexOfLastPost)
+                  .map((item: any) => {
+                    return (
+                      <CardHeader key={item.clientId}>
+                        <Percentage width="6%">
+                          <input
+                            type="checkbox"
+                            checked={checkedArr.includes(item)}
+                            onChange={(e: any) => checkUserHandler(e, item)}
+                          />
+                        </Percentage>
+                        <Percentage width="23%">{item.groupName}</Percentage>
+                        <Percentage width="12%">{item.clientName}</Percentage>
+                        <Percentage width="22%">{item.contact}</Percentage>
+                        <Percentage width="37%">{item.clientEmail}</Percentage>
+                      </CardHeader>
+                    );
+                  })
+              ) : (
+                <CenterContent>더 이상 고객목록이 없습니다.</CenterContent>
+              )
             ) : groupClient.length > 0 ? (
               groupClient
                 // .slice(indexOfFirstPost, indexOfLastPost)

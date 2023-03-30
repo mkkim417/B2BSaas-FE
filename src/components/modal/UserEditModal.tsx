@@ -21,10 +21,10 @@ const UserEditModal = ({
   const initialData = {
     clientName: clientName,
     contact: clientContact,
-    clientEmail : clientEmail
+    clientEmail: clientEmail,
   };
   const [data, setData] = useState(initialData);
-  
+
   const onChangeHandler = (e: any) => {
     const { name, value } = e.target;
     setData({
@@ -42,12 +42,18 @@ const UserEditModal = ({
     alert(`name: ${data.clientName}, contact : ${_contact}`);
 
     // 빈칸 확인 조건처리
-    if (!(data.clientName === '' || data.contact === '' || data.clientEmail === '')) {
+    if (
+      !(
+        data.clientName === '' ||
+        data.contact === '' ||
+        data.clientEmail === ''
+      )
+    ) {
       // 빈칸 없으면 수정 patch
       axios.patch(`https://dev.sendingo-be.store/api/clients/${clientId}`, {
         clientName: data.clientName,
         contact: _contact,
-        clientEmail : data.clientEmail
+        clientEmail: data.clientEmail,
       });
       alert('저장 성공!');
       closeModal();
@@ -74,9 +80,9 @@ const UserEditModal = ({
             />
             <InputBox>연락처</InputBox>
             <InputContainer
-                name="contact"
-                value={data.contact}
-                onChange={onChangeHandler}
+              name="contact"
+              value={data.contact}
+              onChange={onChangeHandler}
             />
             <InputBox>이메일</InputBox>
             <InputContainer

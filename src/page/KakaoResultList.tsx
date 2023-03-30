@@ -141,14 +141,13 @@ function KakaoResultList() {
         <Table>
           <thead style={{ fontWeight: 'bold' }}>
             <tr>
-              <Th>그룹ID</Th>
-              <Th>그룹명</Th>
+              <Th>보낸날짜</Th>
+              <Th>총메시지</Th>
               <Th>성공건수</Th>
               <Th>실패건수</Th>
-              <Th>총메시지</Th>
               <Th>총성공률</Th>
-              <Th>전송상태</Th>
-              <Th>보낸날짜</Th>
+              <Th>그룹명</Th>
+              <Th>발송상태</Th>
               <Th>상세</Th>
             </tr>
           </thead>
@@ -156,14 +155,13 @@ function KakaoResultList() {
             {isGroupClient &&
               isGroupClient.map((el: any, idx: number) => (
                 <tr key={idx}>
-                  <Td>{el.groupId}</Td>
-                  <Td>{el.groupName}</Td>
+                  <Td>{el.sendDate}</Td>
+                  <Td>{el.msgCount}</Td>
                   <Td>{el.scnt}</Td>
                   <Td>{el.fcnt}</Td>
-                  <Td>{el.msgCount}</Td>
                   <Td>{(el.scnt / el.msgCount) * 100}%</Td>
+                  <Td>{el.groupName}</Td>
                   <Td>{el.sendState}</Td>
-                  <Td>{el.sendDate}</Td>
                   <Td>
                     <StlyeBtn
                     // onClick={() => {
@@ -231,7 +229,7 @@ export const Td = styled.td`
   color: #555;
   padding: 15px;
   :nth-of-type(2) {
-    text-align: left;
+    text-align: center;
   }
 `;
 

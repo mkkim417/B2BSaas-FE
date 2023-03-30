@@ -11,18 +11,35 @@ import { clientsIdCreate } from '../redux/modules/clientsId';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import ClientHeader from '../components/ClientHeader';
+import { H1 } from './KakaoResultList';
+import SelectBoxs from '../components/SelectBoxs';
+import useInput from '../hook/useInput';
 
 function UploadPage() {
   const [isData, setData] = useState<any>();
   const [isKeyData, setKeyData] = useState<any>();
   const [checkedList, setCheckedList] = useState<string[]>([]);
   const [isOpen, setOpen] = useState(false);
+  const [isGroupComp, setGroupComp] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [isGroupList, setGroupList] = useState([] as any);
   const fileInput = useRef<any>();
-  const [isGroupName, setGroupName] = useState('');
+  const [currentValue, setCurrentValue] = useState(null);
+  const [isNewGroupInput, setNewGroupInput] = useState(false);
+
+  const [groupName, onChangeGroupName] = useInput();
+  const [descName, onChangeDescName] = useInput();
+
+  const nextRef = useRef<HTMLButtonElement>(null);
+  const InputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const onNextClick = () => {
+    nextRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  const handleOnChangeSelectValue = (e: any) => {
+    setCurrentValue(e.target.value);
+  };
   const dragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     // console.log({ e });
@@ -33,34 +50,31 @@ function UploadPage() {
     console.log(file);
     readExcel(e);
   };
-
+  //다음단계버튼
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
       console.log('fileInput : ', fileInput.current.files[0]);
-      if (isGroupName === '') {
-        alert('그룹명을 입력해주세요');
-        return;
-      }
+      // if (isGroupName === '') {
+      //   alert('그룹명을 입력해주세요');
+      //   return;
+      // }
       if (fileInput.current.files[0] === undefined) {
         alert('파일을 선택해주세요');
+        return;
       }
-      // await mutation.mutateAsync(newCart)
-
       dispatch(sendListCreate(data));
       dispatch(sendKeyCreate(isKeyDataServe));
-      dispatch(sendGroupNameCreate([isGroupName]));
-      navigate(`/splitservicepage`);
+      setGroupComp(true);
+      setTimeout(() => {
+        onNextClick();
+      }, 1000);
     },
     // [mutation]
-    [isGroupName, dispatch]
+    [dispatch]
   );
   //파일초기화함수
   const onClearAttachment = () => {
     fileInput.current.value = '';
-  };
-  //그룹이름 체인지함수
-  const groupName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setGroupName(e.target.value);
   };
   //선택취소함수
   const checkedItemHandler = (value: string, isChecked: boolean) => {
@@ -97,7 +111,6 @@ function UploadPage() {
   const DummyDeleteFuction = () => {
     onClearAttachment();
     setData(false);
-    setGroupName('');
     setOpen(false);
     setKeyData('');
     setCheckedList([]);
@@ -109,10 +122,18 @@ function UploadPage() {
       return false;
     }
   };
+  // const refatoringFunc = (keyData: string[], name: string[]) => {
+  //   name.map((el) => {
+  //     if (keyData.includes(`${el}`) === false) {
+  //       DummyDeleteFuction();
+  //       alert(`${el} 값은 필수입니다.`);
+  //       return false;
+  //     }
+  //   });
+  // };
   const csvFileToArray = (string: any) => {
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',');
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
-
     const array = csvRows.map((i: any) => {
       const values = i.split(',');
       const obj = csvHeader.reduce((object: any, header: any, index: any) => {
@@ -149,9 +170,15 @@ function UploadPage() {
         const jsonData = JSON.stringify(rows);
         const pareData = JSON.parse(jsonData);
         const keyData = Object.keys(pareData[0]);
+        let requiredData = ['이름', '전화번호', '이메일'];
+        // if ((refatoringFunc(keyData, requiredData) as any) !== true) {
+        //   return;
+        // } else {
+        // }
         if (refatoringFunc(keyData, '이름') === false) return;
         if (refatoringFunc(keyData, '전화번호') === false) return;
         if (refatoringFunc(keyData, '이메일') === false) return;
+
         // console.log('rows : ', rows);
         // console.log('jsonData : ', jsonData);
         // console.log('pareData : ', pareData);
@@ -164,6 +191,8 @@ function UploadPage() {
     };
     reader.readAsBinaryString(input.files[0]);
   }
+
+  //클라이언트 대량등록
   const ClentBulkFetch = async () => {
     let data = [] as any;
     isData.map((el: any) =>
@@ -181,20 +210,41 @@ function UploadPage() {
           console.log('api/clients/bulk : ', res.data);
           dispatch(clientsIdCreate(res?.data?.newClients));
         });
-      console.log(response);
       // navigate('/');
     } catch (error) {
       console.log(error);
       // alert('다시 시도해주시기 바랍니다.');
     }
   };
+  //그룹리스트
+  const getGroupData = useCallback(async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_SERVER_URL}/api/groups`
+    );
+    setGroupList(response.data.data);
+  }, []);
+  //selectBox 소통함수
+  const messagePreviewFunc = useCallback((text: string, target: string) => {
+    if (text === '+ 새로운그룹추가') {
+      setNewGroupInput(true);
+      setTimeout(() => {
+        console.log('!!');
+        InputRef.current?.focus();
+      }, 500);
+    } else {
+      setNewGroupInput(false);
+    }
+    return;
+  }, []);
+  useEffect(() => {
+    getGroupData();
+  }, [getGroupData]);
   // console.log('csv넣은대상', isData)
   // console.log('취소된대상:', checkedList)
   // console.log(
   //   '차집합 :',
   //   isData && isData.filter((x: any) => !checkedList.includes(x))
   // )
-  console.log('isData: ', isData);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -204,13 +254,8 @@ function UploadPage() {
       <ClientHeader />
       <Wrapper>
         <ContentsWrap>
+          {/* 상단 파일선택 */}
           <TopContents>
-            <Input
-              type="text"
-              placeholder="그룹명"
-              value={isGroupName}
-              onChange={groupName}
-            />
             <InputFile
               type="file"
               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
@@ -218,6 +263,18 @@ function UploadPage() {
               ref={fileInput}
             ></InputFile>
           </TopContents>
+          {/* 템플릿다운로드 */}
+          <TemplateWrap>
+            <TemplateDown>
+              <a href={'/oneTest.xlsx'} download>
+                템플릿다운로드
+              </a>
+            </TemplateDown>
+            <span>
+              템플릿 파일에 추가할 고객 목록을 작성하여 업로드 해주세요.
+            </span>
+          </TemplateWrap>
+          {/* 테이블 */}
           {isData && isData ? (
             <MapWrapper>
               <Table>
@@ -226,7 +283,7 @@ function UploadPage() {
                     {isOpen && isOpen ? <th>선택</th> : null}
                     {isKeyData &&
                       isKeyData.map((li: any, idx: number) => (
-                        <th key={idx}>{li}</th>
+                        <Th key={idx}>{li}</Th>
                       ))}
                   </tr>
                 </thead>
@@ -247,7 +304,7 @@ function UploadPage() {
                         {isKeyData &&
                           isKeyData.map((li: any, idx: number) =>
                             li === '전화번호' && el[li].includes('-') ? (
-                              el[li].replace(/-/gi, '')
+                              <Td>{el[li].replace(/-/gi, '')}</Td>
                             ) : (
                               <Td key={idx}>{el[li]}</Td>
                             )
@@ -264,16 +321,21 @@ function UploadPage() {
             </BottomContents>
           )}
           <BtnWrap>
-            {!isOpen ? (
-              <Button onClick={() => setOpen((prev) => !prev) as any}>
-                선택삭제
-              </Button>
+            {isData ? (
+              !isOpen ? (
+                <Button onClick={() => setOpen((prev) => !prev) as any}>
+                  선택삭제
+                </Button>
+              ) : (
+                <Button onClick={() => setOpen((prev) => !prev) as any}>
+                  선택취소
+                </Button>
+              )
             ) : null}
             <Button
               onClick={() => [
                 onClearAttachment(),
                 setData(false),
-                setGroupName(''),
                 setOpen(false),
                 setKeyData(''),
                 setCheckedList([]),
@@ -284,27 +346,92 @@ function UploadPage() {
             {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
             {!isOpen ? (
               <Button
+                ref={nextRef}
                 onClick={() => {
                   NextBtnHandler(isData, isKeyData);
                   ClentBulkFetch();
                 }}
               >
-                다음
+                고객업로드 등록
               </Button>
             ) : null}
           </BtnWrap>
+          {/* 그룹지정컨텐츠 */}
+          {isGroupComp && isGroupComp ? (
+            <BottomWrap>
+              <H1>고객 정보 그룹 지정</H1>
+              <span>
+                그룹 선택을 하지 않으면, 미지정 그룹에 자동으로 들어갑니다.
+              </span>
+              <SelectBoxs
+                paddingStyle={'0px'}
+                currentCategoryValue={currentValue}
+                propFunction={messagePreviewFunc}
+                optionData={
+                  [
+                    '---그룹선택---',
+                    ...isGroupList.map((x: any) => x.groupName),
+                    '+ 새로운그룹추가',
+                  ] || '빈값입니다'
+                }
+              ></SelectBoxs>
+              {isNewGroupInput && isNewGroupInput ? (
+                <>
+                  <div>
+                    <input
+                      type="text"
+                      name="groupName"
+                      value={groupName}
+                      onChange={onChangeGroupName}
+                      ref={InputRef}
+                      placeholder="새로운 그룹명"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      name="descName"
+                      value={descName}
+                      onChange={onChangeDescName}
+                      placeholder="그룹설명을 추가하세요"
+                    />
+                  </div>
+                </>
+              ) : null}
+            </BottomWrap>
+          ) : null}
         </ContentsWrap>
       </Wrapper>
     </motion.div>
   );
 }
 
+const Th = styled.th`
+  vertical-align: middle;
+`;
+const BottomWrap = styled.div`
+  width: 800px;
+  margin: 0 auto;
+  height: 100vh;
+`;
+const TemplateWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+`;
+const TemplateDown = styled.div`
+  text-align: center;
+  border: 1px solid #000;
+  padding: 15px;
+`;
 const Table = styled.table`
   width: 100%;
   border: 1px solid #333333;
 `;
 const MapWrapper = styled.div`
-  width: 100%;
+  width: 800px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -319,15 +446,14 @@ const BtnWrap = styled.div`
   align-items: center;
   gap: 10px;
   justify-content: center;
-  margin-top: 25px;
+  margin: 50px auto;
 `;
 const Button = styled.button`
   border-radius: 15px;
-  border: 2px solid #000;
-  background-color: white;
-  color: #000;
+  background-color: #000;
+  color: #fff;
   width: 85px;
-  padding: 5px 0px;
+  padding: 5px;
 `;
 const InputFile = styled.input`
   border: 1px solid #000;
@@ -355,7 +481,7 @@ const TopContents = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  width: 400px;
+  width: 800px;
   margin: 0 auto;
   border-radius: 15px;
   height: 100px;
@@ -370,7 +496,7 @@ const BottomContents = styled.div`
   justify-content: center;
   border-radius: 15px;
   font-size: 12px;
-  width: 600px;
+  width: 800px;
   margin: 0 auto;
   height: 250px;
   background-color: #ededed;

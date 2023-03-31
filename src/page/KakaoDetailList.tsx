@@ -11,8 +11,9 @@ import {
   Th,
   Wrapper,
 } from './KakaoResultList';
-
+import { getCookie } from '../util/cookie';
 function KakaoDetailList() {
+  const token = getCookie('userToken');
   const params = useParams();
   const location = useLocation();
   console.log('location : ', location.state.groupName);
@@ -20,7 +21,8 @@ function KakaoDetailList() {
   const KakaoDetail = useCallback(async () => {
     const response = await axios
       .get(
-        `${process.env.REACT_APP_SERVER_URL}/api/talk/results/detail/${params.id}`
+        `${process.env.REACT_APP_SERVER_URL}/api/talk/results/detail/${params.id}`,
+        { headers: { authorization: `Bearer ${token}` } }
       )
       .then((res) => {
         console.log('res.data : ', res.data.data);
@@ -58,7 +60,7 @@ function KakaoDetailList() {
           <tr>
             <Th>보낸날짜</Th>
             <Th>메시지</Th>
-            <Th style={{ width: '100px' }}>이름</Th>
+            <Th style={{ width: '100px' }}>보낸사람</Th>
             <Th style={{ width: '70px' }}>전화번호</Th>
             <Th style={{ width: '70px' }}>결과</Th>
           </tr>

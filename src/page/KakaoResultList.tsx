@@ -9,7 +9,7 @@ import { DatePicker } from '@mantine/dates';
 import Callander from '../asset/svg/Callander';
 import useDetectClose from '../hook/useDetectClose';
 import { Link } from 'react-router-dom';
-import { getTokens } from '../cookies/cookies';
+import { getCookie } from '../util/cookie';
 function KakaoResultList() {
   //페이지네이션
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
@@ -29,7 +29,7 @@ function KakaoResultList() {
   const [isGroupClient, setGroupClient] = useState([]);
   const [currentValue, setCurrentValue] = useState(null);
   //그룹리스트
-  const { userToken: token } = getTokens();
+  const token = getCookie('userToken');
   const getGroupData = useCallback(async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/groups`,

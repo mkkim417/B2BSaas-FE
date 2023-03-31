@@ -12,8 +12,9 @@ import AutoModal, {
 } from '../components/Automodal';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { getTokens } from '../cookies/cookies';
+import { getCookie } from '../util/cookie';
 function Alarmtalk() {
+  const token = getCookie('userToken');
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
@@ -81,7 +82,6 @@ function Alarmtalk() {
     }
   };
   //전송내용불러오기 다시해야
-  const { userToken } = getTokens();
   const getKakaoExcelData = async () => {
     try {
       const response = await axios
@@ -90,7 +90,7 @@ function Alarmtalk() {
           // { data },
           {
             headers: {
-              Authorization: `Bearer ${userToken}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         )
@@ -200,7 +200,7 @@ function Alarmtalk() {
           { data },
           {
             headers: {
-              Authorization: `Bearer ${userToken}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         )

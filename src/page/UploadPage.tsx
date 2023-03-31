@@ -16,9 +16,10 @@ import SelectBoxs from '../components/SelectBoxs';
 import useInput from '../hook/useInput';
 import { postLogin } from '../axios/api';
 import { useMutation } from 'react-query';
-import { getTokens } from '../cookies/cookies';
+import { getCookie } from '../util/cookie';
 // import { clentBulkFetch } from '../axios/groupSave';
 function UploadPage() {
+  const token = getCookie('userToken');
   const [isData, setData] = useState<any>();
   const [isKeyData, setKeyData] = useState<any>();
   const [checkedList, setCheckedList] = useState<string[]>([]);
@@ -213,7 +214,7 @@ function UploadPage() {
           { data },
           {
             headers: {
-              Authorization: `Bearer ${userToken}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         )
@@ -228,13 +229,12 @@ function UploadPage() {
     }
   };
   //그룹리스트
-  const { userToken } = getTokens();
   const getGroupData = useCallback(async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/groups`,
       {
         headers: {
-          Authorization: `Bearer ${userToken}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -285,7 +285,7 @@ function UploadPage() {
   //         },
   //         {
   //           headers: {
-  //             Authorization: `Bearer ${userToken}`,
+  //             Authorization: `Bearer ${token}`,
   //           },
   //         }
   //       )
@@ -314,7 +314,7 @@ function UploadPage() {
             },
             {
               headers: {
-                Authorization: `Bearer ${userToken}`,
+                Authorization: `Bearer ${token}`,
               },
             }
           )
@@ -331,7 +331,7 @@ function UploadPage() {
             },
             {
               headers: {
-                Authorization: `Bearer ${userToken}`,
+                Authorization: `Bearer ${token}`,
               },
             }
           )

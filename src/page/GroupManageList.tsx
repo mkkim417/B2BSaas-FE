@@ -12,14 +12,18 @@ import UserEditModal from '../components/modal/UserEditModal';
 import UserInGroupDeleteModal from '../components/modal/UserInGroupDeleteModal';
 import UserMoveModal from '../components/modal/UserMoveModal';
 import { PaginationBox } from '../components/NotUsedPages/UserList';
-import { getTokens } from '../cookies/cookies';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
-import { deleteGroupData, getAllClientList, getAllGroupList } from '../axios/api';
+import {
+  deleteGroupData,
+  getAllClientList,
+  getAllGroupList,
+} from '../axios/api';
+import { getCookie } from '../util/cookie';
 
 function GroupManageList() {
   // hook 변수 모음들
-  const { userToken: token } = getTokens();
+  const token = getCookie('userToken');
   const navigate = useNavigate();
   // 조건 상태 분기
   // 전체 클라이언트 리스트 호출시 true, 그룹 내 클라이언트 호출시 false 상태로 호출진행
@@ -28,7 +32,6 @@ function GroupManageList() {
   /*************************************************************************************
     그룹리스트 관련 코드
   ************************************************************************************ */
-
 
   // 그룹리스트 담는 변수
   const [groupList, setGroupList] = useState([] as any);
@@ -52,12 +55,15 @@ function GroupManageList() {
     allUserRef.current?.focus();
   }, [getGroupData]);
 
-  const { data : groupData } = useQuery<any, AxiosError>(['getAllGroupList'], 
-    () => getAllGroupList(), {
+  const { data: groupData } = useQuery<any, AxiosError>(
+    ['getAllGroupList'],
+    () => getAllGroupList(),
+    {
       onSuccess: (response) => {
-        console.log(response)
-      }
-    }) 
+        console.log(response);
+      },
+    }
+  );
   // console.log('useQuery는 잘 되고 있는가', groupData?.data.map((item:any) => item.groupName))
   // 그룹리스트 내 클라이언트 변수
   const [groupClient, setGroupClient] = useState([] as any);
@@ -198,20 +204,23 @@ function GroupManageList() {
     setUserList(response.data.data.clients);
     // setAllclients(response.data.data.clientCount);
   }, []);
-  const { data : userData } = useQuery<any, AxiosError>(['getAllClientList', currentPage],
-    () => getAllClientList(currentPage), {
+  const { data: userData } = useQuery<any, AxiosError>(
+    ['getAllClientList', currentPage],
+    () => getAllClientList(currentPage),
+    {
       onSuccess: (response) => {
-        console.log(response)
-        setAllclients(userData?.data.clientCount)
-      }
-    })
-    // console.log('여기에요!userdata', userData?.data.clientCount)
+        console.log(response);
+        setAllclients(userData?.data.clientCount);
+      },
+    }
+  );
+  // console.log('여기에요!userdata', userData?.data.clientCount)
 
   // 유저리스트 useEffect
   useEffect(() => {
     if (isClientState === true) {
       // getUserData(currentPage);
-      setAllclients(userData?.data.clientCount)
+      setAllclients(userData?.data.clientCount);
     } else {
       getClientInGroup(groupId, groupName, currentPage);
       // setCurrentPage1(1)
@@ -379,14 +388,14 @@ function GroupManageList() {
   // }, [])
 
   const [deleteGroup, setDeleteGroup] = useState([]);
-  const { mutate : deleteGroupMutate } = useMutation(deleteGroupData, {
-    onSuccess : (response) => {
+  const { mutate: deleteGroupMutate } = useMutation(deleteGroupData, {
+    onSuccess: (response) => {
       console.log(response);
     },
     onError: (error) => {
       console.log(error);
-    }
-  })
+    },
+  });
   const clickGroupDelete = async () => {
     // await axios
     //   .delete(`${process.env.REACT_APP_SERVER_URL}/api/groups/${deleteGroup}`, {
@@ -395,7 +404,7 @@ function GroupManageList() {
     //   .then((res) => {
     //     console.log(res);
     //   });
-    deleteGroupMutate(deleteGroup)
+    deleteGroupMutate(deleteGroup);
     alert('삭제 완료!');
   };
   return (
@@ -455,24 +464,23 @@ function GroupManageList() {
             {isClientState ? (
               // userList.slice(indexOfFirstPost, indexOfLastPost) &&
               userData?.data.clients.length > 0 ? (
-                userData?.data.clients
-                  .map((item: any) => {
-                    return (
-                      <CardHeader key={item.clientId}>
-                        <Percentage width="6%">
-                          <input
-                            type="checkbox"
-                            checked={checkedArr.includes(item)}
-                            onChange={(e: any) => checkUserHandler(e, item)}
-                          />
-                        </Percentage>
-                        <Percentage width="23%">{item.groupName}</Percentage>
-                        <Percentage width="12%">{item.clientName}</Percentage>
-                        <Percentage width="22%">{item.contact}</Percentage>
-                        <Percentage width="37%">{item.clientEmail}</Percentage>
-                      </CardHeader>
-                    );
-                  })
+                userData?.data.clients.map((item: any) => {
+                  return (
+                    <CardHeader key={item.clientId}>
+                      <Percentage width="6%">
+                        <input
+                          type="checkbox"
+                          checked={checkedArr.includes(item)}
+                          onChange={(e: any) => checkUserHandler(e, item)}
+                        />
+                      </Percentage>
+                      <Percentage width="23%">{item.groupName}</Percentage>
+                      <Percentage width="12%">{item.clientName}</Percentage>
+                      <Percentage width="22%">{item.contact}</Percentage>
+                      <Percentage width="37%">{item.clientEmail}</Percentage>
+                    </CardHeader>
+                  );
+                })
               ) : (
                 <CenterContent>더 이상 고객목록이 없습니다.</CenterContent>
               )

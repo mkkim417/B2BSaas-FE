@@ -347,6 +347,13 @@ function GroupManageList() {
   //   getClientInGroup(groupId, groupName, currentPage)
   // }, [])
 
+  const [ deleteGroup, setDeleteGroup ] = useState([]);
+  const clickGroupDelete = async() => {
+    await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/groups/${deleteGroup}`,
+    { headers : { authorization: `Bearer ${token}`}})
+    alert('삭제 완료!')
+  }
+
   return (
     <Container>
       <HeaderContainer>그룹관리</HeaderContainer>
@@ -364,6 +371,7 @@ function GroupManageList() {
                   onClick={
                     () => {getClientInGroup(item.groupId, item.groupName, 1);
                       setCurrentPage1(1);
+                      setDeleteGroup(item.groupId)
                     }}
                 >
                   {item.groupName}({item.clientCount})
@@ -373,7 +381,7 @@ function GroupManageList() {
           </GroupContentBox>
           <ButtonBox>
             <GroupButton onClick={clickGroupCreateModal}>그룹 추가</GroupButton>
-            <GroupButton>그룹 삭제</GroupButton>
+            <GroupButton onClick={clickGroupDelete}>그룹 삭제</GroupButton>
           </ButtonBox>
         </GroupContainer>
         {/* 여기부터는 클라이언트 리스트 공간 */}
@@ -514,11 +522,7 @@ function GroupManageList() {
                   </GroupButton>
                 )} */}
                 <ClientButton
-                  onClick={() =>
-                    alert(
-                      '선택된 그룹안에서 누른 버튼이고, 이 모달에서는 고객리스트뜨게하기?'
-                    )
-                  }
+                  onClick={() => navigate('/uploadpage')}
                 >
                   고객 등록
                 </ClientButton>

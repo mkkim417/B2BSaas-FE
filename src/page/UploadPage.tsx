@@ -278,6 +278,7 @@ function UploadPage() {
   //   },
   //   [mutation]
   // );
+  console.log('clientIdData : ', clientIdData);
   const groupSaveFetch = async (groupId: string) => {
     // if (descName === '') {
     //   alert('그룹설명을 해주세요');
@@ -309,7 +310,7 @@ function UploadPage() {
           .post(
             `https://dev.sendingo-be.store/api/batch/groups/${groupId}`,
             {
-              clientIds: clientIdData,
+              clientIds: [...clientIdData],
             },
             {
               headers: {

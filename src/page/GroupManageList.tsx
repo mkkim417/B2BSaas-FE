@@ -66,7 +66,6 @@ function GroupManageList() {
         return id;
       });
       setGroupName(name);
-      console.log(groupId);
       // setIsGroupAllClients(response.data.data.length)
       groupList.map((item: any) => {
         if (item.groupId === id) {
@@ -366,7 +365,6 @@ function GroupManageList() {
       });
     alert('삭제 완료!');
   };
-
   return (
     <Container>
       <HeaderContainer>그룹관리</HeaderContainer>
@@ -407,7 +405,7 @@ function GroupManageList() {
               <GroupButton
               // onClick={kakaoAlertSend}
               >
-                <Link to={'/alarmtalk'}>알림톡전송</Link>
+                <Link to={`/alarmtalk/${groupId}`}>알림톡전송</Link>
               </GroupButton>
             )}
           </ClientHeaderBox>

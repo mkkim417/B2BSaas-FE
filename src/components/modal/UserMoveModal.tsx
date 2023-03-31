@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { getCookie } from '../../util/cookie';
 
 type Props = {
   group?: any;
@@ -8,7 +9,7 @@ type Props = {
   closeModal: () => void;
 };
 function UserMoveModal({ group, content, closeModal }: Props) {
-  const token = localStorage.getItem('Token');
+  const token = getCookie('userToken')
   // Select 그룹이름 담는 변수
   const groupArr = [] as any;
   // Select 선택값 변수 = newGroupId

@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React from 'react';
+import { useMutation } from 'react-query';
 import styled from 'styled-components';
+import { deleteClientData } from '../../axios/api';
 
 type Props = {
   title?: string;
@@ -8,31 +10,43 @@ type Props = {
   closeModal: () => void;
 };
 function UserDeleteModal({ title, checkValue, closeModal }: Props) {
-  const token = localStorage.getItem('Token');
+
+  // mutate 선언
+  const { mutate } = useMutation(deleteClientData, {
+    onSuccess : (response) => {
+      console.log(response);
+      alert('삭제가 완료되었습니다');
+      closeModal();
+    },
+    onError: (error) => {
+      console.log(error);
+      alert('삭제를 실패하였습니다.');
+    }
+  })
   const deleteDataHandler = (e: any) => {
     e.preventDefault();
     // 확인 눌렀을 때
-    // const urls = content.map((item : any) => `${item.clientId}`)
-    const urls = checkValue.map(
-      (item: any) =>
-        `${process.env.REACT_APP_SERVER_URL}/api/clients/${item.clientId}`
-    );
-    console.log(urls);
-    axios
-      .all(
-        urls.map((url: any) =>
-          axios.delete(url, { headers: { authorization: `Bearer ${token}` } })
-        )
-      )
-      .then((response) => {
-        console.log(response);
-        alert('삭제가 완료되었습니다');
-        closeModal();
-      })
-      .catch((error) => {
-        console.log(error.response);
-        alert('삭제를 실패하였습니다.');
-      });
+    mutate(checkValue)
+    // const urls = checkValue.map(
+    //   (item: any) =>
+    //     `${process.env.REACT_APP_SERVER_URL}/api/clients/${item.clientId}`
+    // );
+    // console.log(urls);
+    // axios
+    //   .all(
+    //     urls.map((url: any) =>
+    //       axios.delete(url, { headers: { authorization: `Bearer ${token}` } })
+    //     )
+    //   )
+    //   .then((response) => {
+    //     console.log(response);
+    //     alert('삭제가 완료되었습니다');
+    //     closeModal();
+    //   })
+    //   .catch((error) => {
+    //     console.log(error.response);
+    //     alert('삭제를 실패하였습니다.');
+    //   });
   };
   return (
     <ModalWrap>

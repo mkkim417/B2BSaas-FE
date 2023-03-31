@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import { useSelector } from 'react-redux';
@@ -14,6 +14,8 @@ import UserMoveModal from '../components/modal/UserMoveModal';
 import { PaginationBox } from '../components/NotUsedPages/UserList';
 import { getTokens } from '../cookies/cookies';
 import { Link } from 'react-router-dom';
+import { useMutation, useQuery } from 'react-query';
+import { deleteGroupData, getAllClientList, getAllGroupList } from '../axios/api';
 
 function GroupManageList() {
   // hook 변수 모음들
@@ -27,6 +29,7 @@ function GroupManageList() {
     그룹리스트 관련 코드
   ************************************************************************************ */
 
+
   // 그룹리스트 담는 변수
   const [groupList, setGroupList] = useState([] as any);
   // 그룹리스트 onClick 아이디 변수
@@ -39,11 +42,23 @@ function GroupManageList() {
       `${process.env.REACT_APP_SERVER_URL}/api/groups`,
       { headers: { authorization: `Bearer ${token}` } }
     );
-    // console.log('GroupList API', response.data.data);
     console.log('GroupList API 렌더링', response);
     setGroupList(response.data.data);
   }, []);
 
+  // 그룹리스트 useEffect
+  useEffect(() => {
+    getGroupData();
+    allUserRef.current?.focus();
+  }, [getGroupData]);
+
+  const { data : groupData } = useQuery<any, AxiosError>(['getAllGroupList'], 
+    () => getAllGroupList(), {
+      onSuccess: (response) => {
+        console.log(response)
+      }
+    }) 
+  // console.log('useQuery는 잘 되고 있는가', groupData?.data.map((item:any) => item.groupName))
   // 그룹리스트 내 클라이언트 변수
   const [groupClient, setGroupClient] = useState([] as any);
 
@@ -92,6 +107,10 @@ function GroupManageList() {
   const [indexOfFirstPost, setIndexOfFirstPost] = useState(0); // 현재 페이지의 첫번째 아이템 인덱스
   const [currentPosts, setCurrentPosts] = useState(0); // 현재 페이지에서 보여지는 아이템들
   // const userData = userList.slice(indexOfFirstPost, indexOfLastPost)
+
+  // 전체고객리스트 숫자
+  const [isAllclients, setAllclients] = useState<any>(0);
+
   const setPage1 = (page: any) => {
     console.log('page1', page);
     setCurrentPage(page);
@@ -177,8 +196,45 @@ function GroupManageList() {
     );
     console.log('UserList API', token);
     setUserList(response.data.data.clients);
-    setAllclients(response.data.data.clientCount);
+    // setAllclients(response.data.data.clientCount);
   }, []);
+  const { data : userData } = useQuery<any, AxiosError>(['getAllClientList', currentPage],
+    () => getAllClientList(currentPage), {
+      onSuccess: (response) => {
+        console.log(response)
+        setAllclients(userData?.data.clientCount)
+      }
+    })
+    // console.log('여기에요!userdata', userData?.data.clientCount)
+
+  // 유저리스트 useEffect
+  useEffect(() => {
+    if (isClientState === true) {
+      // getUserData(currentPage);
+      setAllclients(userData?.data.clientCount)
+    } else {
+      getClientInGroup(groupId, groupName, currentPage);
+      // setCurrentPage1(1)
+    }
+
+    // setCount(userList.length);
+    // setIndexOfLastPost(currentPage * postPerPage);
+    // setIndexOfFirstPost(indexOfLastPost - postPerPage);
+    // if (isClientState === true) {
+    //   setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
+    // } else {
+    //   setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
+    // }
+  }, [
+    userData,
+    isAllclients,
+    currentPage,
+    // indexOfLastPost,
+    // indexOfFirstPost,
+    // postPerPage,
+    getUserData,
+    getClientInGroup,
+  ]);
 
   // 유저 수정 state
   const [editUser, setEditUser] = useState({
@@ -190,8 +246,6 @@ function GroupManageList() {
 
   // 처음 렌더링시 전체고객리스트로 focus
   const allUserRef = useRef<HTMLButtonElement>(null);
-  // 전체고객리스트 숫자
-  const [isAllclients, setAllclients] = useState<any>(0);
   // 그룹 내 클라이언트 숫자
   const [isGroupAllClients, setIsGroupAllClients] = useState<any>(0);
   // 체크박스 관련 state
@@ -319,52 +373,29 @@ function GroupManageList() {
     }
   };
 
-  // 그룹리스트 useEffect
-  useEffect(() => {
-    getGroupData();
-    allUserRef.current?.focus();
-  }, [getGroupData]);
-
-  // 유저리스트 useEffect
-
-  useEffect(() => {
-    if (isClientState === true) {
-      getUserData(currentPage);
-    } else {
-      getClientInGroup(groupId, groupName, currentPage);
-      // setCurrentPage1(1)
-    }
-
-    // setCount(userList.length);
-    // setIndexOfLastPost(currentPage * postPerPage);
-    // setIndexOfFirstPost(indexOfLastPost - postPerPage);
-    // if (isClientState === true) {
-    //   setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
-    // } else {
-    //   setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
-    // }
-  }, [
-    currentPage,
-    // indexOfLastPost,
-    // indexOfFirstPost,
-    // postPerPage,
-    getUserData,
-    getClientInGroup,
-  ]);
   // 그룹리스트 내 클라이언트 useEffect
   // useEffect(() => {
   //   getClientInGroup(groupId, groupName, currentPage)
   // }, [])
 
   const [deleteGroup, setDeleteGroup] = useState([]);
+  const { mutate : deleteGroupMutate } = useMutation(deleteGroupData, {
+    onSuccess : (response) => {
+      console.log(response);
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  })
   const clickGroupDelete = async () => {
-    await axios
-      .delete(`${process.env.REACT_APP_SERVER_URL}/api/groups/${deleteGroup}`, {
-        headers: { authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        console.log(res);
-      });
+    // await axios
+    //   .delete(`${process.env.REACT_APP_SERVER_URL}/api/groups/${deleteGroup}`, {
+    //     headers: { authorization: `Bearer ${token}` },
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //   });
+    deleteGroupMutate(deleteGroup)
     alert('삭제 완료!');
   };
   return (
@@ -377,7 +408,7 @@ function GroupManageList() {
             <GroupContentItem onClick={() => getUserData(1)} ref={allUserRef}>
               전체 고객리스트({isAllclients})
             </GroupContentItem>
-            {groupList?.map((item: any) => {
+            {groupData?.data.map((item: any) => {
               return (
                 <GroupContentItem
                   key={item.groupId}
@@ -423,9 +454,8 @@ function GroupManageList() {
           <ClientContentBox>
             {isClientState ? (
               // userList.slice(indexOfFirstPost, indexOfLastPost) &&
-              userList.length > 0 ? (
-                userList
-                  // .slice(indexOfFirstPost, indexOfLastPost)
+              userData?.data.clients.length > 0 ? (
+                userData?.data.clients
                   .map((item: any) => {
                     return (
                       <CardHeader key={item.clientId}>

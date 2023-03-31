@@ -1,13 +1,15 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { useMutation } from 'react-query';
 import styled from 'styled-components';
+import { eidtClientData } from '../../axios/api';
 
 type Props = {
   clientId?: any;
   clientName?: string;
   clientContact?: any;
   clientEmail?: string;
-  closeModal?: () => void;
+  closeModal: () => void;
 };
 const UserEditModal = ({
   clientId,
@@ -32,6 +34,19 @@ const UserEditModal = ({
       [name]: value,
     });
   };
+  // mutate 선언
+  const { mutate } = useMutation(eidtClientData, {
+    onSuccess : (response) => {
+      console.log(response);
+      alert('저장 성공!');
+      closeModal();
+      window.location.reload();
+    },
+    onError: (error) => {
+      console.log(error);
+      alert('저장 실패!');
+    }
+  })
 
   // submit button handler
   const submitHandler = async (e: any, closeModal: any) => {
@@ -50,18 +65,12 @@ const UserEditModal = ({
       )
     ) {
       // 빈칸 없으면 수정 patch
-      axios.patch(
-        `https://dev.sendingo-be.store/api/clients/${clientId}`,
-        {
-          clientName: data.clientName,
-          contact: _contact,
-          clientEmail: data.clientEmail,
-        },
-        { headers: { authorization: `Bearer ${token}` } }
-      );
-      alert('저장 성공!');
-      closeModal();
-      window.location.reload();
+      mutate({
+        clientId: clientId,
+        clientName: data.clientName,
+        contact: _contact,
+        clientEmail: data.clientEmail,
+      })
     } else {
       alert('빈칸을 채워주세요!');
     }

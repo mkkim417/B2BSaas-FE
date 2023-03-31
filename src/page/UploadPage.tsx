@@ -321,6 +321,8 @@ function UploadPage() {
             console.log(res.data);
           });
       }
+      alert('그룹저장완료');
+      navigate('/groupmanageList');
     } catch (error) {
       console.log(error);
     }
@@ -491,17 +493,17 @@ function UploadPage() {
                       placeholder="새로운 그룹명"
                     />
                   </div>
+                  <div>
+                    <Input
+                      type="text"
+                      name="descName"
+                      value={descName}
+                      onChange={onChangeDescName}
+                      placeholder="그룹설명을 추가하세요"
+                    />
+                  </div>
                 </>
               ) : null}
-              <div>
-                <Input
-                  type="text"
-                  name="descName"
-                  value={descName}
-                  onChange={onChangeDescName}
-                  placeholder="그룹설명을 추가하세요"
-                />
-              </div>
               <BtnWrap>
                 <Button onClick={() => DummyDeleteFuction()}>취소</Button>
 

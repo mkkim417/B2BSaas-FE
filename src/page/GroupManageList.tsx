@@ -13,6 +13,7 @@ import UserInGroupDeleteModal from '../components/modal/UserInGroupDeleteModal';
 import UserMoveModal from '../components/modal/UserMoveModal';
 import { PaginationBox } from '../components/NotUsedPages/UserList';
 import { getTokens } from '../cookies/cookies';
+import { Link } from 'react-router-dom';
 
 function GroupManageList() {
   // hook 변수 모음들
@@ -390,7 +391,11 @@ function GroupManageList() {
             <TextArea defaultValue={groupName} />
             <NameBox>{checkedArr.length}</NameBox>
             {isClientState ? null : (
-              <GroupButton onClick={kakaoAlertSend}>알림톡전송</GroupButton>
+              <GroupButton
+              // onClick={kakaoAlertSend}
+              >
+                <Link to={'/alarmtalk'}>알림톡전송</Link>
+              </GroupButton>
             )}
           </ClientHeaderBox>
           <ClientContentHeader>
@@ -458,7 +463,7 @@ function GroupManageList() {
                           onChange={(e: any) => checkUserHandler(e, item)}
                         />
                       </Percentage>
-                      <Percentage width="23%">소속 그룹명</Percentage>
+                      <Percentage width="23%">{item.groupName}</Percentage>
                       <Percentage width="12%">{item.clientName}</Percentage>
                       <Percentage width="22%">{item.contact}</Percentage>
                       <Percentage width="37%">{item.clientEmail}</Percentage>

@@ -27,7 +27,7 @@ function KakaoResultList() {
 
   const [isGroupList, setGroupList] = useState([]);
   const [isGroupClient, setGroupClient] = useState([]);
-  const [currentValue, setCurrentValue] = useState(null);
+  const [currentValue, setCurrentValue] = useState();
   //그룹리스트
   const token = getCookie('userToken');
   const getGroupData = useCallback(async () => {
@@ -35,8 +35,8 @@ function KakaoResultList() {
       `${process.env.REACT_APP_SERVER_URL}/api/groups`,
       { headers: { authorization: `Bearer ${token}` } }
     );
-    console.log('GroupList API', response.data.data);
     setGroupList(response.data.data);
+    setCurrentValue(response.data.data[0]['groupId']);
   }, []);
   //발송조회리스트
   const kakaoResultListFetch = useCallback(
@@ -95,6 +95,14 @@ function KakaoResultList() {
   }, [getGroupData]);
 
   useEffect(() => {
+    // if (currentValue === undefined) {
+    //   // kakaoResultListFetch(
+    //   //   isGroupList[0]['groupId'],
+    //   //   formatDate(value[0]),
+    //   //   formatDate(value[1])
+    //   // );
+    //   //console.log(isGroupList && isGroupList[0]['groupId']);
+    // }
     if (currentValue !== null) {
       if (value[0] !== null) {
         kakaoResultListFetch(

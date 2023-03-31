@@ -8,6 +8,7 @@ type Props = {
   closeModal: () => void;
 };
 function UserDeleteModal({ title, checkValue, closeModal }: Props) {
+  const token = localStorage.getItem('Token');
   const deleteDataHandler = (e: any) => {
     e.preventDefault();
     // 확인 눌렀을 때
@@ -18,7 +19,11 @@ function UserDeleteModal({ title, checkValue, closeModal }: Props) {
     );
     console.log(urls);
     axios
-      .all(urls.map((url: any) => axios.delete(url)))
+      .all(
+        urls.map((url: any) =>
+          axios.delete(url, { headers: { authorization: `Bearer ${token}` } })
+        )
+      )
       .then((response) => {
         console.log(response);
         alert('삭제가 완료되었습니다');

@@ -16,6 +16,7 @@ import SelectBoxs from '../components/SelectBoxs';
 import useInput from '../hook/useInput';
 import { postLogin } from '../axios/api';
 import { useMutation } from 'react-query';
+import { getTokens } from '../cookies/cookies';
 // import { clentBulkFetch } from '../axios/groupSave';
 function UploadPage() {
   const [isData, setData] = useState<any>();
@@ -31,6 +32,7 @@ function UploadPage() {
   const [groupName, onChangeGroupName] = useInput();
   const [descName, onChangeDescName] = useInput();
   const [isClUpload, setClUpload] = useState(false);
+  const [isGroupIdObj, setGroupIdObj] = useState('');
   const nextRef = useRef<HTMLButtonElement>(null);
   const InputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
@@ -210,7 +212,15 @@ function UploadPage() {
     console.log(data);
     try {
       const response = await axios
-        .post(`https://dev.sendingo-be.store/api/clients/bulk`, { data })
+        .post(
+          `https://dev.sendingo-be.store/api/clients/bulk`,
+          { data },
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        )
         .then((res) => {
           console.log('api/clients/bulk : ', res.data);
           dispatch(clientsIdCreate(res?.data?.newClients));
@@ -222,11 +232,18 @@ function UploadPage() {
     }
   };
   //그룹리스트
+  const { userToken } = getTokens();
   const getGroupData = useCallback(async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/groups`
+      `${process.env.REACT_APP_SERVER_URL}/api/groups`,
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
     );
     setGroupList(response.data.data);
+    console.log(response.data.data);
   }, []);
 
   //그룹저장
@@ -239,7 +256,6 @@ function UploadPage() {
       alert('로그인 실패.');
     },
   });
-  console.log('mutation: ', mutation);
   const ClientBulkFetch = useCallback(
     async (isData: any) => {
       await mutation.mutateAsync(isData);
@@ -262,38 +278,72 @@ function UploadPage() {
   //   },
   //   [mutation]
   // );
-  const groupSaveFetch = async () => {
-    if (descName === '') {
-      alert('그룹설명을 해주세요');
-      return;
-    }
+  console.log('clientIdData : ', clientIdData);
+  const groupSaveFetch = async (groupId: string) => {
+    // if (descName === '') {
+    //   alert('그룹설명을 해주세요');
+    //   return;
+    // }
     try {
-      const response = await axios
-        .post(`https://dev.sendingo-be.store/api/batch/groups`, {
-          clientIds: clientIdData,
-          groupName,
-          groupDescription: descName,
-        })
-        .then((res) => {
-          console.log(res.data);
-        });
+      if (isNewGroupInput) {
+        //신규그룹
+        const response = await axios
+          .post(
+            `https://dev.sendingo-be.store/api/batch/groups`,
+            {
+              clientIds: clientIdData,
+              groupName,
+              groupDescription: descName,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${userToken}`,
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res.data);
+          });
+      } else {
+        //기존그룹
+        const response = await axios
+          .post(
+            `https://dev.sendingo-be.store/api/batch/groups/${groupId}`,
+            {
+              clientIds: [...clientIdData],
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${userToken}`,
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res.data);
+          });
+      }
+      alert('그룹저장완료');
+      navigate('/groupmanageList');
     } catch (error) {
       console.log(error);
     }
   };
   //selectBox 소통함수
-  const messagePreviewFunc = useCallback((text: string, target: string) => {
-    if (text === '+ 새로운그룹추가') {
-      setNewGroupInput(true);
-      setTimeout(() => {
-        console.log('!!');
-        InputRef.current?.focus();
-      }, 500);
-    } else {
-      setNewGroupInput(false);
-    }
-    return;
-  }, []);
+  const messagePreviewFunc = useCallback(
+    (text: string, target: string, isGroupId: any) => {
+      setGroupIdObj(isGroupId);
+      if (text === '+ 새로운그룹추가') {
+        setNewGroupInput(true);
+        setTimeout(() => {
+          InputRef.current?.focus();
+        }, 500);
+      } else {
+        setNewGroupInput(false);
+      }
+      return;
+    },
+    []
+  );
   useEffect(() => {
     getGroupData();
   }, [getGroupData]);
@@ -417,6 +467,11 @@ function UploadPage() {
               </span>
               <SelectBoxs
                 placeholder={'---그룹선택---'}
+                className={[
+                  '0',
+                  '1',
+                  ...isGroupList.map((el: any) => el.groupId),
+                ]}
                 currentCategoryValue={currentValue}
                 propFunction={messagePreviewFunc}
                 optionData={
@@ -460,7 +515,7 @@ function UploadPage() {
                     //   groupName,
                     //   descName
                     // );
-                    groupSaveFetch();
+                    groupSaveFetch(isGroupIdObj);
                   }}
                 >
                   그룹저장

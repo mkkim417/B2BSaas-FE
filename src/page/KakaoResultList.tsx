@@ -9,6 +9,7 @@ import { DatePicker } from '@mantine/dates';
 import Callander from '../asset/svg/Callander';
 import useDetectClose from '../hook/useDetectClose';
 import { Link } from 'react-router-dom';
+import { getTokens } from '../cookies/cookies';
 function KakaoResultList() {
   //페이지네이션
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
@@ -28,9 +29,11 @@ function KakaoResultList() {
   const [isGroupClient, setGroupClient] = useState([]);
   const [currentValue, setCurrentValue] = useState(null);
   //그룹리스트
+  const { userToken: token } = getTokens();
   const getGroupData = useCallback(async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/groups`
+      `${process.env.REACT_APP_SERVER_URL}/api/groups`,
+      { headers: { authorization: `Bearer ${token}` } }
     );
     console.log('GroupList API', response.data.data);
     setGroupList(response.data.data);
@@ -38,6 +41,7 @@ function KakaoResultList() {
   //발송조회리스트
   const kakaoResultListFetch = useCallback(
     async (groupId?: any, startDay?: string, endData?: string) => {
+      console.log(groupId);
       ///api/talk/results/list?groupId={groupId}&startdate={YYYYMMDD:string}&enddate={YYYYMMDD:string}
       const skip = postPerPage * (currentPage - 1);
       if (startDay === undefined) {

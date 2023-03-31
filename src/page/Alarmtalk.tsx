@@ -48,6 +48,36 @@ function Alarmtalk() {
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
   };
+  const kakaoSendData = useSelector((state: any) => {
+    return state.kakaoSendData.kakaoSendData[0];
+    //talkContentId,clientId,talkTemplateId
+  });
+  //카카오발송
+  // const kakaoAlertSend = async () => {
+  //   alert('카카오알람톡 전송준비중');
+  //   console.log('kakaoSendData : ', kakaoSendData);
+  //   let data = [] as any;
+  //   kakaoSendData.map((el: any) =>
+  //     data.push({
+  //       talkContentId: el.talkContentId,
+  //       clientId: el.clientId,
+  //       talkTemplateId: el.talkTemplateId,
+  //       groupId: kakaoGroupIdData,
+  //     })
+  //   );
+  //   console.log('kakaoGroupIdData data', data);
+  //   try {
+  //     const response = await axios
+  //       .post(`${process.env.REACT_APP_SERVER_URL}/api/talk/sends`, { data })
+  //       .then((res) => {
+  //         console.log('kakaoAlertSend : ', res.data);
+  //       });
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert('다시 시도해주시기 바랍니다.');
+  //   }
+  // };
   const refactoringFunc = (TM_CODE: any) => {
     console.log(isAllData); //
     console.log('TM_CODE : ', TM_CODE); //현재성택된 템플릿명
@@ -145,7 +175,7 @@ function Alarmtalk() {
     }
   };
   const messagePreviewFunc = useCallback(
-    (text: string, target: string) => {
+    (text: string, target: string, groupId: string) => {
       const obj_n = document.getElementById(`${target}`)?.innerHTML;
       setTarget(text);
       const targetData = document.getElementById(`${obj_n}`)?.innerHTML;

@@ -17,7 +17,7 @@ const UserEditModal = ({
   closeModal,
 }: Props) => {
   // input 추가를 위한 변수들
-
+  const token = localStorage.getItem('Token')
   const initialData = {
     clientName: clientName,
     contact: clientContact,
@@ -54,7 +54,7 @@ const UserEditModal = ({
         clientName: data.clientName,
         contact: _contact,
         clientEmail: data.clientEmail,
-      });
+      }, { headers : { authorization: `Bearer ${token}`}});
       alert('저장 성공!');
       closeModal();
       window.location.reload();

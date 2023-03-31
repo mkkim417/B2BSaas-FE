@@ -8,6 +8,8 @@ type Props = {
   closeModal: () => void;
 };
 function UserCopyModal({ group, content, closeModal }: Props) {
+
+  const token = localStorage.getItem('Token')
   // Select 그룹이름 담는 변수
   const groupArr = [] as any;
   // Select 선택값 변수 = newGroupId
@@ -30,7 +32,8 @@ function UserCopyModal({ group, content, closeModal }: Props) {
     const existGroupId = content[0].groupId;
     const urls = content.map(
       (item: any) =>
-        `${process.env.REACT_APP_SERVER_URL}/api/batch/clients/${item.clientId}/groups/${existGroupId}/copy/${selectedGroupId}`
+        `${process.env.REACT_APP_SERVER_URL}/api/batch/clients/${item.clientId}/groups/${existGroupId}/copy/${selectedGroupId}`,
+        { headers : { authorization: `Bearer ${token}`}}
     );
     if (selectedGroupId === '') {
       alert('복사할 그룹을 선택해주세요.');

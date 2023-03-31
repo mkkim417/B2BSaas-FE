@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import SelectBoxs from '../components/SelectBoxs';
 import { ALAERMTALK_TEMPLATE } from '../constants/alarmtalk';
@@ -12,9 +12,11 @@ import AutoModal, {
 } from '../components/Automodal';
 import axios from 'axios';
 import { motion } from 'framer-motion';
+import { getTokens } from '../cookies/cookies';
 function Alarmtalk() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const params = useParams();
   const sendKeyData = useSelector((state: any) => {
     return state.sendKey.sendKey;
   });
@@ -53,31 +55,55 @@ function Alarmtalk() {
     //talkContentId,clientId,talkTemplateId
   });
   //카카오발송
-  // const kakaoAlertSend = async () => {
-  //   alert('카카오알람톡 전송준비중');
-  //   console.log('kakaoSendData : ', kakaoSendData);
-  //   let data = [] as any;
-  //   kakaoSendData.map((el: any) =>
-  //     data.push({
-  //       talkContentId: el.talkContentId,
-  //       clientId: el.clientId,
-  //       talkTemplateId: el.talkTemplateId,
-  //       groupId: kakaoGroupIdData,
-  //     })
-  //   );
-  //   console.log('kakaoGroupIdData data', data);
-  //   try {
-  //     const response = await axios
-  //       .post(`${process.env.REACT_APP_SERVER_URL}/api/talk/sends`, { data })
-  //       .then((res) => {
-  //         console.log('kakaoAlertSend : ', res.data);
-  //       });
-  //     console.log(response);
-  //   } catch (error) {
-  //     console.log(error);
-  //     alert('다시 시도해주시기 바랍니다.');
-  //   }
-  // };
+  const kakaoAlertSend = async () => {
+    alert('카카오알람톡 전송준비중');
+    console.log('kakaoSendData : ', kakaoSendData);
+    let data = [] as any;
+    kakaoSendData.map((el: any) =>
+      data.push({
+        talkContentId: el.talkContentId,
+        clientId: el.clientId,
+        talkTemplateId: el.talkTemplateId,
+        // groupId: kakaoGroupIdData,
+      })
+    );
+    console.log('kakaoGroupIdData data', data);
+    try {
+      const response = await axios
+        .post(`${process.env.REACT_APP_SERVER_URL}/api/talk/sends`, { data })
+        .then((res) => {
+          console.log('kakaoAlertSend : ', res.data);
+        });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      alert('다시 시도해주시기 바랍니다.');
+    }
+  };
+  //전송내용불러오기 다시해야
+  const { userToken } = getTokens();
+  const getKakaoExcelData = async () => {
+    try {
+      const response = await axios
+        .post(
+          `${process.env.REACT_APP_SERVER_URL}/api/talk/sends`,
+          // { data },
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log('kakaoAlertSend : ', res.data);
+        });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      alert('다시 시도해주시기 바랍니다.');
+    }
+  };
+
   const refactoringFunc = (TM_CODE: any) => {
     console.log(isAllData); //
     console.log('TM_CODE : ', TM_CODE); //현재성택된 템플릿명
@@ -113,6 +139,7 @@ function Alarmtalk() {
     } else if (TM_CODE === 'TM_2220') {
       sendListData[0]?.map((el: any, idx: number) => {
         data.push({
+          groupId: Number(params.id),
           clientId: clientIdData[0][idx],
           customerName: el[labelArr[0]],
           templateCode: TM_CODE,
@@ -121,6 +148,7 @@ function Alarmtalk() {
     } else if (TM_CODE === 'TM_2217') {
       sendListData[0]?.map((el: any, idx: number) => {
         data.push({
+          groupId: Number(params.id),
           clientId: clientIdData[0][idx],
           organizationName: el[labelArr[0]],
           orderNumber: el[labelArr[1]],
@@ -134,6 +162,7 @@ function Alarmtalk() {
     } else if (TM_CODE === 'TM_2216') {
       sendListData[0]?.map((el: any, idx: number) => {
         data.push({
+          groupId: Number(params.id),
           clientId: clientIdData[0][idx],
           customerName: el[labelArr[0]],
           deliveryCompany: el[labelArr[1]],
@@ -145,6 +174,7 @@ function Alarmtalk() {
     } else if (TM_CODE === 'TM_2048') {
       sendListData[0]?.map((el: any, idx: number) => {
         data.push({
+          groupId: Number(params.id),
           clientId: clientIdData[0][idx],
           organizationName: el[labelArr[0]],
           orderNumber: el[labelArr[1]],
@@ -160,10 +190,20 @@ function Alarmtalk() {
   };
 
   const kakaoSaveFetch = async () => {
+    console.log('isAllData.tmpCode : ', isAllData.tmpCode);
     let data = refactoringFunc(isAllData.tmpCode);
+    console.log(data);
     try {
       const response = await axios
-        .post(`https://dev.sendingo-be.store/api/talk/contents`, { data })
+        .post(
+          `${process.env.REACT_APP_SERVER_URL}/api/talk/both/contents/send`,
+          { data },
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        )
         .then((res) => {
           console.log(res.data);
           dispatch(kakaoSendDataCreate(res.data.data));
@@ -257,11 +297,11 @@ function Alarmtalk() {
             <Button onClick={() => navigate(-1)}>취소</Button>
             <Button
               onClick={() => {
-                setAutoModal((prev) => !prev);
+                //setAutoModal((prev) => !prev);
                 kakaoSaveFetch();
               }}
             >
-              다음
+              전송
             </Button>
           </ButtonWrap>
         </RightContents>

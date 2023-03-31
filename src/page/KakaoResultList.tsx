@@ -47,7 +47,8 @@ function KakaoResultList() {
       if (startDay === undefined) {
         const response = await axios
           .get(
-            `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}`
+            `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}`,
+            { headers: { authorization: `Bearer ${token}` } }
           )
           .then((res) => {
             setGroupClient(res.data.data.list);
@@ -56,7 +57,8 @@ function KakaoResultList() {
       } else {
         const response = await axios
           .get(
-            `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}&startdate=${startDay}&enddate=${endData}`
+            `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}&startdate=${startDay}&enddate=${endData}`,
+            { headers: { authorization: `Bearer ${token}` } }
           )
           .then((res) => {
             setGroupClient(res.data.data.list);

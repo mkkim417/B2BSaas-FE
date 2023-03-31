@@ -50,18 +50,20 @@ function GroupManageList() {
   // 그룹 클릭시 그룹 내 클라이언트리스트 호출
   const getClientInGroup = useCallback(
     async (id: any, name: any, page: any) => {
-      console.log('getClientInGroup 호출');
       setCheckedArr([]);
       setIsClientState(false);
-      console.log('IsClientState', isClientState);
-      const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}&index=${page}`,
-        { headers: { authorization: `Bearer ${token}` } }
-      );
+      const response = await axios
+        .get(
+          `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}&index=${page}`,
+          { headers: { authorization: `Bearer ${token}` } }
+        )
+        .then((res) => {
+          setGroupClient(res.data.data);
+        });
       //** 트러블 슈팅 함수형 업데이트로 변경.. 두번 클릭해야 불러오는 상황 발생
-      setGroupClient(() => {
-        return response.data.data;
-      });
+      // setGroupClient(() => {
+      //   return response.data.data;
+      // });
       setGroupId((prev) => {
         return id;
       });
@@ -324,12 +326,13 @@ function GroupManageList() {
   }, [getGroupData]);
 
   // 유저리스트 useEffect
+
   useEffect(() => {
     if (isClientState === true) {
       getUserData(currentPage);
     } else {
-      // setCurrentPage1(1)
       getClientInGroup(groupId, groupName, currentPage);
+      // setCurrentPage1(1)
     }
 
     // setCount(userList.length);
@@ -342,7 +345,6 @@ function GroupManageList() {
     // }
   }, [
     currentPage,
-    isClientState,
     // indexOfLastPost,
     // indexOfFirstPost,
     // postPerPage,

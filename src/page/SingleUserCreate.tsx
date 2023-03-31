@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useMutation } from 'react-query';
 import styled from 'styled-components';
+import { postSingleClient } from '../axios/api';
 import ClientHeader from '../components/ClientHeader';
 import AlertModal from '../components/modal/AlertModal';
 
 function SingleUserCreate() {
-  const token = localStorage.getItem('Token');
   // Modal 변수들
 
   // 성공 모달
@@ -45,6 +46,16 @@ function SingleUserCreate() {
     });
   };
 
+  // mutate 선언
+  const { mutate } = useMutation(postSingleClient, {
+    onSuccess : (response) => {
+      console.log(response);
+      clickSuccessModal();
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  });
   // submit 핸들러
   const submitHandler = async (e: any) => {
     e.preventDefault();
@@ -61,17 +72,11 @@ function SingleUserCreate() {
       )
     ) {
       //  이름, 이메일, 연락처 빈칸 없으면 등록
-      axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/api/clients`,
-        {
-          clientName: inputData.clientName,
-          clientEmail: inputData.clientEmail,
-          contact: _contact,
-        },
-        { headers: { authorization: `Bearer ${token}` } }
-      );
-      // 성공 모달
-      clickSuccessModal();
+      mutate({
+        clientName : inputData.clientName,
+        clientEmail : inputData.clientEmail,
+        contact : _contact
+        })
     } else {
       // 실패 모달
       clickOpenModal();

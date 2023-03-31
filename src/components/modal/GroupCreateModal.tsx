@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import Pagination from 'react-js-pagination';
+import { useMutation } from 'react-query';
 import styled from 'styled-components';
+import { postGroupData } from '../../axios/api';
 import { PaginationBox } from '../NotUsedPages/UserList';
 
 type Props = {
@@ -24,6 +26,15 @@ const GroupCreateModal = ({ closeModal }: Props) => {
       [name]: value,
     });
   };
+  
+  const { mutate } = useMutation(postGroupData, {
+    onSuccess : (response) => {
+      console.log(response);
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  })
 
   // submit button handler
   const submitHandler = async (e: any, closeModal: any) => {
@@ -31,9 +42,10 @@ const GroupCreateModal = ({ closeModal }: Props) => {
     // e.preventDefault();
     // alert('저장!')
     if (!(data.groupName === '' && data.groupDescription === '')) {
-      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/groups`, data, {
-        headers: { authorization: `Bearer ${token}` },
-      });
+      // axios.post(`${process.env.REACT_APP_SERVER_URL}/api/groups`, data, {
+      //   headers: { authorization: `Bearer ${token}` },
+      // });
+      mutate(data)
 
       alert('저장 성공!');
       closeModal();

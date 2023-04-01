@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import TopNav from '../page/TopNav';
-import { getUser } from '../util/localstorage';
 import Home from '../page/Home';
 import UploadPage from '../page/UploadPage';
 import NoticePersonalList from '../page/NoticePersonalList';
@@ -25,16 +24,27 @@ import GroupManageList from '../page/GroupManageList';
 import KakaoResultList from '../page/KakaoResultList';
 import KakaoDetailList from '../page/KakaoDetailList';
 import PricePoicy from '../page/PricePolicy';
+import { getCookie } from '../util/cookie';
+import PrivateRoute from '../util/PrivateRoute';
 
 const Router = () => {
-  const userInfo = getUser();
+  const token = getCookie('userToken');
   return (
     <BrowserRouter>
       {/* <TopNav /> */}
       <AnimatePresence>
         <Routes>
           <Route path="/" element={<TopNav />}>
-            <Route path="/uploadpage" element={<UploadPage />} />
+            <Route
+              path="/uploadpage"
+              element={
+                <PrivateRoute
+                  component={<UploadPage />}
+                  authenticated={token}
+                />
+              }
+            />
+            {/* <Route path="/uploadpage" element={<UploadPage />} /> */}
             <Route
               path="/noticepersonallist"
               element={<NoticePersonalList />}

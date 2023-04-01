@@ -112,45 +112,6 @@ const Trial = styled.li`
   box-shadow: 0 2px 4px 0 #c8d7ee;
 `;
 
-const Standard = styled.li`
-  list-style: none;
-  width: 100%;
-  height: 100%;
-  border: 5px solid #ccc;
-  padding: 15px;
-  display: flex;
-  align-items: left;
-  justify-content: center;
-  flex-direction: column;
-  box-shadow: 0 2px 4px 0 #c8d7ee;
-`;
-
-const Medium = styled.li`
-  list-style: none;
-  width: 100%;
-  height: 100%;
-  border: 5px solid #ccc;
-  padding: 15px;
-  display: flex;
-  align-items: left;
-  justify-content: center;
-  flex-direction: column;
-  box-shadow: 0 2px 4px 0 #c8d7ee;
-`;
-
-const Highest = styled.li`
-  list-style: none;
-  width: 100%;
-  height: 100%;
-  border: 5px solid #ccc;
-  padding: 15px;
-  display: flex;
-  align-items: left;
-  justify-content: center;
-  flex-direction: column;
-  box-shadow: 0 2px 4px 0 #c8d7ee;
-`;
-
 const Stbutton = styled.button`
   font-family: Whitney SSm A, Whitney SSm B, Helvetica Neue, Helvetica, Arial,
     sans-serif;
@@ -177,30 +138,6 @@ const Textdiv = styled.div`
   text-align: center;
   margin: 10px;
   background-color: #e0ffef;
-`;
-
-const Textdiv2 = styled.div`
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin: 10px;
-  background-color: #fff7e5;
-`;
-
-const Textdiv3 = styled.div`
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin: 10px;
-  background-color: #f5f8ff;
-`;
-
-const Textdiv4 = styled.div`
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin: 10px;
-  background-color: #ecedf0;
 `;
 
 const H1 = styled.h1`

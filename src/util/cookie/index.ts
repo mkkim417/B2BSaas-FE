@@ -20,3 +20,5 @@ export const handleLogout = () => {
 
   window.location.href = '/home';
 };
+
+export const isLoggedin = () => !!getCookie('userToken');

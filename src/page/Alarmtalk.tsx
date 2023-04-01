@@ -207,6 +207,7 @@ function Alarmtalk() {
         .then((res) => {
           console.log(res.data);
           dispatch(kakaoSendDataCreate(res.data.data));
+          navigate('/kakaoresultlist');
         });
       // navigate('/');
     } catch (error) {

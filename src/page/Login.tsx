@@ -36,7 +36,7 @@ function Login() {
       // const token = getCookie('userToken'); // 쿠키에서 토큰을 가져옴
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       //console.log(`accessToken=${token}; userToken=${getCookie('userToken')}`);
-      navigate('/');
+      navigate('/home');
     },
     onError: (error) => {
       console.error(error);

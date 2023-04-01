@@ -13,3 +13,10 @@ export const getCookie = (name: string) => {
 export const removeCookie = (name: string) => {
   return cookies.remove(name);
 };
+
+export const handleLogout = () => {
+  removeCookie('accessToken');
+  removeCookie('userToken');
+
+  window.location.href = '/home';
+};

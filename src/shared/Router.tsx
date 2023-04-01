@@ -34,7 +34,7 @@ const Router = () => {
       {/* <TopNav /> */}
       <AnimatePresence>
         <Routes>
-          <Route path="/" element={<TopNav />}>
+          <Route element={<TopNav />}>
             <Route
               path="/uploadpage"
               element={
@@ -44,7 +44,6 @@ const Router = () => {
                 />
               }
             />
-            {/* <Route path="/uploadpage" element={<UploadPage />} /> */}
             <Route
               path="/noticepersonallist"
               element={<NoticePersonalList />}
@@ -55,8 +54,21 @@ const Router = () => {
             {/* <Route path="/usergroupcreate" element={<UserGroupCreate />} /> */}
             {/* <Route path="/usergrouplist" element={<UserGroupList />} /> */}
             <Route path="/userlist" element={<UserList />} />
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/alarmtalk/:id" element={<Alarmtalk />} />
+            <Route
+              path="/statistics"
+              element={
+                <PrivateRoute
+                  component={<Statistics />}
+                  authenticated={token}
+                />
+              }
+            />
+            <Route
+              path="/alarmtalk/:id"
+              element={
+                <PrivateRoute component={<Alarmtalk />} authenticated={token} />
+              }
+            />
             <Route path="/signup" element={<Signup />} />
             <Route path="/email" element={<Email />} />
             <Route path="/login" element={<Login />} />
@@ -67,15 +79,36 @@ const Router = () => {
             <Route path="/singleusercreate" element={<SingleUserCreate />} />
             <Route
               path="/clientregistration"
-              element={<ClientRegistration />}
+              element={
+                <PrivateRoute
+                  component={<ClientRegistration />}
+                  authenticated={token}
+                />
+              }
             />
-            <Route path="/groupmanageList" element={<GroupManageList />} />
-            <Route path="/kakaoresultlist" element={<KakaoResultList />} />
+            <Route
+              path="/groupmanageList"
+              element={
+                <PrivateRoute
+                  component={<GroupManageList />}
+                  authenticated={token}
+                />
+              }
+            />
+            <Route
+              path="/kakaoresultlist"
+              element={
+                <PrivateRoute
+                  component={<KakaoResultList />}
+                  authenticated={token}
+                />
+              }
+            />
             <Route path="/pricepolicy" element={<PricePoicy />} />
             <Route path="/kakaodetaillist/:id" element={<KakaoDetailList />} />
           </Route>
           <Route
-            path="/home"
+            path="/"
             element={
               <>
                 <Header />

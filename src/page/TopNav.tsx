@@ -24,7 +24,7 @@ const TopNav = () => {
         <UserContatiner>
           <div style={{ marginBottom: '40px' }}>
             <Logo>
-              <Link to={'/home'}>Logo</Link>
+              <Link to={'/'}>Logo</Link>
             </Logo>
           </div>
           <UserWrap>
@@ -92,15 +92,6 @@ const TopNav = () => {
         />
         <Link to={'/uploadpage'}>
           <Accordion title="대량발송" />
-        </Link>
-        <Link to={'/statistics'}>
-          <Accordion title="Statistic" />
-        </Link>
-        <Link to={'/group'}>
-          <Accordion title="Group" />
-        </Link>
-        <Link to={'userdatacreate'}>
-          <Accordion title="Create" />
         </Link>
       </Wrapper>
       {<Outlet />}

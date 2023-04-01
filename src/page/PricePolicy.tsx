@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 function PricePolicy() {
   const onClickPayment = (price: number) => {
@@ -50,20 +48,13 @@ function PricePolicy() {
         <Ul>
           <Trial>
             <Textdiv>
-              <H1>무료 체험</H1>
-              <p>SendingGo의 서비스를 무료로 체험 해 보세요</p>
+              <H1>Free Trial</H1>
+              <Stp>SendingGo의 서비스를 무료로 체험 해 보세요</Stp>
             </Textdiv>
-            <div>
-              prcie: 0/month
-              {/* <FontAwesomeIcon
-                icon={faPaperPlane}
-                style={{ color: '#256be4' }}
-                display="flex"
-                justify-content="center"
-                align-items="center"
-                flex-direction="column"
-                size="2x"
-              /> */}
+
+            <IconDiv>
+              <Stp>prcie: 0/month</Stp>
+
               <Stbutton
                 type="button"
                 id="purchase-button"
@@ -74,50 +65,31 @@ function PricePolicy() {
               >
                 결제하기
               </Stbutton>
-            </div>
-            <p>✔ 무료 체험 기간: 1개월</p>
-            <p>✔ 템플릿 제공</p>
-            <p>✔ 이메일 전송 관련 인사이트</p>
+            </IconDiv>
+            <Stp>✔ 팀원 1명 권한 부여 가능</Stp>
           </Trial>
-          <Standard>
-            prcie (1month) 30000
-            <Stbutton
-              type="button"
-              id="purchase-button"
-              className="mt30"
-              onClick={() => {
-                onClickPayment(30000);
-              }}
-            >
-              결제하기
-            </Stbutton>
-          </Standard>
-          <Medium>
-            prcie (1month) 1000
-            <Stbutton
-              type="button"
-              id="purchase-button"
-              className="mt30"
-              onClick={() => {
-                onClickPayment(80000);
-              }}
-            >
-              결제하기
-            </Stbutton>
-          </Medium>
-          <Highest>
-            prcie (1month) 1000
-            <Stbutton
-              type="button"
-              id="purchase-button"
-              className="mt30"
-              onClick={() => {
-                onClickPayment(80000);
-              }}
-            >
-              결제하기
-            </Stbutton>
-          </Highest>
+          <Normal>
+            <Textdiv>
+              <H1>Free Trial</H1>
+              <Stp>SendingGo의 서비스를 체험 해 보세요</Stp>
+            </Textdiv>
+
+            <IconDiv>
+              <Stp>prcie: 10,000/month</Stp>
+
+              <Stbutton
+                type="button"
+                id="purchase-button"
+                className="mt30"
+                onClick={() => {
+                  onClickPayment(10000);
+                }}
+              >
+                결제하기
+              </Stbutton>
+            </IconDiv>
+            <Stp>✔ 팀원 3명 권한 부여 가능</Stp>
+          </Normal>
         </Ul>
       </FlexWrap>
     </Wrapper>
@@ -138,52 +110,41 @@ const Ul = styled.ul`
   display: flex;
   gap: 30px;
 `;
+
+const Stp = styled.p`
+  margin: 10px;
+`;
+
+const IconDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const Trial = styled.li`
   list-style: none;
   width: 100%;
-  height: 350px;
+  height: 100%;
   border: 5px solid #ccc;
   padding: 15px;
   display: flex;
-  align-items: center;
+  align-items: left;
   justify-content: center;
   flex-direction: column;
+  box-shadow: 0 2px 4px 0 #c8d7ee;
 `;
 
-const Standard = styled.li`
+const Normal = styled.li`
   list-style: none;
   width: 100%;
-  height: 350px;
+  height: 100%;
   border: 5px solid #ccc;
   padding: 15px;
   display: flex;
-  align-items: center;
+  align-items: left;
   justify-content: center;
   flex-direction: column;
-`;
-
-const Medium = styled.li`
-  list-style: none;
-  width: 100%;
-  height: 350px;
-  border: 5px solid #ccc;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-`;
-
-const Highest = styled.li`
-  list-style: none;
-  width: 100%;
-  height: 350px;
-  border: 5px solid #ccc;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  box-shadow: 0 2px 4px 0 #c8d7ee;
 `;
 
 const Stbutton = styled.button`
@@ -210,6 +171,8 @@ const Textdiv = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
+  margin: 10px;
+  background-color: #e0ffef;
 `;
 
 const H1 = styled.h1`

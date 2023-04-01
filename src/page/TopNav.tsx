@@ -4,12 +4,15 @@ import { Link, useMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import Accordion from '../components/Accordion';
 import { Logo } from '../components/Header';
+import { handleLogout, isLoggedin } from '../util/cookie';
 
 const TopNav = () => {
   const Uploadpage = useMatch('/uploadpage');
   const usergrouplist = useMatch('/usergrouplist');
   const statistics = useMatch('/statistics');
   const Home = useMatch('/');
+
+  const isLoggedIn = isLoggedin();
 
   const clientCreate = useMatch('/singleusercreate');
   const clientRegistration = useMatch('/clientregistration');
@@ -37,7 +40,9 @@ const TopNav = () => {
           <FlexWrap>
             <UserButton>마이페이지</UserButton>
             <UserButton>|</UserButton>
-            <UserButton>로그아웃</UserButton>
+            {isLoggedIn ? (
+              <UserButton onClick={handleLogout}>로그아웃</UserButton>
+            ) : null}
           </FlexWrap>
         </UserContatiner>
         <Accordion

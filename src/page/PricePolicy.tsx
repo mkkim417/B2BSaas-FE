@@ -68,6 +68,28 @@ function PricePolicy() {
             </IconDiv>
             <Stp>✔ 팀원 1명 권한 부여 가능</Stp>
           </Trial>
+          <Normal>
+            <Textdiv>
+              <H1>Free Trial</H1>
+              <Stp>SendingGo의 서비스를 체험 해 보세요</Stp>
+            </Textdiv>
+
+            <IconDiv>
+              <Stp>prcie: 10,000/month</Stp>
+
+              <Stbutton
+                type="button"
+                id="purchase-button"
+                className="mt30"
+                onClick={() => {
+                  onClickPayment(10000);
+                }}
+              >
+                결제하기
+              </Stbutton>
+            </IconDiv>
+            <Stp>✔ 팀원 3명 권한 부여 가능</Stp>
+          </Normal>
         </Ul>
       </FlexWrap>
     </Wrapper>
@@ -100,6 +122,19 @@ const IconDiv = styled.div`
 `;
 
 const Trial = styled.li`
+  list-style: none;
+  width: 100%;
+  height: 100%;
+  border: 5px solid #ccc;
+  padding: 15px;
+  display: flex;
+  align-items: left;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: 0 2px 4px 0 #c8d7ee;
+`;
+
+const Normal = styled.li`
   list-style: none;
   width: 100%;
   height: 100%;

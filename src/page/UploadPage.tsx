@@ -16,9 +16,10 @@ import SelectBoxs from '../components/SelectBoxs';
 import useInput from '../hook/useInput';
 import { postLogin } from '../axios/api';
 import { useMutation } from 'react-query';
-import { getTokens } from '../cookies/cookies';
+import { getCookie } from '../util/cookie';
 // import { clentBulkFetch } from '../axios/groupSave';
 function UploadPage() {
+  const token = getCookie('userToken');
   const [isData, setData] = useState<any>();
   const [isKeyData, setKeyData] = useState<any>();
   const [checkedList, setCheckedList] = useState<string[]>([]);
@@ -38,8 +39,9 @@ function UploadPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const clientIdData = useSelector((state: any) => {
-    return state.clientsId.clientsId;
+    return state.clientsId.clientsId[0];
   });
+  console.log('clientIdData : ', clientIdData);
   const onNextClick = () => {
     nextRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -184,11 +186,6 @@ function UploadPage() {
         if (refatoringFunc(keyData, '이름') === false) return;
         if (refatoringFunc(keyData, '전화번호') === false) return;
         if (refatoringFunc(keyData, '이메일') === false) return;
-
-        // console.log('rows : ', rows);
-        // console.log('jsonData : ', jsonData);
-        // console.log('pareData : ', pareData);
-        // console.log('keyData : ', keyData);
         setKeyData(keyData);
         setData(pareData);
         console.log('keyData : ', keyData);
@@ -217,7 +214,7 @@ function UploadPage() {
           { data },
           {
             headers: {
-              Authorization: `Bearer ${userToken}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         )
@@ -232,13 +229,12 @@ function UploadPage() {
     }
   };
   //그룹리스트
-  const { userToken } = getTokens();
   const getGroupData = useCallback(async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/groups`,
       {
         headers: {
-          Authorization: `Bearer ${userToken}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -262,23 +258,44 @@ function UploadPage() {
     },
     [mutation]
   );
-  //그룹저장
-  // const mutationGroupSave = useMutation(groupSaveFetch as any, {
-  //   onSuccess: (response) => {
-  //     console.log(response);
-  //   },
-  //   onError: (error) => {
-  //     console.error(error);
-  //     alert('로그인 실패.');
-  //   },
-  // });
-  // const mutationGroupSaveQuery = useCallback(
-  //   async (isData: any, isData2: any, isData3: any) => {
-  //     await mutationGroupSave.mutateAsync({ isData, isData2, isData3 } as any);
-  //   },
-  //   [mutation]
-  // );
-  console.log('clientIdData : ', clientIdData);
+  // const excelDataKakaoSend = async () => {
+  //   //카카오전송내용저장api
+  //   const data = [
+  //     {
+  //       //       groupId: 1, (*),
+  //       // clientId: 2, (*)
+  //       // organizationName: “회사명”,
+  //       // orderNumber: “10230192393”,
+  //       // region: “지역구 또는 면”,
+  //       // regionDetail: “동 또는 리”,
+  //       // deliveryDate: “배송월일”,
+  //       // paymentPrice: 100000,
+  //       // deliveryCompany: “택배회사명”,
+  //       // deliveryTime: “택배배송시간”,
+  //       // deliveryNumber: “송장번호”,
+  //       // templateCode: “TM_2216” (템플릿 Id로 바뀔 수도)
+  //     },
+  //   ];
+  //   try {
+  //     const response = await axios
+  //       .post(
+  //         `${process.env.REACT_APP_SERVER_URL}/api/talk/contents`,
+  //         {
+  //           data,
+  //         },
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       )
+  //       .then((res) => {
+  //         console.log(res.data);
+  //       });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const groupSaveFetch = async (groupId: string) => {
     // if (descName === '') {
     //   alert('그룹설명을 해주세요');
@@ -297,7 +314,7 @@ function UploadPage() {
             },
             {
               headers: {
-                Authorization: `Bearer ${userToken}`,
+                Authorization: `Bearer ${token}`,
               },
             }
           )
@@ -310,11 +327,11 @@ function UploadPage() {
           .post(
             `https://dev.sendingo-be.store/api/batch/groups/${groupId}`,
             {
-              clientIds: [...clientIdData],
+              clientIds: clientIdData,
             },
             {
               headers: {
-                Authorization: `Bearer ${userToken}`,
+                Authorization: `Bearer ${token}`,
               },
             }
           )
@@ -516,6 +533,7 @@ function UploadPage() {
                     //   descName
                     // );
                     groupSaveFetch(isGroupIdObj);
+                    // excelDataKakaoSend();
                   }}
                 >
                   그룹저장

@@ -5,10 +5,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { setCookie, getCookie } from '../cookies/cookies';
 import jwt_decode from 'jwt-decode';
 import { useMutation } from 'react-query';
 import { postLogin } from '../axios/api';
+import { getCookie, setCookie } from '../util/cookie';
 
 interface FormValues {
   email: string;

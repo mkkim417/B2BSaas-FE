@@ -9,7 +9,7 @@ import { DatePicker } from '@mantine/dates';
 import Callander from '../asset/svg/Callander';
 import useDetectClose from '../hook/useDetectClose';
 import { Link } from 'react-router-dom';
-import { getTokens } from '../cookies/cookies';
+import { getCookie } from '../util/cookie';
 function KakaoResultList() {
   //페이지네이션
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
@@ -27,16 +27,16 @@ function KakaoResultList() {
 
   const [isGroupList, setGroupList] = useState([]);
   const [isGroupClient, setGroupClient] = useState([]);
-  const [currentValue, setCurrentValue] = useState(null);
+  const [currentValue, setCurrentValue] = useState();
   //그룹리스트
-  const { userToken: token } = getTokens();
+  const token = getCookie('userToken');
   const getGroupData = useCallback(async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/groups`,
       { headers: { authorization: `Bearer ${token}` } }
     );
-    console.log('GroupList API', response.data.data);
     setGroupList(response.data.data);
+    setCurrentValue(response.data.data[0]['groupId']);
   }, []);
   //발송조회리스트
   const kakaoResultListFetch = useCallback(
@@ -47,7 +47,8 @@ function KakaoResultList() {
       if (startDay === undefined) {
         const response = await axios
           .get(
-            `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}`
+            `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}`,
+            { headers: { authorization: `Bearer ${token}` } }
           )
           .then((res) => {
             setGroupClient(res.data.data.list);
@@ -56,7 +57,8 @@ function KakaoResultList() {
       } else {
         const response = await axios
           .get(
-            `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}&startdate=${startDay}&enddate=${endData}`
+            `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}&startdate=${startDay}&enddate=${endData}`,
+            { headers: { authorization: `Bearer ${token}` } }
           )
           .then((res) => {
             setGroupClient(res.data.data.list);
@@ -93,6 +95,14 @@ function KakaoResultList() {
   }, [getGroupData]);
 
   useEffect(() => {
+    // if (currentValue === undefined) {
+    //   // kakaoResultListFetch(
+    //   //   isGroupList[0]['groupId'],
+    //   //   formatDate(value[0]),
+    //   //   formatDate(value[1])
+    //   // );
+    //   //console.log(isGroupList && isGroupList[0]['groupId']);
+    // }
     if (currentValue !== null) {
       if (value[0] !== null) {
         kakaoResultListFetch(

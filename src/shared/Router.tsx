@@ -46,7 +46,7 @@ const Router = () => {
             {/* <Route path="/usergrouplist" element={<UserGroupList />} /> */}
             <Route path="/userlist" element={<UserList />} />
             <Route path="/statistics" element={<Statistics />} />
-            <Route path="/alarmtalk" element={<Alarmtalk />} />
+            <Route path="/alarmtalk/:id" element={<Alarmtalk />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/email" element={<Email />} />
             <Route path="/login" element={<Login />} />

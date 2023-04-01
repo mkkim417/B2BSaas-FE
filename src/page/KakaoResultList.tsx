@@ -9,6 +9,7 @@ import { DatePicker } from '@mantine/dates';
 import Callander from '../asset/svg/Callander';
 import useDetectClose from '../hook/useDetectClose';
 import { Link } from 'react-router-dom';
+import { getTokens } from '../cookies/cookies';
 function KakaoResultList() {
   //페이지네이션
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
@@ -28,9 +29,11 @@ function KakaoResultList() {
   const [isGroupClient, setGroupClient] = useState([]);
   const [currentValue, setCurrentValue] = useState(null);
   //그룹리스트
+  const { userToken: token } = getTokens();
   const getGroupData = useCallback(async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/groups`
+      `${process.env.REACT_APP_SERVER_URL}/api/groups`,
+      { headers: { authorization: `Bearer ${token}` } }
     );
     console.log('GroupList API', response.data.data);
     setGroupList(response.data.data);
@@ -38,6 +41,7 @@ function KakaoResultList() {
   //발송조회리스트
   const kakaoResultListFetch = useCallback(
     async (groupId?: any, startDay?: string, endData?: string) => {
+      console.log(groupId);
       ///api/talk/results/list?groupId={groupId}&startdate={YYYYMMDD:string}&enddate={YYYYMMDD:string}
       const skip = postPerPage * (currentPage - 1);
       if (startDay === undefined) {
@@ -141,14 +145,13 @@ function KakaoResultList() {
         <Table>
           <thead style={{ fontWeight: 'bold' }}>
             <tr>
-              <Th>그룹ID</Th>
-              <Th>그룹명</Th>
+              <Th>보낸날짜</Th>
+              <Th>총메시지</Th>
               <Th>성공건수</Th>
               <Th>실패건수</Th>
-              <Th>총메시지</Th>
               <Th>총성공률</Th>
-              <Th>전송상태</Th>
-              <Th>보낸날짜</Th>
+              <Th>그룹명</Th>
+              <Th>발송상태</Th>
               <Th>상세</Th>
             </tr>
           </thead>
@@ -156,14 +159,13 @@ function KakaoResultList() {
             {isGroupClient &&
               isGroupClient.map((el: any, idx: number) => (
                 <tr key={idx}>
-                  <Td>{el.groupId}</Td>
-                  <Td>{el.groupName}</Td>
+                  <Td>{el.sendDate}</Td>
+                  <Td>{el.msgCount}</Td>
                   <Td>{el.scnt}</Td>
                   <Td>{el.fcnt}</Td>
-                  <Td>{el.msgCount}</Td>
                   <Td>{(el.scnt / el.msgCount) * 100}%</Td>
+                  <Td>{el.groupName}</Td>
                   <Td>{el.sendState}</Td>
-                  <Td>{el.sendDate}</Td>
                   <Td>
                     <StlyeBtn
                     // onClick={() => {
@@ -231,7 +233,7 @@ export const Td = styled.td`
   color: #555;
   padding: 15px;
   :nth-of-type(2) {
-    text-align: left;
+    text-align: center;
   }
 `;
 

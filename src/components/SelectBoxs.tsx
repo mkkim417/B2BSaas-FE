@@ -1,24 +1,22 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import useDetectClose from '../hook/useDetectClose';
-
-interface Itodolist {
-  optionData: any;
-  placeholder: any;
-}
 const SelectBoxs = ({
-  optionData,
-  currentCategoryValue,
-  propFunction,
-  className,
+  placeholder = '',
+  optionData = '',
+  currentCategoryValue = '',
+  propFunction = '',
+  className = '',
 }: any): React.ReactElement => {
   const [currentValue, setCurrentValue] = useState(null);
+  const [isGroupId, setGroupId] = useState<string>();
   const selectInputRef = useRef(null);
   const dropDownRef = useRef();
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false); //커스텀훅
   const handleOnChangeSelectValue = (e: any) => {
-    const { innerText } = e.target;
+    const { innerText, value } = e.target;
     setCurrentValue(innerText);
+    setGroupId(value);
   };
   // onChange setState비동기
   const ResetHandler = useCallback(() => {
@@ -26,9 +24,9 @@ const SelectBoxs = ({
   }, []);
   useEffect(() => {
     if (currentValue !== null) {
-      propFunction(currentValue, className);
+      propFunction(currentValue, className, isGroupId);
     }
-  }, [currentValue, propFunction]);
+  }, [currentValue, propFunction, isGroupId]);
   useEffect(() => {
     ResetHandler();
   }, [currentCategoryValue, ResetHandler]);
@@ -37,13 +35,15 @@ const SelectBoxs = ({
       ref={dropDownRef}
       onClick={() => setIsOpen((prev: any) => !prev)}
     >
-      <Label ref={selectInputRef}>{currentValue}</Label>
+      <Label ref={selectInputRef}>
+        {currentValue === null ? placeholder : currentValue}
+      </Label>
       {isOpen && (
         <SelectOptions>
           {optionData.map((data: any, index: any) => (
             <Option
               key={index}
-              value={data}
+              value={`${className[index]}`}
               onClick={handleOnChangeSelectValue}
             >
               {data}
@@ -112,5 +112,4 @@ const Option = styled.li`
     font-weight: bold;
   }
 `;
-
 export default React.memo(SelectBoxs);

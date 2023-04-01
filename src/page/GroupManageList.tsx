@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import { useSelector } from 'react-redux';
@@ -12,9 +12,14 @@ import UserEditModal from '../components/modal/UserEditModal';
 import UserInGroupDeleteModal from '../components/modal/UserInGroupDeleteModal';
 import UserMoveModal from '../components/modal/UserMoveModal';
 import { PaginationBox } from '../components/NotUsedPages/UserList';
+import { getTokens } from '../cookies/cookies';
+import { Link } from 'react-router-dom';
+import { useMutation, useQuery } from 'react-query';
+import { deleteGroupData, getAllClientList, getAllGroupList } from '../axios/api';
 
 function GroupManageList() {
   // hook 변수 모음들
+  const { userToken: token } = getTokens();
   const navigate = useNavigate();
   // 조건 상태 분기
   // 전체 클라이언트 리스트 호출시 true, 그룹 내 클라이언트 호출시 false 상태로 호출진행
@@ -24,56 +29,100 @@ function GroupManageList() {
     그룹리스트 관련 코드
   ************************************************************************************ */
 
+
   // 그룹리스트 담는 변수
   const [groupList, setGroupList] = useState([] as any);
+  // 그룹리스트 onClick 아이디 변수
+  const [groupId, setGroupId] = useState('');
   // 그룹리스트 이름 textarea 변수
   const [groupName, setGroupName] = useState('');
   // 그룹리스트 GET API
   const getGroupData = useCallback(async () => {
-    // https://dev.sendingo-be.store/api/groups
     const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/groups`
+      `${process.env.REACT_APP_SERVER_URL}/api/groups`,
+      { headers: { authorization: `Bearer ${token}` } }
     );
-    console.log('GroupList API', response.data.data);
+    console.log('GroupList API 렌더링', response);
     setGroupList(response.data.data);
   }, []);
 
+  // 그룹리스트 useEffect
+  useEffect(() => {
+    getGroupData();
+    allUserRef.current?.focus();
+  }, [getGroupData]);
+
+  const { data : groupData } = useQuery<any, AxiosError>(['getAllGroupList'], 
+    () => getAllGroupList(), {
+      onSuccess: (response) => {
+        console.log(response)
+      }
+    }) 
+  // console.log('useQuery는 잘 되고 있는가', groupData?.data.map((item:any) => item.groupName))
   // 그룹리스트 내 클라이언트 변수
   const [groupClient, setGroupClient] = useState([] as any);
 
   // 그룹 클릭시 그룹 내 클라이언트리스트 호출
   const getClientInGroup = useCallback(
-    async (id: any, name: any) => {
+    async (id: any, name: any, page: any) => {
       setCheckedArr([]);
       setIsClientState(false);
-      // console.log('IsClientState', isClientState);
-      const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}`
-      );
-      console.log('getClientInGroup Response', response.data.data);
-      setGroupClient(response.data.data);
+      const response = await axios
+        .get(
+          `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}&index=${page}`,
+          { headers: { authorization: `Bearer ${token}` } }
+        )
+        .then((res) => {
+          setGroupClient(res.data.data);
+        });
+      //** 트러블 슈팅 함수형 업데이트로 변경.. 두번 클릭해야 불러오는 상황 발생
+      // setGroupClient(() => {
+      //   return response.data.data;
+      // });
+      setGroupId((prev) => {
+        return id;
+      });
       setGroupName(name);
+      // setIsGroupAllClients(response.data.data.length)
+      groupList.map((item: any) => {
+        if (item.groupId === id) {
+          // 그룹 내 클라이언트 갯수 저장 => 페이징처리 위함
+          setIsGroupAllClients(item.clientCount);
+        }
+      });
     },
-    [isClientState]
+    [groupId]
   );
-
   /*************************************************************************************
     유저리스트 관련 코드
   ************************************************************************************ */
 
   // Pagination 처리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
+  const [currentPage1, setCurrentPage1] = useState(1); // 현재 페이지 default값으로
   // const [count, setCount] = useState(0); // 아이템 총 갯수
   // const [ product, setProduct ] = useState([])  // 리스트에 담아낼 아이템들
-  const [postPerPage] = useState(20); // 한 페이지에 보여질 아이템 수
+  const [postPerPage] = useState(15); // 한 페이지에 보여질 아이템 수
   const [indexOfLastPost, setIndexOfLastPost] = useState(0); // 현재 페이지의 마지막 아이템 인덱스
   const [indexOfFirstPost, setIndexOfFirstPost] = useState(0); // 현재 페이지의 첫번째 아이템 인덱스
   const [currentPosts, setCurrentPosts] = useState(0); // 현재 페이지에서 보여지는 아이템들
   // const userData = userList.slice(indexOfFirstPost, indexOfLastPost)
-  const setPage = (page: any) => {
+
+  // 전체고객리스트 숫자
+  const [isAllclients, setAllclients] = useState<any>(0);
+
+  const setPage1 = (page: any) => {
+    console.log('page1', page);
     setCurrentPage(page);
+    getUserData(page);
   };
 
+  const setPage2 = async (page: any) => {
+    console.log('page2', page);
+    setCurrentPage1(page);
+
+    getClientInGroup(groupId, groupName, page);
+  };
   // 모달
   // 유저리스트 선택 유저 수정 조건모달
   const [userConditionModal, setUserConditionModal] = useState(false);
@@ -136,18 +185,56 @@ function GroupManageList() {
   // 유저리스트 담는 변수
   const [userList, setUserList] = useState([] as any);
   // 유저리스트 GET API
-  const getUserData = useCallback(async () => {
+  const getUserData = useCallback(async (page: any) => {
     setCheckedArr([]);
     setIsClientState(true);
     // console.log('IsClientState', isClientState);
     // `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${1}`
     const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${8}`
+      `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${page}`,
+      { headers: { authorization: `Bearer ${token}` } }
     );
-    console.log('UserList API-페이지1', response);
+    console.log('UserList API', token);
     setUserList(response.data.data.clients);
-    setAllclients(response.data.data.clientCount);
+    // setAllclients(response.data.data.clientCount);
   }, []);
+  const { data : userData } = useQuery<any, AxiosError>(['getAllClientList', currentPage],
+    () => getAllClientList(currentPage), {
+      onSuccess: (response) => {
+        console.log(response)
+        setAllclients(userData?.data.clientCount)
+      }
+    })
+    // console.log('여기에요!userdata', userData?.data.clientCount)
+
+  // 유저리스트 useEffect
+  useEffect(() => {
+    if (isClientState === true) {
+      // getUserData(currentPage);
+      setAllclients(userData?.data.clientCount)
+    } else {
+      getClientInGroup(groupId, groupName, currentPage);
+      // setCurrentPage1(1)
+    }
+
+    // setCount(userList.length);
+    // setIndexOfLastPost(currentPage * postPerPage);
+    // setIndexOfFirstPost(indexOfLastPost - postPerPage);
+    // if (isClientState === true) {
+    //   setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
+    // } else {
+    //   setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
+    // }
+  }, [
+    userData,
+    isAllclients,
+    currentPage,
+    // indexOfLastPost,
+    // indexOfFirstPost,
+    // postPerPage,
+    getUserData,
+    getClientInGroup,
+  ]);
 
   // 유저 수정 state
   const [editUser, setEditUser] = useState({
@@ -159,9 +246,8 @@ function GroupManageList() {
 
   // 처음 렌더링시 전체고객리스트로 focus
   const allUserRef = useRef<HTMLButtonElement>(null);
-  // 전체고객리스트 숫자
-  const [isAllclients, setAllclients] = useState();
-
+  // 그룹 내 클라이언트 숫자
+  const [isGroupAllClients, setIsGroupAllClients] = useState<any>(0);
   // 체크박스 관련 state
 
   // 개별 항목을 체크했을 때의 state
@@ -196,6 +282,8 @@ function GroupManageList() {
   const userEditHandler = () => {
     if (checkedArr.length > 1) {
       alert('한 개만 체크해주세요!');
+    } else if (checkedArr.length === 0) {
+      alert('수정할 고객을 선택해주세요!');
     } else {
       checkedArr.map((item: any) => {
         setEditUser({
@@ -206,8 +294,8 @@ function GroupManageList() {
           clientEmail: item.clientEmail,
         });
       });
+      clickUserEditModal();
     }
-    clickUserEditModal();
   };
 
   // 체크박스관련
@@ -258,7 +346,7 @@ function GroupManageList() {
     return state.kakaoGroupId.kakaoGroupId[0];
     //talkContentId,clientId,talkTemplateId
   });
-  console.log('kakaoGroupIdData : ', kakaoGroupIdData);
+  // console.log('kakaoGroupIdData : ', kakaoGroupIdData);
   const kakaoAlertSend = async () => {
     alert('카카오알람톡 전송준비중');
     console.log('kakaoSendData : ', kakaoSendData);
@@ -284,32 +372,32 @@ function GroupManageList() {
       alert('다시 시도해주시기 바랍니다.');
     }
   };
-  // 그룹리스트 useEffect
-  useEffect(() => {
-    getGroupData();
-    allUserRef.current?.focus();
-  }, [getGroupData]);
 
-  // 유저리스트 useEffect
-  useEffect(() => {
-    getUserData();
+  // 그룹리스트 내 클라이언트 useEffect
+  // useEffect(() => {
+  //   getClientInGroup(groupId, groupName, currentPage)
+  // }, [])
 
-    // setCount(userList.length);
-    setIndexOfLastPost(currentPage * postPerPage);
-    setIndexOfFirstPost(indexOfLastPost - postPerPage);
-    if (isClientState === true) {
-      setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
-    } else {
-      setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
+  const [deleteGroup, setDeleteGroup] = useState([]);
+  const { mutate : deleteGroupMutate } = useMutation(deleteGroupData, {
+    onSuccess : (response) => {
+      console.log(response);
+    },
+    onError: (error) => {
+      console.log(error);
     }
-  }, [
-    currentPage,
-    indexOfLastPost,
-    indexOfFirstPost,
-    postPerPage,
-    getUserData,
-  ]);
-
+  })
+  const clickGroupDelete = async () => {
+    // await axios
+    //   .delete(`${process.env.REACT_APP_SERVER_URL}/api/groups/${deleteGroup}`, {
+    //     headers: { authorization: `Bearer ${token}` },
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //   });
+    deleteGroupMutate(deleteGroup)
+    alert('삭제 완료!');
+  };
   return (
     <Container>
       <HeaderContainer>그룹관리</HeaderContainer>
@@ -317,14 +405,18 @@ function GroupManageList() {
         {/* 그룹리스트 공간 */}
         <GroupContainer>
           <GroupContentBox>
-            <GroupContentItem onClick={getUserData} ref={allUserRef}>
-              전체 고객리스트{isAllclients}
+            <GroupContentItem onClick={() => getUserData(1)} ref={allUserRef}>
+              전체 고객리스트({isAllclients})
             </GroupContentItem>
-            {groupList?.map((item: any) => {
+            {groupData?.data.map((item: any) => {
               return (
                 <GroupContentItem
                   key={item.groupId}
-                  onClick={() => getClientInGroup(item.groupId, item.groupName)}
+                  onClick={() => {
+                    getClientInGroup(item.groupId, item.groupName, 1);
+                    setCurrentPage1(1);
+                    setDeleteGroup(item.groupId);
+                  }}
                 >
                   {item.groupName}({item.clientCount})
                 </GroupContentItem>
@@ -333,17 +425,21 @@ function GroupManageList() {
           </GroupContentBox>
           <ButtonBox>
             <GroupButton onClick={clickGroupCreateModal}>그룹 추가</GroupButton>
-            <GroupButton>그룹 삭제</GroupButton>
+            <GroupButton onClick={clickGroupDelete}>그룹 삭제</GroupButton>
           </ButtonBox>
         </GroupContainer>
         {/* 여기부터는 클라이언트 리스트 공간 */}
         <ClientContainer>
           <ClientHeaderBox>
             <NameBox>그룹명</NameBox>
-            <TextArea value={groupName} />
+            <TextArea defaultValue={groupName} />
             <NameBox>{checkedArr.length}</NameBox>
             {isClientState ? null : (
-              <GroupButton onClick={kakaoAlertSend}>알림톡전송</GroupButton>
+              <GroupButton
+              // onClick={kakaoAlertSend}
+              >
+                <Link to={`/alarmtalk/${groupId}`}>알림톡전송</Link>
+              </GroupButton>
             )}
           </ClientHeaderBox>
           <ClientContentHeader>
@@ -357,10 +453,9 @@ function GroupManageList() {
           </ClientContentHeader>
           <ClientContentBox>
             {isClientState ? (
-              userList.slice(indexOfFirstPost, indexOfLastPost) &&
-              userList.length > 0 ? (
-                userList
-                  .slice(indexOfFirstPost, indexOfLastPost)
+              // userList.slice(indexOfFirstPost, indexOfLastPost) &&
+              userData?.data.clients.length > 0 ? (
+                userData?.data.clients
                   .map((item: any) => {
                     return (
                       <CardHeader key={item.clientId}>
@@ -379,14 +474,11 @@ function GroupManageList() {
                     );
                   })
               ) : (
-                <CenterContent>
-                  추가된 고객 목록이 없습니다. 고객을 추가해주세요.
-                </CenterContent>
+                <CenterContent>더 이상 고객목록이 없습니다.</CenterContent>
               )
-            ) : groupClient.slice(indexOfFirstPost, indexOfLastPost) &&
-              groupClient.length > 0 ? (
+            ) : groupClient.length > 0 ? (
               groupClient
-                .slice(indexOfFirstPost, indexOfLastPost)
+                // .slice(indexOfFirstPost, indexOfLastPost)
                 .map((item: any) => {
                   return (
                     <CardHeader key={item.clientId}>
@@ -414,7 +506,7 @@ function GroupManageList() {
                           onChange={(e: any) => checkUserHandler(e, item)}
                         />
                       </Percentage>
-                      <Percentage width="23%">소속 그룹명</Percentage>
+                      <Percentage width="23%">{item.groupName}</Percentage>
                       <Percentage width="12%">{item.clientName}</Percentage>
                       <Percentage width="22%">{item.contact}</Percentage>
                       <Percentage width="37%">{item.clientEmail}</Percentage>
@@ -432,22 +524,22 @@ function GroupManageList() {
               {isClientState ? (
                 <Pagination
                   activePage={currentPage}
-                  itemsCountPerPage={14}
+                  // itemsCountPerPage={15}
                   pageRangeDisplayed={10}
                   prevPageText={'<'}
                   nextPageText={'>'}
-                  totalItemsCount={userList.length}
-                  onChange={setPage}
+                  totalItemsCount={isAllclients}
+                  onChange={setPage1}
                 />
               ) : (
                 <Pagination
-                  activePage={currentPage}
-                  itemsCountPerPage={14}
+                  activePage={currentPage1}
+                  // itemsCountPerPage={15}
                   pageRangeDisplayed={10}
                   prevPageText={'<'}
                   nextPageText={'>'}
-                  totalItemsCount={groupClient.length}
-                  onChange={setPage}
+                  totalItemsCount={isGroupAllClients}
+                  onChange={setPage2}
                 />
               )}
             </PaginationBox>
@@ -476,13 +568,7 @@ function GroupManageList() {
                     선택취소
                   </GroupButton>
                 )} */}
-                <ClientButton
-                  onClick={() =>
-                    alert(
-                      '선택된 그룹안에서 누른 버튼이고, 이 모달에서는 고객리스트뜨게하기?'
-                    )
-                  }
-                >
+                <ClientButton onClick={() => navigate('/uploadpage')}>
                   고객 등록
                 </ClientButton>
                 <ClientButton onClick={() => clickUserCopyModal()}>

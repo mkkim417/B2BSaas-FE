@@ -222,19 +222,22 @@ const Signup = () => {
     // };
     const sendEmail = email + formData.email;
     const sendEmail2 = email2 + formData.companyEmail;
-
-    await axios.post('https://dev.sendingo-be.store/api/users/signup', {
-      email: sendEmail,
-      password: data.password,
-      name: data.name,
-      phoneNumber: data.phoneNumber,
-      companyName: data.companyName,
-      companyNumber: data.companyNumber,
-      companyEmail: sendEmail2,
-      role: '1',
-    });
-    setIsSubmitted(true);
-    navigate('/');
+    try {
+      await axios.post('https://dev.sendingo-be.store/api/users/signup', {
+        email: sendEmail,
+        password: data.password,
+        confirmPassword: data.ConfirmPw,
+        name: data.name,
+        phoneNumber: data.phoneNumber,
+        companyName: data.companyName,
+        companyNumber: data.companyNumber,
+        companyEmail: sendEmail2,
+      });
+      navigate('/login');
+    } catch (error: any) {
+      alert(error.response.data.message);
+      console.log('error : ', error);
+    }
   };
 
   return (
@@ -496,7 +499,7 @@ const Signup = () => {
             errors.ConfirmPw.type === 'validate' &&
             'The Passwords do not matched'}
         </StPw>
-        <StSignupButton type="submit">회원가입</StSignupButton>
+        <StSignupButton>회원가입</StSignupButton>
         <Link to="/login">이미 계정이 있으신가요? 여기서 로그인 하세요</Link>
       </Wrapper>
     </form>

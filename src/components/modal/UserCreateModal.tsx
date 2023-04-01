@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react'
+import { useMutation } from 'react-query';
 import styled from 'styled-components'
+import { postSingleClient } from '../../axios/api';
 
 type Props = {
   title?: string;
@@ -28,6 +30,15 @@ const UserCreateModal = ({ title, memo, closeModal }: Props) => {
     });
   };
 
+  // mutate 선언
+  const { mutate } = useMutation(postSingleClient, {
+    onSuccess : (response) => {
+      console.log(response);
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  });
   // submit button handler
   const submitHandler = async (e:any, closeModal : any) => {
     e.preventDefault();
@@ -39,11 +50,16 @@ const UserCreateModal = ({ title, memo, closeModal }: Props) => {
     // 빈칸 확인 조건처리
     if ( !(data.clientName === "" && data.contact === "") ) {
       // 빈칸 없으면 저장 post
-      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/clients`, {
-      clientName : data.clientName,
-      clientEmail : data.clientEmail,
-      contact : _contact
-      });
+      // axios.post(`${process.env.REACT_APP_SERVER_URL}/api/clients`, {
+      // clientName : data.clientName,
+      // clientEmail : data.clientEmail,
+      // contact : _contact
+      // });
+      mutate({
+        clientName : data.clientName,
+        clientEmail : data.clientEmail,
+        contact : _contact
+        })
       alert('저장 성공!')
       closeModal()
       

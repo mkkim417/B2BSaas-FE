@@ -41,7 +41,6 @@ function UploadPage() {
   const clientIdData = useSelector((state: any) => {
     return state.clientsId.clientsId[0];
   });
-  console.log('clientIdData : ', clientIdData);
   const onNextClick = () => {
     nextRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -122,22 +121,23 @@ function UploadPage() {
     setGroupComp(false);
     setClUpload(false);
   };
-  const refatoringFunc = (keyData: string[], name: string) => {
-    if (keyData.includes(`${name}`) === false) {
-      DummyDeleteFuction();
-      alert(`${name} 값은 필수입니다.`);
-      return false;
-    }
-  };
-  // const refatoringFunc = (keyData: string[], name: string[]) => {
-  //   name.map((el) => {
-  //     if (keyData.includes(`${el}`) === false) {
-  //       DummyDeleteFuction();
-  //       alert(`${el} 값은 필수입니다.`);
-  //       return false;
-  //     }
-  //   });
+  // const refatoringFunc = (keyData: string[], name: string) => {
+  //   if (keyData.includes(`${name}`) === false) {
+  //     DummyDeleteFuction();
+  //     alert(`${name} 값은 필수입니다.`);
+  //     return false;
+  //   }
   // };
+  const refatoringFunc = (keyData: string[], name: string[]) => {
+    for (let i = 0; i < name.length; i++) {
+      if (keyData.includes(name[i]) === false) {
+        DummyDeleteFuction();
+        alert(`${name[i]}값은 필수입니다.`);
+        return false;
+      }
+    }
+    return true;
+  };
   const csvFileToArray = (string: any) => {
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',');
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
@@ -179,15 +179,12 @@ function UploadPage() {
         const pareData = JSON.parse(jsonData);
         const keyData = Object.keys(pareData[0]);
         let requiredData = ['이름', '전화번호', '이메일'];
-        // if ((refatoringFunc(keyData, requiredData) as any) !== true) {
-        //   return;
-        // } else {
-        // }
-        if (refatoringFunc(keyData, '이름') === false) return;
-        if (refatoringFunc(keyData, '전화번호') === false) return;
-        if (refatoringFunc(keyData, '이메일') === false) return;
+        if ((refatoringFunc(keyData, requiredData) as any) !== true) return;
         setKeyData(keyData);
         setData(pareData);
+        // if (refatoringFunc(keyData, '이름') === false) return;
+        // if (refatoringFunc(keyData, '전화번호') === false) return;
+        // if (refatoringFunc(keyData, '이메일') === false) return;
         console.log('keyData : ', keyData);
         console.log('pareData : ', pareData);
       });

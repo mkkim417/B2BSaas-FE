@@ -1,3 +1,4 @@
+import { range } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -66,8 +67,16 @@ function PricePolicy() {
                 결제하기
               </Stbutton>
             </IconDiv>
-            <Stp>✔ 팀원 1명 권한 부여 가능</Stp>
+            <input type="range"></input>
+
+            <Tooltip data-tooltip="설명입니다">
+              <Stp>✔ 팀원 1명 권한 부여 가능</Stp>
+            </Tooltip>
+            <Tooltip data-tooltip="100건">
+              <Stp>✔ 100건 가능</Stp>
+            </Tooltip>
           </Trial>
+
           <Normal>
             <Textdiv>
               <H1>Free Trial</H1>
@@ -185,4 +194,16 @@ const FlexWrap = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
+const Tooltip = styled.span`
+  position: relative;
+
+  &:hover:before {
+    content: attr(data-tooltip);
+    width: 100%;
+    background-color: #beb5b5;
+    color: #fff;
+  }
+`;
+
 export default PricePolicy;

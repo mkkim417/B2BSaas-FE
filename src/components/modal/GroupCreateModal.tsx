@@ -10,7 +10,7 @@ type Props = {
   closeModal?: () => void;
 };
 const GroupCreateModal = ({ closeModal }: Props) => {
-  const token = localStorage.getItem('Token');
+  // const token = localStorage.getItem('Token');
   // group input 변수들
   const initialData = {
     groupName: '',

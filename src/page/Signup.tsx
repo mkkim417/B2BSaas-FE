@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useForm, SubmitHandler, Validate } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { postSignUp } from '../axios/api';
 
 interface FormValues {
   email: string;
@@ -197,8 +199,19 @@ const Signup = () => {
   };
   const nameRegex = /^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]+$/;
 
+  // mutate 선언
+  const { mutate } = useMutation(postSignUp, {
+    onSuccess : (response) => {
+      console.log(response)
+      alert('회원가입 완료!')
+      navigate('/');
+    },
+    onError : (error) => {
+      console.log(error)
+      alert('회원가입 실패')
+    }
+  })
   const onSubmit = async (data: FormValues) => {
-    // console.log(data);
     if (!isDupliEmail) {
       alert('이메일 중복을 확인해주세요');
     }
@@ -222,22 +235,16 @@ const Signup = () => {
     // };
     const sendEmail = email + formData.email;
     const sendEmail2 = email2 + formData.companyEmail;
-    try {
-      await axios.post('https://dev.sendingo-be.store/api/users/signup', {
-        email: sendEmail,
-        password: data.password,
-        confirmPassword: data.ConfirmPw,
-        name: data.name,
-        phoneNumber: data.phoneNumber,
-        companyName: data.companyName,
-        companyNumber: data.companyNumber,
-        companyEmail: sendEmail2,
-      });
-      navigate('/login');
-    } catch (error: any) {
-      alert(error.response.data.message);
-      console.log('error : ', error);
-    }
+    mutate({
+      email: sendEmail,
+      password: data.password,
+      confirmPassword: data.ConfirmPw,
+      name: data.name,
+      phoneNumber: data.phoneNumber,
+      companyName: data.companyName,
+      companyNumber: data.companyNumber,
+      companyEmail: sendEmail2,
+    })
   };
 
   return (
@@ -303,7 +310,7 @@ const Signup = () => {
                 '이메일을 입력해 주십시오.'}
             </StErrorMsg>
           ) : null}
-          <button
+          <div
             onClick={() => {
               checkEmailDuplication(formData.email);
               // checkEmailDuplication(formData.email).then((exists) => {
@@ -316,7 +323,7 @@ const Signup = () => {
             }}
           >
             중복확인
-          </button>
+          </div>
         </StEmail>
 
         <StBrand>

@@ -15,6 +15,7 @@ import { motion } from 'framer-motion';
 import { getCookie } from '../util/cookie';
 import { HeaderContainer } from './GroupManageList';
 function Alarmtalk() {
+  const [isTemplatesList, setTemplatesList] = useState<any>([]);
   const token = getCookie('userToken');
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,14 +32,15 @@ function Alarmtalk() {
   const clientIdData = useSelector((state: any) => {
     return state.clientsId.clientsId;
   });
+
   const TemplatesNameDummy = () => {
-    let Arr = [];
-    for (const element in ALAERMTALK_TEMPLATE) {
-      Arr.push(element);
-    }
+    let Arr = [] as any[];
+    isTemplatesList.map((el: any) => {
+      Arr.push(el.talkTemplateName);
+    });
+    console.log(Arr);
     return Arr;
   };
-
   const [isAutoModal, setAutoModal] = useState<boolean>(false);
   const [currentValue, setCurrentValue] = useState(null);
   const [isTarget, setTarget] = useState<string | undefined>(undefined);
@@ -82,6 +84,7 @@ function Alarmtalk() {
       alert('다시 시도해주시기 바랍니다.');
     }
   };
+
   const fetchTemplateList = useCallback(async () => {
     try {
       await axios
@@ -91,7 +94,7 @@ function Alarmtalk() {
           },
         })
         .then((res) => {
-          console.log('res : ', res.data);
+          setTemplatesList(res.data.data);
         });
     } catch (error) {
       console.log(error);

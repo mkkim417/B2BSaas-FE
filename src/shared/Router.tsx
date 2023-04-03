@@ -52,7 +52,9 @@ const Router = () => {
               <Route path="/statistics" element={<Statistics />} />
             </Route>
             <Route element={<PrivateRoute authentication={true} />}>
-              <Route path="/alarmtalk/:id" element={<Alarmtalk />} />
+              <Route path="/alarmtalk" element={<Alarmtalk />}>
+                <Route path="/alarmtalk/:id" element={<Alarmtalk />} />
+              </Route>
             </Route>
             <Route path="/signup" element={<Signup />} />
             <Route path="/email" element={<Email />} />

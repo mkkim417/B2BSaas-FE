@@ -18,6 +18,7 @@ const TopNav = () => {
   const clientRegistration = useMatch('/clientregistration');
   const groupManageList = useMatch('/groupmanageList');
   const kakaoresultlist = useMatch('/kakaoresultlist');
+  const alarmtalk = useMatch('/alarmtalk');
 
   // console.log('Uploadpage : ', Uploadpage);
   // console.log('Home : ', Home);
@@ -58,13 +59,6 @@ const TopNav = () => {
           contents={
             <div>
               <Ul>
-                <Link to={'/KakaoResultList'}>
-                  {kakaoresultlist ? (
-                    <LiBlue>전송결과</LiBlue>
-                  ) : (
-                    <Li>전송결과</Li>
-                  )}
-                </Link>
                 <Link to={'/statistics'}>
                   {statistics ? <LiBlue>그래프</LiBlue> : <Li>그래프</Li>}
                 </Link>
@@ -77,8 +71,8 @@ const TopNav = () => {
           contents={
             <div>
               <Ul>
-                <Link to={'/alarmtalk/:id'}>
-                  {kakaoresultlist ? (
+                <Link to={'/alarmtalk'}>
+                  {alarmtalk ? (
                     <LiBlue>알림톡전송</LiBlue>
                   ) : (
                     <Li>알림톡전송</Li>

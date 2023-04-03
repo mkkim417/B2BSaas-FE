@@ -19,20 +19,13 @@ function Login() {
   const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState('');
   const { register, handleSubmit } = useForm<FormValues>();
-
-  const token = getCookie('userToken');
-  if (token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  }
-
   const { mutate } = useMutation(postLogin, {
     onSuccess: (response) => {
       alert('로그인 성공.');
       const token = response.token;
-      setCookie('userToken', token, 7); // 쿠키에 토큰을 저장
-      // const token = getCookie('userToken'); // 쿠키에서 토큰을 가져옴
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      //console.log(`accessToken=${token}; userToken=${getCookie('userToken')}`);
+      console.log(jwt_decode(token));
+      setCookie('userToken', token);
+
       navigate(-1);
     },
     onError: (error) => {
@@ -42,7 +35,6 @@ function Login() {
   });
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    setCookie('userToken', data.email, 7);
     mutate(data);
   };
 

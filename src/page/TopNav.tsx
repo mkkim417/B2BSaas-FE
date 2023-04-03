@@ -39,11 +39,17 @@ const TopNav = () => {
           </UserWrap>
           <FlexWrap>
             {isLoggedIn ? (
-              <>
-                <UserButton>마이페이지</UserButton>
-                <UserButton>|</UserButton>
-                <UserButton onClick={handleLogout}>로그아웃</UserButton>
-              </>
+              <UserButton
+                onClick={() => {
+                  const isConfirmed =
+                    window.confirm('정말 로그아웃 하시겠습니까?');
+                  if (isConfirmed) {
+                    handleLogout();
+                  }
+                }}
+              >
+                로그아웃
+              </UserButton>
             ) : null}
           </FlexWrap>
         </UserContatiner>

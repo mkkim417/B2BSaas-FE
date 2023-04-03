@@ -10,7 +10,7 @@ type Props = {
   closeModal?: () => void;
 };
 const GroupCreateModal = ({ closeModal }: Props) => {
-  const token = localStorage.getItem('Token');
+  // const token = localStorage.getItem('Token');
   // group input 변수들
   const initialData = {
     groupName: '',
@@ -26,15 +26,15 @@ const GroupCreateModal = ({ closeModal }: Props) => {
       [name]: value,
     });
   };
-  
+
   const { mutate } = useMutation(postGroupData, {
-    onSuccess : (response) => {
+    onSuccess: (response) => {
       console.log(response);
     },
     onError: (error) => {
       console.log(error);
-    }
-  })
+    },
+  });
 
   // submit button handler
   const submitHandler = async (e: any, closeModal: any) => {
@@ -45,7 +45,7 @@ const GroupCreateModal = ({ closeModal }: Props) => {
       // axios.post(`${process.env.REACT_APP_SERVER_URL}/api/groups`, data, {
       //   headers: { authorization: `Bearer ${token}` },
       // });
-      mutate(data)
+      mutate(data);
 
       alert('저장 성공!');
       closeModal();

@@ -19,7 +19,7 @@ const UserEditModal = ({
   closeModal,
 }: Props) => {
   // input 추가를 위한 변수들
-  const token = localStorage.getItem('Token');
+  // const token = localStorage.getItem('Token');
   const initialData = {
     clientName: clientName,
     contact: clientContact,

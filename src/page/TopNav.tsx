@@ -38,8 +38,6 @@ const TopNav = () => {
             </Display>
           </UserWrap>
           <FlexWrap>
-            <UserButton>마이페이지</UserButton>
-            <UserButton>|</UserButton>
             {isLoggedIn ? (
               <UserButton
                 onClick={() => {
@@ -69,6 +67,29 @@ const TopNav = () => {
                 </Link>
                 <Link to={'/statistics'}>
                   {statistics ? <LiBlue>그래프</LiBlue> : <Li>그래프</Li>}
+                </Link>
+              </Ul>
+            </div>
+          }
+        />
+        <Accordion
+          title="알림톡전송"
+          contents={
+            <div>
+              <Ul>
+                <Link to={'/alarmtalk/:id'}>
+                  {kakaoresultlist ? (
+                    <LiBlue>알림톡전송</LiBlue>
+                  ) : (
+                    <Li>알림톡전송</Li>
+                  )}
+                </Link>
+                <Link to={'/kakaoresultlist'}>
+                  {kakaoresultlist ? (
+                    <LiBlue>전송결과</LiBlue>
+                  ) : (
+                    <Li>전송결과</Li>
+                  )}
                 </Link>
               </Ul>
             </div>

@@ -17,8 +17,7 @@ export const removeCookie = (name: string) => {
 export const handleLogout = () => {
   removeCookie('accessToken');
   removeCookie('userToken');
-
-  window.location.href = '/home';
+  window.location.href = '/';
 };
 
 export const isLoggedin = () => !!getCookie('userToken');

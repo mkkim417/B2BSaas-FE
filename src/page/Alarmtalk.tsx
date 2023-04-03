@@ -82,6 +82,21 @@ function Alarmtalk() {
       alert('다시 시도해주시기 바랍니다.');
     }
   };
+  const fetchTemplateList = useCallback(async () => {
+    try {
+      await axios
+        .get(`${process.env.REACT_APP_SERVER_URL}/api/talk/templates`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log('res : ', res.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
   //전송내용불러오기 다시해야
   const getKakaoExcelData = async () => {
     try {
@@ -230,10 +245,6 @@ function Alarmtalk() {
         document
           .getElementById('view')
           ?.innerHTML.split(`<span id=\"${obj_n}\">${targetData}`)[1];
-      console.log(obj_n);
-      console.log(targetData);
-      console.log(ChangeData);
-      console.log(sumData);
       setViewData(sumData);
       return;
     },
@@ -247,6 +258,10 @@ function Alarmtalk() {
       setViewData(ALAERMTALK_TEMPLATE[currentValue]['text']);
     }
   }, [currentValue]);
+  useEffect(() => {
+    fetchTemplateList();
+    console.log('fetchTemplateList');
+  }, [fetchTemplateList]);
   return (
     <motion.div
       initial={{ opacity: 0 }}

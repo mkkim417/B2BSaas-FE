@@ -77,7 +77,14 @@ const TopNav = () => {
           contents={
             <div>
               <Ul>
-                <Link to={'/KakaoAlarmtalk'}>
+                <Link to={'/alarmtalk/:id'}>
+                  {kakaoresultlist ? (
+                    <LiBlue>알림톡전송</LiBlue>
+                  ) : (
+                    <Li>알림톡전송</Li>
+                  )}
+                </Link>
+                <Link to={'/kakaoresultlist'}>
                   {kakaoresultlist ? (
                     <LiBlue>전송결과</LiBlue>
                   ) : (

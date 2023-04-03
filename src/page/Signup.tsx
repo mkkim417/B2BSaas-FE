@@ -195,7 +195,7 @@ const Signup = () => {
       '10-11자리 숫자를 입력하시기 바랍니다.'
     );
   };
-  const nameRegex = /^[a-zA-Z ]+$/;
+  const nameRegex = /^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]+$/;
 
   const onSubmit = async (data: FormValues) => {
     // console.log(data);
@@ -494,10 +494,10 @@ const Signup = () => {
           />
           {errors.ConfirmPw &&
             errors.ConfirmPw.type === 'required' &&
-            'this field is required'}
+            '해당 항목은 필수입니다.'}
           {errors.ConfirmPw &&
             errors.ConfirmPw.type === 'validate' &&
-            'The Passwords do not matched'}
+            '비밀번호가 일치하지 않습니다.'}
         </StPw>
         <StSignupButton>회원가입</StSignupButton>
         <Link to="/login">이미 계정이 있으신가요? 여기서 로그인 하세요</Link>
@@ -513,7 +513,7 @@ const StInputWrapper = styled.div`
 `;
 const StErrorMsg = styled.span`
   color: red;
-  visibility: hidden;
+  /* visibility: hidden; */
 `;
 
 const StInput = styled.input<StInputProps>`

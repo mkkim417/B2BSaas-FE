@@ -18,7 +18,11 @@ interface FormValues {
 function Login() {
   const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState('');
-  const { register, handleSubmit } = useForm<FormValues>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
 
   const token = getCookie('userToken');
   if (token) {
@@ -62,6 +66,11 @@ function Login() {
             name="email"
             placeholder="sendingo@gmail.com"
           />
+          {errors.email && (
+            <StErrorMsg>
+              {errors.email.message || '이메일을 입력해주세요'}
+            </StErrorMsg>
+          )}
         </StEmail>
         <StPw>
           <h1>Password</h1>
@@ -71,6 +80,11 @@ function Login() {
             name="password"
             placeholder="비밀번호는 8~20자리입니다."
           />
+          {errors.password && (
+            <StErrorMsg>
+              {errors.password.message || '비밀번호를 입력해주세요'}
+            </StErrorMsg>
+          )}
         </StPw>
         <StLoginButton type="submit">로그인</StLoginButton>
         <Link to="/signup">계정이 없으신가요? 여기서 가입하세요.</Link>
@@ -112,4 +126,9 @@ const StLoginButton = styled.button`
   border-radius: 40px;
   width: 80px;
   height: 30px;
+`;
+
+const StErrorMsg = styled.span`
+  color: red;
+  /* visibility: hidden; */
 `;

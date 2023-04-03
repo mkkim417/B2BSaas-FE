@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { data } from '../components/Chart';
-import { setCookie, getCookie, getTokens } from '../cookies/cookies';
+import { getCookie } from '../util/cookie';
 interface Login {
   email: string;
   password: string;
@@ -10,22 +10,42 @@ const instance = axios.create({
   withCredentials: true,
 });
 instance.interceptors.request.use(function (config) {
-  const { accessToken, userToken } = getTokens();
-  if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
+  // const { accessToken, userToken } = getTokens();
+  const token = getCookie('userToken')
+  if ( token ) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-  if (userToken) {
-    config.headers.userToken = userToken;
-  }
+  // if (accessToken) {
+  //   config.headers.Authorization = `Bearer ${accessToken}`;
+  // }
+  // if (userToken) {
+  //   config.headers.userToken = userToken;
+  // }
   return config;
 });
+
+// 회원가입
+export const postSignUp = async ( user: any) => {
+  const response = await instance.post('/api/users/signup', {
+    email: user.email,
+    password: user.password,
+    confirmPassword: user.confirmPassword,
+    name: user.name,
+    phoneNumber: user.phoneNumber,
+    companyName: user.companyName,
+    companyNumber: user.companyNumber,
+    companyEmail: user.companyEmail,
+  })
+  return response;
+}
+// 로그인
 export const postLogin = async (data: Login) => {
   try {
     const response = await instance.post('/api/users/login', data);
     const authHeader =
       response.headers.authorization || response.headers.Authorization;
     const token = authHeader ? authHeader.split(' ')[1] : null;
-    localStorage.setItem('Token', token);
+    // localStorage.setItem('Token', token);
     return { response, token, data: response.data };
   } catch (error) {
     console.error(error);
@@ -35,71 +55,53 @@ export const postLogin = async (data: Login) => {
 
 // 단건 클라이언트 생성
 export const postSingleClient = async (user: any) => {
-  const token = getCookie('userToken')
   const response = await instance.post('/api/clients', {
     clientName: user.clientName,
     clientEmail: user.clientEmail,
     contact: user.contact,
-  },
-  { headers : { authorization: `Bearer ${token}`}});
+  });
   return response;
 };
 // 빈 그룹 생성
 export const postGroupData = async (data: any) => {
-  const token = getCookie('userToken')
-  const response = await instance.post('/api/groups', data,
-    { headers : { authorization: `Bearer ${token}`}})
+  const response = await instance.post('/api/groups', data)
   return response;
 }
 
 // 전체 클라이언트 리스트 불러오기
 export const getAllClientList = async (page : any) => {
-  const token = getCookie('userToken')
-    const response = await instance.get(
-      `/api/clients?index=${page}`,
-      { headers : { authorization: `Bearer ${token}`}})
+  const response = await instance.get(`/api/clients?index=${page}`)
     return response.data;
 
 }
 // 전체 그룹 리스트 불러오기
 export const getAllGroupList = async () => {
-  const token = getCookie('userToken')
-  const response = await instance.get('/api/groups',
-    { headers : { authorization: `Bearer ${token}`}})
+  const response = await instance.get('/api/groups')
   return response.data;
 }
 // 단건 고객정보 수정
 export const eidtClientData = async (user:any) => {
-  const token = getCookie('userToken')
   const response = await instance.patch(`/api/clients/${user.clientId}`, {
       clientName :user.clientName,
       contact :user.contact,
       clientEmail :user.clientEmail
-    },
-    { headers : { authorization: `Bearer ${token}`}}
-  )
+    })
   return response;
 }
 // 고객리스트에서 고객 삭제
 export const deleteClientData = async(checkValue: any) => {
-  const token = getCookie('userToken')
   const urls = checkValue.map(
     (item: any) =>
       `/api/clients/${item.clientId}`
   );
   const response = await axios.all(
-    urls.map((url: any) => {
-      instance.delete(url,
-        { headers : { authorization: `Bearer ${token}`}})
-    })
+    urls.map((url: any) => { instance.delete(url)})
   )
   return response;
 }
 // 그룹 삭제
 export const deleteGroupData = async (groupId: any) => {
-  const token = getCookie('userToken')
-  const response = await instance.delete(`/api/groups/${groupId}`,
-  { headers : { authorization: `Bearer ${token}`}})
+  const response = await instance.delete(`/api/groups/${groupId}`)
   return response;
 }
 // 그룹 내 클라이언트 복사

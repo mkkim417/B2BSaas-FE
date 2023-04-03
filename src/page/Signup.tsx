@@ -214,6 +214,7 @@ const Signup = () => {
   const onSubmit = async (data: FormValues) => {
     if (!isDupliEmail) {
       alert('이메일 중복을 확인해주세요');
+      return;
     }
 
     if (!isValid) {

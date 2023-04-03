@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 function Home() {
+  useEffect(() => {}, []);
   return (
     <motion.div
       initial={{ opacity: 0 }}

@@ -35,7 +35,7 @@ const Router = () => {
       <AnimatePresence>
         <Routes>
           <Route element={<TopNav />}>
-            <Route
+            {/* <Route
               path="/uploadpage"
               element={
                 <PrivateRoute
@@ -43,7 +43,10 @@ const Router = () => {
                   authenticated={token}
                 />
               }
-            />
+            /> */}
+            <Route element={<PrivateRoute authentication={true} />}>
+              <Route path="/uploadpage" element={<UploadPage />} />
+            </Route>
             <Route
               path="/noticepersonallist"
               element={<NoticePersonalList />}
@@ -54,7 +57,7 @@ const Router = () => {
             {/* <Route path="/usergroupcreate" element={<UserGroupCreate />} /> */}
             {/* <Route path="/usergrouplist" element={<UserGroupList />} /> */}
             <Route path="/userlist" element={<UserList />} />
-            <Route
+            {/* <Route
               path="/statistics"
               element={
                 <PrivateRoute
@@ -68,7 +71,7 @@ const Router = () => {
               element={
                 <PrivateRoute component={<Alarmtalk />} authenticated={token} />
               }
-            />
+            /> */}
             <Route path="/signup" element={<Signup />} />
             <Route path="/email" element={<Email />} />
             <Route path="/login" element={<Login />} />
@@ -77,7 +80,7 @@ const Router = () => {
             <Route path="/groupinuserlist/:id" element={<GroupInUserList />} />
             <Route path="/emailtemplates" element={<EmailTemplates />} />
             <Route path="/singleusercreate" element={<SingleUserCreate />} />
-            <Route
+            {/* <Route
               path="/clientregistration"
               element={
                 <PrivateRoute
@@ -103,7 +106,7 @@ const Router = () => {
                   authenticated={token}
                 />
               }
-            />
+            /> */}
             <Route path="/pricepolicy" element={<PricePoicy />} />
             <Route path="/kakaodetaillist/:id" element={<KakaoDetailList />} />
           </Route>

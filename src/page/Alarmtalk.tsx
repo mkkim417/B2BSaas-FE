@@ -13,6 +13,7 @@ import AutoModal, {
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { getCookie } from '../util/cookie';
+import { HeaderContainer } from './GroupManageList';
 function Alarmtalk() {
   const token = getCookie('userToken');
   const dispatch = useDispatch();
@@ -255,7 +256,7 @@ function Alarmtalk() {
       <Wrapper>
         <LeftContents>
           <>
-            <H1>알림톡 대량발송하기</H1>
+            <HeaderContainer>알림톡 전송</HeaderContainer>
             <select
               name=""
               id=""

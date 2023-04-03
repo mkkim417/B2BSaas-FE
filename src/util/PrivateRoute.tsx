@@ -12,7 +12,7 @@ export default function PrivateRoute({
   const isAuthenticated = getCookie('userToken');
   if (authentication) {
     return isAuthenticated === undefined || isAuthenticated === 'false' ? (
-      <Navigate to="/login" />
+      <Navigate to="/login" {...(alert('로그인하십시요') as any)} />
     ) : (
       <Outlet />
     );

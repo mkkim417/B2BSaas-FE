@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import styled from 'styled-components';
 import GroupCreateModal from '../components/modal/GroupCreateModal';
 import UserCopyModal from '../components/modal/UserCopyModal';
@@ -21,7 +21,9 @@ import {
 } from '../axios/api';
 import { getCookie } from '../util/cookie';
 
-function GroupManageList() {
+function KakaoAlarmtalk() {
+  const params = useParams();
+  console.log('params : ', params);
   // hook 변수 모음들
   const token = getCookie('userToken');
   const navigate = useNavigate();
@@ -802,4 +804,4 @@ const CenterContent = styled.div`
 
   /* margin: 0 auto; */
 `;
-export default GroupManageList;
+export default KakaoAlarmtalk;

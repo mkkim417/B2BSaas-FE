@@ -67,6 +67,22 @@ const TopNav = () => {
           }
         />
         <Accordion
+          title="알림톡전송"
+          contents={
+            <div>
+              <Ul>
+                <Link to={'/KakaoAlarmtalk'}>
+                  {kakaoresultlist ? (
+                    <LiBlue>전송결과</LiBlue>
+                  ) : (
+                    <Li>전송결과</Li>
+                  )}
+                </Link>
+              </Ul>
+            </div>
+          }
+        />
+        <Accordion
           title="고객관리"
           contents={
             <div>

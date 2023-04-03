@@ -38,10 +38,12 @@ const TopNav = () => {
             </Display>
           </UserWrap>
           <FlexWrap>
-            <UserButton>마이페이지</UserButton>
-            <UserButton>|</UserButton>
             {isLoggedIn ? (
-              <UserButton onClick={handleLogout}>로그아웃</UserButton>
+              <>
+                <UserButton>마이페이지</UserButton>
+                <UserButton>|</UserButton>
+                <UserButton onClick={handleLogout}>로그아웃</UserButton>
+              </>
             ) : null}
           </FlexWrap>
         </UserContatiner>

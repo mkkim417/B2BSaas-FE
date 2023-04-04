@@ -18,6 +18,7 @@ const TopNav = () => {
   const clientRegistration = useMatch('/clientregistration');
   const groupManageList = useMatch('/groupmanageList');
   const kakaoresultlist = useMatch('/kakaoresultlist');
+  const alarmtalk = useMatch('/alarmtalk');
 
   // console.log('Uploadpage : ', Uploadpage);
   // console.log('Home : ', Home);
@@ -27,7 +28,7 @@ const TopNav = () => {
         <UserContatiner>
           <div style={{ marginBottom: '40px' }}>
             <Logo>
-              <Link to={'/home'}>Logo</Link>
+              <Link to={'/'}>Logo</Link>
             </Logo>
           </div>
           <UserWrap>
@@ -38,8 +39,6 @@ const TopNav = () => {
             </Display>
           </UserWrap>
           <FlexWrap>
-            <UserButton>마이페이지</UserButton>
-            <UserButton>|</UserButton>
             {isLoggedIn ? (
               <UserButton
                 onClick={() => {
@@ -60,15 +59,31 @@ const TopNav = () => {
           contents={
             <div>
               <Ul>
-                <Link to={'/KakaoResultList'}>
+                <Link to={'/statistics'}>
+                  {statistics ? <LiBlue>그래프</LiBlue> : <Li>그래프</Li>}
+                </Link>
+              </Ul>
+            </div>
+          }
+        />
+        <Accordion
+          title="알림톡전송"
+          contents={
+            <div>
+              <Ul>
+                <Link to={'/alarmtalk'}>
+                  {alarmtalk ? (
+                    <LiBlue>알림톡전송</LiBlue>
+                  ) : (
+                    <Li>알림톡전송</Li>
+                  )}
+                </Link>
+                <Link to={'/kakaoresultlist'}>
                   {kakaoresultlist ? (
                     <LiBlue>전송결과</LiBlue>
                   ) : (
                     <Li>전송결과</Li>
                   )}
-                </Link>
-                <Link to={'/statistics'}>
-                  {statistics ? <LiBlue>그래프</LiBlue> : <Li>그래프</Li>}
                 </Link>
               </Ul>
             </div>
@@ -107,15 +122,6 @@ const TopNav = () => {
         />
         <Link to={'/uploadpage'}>
           <Accordion title="대량발송" />
-        </Link>
-        <Link to={'/statistics'}>
-          <Accordion title="Statistic" />
-        </Link>
-        <Link to={'/group'}>
-          <Accordion title="Group" />
-        </Link>
-        <Link to={'userdatacreate'}>
-          <Accordion title="Create" />
         </Link>
       </Wrapper>
       {<Outlet />}

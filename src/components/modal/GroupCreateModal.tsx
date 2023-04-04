@@ -26,22 +26,23 @@ const GroupCreateModal = ({ closeModal }: Props) => {
       [name]: value,
     });
   };
-  
+
   const { mutate } = useMutation(postGroupData, {
-    onSuccess : (response) => {
+    onSuccess: (response) => {
       console.log(response);
       closeModal();
     },
     onError: (error) => {
       console.log(error);
-    }
-  })
+    },
+  });
 
   // submit button handler
   const submitHandler = async (e: any, closeModal: any) => {
     if (!(data.groupName === '' && data.groupDescription === '')) {
       // 빈칸없다면 그룹생성 API post
       mutate(data)
+
 
     } else {
       alert('빈칸을 채워주세요.');

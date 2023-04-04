@@ -36,15 +36,15 @@ const UserEditModal = ({
   };
   // mutate 선언
   const { mutate } = useMutation(eidtClientData, {
-    onSuccess : (response) => {
+    onSuccess: (response) => {
       console.log(response);
       closeModal();
     },
     onError: (error) => {
       console.log(error);
       alert('저장 실패!');
-    }
-  })
+    },
+  });
 
   // submit button handler
   const submitHandler = async (e: any, closeModal: any) => {
@@ -65,7 +65,7 @@ const UserEditModal = ({
         clientName: data.clientName,
         contact: _contact,
         clientEmail: data.clientEmail,
-      })
+      });
     } else {
       alert('빈칸을 채워주세요!');
     }

@@ -33,7 +33,12 @@ function UploadPage() {
   const [groupName, onChangeGroupName] = useInput();
   const [descName, onChangeDescName] = useInput();
   const [isClUpload, setClUpload] = useState(false);
+  const [isTmpId, setTmpId] = useState<string>();
   const [isGroupIdObj, setGroupIdObj] = useState('');
+  const [isTemplatesList, setTemplatesList] = useState<any>([]);
+  const [isReqData, setReqData] = useState([]);
+  const [isClientId, setClientId] = useState([]);
+
   const nextRef = useRef<HTMLButtonElement>(null);
   const InputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
@@ -41,7 +46,6 @@ function UploadPage() {
   const clientIdData = useSelector((state: any) => {
     return state.clientsId.clientsId[0];
   });
-  console.log('clientIdData : ', clientIdData);
   const onNextClick = () => {
     nextRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -60,7 +64,6 @@ function UploadPage() {
   //다음단계버튼
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
-      console.log('fileInput : ', fileInput.current.files[0]);
       if (fileInput.current.files[0] === undefined) {
         alert('파일을 선택해주세요');
         return;
@@ -122,22 +125,19 @@ function UploadPage() {
     setGroupComp(false);
     setClUpload(false);
   };
-  const refatoringFunc = (keyData: string[], name: string) => {
-    if (keyData.includes(`${name}`) === false) {
-      DummyDeleteFuction();
-      alert(`${name} 값은 필수입니다.`);
-      return false;
+  //엑셀 필수값 필터링함수
+  const refatoringFunc = (keyData: string[], name: string[]) => {
+    console.log(keyData, name);
+    for (let i = 0; i < name.length; i++) {
+      if (keyData.includes(name[i]) === false) {
+        DummyDeleteFuction();
+        alert(`${name[i]}값은 필수입니다.`);
+        return false;
+      }
     }
+    return true;
   };
-  // const refatoringFunc = (keyData: string[], name: string[]) => {
-  //   name.map((el) => {
-  //     if (keyData.includes(`${el}`) === false) {
-  //       DummyDeleteFuction();
-  //       alert(`${el} 값은 필수입니다.`);
-  //       return false;
-  //     }
-  //   });
-  // };
+  //csv저장함수
   const csvFileToArray = (string: any) => {
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',');
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
@@ -153,6 +153,7 @@ function UploadPage() {
     setData(array);
     setKeyData(Object.keys(Object.assign({}, ...array)));
   };
+  //xlsx저장함수
   function readExcel(event: any) {
     let input = event.target;
     let reader = new FileReader();
@@ -179,38 +180,110 @@ function UploadPage() {
         const pareData = JSON.parse(jsonData);
         const keyData = Object.keys(pareData[0]);
         let requiredData = ['이름', '전화번호', '이메일'];
-        // if ((refatoringFunc(keyData, requiredData) as any) !== true) {
-        //   return;
-        // } else {
-        // }
-        if (refatoringFunc(keyData, '이름') === false) return;
-        if (refatoringFunc(keyData, '전화번호') === false) return;
-        if (refatoringFunc(keyData, '이메일') === false) return;
+        if ((refatoringFunc(keyData, requiredData) as any) !== true) return;
         setKeyData(keyData);
         setData(pareData);
-        console.log('keyData : ', keyData);
-        console.log('pareData : ', pareData);
       });
     };
     reader.readAsBinaryString(input.files[0]);
   }
-
-  //클라이언트 대량등록
-  //들어갈값 isData,
+  //템플릿전체조회fn
+  const fetchTemplateList = useCallback(async () => {
+    try {
+      await axios
+        .get(`${process.env.REACT_APP_SERVER_URL}/api/talk/templates`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data.data);
+          setTemplatesList(res.data.data);
+          setTmpId(res.data.data[0].talkTemplateId);
+          setReqData(JSON.parse(res.data.data[0].reqData));
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  //클라이언트 대량등록fn
   const clentBulkFetch = async () => {
+    console.log(isReqData); //키값 ['#{회사명}', '#{주문번호}', '#{구/면}', '#{동/리}', '#{월일}', '#{결제금액}']
+
+    console.log(isData); // 결제금액: 33000,구/면: "처인구"동/리: "왕곡동"배송예정일: "2일뒤"송장번호: 2901248912이름: "김영현"이메일: "djdjdjk2006@naver.com"전화번호: "01041096590"주문번호: 912399택배배송시간: 0.5416666666666666택배회사명: "CJ택배"회사명: "센딩고"
+
+    //1.key: isReqData , value : isData.결제금액 ?  : undefined
+    //2.검증처리 엑셀에 키값이 없으면 return;
+
+    // //console.log(matchData['구/면']);
+
+    // //key matchData 치환
+
+    // console.log('reqKeyArr : ', reqKeyArr);
+    //customerName","deliveryCompany","deliveryTime","deliveryNumber"
+
+    // const transArray = csvRows.map((i: any) => {
+    //   const values = i.split(',');
+    //   console.log(values);
+    //   const obj = reqKeyArr.reduce((object: any, header: any, index: any) => {
+    //     object[header] = values[index];
+    //     return object;
+    //   }, {});
+    //   return obj;
+    // });
+    // console.log("transArray : ",transArray)
+    const matchData = {
+      '#{회사명}': '회사명',
+      '#{고객명}': '고객명',
+      '#{주문번호}': '주문번호',
+      '#{구/면}': '구/면',
+      '#{동/리}': '동/리',
+      '#{월일}': '월일',
+      '#{결제금액}': '결제금액',
+      '#{택배회사명}': '택배회사명',
+      '#{택배배송시간}': '택배배송시간',
+      '#{송장번호}': '송장번호',
+    };
+    let reqKeyArr = [] as string[];
+    for (let key of isReqData) {
+      reqKeyArr.push(matchData[key]);
+    }
+    let requiredKeyData = Object.keys(Object.assign({}, ...isData));
+
+    console.log('isReqData :', isReqData);
+    console.log('필수값 :', reqKeyArr);
+    console.log('존재하는값 :', requiredKeyData);
+
+    if ((refatoringFunc(requiredKeyData, reqKeyArr) as any) !== true) return;
+
     let data = [] as any;
+    //템플릿 필요한데이터를 [reqData] 키값으로 두고
     isData.map((el: any) =>
       data.push({
+        talkTemplateId: isTmpId,
         clientName: `${el.이름}`,
         contact: `${el.전화번호.replace(/-/gi, '')}`,
         clientEmail: `${el.이메일}`,
+
+        organizationName: el.회사명 ? `${el.회사명}` : null,
+        customerName: el.고객명 ? `${el.고객명}` : null,
+        orderNumber: el.주문번호 ? `${el.주문번호}` : null,
+        region: el['구/면'] ? `${el['구/면']}` : null,
+        regionDetail: el['동/리'] ? `${el['동/리']}` : null,
+        deliveryDate: el.월일 ? `${el.월일}` : null,
+        paymentPrice: el.결제금액 ? `${el.결제금액}` : null,
+        deliveryCompany: el.택배회사명 ? `${el.택배회사명}` : null,
+        deliveryTime: el.택배배송시간 ? `${el.택배배송시간}` : null,
+        deliveryNumber: el.송장번호 ? `${el.송장번호}` : null,
       })
     );
     console.log(data);
+    console.log(isOpen);
+    console.log(isClUpload);
     try {
       const response = await axios
         .post(
-          `https://dev.sendingo-be.store/api/clients/bulk`,
+          `${process.env.REACT_APP_SERVER_URL}/api/clients/contents/bulk`,
           { data },
           {
             headers: {
@@ -219,8 +292,11 @@ function UploadPage() {
           }
         )
         .then((res) => {
-          console.log('api/clients/bulk : ', res.data);
-          dispatch(clientsIdCreate(res?.data?.newClients));
+          console.log('api/clients/bulk : ', res.data.clientIds);
+          dispatch(clientsIdCreate(res?.data?.clientIds));
+          NextBtnHandler(isData, isKeyData);
+          console.log(res.data.clientIds);
+          setClientId(res.data.clientIds);
         });
       // navigate('/');
     } catch (error) {
@@ -239,7 +315,6 @@ function UploadPage() {
       }
     );
     setGroupList(response.data.data);
-    console.log(response.data.data);
   }, []);
 
   //그룹저장
@@ -249,7 +324,7 @@ function UploadPage() {
     },
     onError: (error) => {
       console.error(error);
-      alert('로그인 실패.');
+      alert('파일을 선택해주세요.');
     },
   });
   const ClientBulkFetch = useCallback(
@@ -304,11 +379,12 @@ function UploadPage() {
     try {
       if (isNewGroupInput) {
         //신규그룹
+        console.log('isClientId : ', isClientId);
         const response = await axios
           .post(
-            `https://dev.sendingo-be.store/api/batch/groups`,
+            `${process.env.REACT_APP_SERVER_URL}/api/batch/groups`,
             {
-              clientIds: clientIdData,
+              clientIds: isClientId,
               groupName,
               groupDescription: descName,
             },
@@ -325,9 +401,9 @@ function UploadPage() {
         //기존그룹
         const response = await axios
           .post(
-            `https://dev.sendingo-be.store/api/batch/groups/${groupId}`,
+            `${process.env.REACT_APP_SERVER_URL}/api/batch/groups/${groupId}`,
             {
-              clientIds: clientIdData,
+              clientIds: isClientId,
             },
             {
               headers: {
@@ -363,13 +439,25 @@ function UploadPage() {
   );
   useEffect(() => {
     getGroupData();
+    fetchTemplateList();
   }, [getGroupData]);
+
+  useEffect(() => {
+    if (currentValue !== null) {
+      const data = isTemplatesList.filter(
+        (el: any) => el.talkTemplateName === currentValue
+      );
+      setTmpId(data[0].talkTemplateId);
+      setReqData(JSON.parse(data[0].reqData));
+    }
+  }, [currentValue]);
   // console.log('csv넣은대상', isData)
   // console.log('취소된대상:', checkedList)
   // console.log(
   //   '차집합 :',
   //   isData && isData.filter((x: any) => !checkedList.includes(x))
   // )
+  console.log(isClientId);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -399,6 +487,33 @@ function UploadPage() {
               템플릿 파일에 추가할 고객 목록을 작성하여 업로드 해주세요.
             </span>
           </TemplateWrap>
+          {/* 드롭다운 */}
+          <TemplateWrap>
+            <select
+              name=""
+              id=""
+              onChange={(e) => handleOnChangeSelectValue(e)}
+            >
+              {isTemplatesList &&
+                isTemplatesList.map((el: any) => (
+                  <option key={el.talkTemplateId}>{el.talkTemplateName}</option>
+                ))}
+            </select>
+          </TemplateWrap>
+          {/* {isReqData &&
+            isReqData.map((el: any, idx: any) => (
+              <div key={idx}>
+                <div id={`obj_${idx}`}>{el}</div>
+                <SelectBoxs
+                  // currentCategoryValue={currentValue}
+                  // className={`obj_${idx}`}
+                  // propFunction={messagePreviewFunc}
+                  optionData={
+                    (sendKeyData && sendKeyData[0]) || ['빈값입니다.']
+                  }
+                ></SelectBoxs>
+              </div>
+            ))} */}
           {/* 테이블 */}
           {isData && isData ? (
             <MapWrapper>
@@ -466,7 +581,6 @@ function UploadPage() {
                 <Button
                   ref={nextRef}
                   onClick={() => {
-                    NextBtnHandler(isData, isKeyData);
                     ClientBulkFetch(isData);
                   }}
                 >

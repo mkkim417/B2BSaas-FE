@@ -254,7 +254,7 @@ const Signup = () => {
         {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
         {alertMessage && <p>{alertMessage}</p>}
         <StEmail>
-          <StEmailP>Email</StEmailP>
+          <StEmailP>이메일</StEmailP>
           <StInput
             type="text"
             {...register('email', {
@@ -311,7 +311,7 @@ const Signup = () => {
                 '이메일을 입력해 주십시오.'}
             </StErrorMsg>
           ) : null}
-          <div
+          <button
             onClick={() => {
               checkEmailDuplication(formData.email);
               // checkEmailDuplication(formData.email).then((exists) => {
@@ -324,7 +324,7 @@ const Signup = () => {
             }}
           >
             중복확인
-          </div>
+          </button>
         </StEmail>
 
         <StBrand>
@@ -524,12 +524,38 @@ const StErrorMsg = styled.span`
   /* visibility: hidden; */
 `;
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 30px;
+`;
+
+const StEmail = styled(StInputWrapper)`
+  border: 2px solid;
+  width: 600px;
+`;
+
+const StEmailP = styled.p`
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #000000;
+  mix-blend-mode: darken;
+`;
+
 const StInput = styled.input<StInputProps>`
-  background: rgba(170, 170, 170, 0.26);
+  background: #FFFFFF(170, 170, 170, 0.26);
   border-radius: 40px;
-  width: 400px;
+  width: 250px;
   margin: 10px auto;
-  border: 2px solid rgba(170, 170, 170, 0.26);
+  border: 2px solid #BDBDBD(170, 170, 170, 0.26);
   transition: border-color 0.2s ease-in-out;
   &:focus {
     border-color: #333;
@@ -544,12 +570,21 @@ const StInput = styled.input<StInputProps>`
   `}
 `;
 
-const StInput2 = styled.input<StInputProps>`
-  background: rgba(170, 170, 170, 0.26);
+const StSelect = styled.select`
+  background: #FFFFFF(170, 170, 170, 0.26);
   border-radius: 40px;
-  width: 400px;
+  width: 250px;
   margin: 10px auto;
   border: 2px solid rgba(170, 170, 170, 0.26);
+  transition: border-color 0.2s ease-in-out;
+`;
+
+const StInput2 = styled.input<StInputProps>`
+  background: #FFFFFF(170, 170, 170, 0.26);
+  border-radius: 40px;
+  width: 250px;
+  margin-left: 10px;
+  border: 2px solid #BDBDBD(170, 170, 170, 0.26);
   transition: border-color 0.2s ease-in-out;
   &:focus {
     border-color: #333;
@@ -564,27 +599,14 @@ const StInput2 = styled.input<StInputProps>`
   `}
 `;
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  gap: 30px;
+const StSelect2 = styled.select`
+  background: #FFFFFF(170, 170, 170, 0.26);
+  border-radius: 40px;
+  width: 250px;
+  margin: 10px auto;
+  border: 2px solid rgba(170, 170, 170, 0.26);
+  transition: border-color 0.2s ease-in-out;
 `;
-
-const StEmailP = styled.p`
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 300;
-  line-height: 28px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  color: #000000;
-  mix-blend-mode: darken;
-`;
-const StEmail = styled(StInputWrapper)``;
 
 const StBrandP = styled.p`
   font-family: 'Roboto';
@@ -601,7 +623,7 @@ const StBrand = styled.div`
   width: 600px;
 `;
 const StBrandInput = styled.input<StInputProps>`
-  background: #d3d3d3;
+  background: #ffffff;
   border-radius: 40px;
   margin: 10px;
   display: flex;
@@ -609,7 +631,7 @@ const StBrandInput = styled.input<StInputProps>`
   width: 500px;
 `;
 const StBrandNumberInput = styled.input<StInputProps>`
-  background: #d3d3d3;
+  background: #ffffff;
   border-radius: 40px;
   border-color: ${({ hasError }) => (hasError ? 'red' : 'inherit')};
   margin: 10px;
@@ -619,7 +641,6 @@ const StBrandNumberInput = styled.input<StInputProps>`
   width: 500px;
 `;
 const StContectNumberInputWrapper = styled.div<StInputProps>`
-  background: #d3d3d3;
   margin-right: 20px;
   border-color: ${({ hasError }) => (hasError ? 'red' : 'inherit')};
 `;
@@ -669,9 +690,10 @@ const StPwinput = styled.input<StInputProps>`
     border-color: red;
   `}
 `;
+
 const StSignupButton = styled.button`
-  background-color: #f57c00;
-  color: white;
+  background-color: #eeeeee;
+  color: #000000;
   font-size: 1.25rem;
   font-weight: bold;
   padding: 10px 40px;
@@ -687,23 +709,6 @@ const StSignupButton = styled.button`
 const StPicInfo = styled.div`
   width: 600px;
   border: 2px solid;
-`;
-const StSelect = styled.select`
-  background: rgba(170, 170, 170, 0.26);
-  border-radius: 40px;
-  width: 400px;
-  margin: 10px auto;
-  border: 2px solid rgba(170, 170, 170, 0.26);
-  transition: border-color 0.2s ease-in-out;
-`;
-
-const StSelect2 = styled.select`
-  background: rgba(170, 170, 170, 0.26);
-  border-radius: 40px;
-  width: 400px;
-  margin: 10px auto;
-  border: 2px solid rgba(170, 170, 170, 0.26);
-  transition: border-color 0.2s ease-in-out;
 `;
 
 const StBrandEmailInput = styled.input`

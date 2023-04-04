@@ -30,7 +30,6 @@ function Login() {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   }
 
-
   const { mutate } = useMutation(postLogin, {
     onSuccess: (response) => {
       alert('로그인 성공.');
@@ -52,11 +51,11 @@ function Login() {
 
   return (
     <Wrapper>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <StForm onSubmit={handleSubmit(onSubmit)}>
         {alertMessage && <p>{alertMessage}</p>}
         <StEmail>
-          <StLogin>Login</StLogin>
-          <h1>ID (email)</h1>
+          <StLogin>로그인</StLogin>
+          <h1>아이디(이메일)</h1>
           <Stinput
             type="email"
             {...register('email', { required: true })}
@@ -70,7 +69,7 @@ function Login() {
           )}
         </StEmail>
         <StPw>
-          <h1>Password</h1>
+          <h1>비밀번호</h1>
           <StPwinput
             type="password"
             {...register('password', { required: true })}
@@ -85,7 +84,7 @@ function Login() {
         </StPw>
         <StLoginButton type="submit">로그인</StLoginButton>
         <Link to="/signup">계정이 없으신가요? 여기서 가입하세요.</Link>
-      </form>
+      </StForm>
     </Wrapper>
   );
 }
@@ -103,7 +102,7 @@ const StLogin = styled.h1`
 const Stinput = styled.input`
   background: rgba(170, 170, 170, 0.26);
   border-radius: 40px;
-  width: 400px;
+  width: 350px;
   margin: 10px auto;
 `;
 
@@ -114,18 +113,32 @@ const StPw = styled.div`
 const StPwinput = styled.input`
   background: #d3d3d3;
   border-radius: 40px;
-  width: 400px;
+  width: 350px;
   margin: 10px auto;
 `;
 
 const StLoginButton = styled.button`
   background: #d3d3d3;
   border-radius: 40px;
-  width: 80px;
+  width: 350px;
   height: 30px;
+  margin: 10px auto;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
 `;
 
 const StErrorMsg = styled.span`
   color: red;
   /* visibility: hidden; */
+`;
+
+const StForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid black;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 `;

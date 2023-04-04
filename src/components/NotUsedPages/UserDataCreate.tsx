@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import GroupCreateModal from '../modal/GroupCreateModal';
-import UserCreateModal from '../modal/UserCreateModal';
+import UserCreateModal from './UserCreateModal';
 
 function UserDataCreate() {
   // Modal 변수들

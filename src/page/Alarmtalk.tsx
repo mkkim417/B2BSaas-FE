@@ -85,6 +85,7 @@ function Alarmtalk() {
         .then((res) => {
           setTemplatesList(res.data.data);
           setAllData(res.data.data[0]);
+          console.log(isAllData);
           setViewData(res.data.data[0]['text']);
           setReqData(JSON.parse(res.data.data[0].reqData));
           fetchTemplateDetail(res.data.data[0]['talkTemplateId']);
@@ -106,36 +107,12 @@ function Alarmtalk() {
           }
         )
         .then((res) => {
-          console.log(res.data);
           setReqTemplates(res.data.data);
         });
     } catch (error) {
       console.log(error);
     }
   }, []);
-  //전송내용불러오기 다시해야
-  const getKakaoExcelData = async () => {
-    try {
-      const response = await axios
-        .post(
-          `${process.env.REACT_APP_SERVER_URL}/api/talk/clients/contents`,
-          { groupId: 3, clientIds: [1, 2, 3] },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          console.log('kakaoAlertSend : ', res.data);
-        });
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-      alert('다시 시도해주시기 바랍니다.');
-    }
-  };
-
   const refactoringFunc = (TM_CODE: any) => {
     console.log(isAllData); //
     console.log('TM_CODE : ', TM_CODE); //현재성택된 템플릿명
@@ -220,15 +197,15 @@ function Alarmtalk() {
     }
     return data;
   };
-
+  //카카오전송
   const kakaoSaveFetch = async () => {
     console.log('isAllData.tmpCode : ', isAllData.talkTemplateCode);
     let data = refactoringFunc(isAllData.talkTemplateCode);
     console.log(data);
     try {
-      const response = await axios
+      await axios
         .post(
-          `${process.env.REACT_APP_SERVER_URL}/api/talk/both/contents/send`,
+          `${process.env.REACT_APP_SERVER_URL}/api/talk/contents`,
           { data },
           {
             headers: {
@@ -238,7 +215,6 @@ function Alarmtalk() {
         )
         .then((res) => {
           console.log(res.data);
-          dispatch(kakaoSendDataCreate(res.data.data));
           navigate('/kakaoresultlist');
         });
       // navigate('/');
@@ -248,7 +224,7 @@ function Alarmtalk() {
     }
   };
   const messagePreviewFunc = useCallback(
-    (text: string, target: string, groupId: string) => {
+    (text: string, target: string) => {
       const obj_n = document.getElementById(`${target}`)?.innerHTML;
       setTarget(text);
       const targetData = document.getElementById(`${obj_n}`)?.innerHTML;
@@ -305,9 +281,9 @@ function Alarmtalk() {
                 <div key={idx}>
                   <div id={`obj_${idx}`}>{el}</div>
                   <SelectBoxs
-                    // currentCategoryValue={currentValue}
-                    // className={`obj_${idx}`}
-                    // propFunction={messagePreviewFunc}
+                    currentCategoryValue={currentValue}
+                    className={`obj_${idx}`}
+                    propFunction={messagePreviewFunc}
                     optionData={
                       (sendKeyData && sendKeyData[0]) || ['빈값입니다.']
                     }
@@ -333,7 +309,7 @@ function Alarmtalk() {
             <Button
               onClick={() => {
                 //setAutoModal((prev) => !prev);
-                //kakaoSaveFetch();
+                kakaoSaveFetch();
               }}
             >
               전송
@@ -376,9 +352,8 @@ const Button = styled.button`
   padding: 5px 0px;
 `;
 export const Wrapper = styled.div`
-  padding-left: 200px;
+  padding-left: 250px;
   display: flex;
-  gap: 30px;
   -webkit-box-pack: center;
   align-items: center;
   justify-content: center;

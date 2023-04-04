@@ -38,9 +38,7 @@ const UserEditModal = ({
   const { mutate } = useMutation(eidtClientData, {
     onSuccess: (response) => {
       console.log(response);
-      alert('저장 성공!');
       closeModal();
-      window.location.reload();
     },
     onError: (error) => {
       console.log(error);
@@ -50,11 +48,8 @@ const UserEditModal = ({
 
   // submit button handler
   const submitHandler = async (e: any, closeModal: any) => {
-    e.preventDefault();
-
     // 연락처에서 '-' 제거
     const _contact = data.contact.replace(/-/g, '');
-    alert(`name: ${data.clientName}, contact : ${_contact}`);
 
     // 빈칸 확인 조건처리
     if (

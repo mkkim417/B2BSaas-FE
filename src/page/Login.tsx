@@ -36,7 +36,10 @@ function Login() {
       alert('로그인 성공.');
       const token = response.token;
       console.log(jwt_decode(token));
-      setCookie('userToken', token);
+
+      setCookie('userToken', token)
+      console.log('getCookie', getCookie('userToken'))
+
 
       navigate(-1);
     },

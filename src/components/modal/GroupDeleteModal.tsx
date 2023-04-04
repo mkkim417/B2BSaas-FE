@@ -1,88 +1,53 @@
-import axios from 'axios';
-import React from 'react';
+import React from 'react'
 import { useMutation } from 'react-query';
 import styled from 'styled-components';
-import { deleteClientData } from '../../axios/api';
+import { deleteGroupData } from '../../axios/api';
 
 type Props = {
   title?: string;
-  checkValue?: any;
-  closeModal: () => void;
+  content?: any;
+  closeModal?: () => void;
 };
-function UserDeleteModal({ title, checkValue, closeModal }: Props) {
+function GroupDeleteModal({ title, content, closeModal }: Props) {
 
-  // mutate 선언
-  const { mutate } = useMutation(deleteClientData, {
-    onSuccess : (response) => {
-      console.log(response);
-      alert('삭제가 완료되었습니다');
-      closeModal();
+  const { mutate } = useMutation(deleteGroupData, {
+    onSuccess: (response) => {
+      console.log('success', response);
+      alert('삭제 성공')
     },
     onError: (error) => {
-      console.log(error);
-      alert('삭제를 실패하였습니다.');
-    }
+      console.log('error', error);
+    },
   })
-  const deleteDataHandler = (e: any) => {
-    e.preventDefault();
-    // 확인 눌렀을 때
-    mutate(checkValue)
-    // const urls = checkValue.map(
-    //   (item: any) =>
-    //     `${process.env.REACT_APP_SERVER_URL}/api/clients/${item.clientId}`
-    // );
-    // console.log(urls);
-    // axios
-    //   .all(
-    //     urls.map((url: any) =>
-    //       axios.delete(url, { headers: { authorization: `Bearer ${token}` } })
-    //     )
-    //   )
-    //   .then((response) => {
-    //     console.log(response);
-    //     alert('삭제가 완료되었습니다');
-    //     closeModal();
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.response);
-    //     alert('삭제를 실패하였습니다.');
-    //   });
-  };
+  const onSubmitHandler = async() => {
+    mutate(content.groupId)
+  }
   return (
     <ModalWrap>
       <ModalBackGround>
         <ModalContainer>
           <ContentContainer>
             <TitleContainer>
-              <div>{title}</div>
-              <div>해당 고객을 삭제시, 관련 발송내역이 모두 삭제됩니다.</div>
+              <div>정말 삭제하시겠습니까?</div>
+              <div>해당 그룹 삭제시, 관련 발송내역도 모두 삭제됩니다.</div>
+              {/* <div>해당 그룹을 삭제시, 관련 발송내역도 모두 삭제됩니다.</div> */}
             </TitleContainer>
             <DataHeader>
-              <RowPercent width="20%">이름</RowPercent>
-              <RowPercent width="30%">연락처</RowPercent>
-              <RowPercent width="50%">이메일</RowPercent>
-            </DataHeader>
-            <DataContainer>
-              {checkValue.map((item: any) => {
-                return (
-                  <DataHeader>
-                    <RowPercent width="20%">{item.clientName}</RowPercent>
-                    <RowPercent width="30%">{item.contact}</RowPercent>
-                    <RowPercent width="50%">{item.clientEmail}</RowPercent>
-                  </DataHeader>
-                );
-              })}
-            </DataContainer>
+                <div>삭제할 그룹목록</div>
+              </DataHeader>
+              <DataContainer>
+                {content.groupName}
+              </DataContainer>
           </ContentContainer>
           <ButtonContainer>
             {/* <ButtonBox>아니오</ButtonBox> */}
             <ButtonBox onClick={closeModal}>취소</ButtonBox>
-            <ButtonBox onClick={deleteDataHandler}>확인</ButtonBox>
+            <ButtonBox onClick={onSubmitHandler}>확인</ButtonBox>
           </ButtonContainer>
         </ModalContainer>
       </ModalBackGround>
     </ModalWrap>
-  );
+  )
 }
 
 // 전체 모달 감싸주는 컴포넌틑
@@ -180,4 +145,4 @@ const ButtonBox = styled.button`
   font-size: 18px;
 `;
 
-export default UserDeleteModal;
+export default GroupDeleteModal

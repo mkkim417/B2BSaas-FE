@@ -2,8 +2,8 @@ import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import styled from 'styled-components';
-import UserCreateModal from '../modal/UserCreateModal';
 import UserEditModal from '../modal/UserEditModal';
+import UserCreateModal from './UserCreateModal';
 import {
   Button,
   CardContainer,

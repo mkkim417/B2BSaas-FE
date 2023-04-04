@@ -26,6 +26,7 @@ import KakaoDetailList from '../page/KakaoDetailList';
 import PricePoicy from '../page/PricePolicy';
 import { getCookie } from '../util/cookie';
 import PrivateRoute from '../util/PrivateRoute';
+import ReadyAlarmtalk from '../page/ReadyAlarmtalk';
 
 const Router = () => {
   const token = getCookie('userToken');
@@ -69,6 +70,9 @@ const Router = () => {
                 path="/clientregistration"
                 element={<ClientRegistration />}
               />
+            </Route>
+            <Route element={<PrivateRoute authentication={true} />}>
+              <Route path="/readyalarmtalk/:id" element={<ReadyAlarmtalk />} />
             </Route>
             <Route element={<PrivateRoute authentication={true} />}>
               <Route path="/groupmanageList" element={<GroupManageList />} />

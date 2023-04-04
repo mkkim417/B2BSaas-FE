@@ -173,6 +173,11 @@ const Signup = () => {
     console.log('isEmail', isEmail);
     console.log('isEmail', isEmail + formData.emailProvider);
 
+    if (!email) {
+      alert('이메일을 입력해주세요.');
+      return;
+    }
+
     try {
       const response = await axios
         .post('https://dev.sendingo-be.store/api/users/signup/existemail', {

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 type Props = {
   title?: string;
   content?: string;
-  closeModal?: () => void;
+  closeModal: () => void;
 };
 function AlertModal({ title, content, closeModal }: Props) {
   return (

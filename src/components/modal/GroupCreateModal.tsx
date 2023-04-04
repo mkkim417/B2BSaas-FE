@@ -7,7 +7,7 @@ import { postGroupData } from '../../axios/api';
 import { PaginationBox } from '../NotUsedPages/UserList';
 
 type Props = {
-  closeModal?: () => void;
+  closeModal: () => void;
 };
 const GroupCreateModal = ({ closeModal }: Props) => {
   // const token = localStorage.getItem('Token');
@@ -30,6 +30,7 @@ const GroupCreateModal = ({ closeModal }: Props) => {
   const { mutate } = useMutation(postGroupData, {
     onSuccess : (response) => {
       console.log(response);
+      closeModal();
     },
     onError: (error) => {
       console.log(error);
@@ -38,17 +39,10 @@ const GroupCreateModal = ({ closeModal }: Props) => {
 
   // submit button handler
   const submitHandler = async (e: any, closeModal: any) => {
-    alert(`groupName : ${data.groupName}, groupDes : ${data.groupDescription}`);
-    // e.preventDefault();
-    // alert('저장!')
     if (!(data.groupName === '' && data.groupDescription === '')) {
-      // axios.post(`${process.env.REACT_APP_SERVER_URL}/api/groups`, data, {
-      //   headers: { authorization: `Bearer ${token}` },
-      // });
+      // 빈칸없다면 그룹생성 API post
       mutate(data)
 
-      alert('저장 성공!');
-      closeModal();
     } else {
       alert('빈칸을 채워주세요.');
     }

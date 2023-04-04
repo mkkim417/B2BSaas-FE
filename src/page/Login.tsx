@@ -26,6 +26,7 @@ function Login() {
       const token = response.token;
       console.log(jwt_decode(token));
       setCookie('userToken', token)
+      console.log('getCookie', getCookie('userToken'))
 
       navigate('/');
     },

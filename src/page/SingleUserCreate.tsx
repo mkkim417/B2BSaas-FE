@@ -1,12 +1,15 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { postSingleClient } from '../axios/api';
 import ClientHeader from '../components/ClientHeader';
 import AlertModal from '../components/modal/AlertModal';
 
 function SingleUserCreate() {
+
+  const navigate = useNavigate();
   // Modal 변수들
 
   // 성공 모달
@@ -16,6 +19,7 @@ function SingleUserCreate() {
   };
   const closeSuccessModal = () => {
     setIsSuccessModal(false);
+    window.location.reload();
   };
 
   // 실패 모달
@@ -26,6 +30,14 @@ function SingleUserCreate() {
   const closeModal = () => {
     setIsFailModal(false);
   };
+  // 이메일형식 유효성 모달
+  const [ emailValModal, setEmailValModal ] = useState(false);
+  const clickEmailModal = () => {
+    setEmailValModal(true);
+  }
+  const closeEmailModal = () => {
+    setEmailValModal(false);
+  }
 
   // input 기본 state
   const initialInput = {
@@ -51,17 +63,24 @@ function SingleUserCreate() {
     onSuccess : (response) => {
       console.log(response);
       clickSuccessModal();
+      navigate('/clientRegistration');
+      
     },
     onError: (error) => {
       console.log(error);
     }
   });
+
+  useEffect(() => {
+  },[clickSuccessModal])
   // submit 핸들러
   const submitHandler = async (e: any) => {
     e.preventDefault();
 
     // 연락처는 '-'제거 후 api 보내기
     const _contact = inputData.clientContact.replace(/-/g, '');
+    // 이메일 유효성
+    const _email = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
     // 빈칸 유효성 처리
     if (
@@ -71,12 +90,22 @@ function SingleUserCreate() {
         inputData.clientContact === ''
       )
     ) {
-      //  이름, 이메일, 연락처 빈칸 없으면 등록
-      mutate({
-        clientName : inputData.clientName,
-        clientEmail : inputData.clientEmail,
-        contact : _contact
-        })
+      // 이메일 형식 유효성 검사
+      if ( _email.test(inputData.clientEmail) === true) {
+        // 연락처 유효성 검사
+        if( _contact.length > 11 || _contact.length < 11) {
+          alert('연락처를 다시 한번 확인해주세요.')
+        } else {
+          mutate({
+            clientName : inputData.clientName,
+            clientEmail : inputData.clientEmail,
+            contact : _contact
+            })
+        }
+      } else {
+        // 이메일유효성이 올바르지 않을 경우
+        clickEmailModal()
+      }
     } else {
       // 실패 모달
       clickOpenModal();
@@ -126,6 +155,10 @@ function SingleUserCreate() {
       )}
       {isFailModal && (
         <AlertModal closeModal={closeModal} content="빈칸을 확인해주세요." />
+      )}
+      {/* 이메일 유효성 실패 모달 */}
+      {emailValModal && (
+        <AlertModal closeModal={closeEmailModal} content="이메일 형식이 맞지않습니다." />
       )}
     </Container>
   );

@@ -204,7 +204,7 @@ const Signup = () => {
     onSuccess : (response) => {
       console.log(response)
       alert('회원가입 완료!')
-      navigate('/');
+      navigate('/login');
     },
     onError : (error) => {
       console.log(error)

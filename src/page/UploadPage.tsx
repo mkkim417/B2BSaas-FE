@@ -37,6 +37,8 @@ function UploadPage() {
   const [isGroupIdObj, setGroupIdObj] = useState('');
   const [isTemplatesList, setTemplatesList] = useState<any>([]);
   const [isReqData, setReqData] = useState([]);
+  const [isClientId, setClientId] = useState([]);
+
   const nextRef = useRef<HTMLButtonElement>(null);
   const InputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
@@ -62,7 +64,6 @@ function UploadPage() {
   //다음단계버튼
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
-      console.log('fileInput : ', fileInput.current.files[0]);
       if (fileInput.current.files[0] === undefined) {
         alert('파일을 선택해주세요');
         return;
@@ -126,6 +127,7 @@ function UploadPage() {
   };
   //엑셀 필수값 필터링함수
   const refatoringFunc = (keyData: string[], name: string[]) => {
+    console.log(keyData, name);
     for (let i = 0; i < name.length; i++) {
       if (keyData.includes(name[i]) === false) {
         DummyDeleteFuction();
@@ -248,10 +250,11 @@ function UploadPage() {
     }
     let requiredKeyData = Object.keys(Object.assign({}, ...isData));
 
-    console.log('reqKeyArr :', reqKeyArr);
-    console.log('requiredKeyData :', requiredKeyData);
+    console.log('isReqData :', isReqData);
+    console.log('필수값 :', reqKeyArr);
+    console.log('존재하는값 :', requiredKeyData);
 
-    if ((refatoringFunc(reqKeyArr, requiredKeyData) as any) !== true) return;
+    if ((refatoringFunc(requiredKeyData, reqKeyArr) as any) !== true) return;
 
     let data = [] as any;
     //템플릿 필요한데이터를 [reqData] 키값으로 두고
@@ -275,27 +278,31 @@ function UploadPage() {
       })
     );
     console.log(data);
-
-    // try {
-    //   const response = await axios
-    //     .post(
-    //       `${process.env.REACT_APP_SERVER_URL}/api/clients/contents/bulk`,
-    //       { data },
-    //       {
-    //         headers: {
-    //           Authorization: `Bearer ${token}`,
-    //         },
-    //       }
-    //     )
-    //     .then((res) => {
-    //       console.log('api/clients/bulk : ', res.data);
-    //       dispatch(clientsIdCreate(res?.data?.newClients));
-    //     });
-    //   // navigate('/');
-    // } catch (error) {
-    //   console.log(error);
-    //   // alert('다시 시도해주시기 바랍니다.');
-    // }
+    console.log(isOpen);
+    console.log(isClUpload);
+    try {
+      const response = await axios
+        .post(
+          `${process.env.REACT_APP_SERVER_URL}/api/clients/contents/bulk`,
+          { data },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log('api/clients/bulk : ', res.data.clientIds);
+          dispatch(clientsIdCreate(res?.data?.clientIds));
+          NextBtnHandler(isData, isKeyData);
+          console.log(res.data.clientIds);
+          setClientId(res.data.clientIds);
+        });
+      // navigate('/');
+    } catch (error) {
+      console.log(error);
+      // alert('다시 시도해주시기 바랍니다.');
+    }
   };
   //그룹리스트
   const getGroupData = useCallback(async () => {
@@ -317,7 +324,7 @@ function UploadPage() {
     },
     onError: (error) => {
       console.error(error);
-      alert('로그인 실패.');
+      alert('파일을 선택해주세요.');
     },
   });
   const ClientBulkFetch = useCallback(
@@ -372,11 +379,12 @@ function UploadPage() {
     try {
       if (isNewGroupInput) {
         //신규그룹
+        console.log('isClientId : ', isClientId);
         const response = await axios
           .post(
             `${process.env.REACT_APP_SERVER_URL}/api/batch/groups`,
             {
-              clientIds: clientIdData,
+              clientIds: isClientId,
               groupName,
               groupDescription: descName,
             },
@@ -395,7 +403,7 @@ function UploadPage() {
           .post(
             `${process.env.REACT_APP_SERVER_URL}/api/batch/groups/${groupId}`,
             {
-              clientIds: clientIdData,
+              clientIds: isClientId,
             },
             {
               headers: {
@@ -449,6 +457,7 @@ function UploadPage() {
   //   '차집합 :',
   //   isData && isData.filter((x: any) => !checkedList.includes(x))
   // )
+  console.log(isClientId);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -479,12 +488,18 @@ function UploadPage() {
             </span>
           </TemplateWrap>
           {/* 드롭다운 */}
-          <select name="" id="" onChange={(e) => handleOnChangeSelectValue(e)}>
-            {isTemplatesList &&
-              isTemplatesList.map((el: any) => (
-                <option key={el.talkTemplateId}>{el.talkTemplateName}</option>
-              ))}
-          </select>
+          <TemplateWrap>
+            <select
+              name=""
+              id=""
+              onChange={(e) => handleOnChangeSelectValue(e)}
+            >
+              {isTemplatesList &&
+                isTemplatesList.map((el: any) => (
+                  <option key={el.talkTemplateId}>{el.talkTemplateName}</option>
+                ))}
+            </select>
+          </TemplateWrap>
           {/* {isReqData &&
             isReqData.map((el: any, idx: any) => (
               <div key={idx}>
@@ -566,7 +581,6 @@ function UploadPage() {
                 <Button
                   ref={nextRef}
                   onClick={() => {
-                    NextBtnHandler(isData, isKeyData);
                     ClientBulkFetch(isData);
                   }}
                 >

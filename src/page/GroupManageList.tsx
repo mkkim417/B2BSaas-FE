@@ -715,7 +715,7 @@ const Container = styled.div`
   /* padding-bottom: 50px; */
   /* background-color: sandybrown; */
 `;
-const HeaderContainer = styled.div`
+export const HeaderContainer = styled.div`
   height: 100px;
   width: 100%;
   display: flex;

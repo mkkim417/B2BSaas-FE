@@ -72,7 +72,12 @@ const Router = () => {
               />
             </Route>
             <Route element={<PrivateRoute authentication={true} />}>
-              <Route path="/readyalarmtalk/:id" element={<ReadyAlarmtalk />} />
+              <Route path="/readyalarmtalk" element={<ReadyAlarmtalk />}>
+                <Route
+                  path="/readyalarmtalk/:id"
+                  element={<ReadyAlarmtalk />}
+                />
+              </Route>
             </Route>
             <Route element={<PrivateRoute authentication={true} />}>
               <Route path="/groupmanageList" element={<GroupManageList />} />

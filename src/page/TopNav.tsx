@@ -18,7 +18,7 @@ const TopNav = () => {
   const clientRegistration = useMatch('/clientregistration');
   const groupManageList = useMatch('/groupmanageList');
   const kakaoresultlist = useMatch('/kakaoresultlist');
-  const alarmtalk = useMatch('/alarmtalk');
+  const readyalarmtalk = useMatch('/readyalarmtalk');
 
   // console.log('Uploadpage : ', Uploadpage);
   // console.log('Home : ', Home);
@@ -71,8 +71,8 @@ const TopNav = () => {
           contents={
             <div>
               <Ul>
-                <Link to={'/alarmtalk'}>
-                  {alarmtalk ? (
+                <Link to={'/readyalarmtalk'}>
+                  {readyalarmtalk ? (
                     <LiBlue>알림톡전송</LiBlue>
                   ) : (
                     <Li>알림톡전송</Li>

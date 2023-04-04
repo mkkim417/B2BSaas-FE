@@ -1,15 +1,26 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { ReactElement } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import { getCookie } from './cookie';
 
-const PrivateRoute = ({ authenticated, component: Component }: any) => {
-  return authenticated ? (
-    Component
-  ) : (
-    <Navigate
-      to="/login"
-      {...(alert('로그인이 필요합니다.') as any)}
-    ></Navigate>
-  );
-};
-
-export default PrivateRoute;
+interface PrivateRouteProps {
+  children?: ReactElement;
+  authentication: boolean;
+}
+export default function PrivateRoute({
+  authentication,
+}: PrivateRouteProps): React.ReactElement | null {
+  const isAuthenticated = getCookie('userToken');
+  if (authentication) {
+    return isAuthenticated === undefined || isAuthenticated === 'false' ? (
+      <Navigate to="/login" {...(alert('로그인하십시요') as any)} />
+    ) : (
+      <Outlet />
+    );
+  } else {
+    return isAuthenticated === undefined || isAuthenticated === 'false' ? (
+      <Outlet />
+    ) : (
+      <Navigate to="/" />
+    );
+  }
+}

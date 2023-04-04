@@ -34,17 +34,10 @@ const Router = () => {
       {/* <TopNav /> */}
       <AnimatePresence>
         <Routes>
-          <Route path="/" element={<TopNav />}>
-            <Route
-              path="/uploadpage"
-              element={
-                <PrivateRoute
-                  component={<UploadPage />}
-                  authenticated={token}
-                />
-              }
-            />
-            {/* <Route path="/uploadpage" element={<UploadPage />} /> */}
+          <Route element={<TopNav />}>
+            <Route element={<PrivateRoute authentication={true} />}>
+              <Route path="/uploadpage" element={<UploadPage />} />
+            </Route>
             <Route
               path="/noticepersonallist"
               element={<NoticePersonalList />}
@@ -55,8 +48,14 @@ const Router = () => {
             {/* <Route path="/usergroupcreate" element={<UserGroupCreate />} /> */}
             {/* <Route path="/usergrouplist" element={<UserGroupList />} /> */}
             <Route path="/userlist" element={<UserList />} />
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/alarmtalk/:id" element={<Alarmtalk />} />
+            <Route element={<PrivateRoute authentication={true} />}>
+              <Route path="/statistics" element={<Statistics />} />
+            </Route>
+            <Route element={<PrivateRoute authentication={true} />}>
+              <Route path="/alarmtalk" element={<Alarmtalk />}>
+                <Route path="/alarmtalk/:id" element={<Alarmtalk />} />
+              </Route>
+            </Route>
             <Route path="/signup" element={<Signup />} />
             <Route path="/email" element={<Email />} />
             <Route path="/login" element={<Login />} />
@@ -65,17 +64,23 @@ const Router = () => {
             <Route path="/groupinuserlist/:id" element={<GroupInUserList />} />
             <Route path="/emailtemplates" element={<EmailTemplates />} />
             <Route path="/singleusercreate" element={<SingleUserCreate />} />
-            <Route
-              path="/clientregistration"
-              element={<ClientRegistration />}
-            />
-            <Route path="/groupmanageList" element={<GroupManageList />} />
-            <Route path="/kakaoresultlist" element={<KakaoResultList />} />
+            <Route element={<PrivateRoute authentication={true} />}>
+              <Route
+                path="/clientregistration"
+                element={<ClientRegistration />}
+              />
+            </Route>
+            <Route element={<PrivateRoute authentication={true} />}>
+              <Route path="/groupmanageList" element={<GroupManageList />} />
+            </Route>
+            <Route element={<PrivateRoute authentication={true} />}>
+              <Route path="/kakaoresultlist" element={<KakaoResultList />} />
+            </Route>
             <Route path="/pricepolicy" element={<PricePoicy />} />
             <Route path="/kakaodetaillist/:id" element={<KakaoDetailList />} />
           </Route>
           <Route
-            path="/home"
+            path="/"
             element={
               <>
                 <Header />

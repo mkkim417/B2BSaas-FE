@@ -11,8 +11,8 @@ const instance = axios.create({
 });
 instance.interceptors.request.use(function (config) {
   // const { accessToken, userToken } = getTokens();
-  const token = getCookie('userToken')
-  if ( token ) {
+  const token = getCookie('userToken');
+  if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   // if (accessToken) {
@@ -25,7 +25,7 @@ instance.interceptors.request.use(function (config) {
 });
 
 // 회원가입
-export const postSignUp = async ( user: any) => {
+export const postSignUp = async (user: any) => {
   const response = await instance.post('/api/users/signup', {
     email: user.email,
     password: user.password,
@@ -35,9 +35,9 @@ export const postSignUp = async ( user: any) => {
     companyName: user.companyName,
     companyNumber: user.companyNumber,
     companyEmail: user.companyEmail,
-  })
+  });
   return response;
-}
+};
 // 로그인
 export const postLogin = async (data: Login) => {
   try {
@@ -64,46 +64,44 @@ export const postSingleClient = async (user: any) => {
 };
 // 빈 그룹 생성
 export const postGroupData = async (data: any) => {
-  const response = await instance.post('/api/groups', data)
+  const response = await instance.post('/api/groups', data);
   return response;
-}
+};
 
 // 전체 클라이언트 리스트 불러오기
-export const getAllClientList = async (page : any) => {
-  const response = await instance.get(`/api/clients?index=${page}`)
-    return response.data;
-
-}
+export const getAllClientList = async (page: any) => {
+  const response = await instance.get(`/api/clients?index=${page}`);
+  return response.data;
+};
 // 전체 그룹 리스트 불러오기
 export const getAllGroupList = async () => {
-  const response = await instance.get('/api/groups')
+  const response = await instance.get('/api/groups');
   return response.data;
-}
+};
 // 단건 고객정보 수정
-export const eidtClientData = async (user:any) => {
+export const eidtClientData = async (user: any) => {
   const response = await instance.patch(`/api/clients/${user.clientId}`, {
-      clientName :user.clientName,
-      contact :user.contact,
-      clientEmail :user.clientEmail
-    })
+    clientName: user.clientName,
+    contact: user.contact,
+    clientEmail: user.clientEmail,
+  });
   return response;
-}
+};
 // 고객리스트에서 고객 삭제
-export const deleteClientData = async(checkValue: any) => {
-  const urls = checkValue.map(
-    (item: any) =>
-      `/api/clients/${item.clientId}`
-  );
+export const deleteClientData = async (checkValue: any) => {
+  const urls = checkValue.map((item: any) => `/api/clients/${item.clientId}`);
   const response = await axios.all(
-    urls.map((url: any) => { instance.delete(url)})
-  )
+    urls.map((url: any) => {
+      instance.delete(url);
+    })
+  );
   return response;
-}
+};
 // 그룹 삭제
 export const deleteGroupData = async (groupId: any) => {
-  const response = await instance.delete(`/api/groups/${groupId}`)
+  const response = await instance.delete(`/api/groups/${groupId}`);
   return response;
-}
+};
 // 그룹 내 클라이언트 복사
 // 그룹 내 클라이언트 이동
 

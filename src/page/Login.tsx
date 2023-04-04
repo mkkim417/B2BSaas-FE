@@ -33,13 +33,12 @@ function Login() {
 
   const { mutate } = useMutation(postLogin, {
     onSuccess: (response) => {
-      console.log(response);
       alert('로그인 성공.');
       const token = response.token;
       console.log(jwt_decode(token));
-      setCookie('userToken', token)
+      setCookie('userToken', token);
 
-      navigate('/');
+      navigate(-1);
     },
     onError: (error) => {
       console.error(error);

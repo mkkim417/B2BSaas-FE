@@ -201,19 +201,20 @@ const Signup = () => {
 
   // mutate 선언
   const { mutate } = useMutation(postSignUp, {
-    onSuccess : (response) => {
-      console.log(response)
-      alert('회원가입 완료!')
+    onSuccess: (response) => {
+      console.log(response);
+      alert('회원가입 완료!');
       navigate('/');
     },
-    onError : (error) => {
-      console.log(error)
-      alert('회원가입 실패')
-    }
-  })
+    onError: (error) => {
+      console.log(error);
+      alert('회원가입 실패');
+    },
+  });
   const onSubmit = async (data: FormValues) => {
     if (!isDupliEmail) {
       alert('이메일 중복을 확인해주세요');
+      return;
     }
 
     if (!isValid) {
@@ -244,7 +245,7 @@ const Signup = () => {
       companyName: data.companyName,
       companyNumber: data.companyNumber,
       companyEmail: sendEmail2,
-    })
+    });
   };
 
   return (

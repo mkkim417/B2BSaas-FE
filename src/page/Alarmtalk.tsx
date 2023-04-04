@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import SelectBoxs from '../components/SelectBoxs';
-import { ALAERMTALK_TEMPLATE } from '../constants/alarmtalk';
 import { kakaoSendDataCreate } from '../redux/modules/kakaoSendData';
 import AutoModal, {
   KakaoBox,
@@ -33,24 +32,14 @@ function Alarmtalk() {
     return state.clientsId.clientsId;
   });
 
-  const TemplatesNameDummy = () => {
-    let Arr = [] as any[];
-    isTemplatesList.map((el: any) => {
-      Arr.push(el.talkTemplateName);
-    });
-    console.log(Arr);
-    return Arr;
-  };
   const [isAutoModal, setAutoModal] = useState<boolean>(false);
   const [currentValue, setCurrentValue] = useState(null);
   const [isTarget, setTarget] = useState<string | undefined>(undefined);
-  const [isValue, setValue] = useState('');
-  const [isAllData, setAllData] = useState<any>(
-    ALAERMTALK_TEMPLATE['택배번호 안내']
-  );
-  const [isViewData, setViewData] = useState<string>(
-    ALAERMTALK_TEMPLATE['택배번호 안내'].text
-  );
+  const [isReqTemplates, setReqTemplates] = useState('');
+  const [isReqData, setReqData] = useState([]);
+
+  const [isAllData, setAllData] = useState<any>();
+  const [isViewData, setViewData] = useState<string>();
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
   };
@@ -84,7 +73,7 @@ function Alarmtalk() {
       alert('다시 시도해주시기 바랍니다.');
     }
   };
-
+  //템플릿전체조회
   const fetchTemplateList = useCallback(async () => {
     try {
       await axios
@@ -95,6 +84,30 @@ function Alarmtalk() {
         })
         .then((res) => {
           setTemplatesList(res.data.data);
+          setAllData(res.data.data[0]);
+          setViewData(res.data.data[0]['text']);
+          setReqData(JSON.parse(res.data.data[0].reqData));
+          fetchTemplateDetail(res.data.data[0]['talkTemplateId']);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  //템플릿상세조회
+  const fetchTemplateDetail = useCallback(async (talkTemplateId: number) => {
+    try {
+      await axios
+        .get(
+          `${process.env.REACT_APP_SERVER_URL}/api/talk/templates/${talkTemplateId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          setReqTemplates(res.data.data);
         });
     } catch (error) {
       console.log(error);
@@ -105,8 +118,8 @@ function Alarmtalk() {
     try {
       const response = await axios
         .post(
-          `${process.env.REACT_APP_SERVER_URL}/api/talk/sends`,
-          // { data },
+          `${process.env.REACT_APP_SERVER_URL}/api/talk/clients/contents`,
+          { groupId: 3, clientIds: [1, 2, 3] },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -209,8 +222,8 @@ function Alarmtalk() {
   };
 
   const kakaoSaveFetch = async () => {
-    console.log('isAllData.tmpCode : ', isAllData.tmpCode);
-    let data = refactoringFunc(isAllData.tmpCode);
+    console.log('isAllData.tmpCode : ', isAllData.talkTemplateCode);
+    let data = refactoringFunc(isAllData.talkTemplateCode);
     console.log(data);
     try {
       const response = await axios
@@ -253,17 +266,19 @@ function Alarmtalk() {
     },
     [sendListData]
   );
-  console.log(isAllData.tmpCode);
   // onChange setState비동기
   useEffect(() => {
     if (currentValue !== null) {
-      setAllData(ALAERMTALK_TEMPLATE[currentValue]);
-      setViewData(ALAERMTALK_TEMPLATE[currentValue]['text']);
+      const data = isTemplatesList.filter(
+        (el: any) => el.talkTemplateName === currentValue
+      );
+      setAllData(data[0]);
+      setViewData(data[0]['text']);
+      setReqData(JSON.parse(data[0].reqData));
     }
   }, [currentValue]);
   useEffect(() => {
     fetchTemplateList();
-    console.log('fetchTemplateList');
   }, [fetchTemplateList]);
   return (
     <motion.div
@@ -280,25 +295,25 @@ function Alarmtalk() {
               id=""
               onChange={(e) => handleOnChangeSelectValue(e)}
             >
-              {TemplatesNameDummy().map((el, idx) => (
-                <option key={idx} value={el}>
-                  {el}
-                </option>
-              ))}
+              {isTemplatesList &&
+                isTemplatesList.map((el: any, idx: number) => (
+                  <option>{el.talkTemplateName}</option>
+                ))}
             </select>
-            {isAllData.reqData.map((el: any, idx: any) => (
-              <div key={idx}>
-                <div id={`obj_${idx}`}>{el}</div>
-                <SelectBoxs
-                  currentCategoryValue={currentValue}
-                  className={`obj_${idx}`}
-                  propFunction={messagePreviewFunc}
-                  optionData={
-                    (sendKeyData && sendKeyData[0]) || ['빈값입니다.']
-                  }
-                ></SelectBoxs>
-              </div>
-            ))}
+            {isReqData &&
+              isReqData.map((el: any, idx: any) => (
+                <div key={idx}>
+                  <div id={`obj_${idx}`}>{el}</div>
+                  <SelectBoxs
+                    // currentCategoryValue={currentValue}
+                    // className={`obj_${idx}`}
+                    // propFunction={messagePreviewFunc}
+                    optionData={
+                      (sendKeyData && sendKeyData[0]) || ['빈값입니다.']
+                    }
+                  ></SelectBoxs>
+                </div>
+              ))}
           </>
         </LeftContents>
         <RightContents>
@@ -309,7 +324,7 @@ function Alarmtalk() {
               </YellowWrap>
               <WhiteWrap
                 id="view"
-                dangerouslySetInnerHTML={{ __html: isViewData }}
+                dangerouslySetInnerHTML={{ __html: isViewData || '' }}
               ></WhiteWrap>
             </KakaoBox>
           </ContnetDataWrap>
@@ -318,7 +333,7 @@ function Alarmtalk() {
             <Button
               onClick={() => {
                 //setAutoModal((prev) => !prev);
-                kakaoSaveFetch();
+                //kakaoSaveFetch();
               }}
             >
               전송

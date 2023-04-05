@@ -86,7 +86,9 @@ function Login() {
           )}
         </StPw>
         <StLoginButton type="submit">로그인</StLoginButton>
-        <Link to="/signup">계정이 없으신가요? 여기서 가입하세요.</Link>
+        <Stsignup>
+          <Link to="/signup">계정이 없으신가요? 여기서 가입하세요.</Link>
+        </Stsignup>
       </StForm>
     </Wrapper>
   );
@@ -96,33 +98,51 @@ export default Login;
 
 const StEmail = styled.div`
   margin: 10px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
 `;
 
 const StLogin = styled.h1`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 20px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
 `;
 
 const Stinput = styled.input`
   background: rgba(170, 170, 170, 0.26);
-  border-radius: 40px;
+  border-radius: 8px;
   width: 350px;
   margin: 10px auto;
 `;
 
 const StPw = styled.div`
   margin: 10px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
 `;
 
 const StPwinput = styled.input`
   background: #d3d3d3;
-  border-radius: 40px;
+  border-radius: 8px;
   width: 350px;
   margin: 10px auto;
 `;
 
 const StLoginButton = styled.button`
-  background: #d3d3d3;
-  border-radius: 40px;
+  background: #14b769;
+  border-radius: 8px;
   width: 350px;
   height: 30px;
   margin: 10px auto;
@@ -131,6 +151,7 @@ const StLoginButton = styled.button`
   font-weight: 700;
   font-size: 16px;
   line-height: 20px;
+  color: #ffffff;
 `;
 
 const StErrorMsg = styled.span`
@@ -142,6 +163,15 @@ const StForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+`;
+
+const Stsignup = styled.div`
+  margin: 20px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
 `;

@@ -52,14 +52,14 @@ function GroupManageList() {
   // 그룹리스트 이름 textarea 변수
   const [groupName, setGroupName] = useState('');
   // 그룹리스트 GET API
-  const getGroupData = useCallback(async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/groups`,
-      { headers: { authorization: `Bearer ${token}` } }
-    );
-    console.log('GroupList API 렌더링', response);
-    setGroupList(response.data.data);
-  }, []);
+  // const getGroupData = useCallback(async () => {
+  //   const response = await axios.get(
+  //     `${process.env.REACT_APP_SERVER_URL}/api/groups`,
+  //     { headers: { authorization: `Bearer ${token}` } }
+  //   );
+  //   console.log('GroupList API 렌더링', response);
+  //   setGroupList(response.data.data);
+  // }, []);
 
   // 전체고객리스트 useRef
   useEffect(() => {}, []);
@@ -83,23 +83,9 @@ function GroupManageList() {
   // 그룹리스트 내 클라이언트 변수
   const [groupClient, setGroupClient] = useState([] as any);
 
-  //알림톡전송 클릭이벤트
-  const readyAlarmTalk = () => {
-    const ArrClientsIdsData = [] as string[];
-    groupClient.map((el: { clientId: string }) => {
-      ArrClientsIdsData.push(el.clientId);
-    });
-    console.log('ArrClientsIdsData : ', ArrClientsIdsData);
-    navigate(`/readyalarmtalk/${groupId}`, {
-      state: { ArrClientsIdsData },
-    });
-    // <Link to={`/readyalarmtalk/${groupId}`} state={{ clientIds: null }}></Link>;
-  };
-
   // 그룹 클릭시 그룹 내 클라이언트리스트 호출
   const getClientInGroup = useCallback(
     async (id: any, name: any, page: any) => {
-      setGroupId(id);
       setCheckedArr([]);
       setIsClientState(false);
       const response = await axios
@@ -108,15 +94,9 @@ function GroupManageList() {
           { headers: { Authorization: `Bearer ${token}` } }
         )
         .then((res) => {
-          console.log(res.data.data);
           setGroupClient(res.data.data);
         });
-      //** 트러블 슈팅 함수형 업데이트로 변경.. 두번 클릭해야 불러오는 상황 발생
-      // setGroupClient(() => {
-      //   return response.data.data;
-      // });
-
-      // setIsGroupAllClients(response.data.data.length)
+      console.log('그룹내 클라이언트', response);
 
       setGroupId(id);
       setGroupName(name);
@@ -339,7 +319,19 @@ function GroupManageList() {
     console.log('deletegroup', deleteGroup);
     clickGroupDeleteModal();
   };
+  //알림톡전송 다음페이지
+  const readyAlarmTalk = () => {
+    const ArrClientsIdsData = [] as string[];
+    groupClient.map((el: { clientId: string }) => {
+      ArrClientsIdsData.push(el.clientId);
+    });
+    console.log('ArrClientsIdsData : ', ArrClientsIdsData);
+    navigate(`/readyalarmtalk/${groupId}`, {
+      state: { ArrClientsIdsData },
+    });
 
+    // <Link to={`/readyalarmtalk/${groupId}`} state={{ clientIds: null }}></Link>;
+  };
   // 체크박스관련
   //******************************************************************************
 

@@ -15,6 +15,7 @@ import { getCookie } from '../util/cookie';
 import { HeaderContainer } from './GroupManageList';
 import { useMutation } from 'react-query';
 import { fetchTemplatesList } from '../axios/api';
+import { KorToEngTransData, engToKorTransData } from '../constants/alarmtalk';
 function Alarmtalk() {
   const [isTemplatesList, setTemplatesList] = useState<any>([]);
   const token = getCookie('userToken');
@@ -22,17 +23,10 @@ function Alarmtalk() {
   const location = useLocation();
   //console.log(location.state.ArrClientsIdsData);
   const params = useParams();
-  const sendKeyData = useSelector((state: any) => {
-    return state.sendKey.sendKey;
-  });
 
   const sendGroupNameData = useSelector((state: any) => {
     return state.sendGroupName.sendGroupName;
   });
-  const clientIdData = useSelector((state: any) => {
-    return state.clientsId.clientsId;
-  });
-
   const [isAutoModal, setAutoModal] = useState<boolean>(false);
   const [currentValue, setCurrentValue] = useState(null);
   const [isTarget, setTarget] = useState<string | undefined>(undefined);
@@ -47,49 +41,6 @@ function Alarmtalk() {
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
   };
-
-  const engToKorTransData = {
-    clientEmail: '이메일',
-    clientId: 'ID',
-    clientName: '이름',
-    contact: '연락처',
-    createdAt: '생성일',
-    customerName: '고객명',
-    deliveryCompany: '택배사',
-    deliveryDate: '배송일',
-    deliveryNumber: '송장번호',
-    deliveryTime: '배송일자',
-    groupId: '그룹ID',
-    groupName: '그룹이름',
-    orderNumber: '주문번호',
-    organizationName: '회사명',
-    paymentPrice: '결제금액',
-    region: '구/면',
-    regionDetail: '동/리',
-    talkContentId: '알림톡컨텐츠ID',
-    talkTemplateId: '템플릿ID',
-  } as any;
-  const KorToEngTransData = {
-    이메일: 'clientEmail',
-    ID: 'clientId',
-    이름: 'clientName',
-    연락처: 'contact',
-    생성일: 'createdAt',
-    고객명: 'customerName',
-    택배사: 'deliveryCompany',
-    배송일: 'deliveryDate',
-    송장번호: 'deliveryNumber',
-    배송일자: 'deliveryTime',
-    그룹ID: 'groupId',
-    그룹이름: 'groupName',
-    주문번호: 'orderNumber',
-    회사명: 'organizationName',
-    결제금액: 'paymentPrice',
-    '구/면': 'region',
-    '동/리': 'regionDetail',
-    알림톡컨텐츠ID: 'talkContentId',
-    템플릿ID: 'talkTemplateId',
-  } as any;
 
   // 카카오내용 불러오기
   const { mutate } = useMutation(fetchTemplatesList, {
@@ -123,6 +74,7 @@ function Alarmtalk() {
           },
         })
         .then((res) => {
+          console.log('템플릿전체조회 : ', res.data.data);
           setTemplatesList(res.data.data);
           setAllData(res.data.data[0]);
           setViewData(res.data.data[0]['text']);
@@ -146,6 +98,7 @@ function Alarmtalk() {
           }
         )
         .then((res) => {
+          console.log('fetchTemplateDetail : ', res.data.data);
           setReqTemplates(res.data.data);
         });
     } catch (error) {
@@ -165,9 +118,9 @@ function Alarmtalk() {
         data.push({
           groupId: Number(params.id),
           clientId: el.clientId,
-          customerName: el[labelArr[0]],
-          organizationName: el[labelArr[1]],
-          talkTemplateId: el.talkTemplateId,
+          customerName: el[KorToEngTransData[labelArr[0]]],
+          organizationName: el[KorToEngTransData[labelArr[1]]],
+          talkTemplateId: isAllData.talkTemplateId,
         });
       });
     } else if (TM_CODE === 'TM_2222') {
@@ -176,7 +129,7 @@ function Alarmtalk() {
           groupId: Number(params.id),
           clientId: el.clientId,
           customerName: el[KorToEngTransData[labelArr[0]]],
-          talkTemplateId: el.talkTemplateId,
+          talkTemplateId: isAllData.talkTemplateId,
         });
       });
     } else if (TM_CODE === 'TM_2220') {
@@ -185,7 +138,7 @@ function Alarmtalk() {
           groupId: Number(params.id),
           clientId: el.clientId,
           customerName: el[KorToEngTransData[labelArr[0]]],
-          talkTemplateId: el.talkTemplateId,
+          talkTemplateId: isAllData.talkTemplateId,
         });
       });
     } else if (TM_CODE === 'TM_2217') {
@@ -199,7 +152,7 @@ function Alarmtalk() {
           regionDetail: el[KorToEngTransData[labelArr[3]]],
           deliveryDate: el[KorToEngTransData[labelArr[4]]],
           paymentPrice: el[KorToEngTransData[labelArr[5]]],
-          talkTemplateId: el.talkTemplateId,
+          talkTemplateId: isAllData.talkTemplateId,
         });
       });
     } else if (TM_CODE === 'TM_2216') {
@@ -211,7 +164,7 @@ function Alarmtalk() {
           deliveryCompany: el[KorToEngTransData[labelArr[1]]],
           deliveryTime: el[KorToEngTransData[labelArr[2]]],
           deliveryNumber: el[KorToEngTransData[labelArr[3]]],
-          talkTemplateId: el.talkTemplateId,
+          talkTemplateId: isAllData.talkTemplateId,
         });
       });
     } else if (TM_CODE === 'TM_2048') {
@@ -225,7 +178,7 @@ function Alarmtalk() {
           regionDetail: el[KorToEngTransData[labelArr[0]]],
           deliveryDate: el[KorToEngTransData[labelArr[0]]],
           paymentPrice: el[KorToEngTransData[labelArr[0]]],
-          talkTemplateId: el.talkTemplateId,
+          talkTemplateId: isAllData.talkTemplateId,
         });
       });
     }
@@ -234,6 +187,7 @@ function Alarmtalk() {
   //카카오전송
   const kakaoSaveFetch = async () => {
     let data = refactoringFunc(isAllData.talkTemplateCode);
+    console.log('data : ', data);
     try {
       await axios
         .post(
@@ -287,7 +241,7 @@ function Alarmtalk() {
       setViewData(data[0]['text']);
       setReqData(JSON.parse(data[0].reqData));
     }
-  }, [currentValue]);
+  }, [currentValue, isTemplatesList]);
   useEffect(() => {
     if (location && location?.state?.ArrClientsIdsData) {
       fetchTemplateList();
@@ -298,9 +252,6 @@ function Alarmtalk() {
     }
     console.log(isTableData);
   }, [fetchTemplateList, mutate]);
-
-  console.log('isTableData : ', isTableData);
-  console.log('isKeyData : ', isKeyData);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -318,7 +269,7 @@ function Alarmtalk() {
             >
               {isTemplatesList &&
                 isTemplatesList.map((el: any, idx: number) => (
-                  <option>{el.talkTemplateName}</option>
+                  <option key={el.talkTemplateId}>{el.talkTemplateName}</option>
                 ))}
             </select>
             {isReqData &&

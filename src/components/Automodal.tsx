@@ -16,7 +16,6 @@ const AutoModal = (props: any) => {
     const data = [] as any[];
     const token = getCookie('userToken');
     props.isSendModalData.map((el: any) => data.push(el));
-    console.log(data);
     try {
       await axios
         .post(
@@ -32,7 +31,7 @@ const AutoModal = (props: any) => {
         )
         .then((res) => {
           console.log(res.data);
-          //navigate('/groupmanageList');
+          navigate('/groupmanageList');
         });
     } catch (error) {
       console.log(error);
@@ -47,34 +46,6 @@ const AutoModal = (props: any) => {
         <XboxWrap onClick={() => props.closeModal(false)}></XboxWrap>
         <ContentsWrap>
           <BoxMent>알림톡전송</BoxMent>
-          {/* <TwiceWrap>
-            <Flex width="50%">
-              <Strong>
-                그룹명<Red>*</Red>
-              </Strong>
-              <Input
-                type="text"
-                defaultValue={props.groupName}
-                onChange={(e) => {
-                  setGorupName(e.target.value);
-                }}
-              />
-            </Flex>
-            <Flex width="50%">
-              <Strong>유저수</Strong> {props.userNum}
-            </Flex>
-          </TwiceWrap>
-          <Flex width="100%">
-            <Strong>그룹설명</Strong>
-            <Input
-              width="80%"
-              type="text"
-              placeholder="그룹설명"
-              value={isGorupDesc}
-              onChange={isGorupDescChage}
-            />
-          </Flex>
-          <TwiceWrap> */}
           <Flex flexDirection="column">
             <Strong>미리보기</Strong>
             <KakaoBox>
@@ -84,22 +55,7 @@ const AutoModal = (props: any) => {
               ></WhiteWrap>
             </KakaoBox>
           </Flex>
-          {/* <Flex width="50%" flexDirection="column" alignItems="initial">
-            <Strong>정보</Strong>
-            <Flex width="100%" flexDirection="column">
-              <Flex width="100%">
-                <Flex width="50%">고객명</Flex>
-                <Flex width="50%">회사명</Flex>
-              </Flex>
-              <Flex width="100%">
-                <Flex width="50%">운송장번호</Flex>
-                <Flex width="50%">송장번호</Flex>
-              </Flex>
-            </Flex>
-          </Flex> */}
-          {/* </TwiceWrap> */}
         </ContentsWrap>
-
         <div>
           <ButtonWrap>
             <div>

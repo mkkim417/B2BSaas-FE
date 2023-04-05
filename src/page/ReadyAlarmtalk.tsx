@@ -28,19 +28,29 @@ function ReadyAlarmtalk() {
   const { mutate } = useMutation(fetchTemplatesList, {
     onSuccess: (res) => {
       console.log(res.data.data);
-      setTableData(
-        res.data.data.map((el: any) => Object.assign(el.client, el.talkContent))
+      // setTableData(
+      //   res.data.data.map((el: any) => Object.assign(el.client, el.talkContent))
+      // );
+
+      // console.log(
+      //   res.data.data.map((el: any) =>
+      //     Object.keys(Object.assign(el.client, el.talkContent))
+      //   )
+      // );
+      const Data = res.data.data.map((el: any) =>
+        Object.assign(el.client, el.talkContent)
       );
-      setKeyData(
-        res.data.data.map((el: any) =>
-          Object.keys(Object.assign(el.client, el.talkContent))
-        )[0]
-      );
-      console.log(
-        res.data.data.map((el: any) =>
-          Object.keys(Object.assign(el.client, el.talkContent))
-        )
-      );
+
+      const filteredData = Data.filter((obj: any) => {
+        for (const prop in obj) {
+          if (obj[prop] == null) {
+            delete obj[prop];
+          }
+        }
+        return Object.keys(obj).length > 0;
+      });
+      setKeyData(Object.keys(filteredData[0]) as any);
+      setTableData(filteredData);
     },
     onError: (error) => {
       console.log(error);
@@ -58,11 +68,7 @@ function ReadyAlarmtalk() {
       setNullComponent(true);
     }
   }, [mutate]);
-  console.log(
-    'isKeyData : ',
-    isKeyData.sort((a, b) => b - a)
-  );
-  console.log('isTableData : ', isTableData);
+  console.log(isKeyData);
   const transData = {
     clientEmail: '이메일',
     clientId: 'ID',
@@ -102,33 +108,41 @@ function ReadyAlarmtalk() {
                       isKeyData
                         .sort()
                         .map((el: any, idx: number) => (
-                          <Th>{transData[el]}</Th>
+                          <Th key={idx}>{transData[el]}</Th>
                         ))}
                   </tr>
                 </thead>
                 <tbody style={{ textAlign: 'center' }}>
                   {isTableData &&
                     isTableData.map((el: any, idx: number) => (
-                      <tr key={idx}>
-                        <Td>{el.clientEmail}</Td>
-                        <Td>{el.clientId}</Td>
-                        <Td>{el.clientName}</Td>
-                        <Td>{el.contact}</Td>
-                        <Td>{el.createdAt}</Td>
-                        <Td>{el.customerName}</Td>
-                        <Td>{el.deliveryCompany}</Td>
-                        <Td>{el.deliveryDate}</Td>
-                        <Td>{el.deliveryNumber}</Td>
-                        <Td>{el.deliveryTime}</Td>
-                        <Td>{el.groupId}</Td>
-                        <Td>{el.groupName}</Td>
-                        <Td>{el.orderNumber}</Td>
-                        <Td>{el.organizationName}</Td>
-                        <Td>{el.paymentPrice}</Td>
-                        <Td>{el.region}</Td>
-                        <Td>{el.regionDetail}</Td>
-                        <Td>{el.talkContentId}</Td>
-                        <Td>{el.talkTemplateId}</Td>
+                      <tr key={el.clientId}>
+                        {el.clientEmail ? <Td>{el.clientEmail}</Td> : null}
+                        {el.clientId ? <Td>{el.clientId}</Td> : null}
+                        {el.clientName ? <Td>{el.clientName}</Td> : null}
+                        {el.contact ? <Td>{el.contact}</Td> : null}
+                        {el.createdAt ? <Td>{el.createdAt}</Td> : null}
+                        {el.customerName ? <Td>{el.customerName}</Td> : null}
+                        {el.deliveryCompany ? (
+                          <Td>{el.deliveryCompany}</Td>
+                        ) : null}
+                        {el.deliveryDate ? <Td>{el.deliveryDate}</Td> : null}
+                        {el.deliveryNumber ? (
+                          <Td>{el.deliveryNumber}</Td>
+                        ) : null}
+                        {el.deliveryTime ? <Td>{el.deliveryTime}</Td> : null}
+                        {el.groupId ? <Td>{el.groupId}</Td> : null}
+                        {el.groupName ? <Td>{el.groupName}</Td> : null}
+                        {el.orderNumber ? <Td>{el.orderNumber}</Td> : null}
+                        {el.organizationName ? (
+                          <Td>{el.organizationName}</Td>
+                        ) : null}
+                        {el.paymentPrice ? <Td>{el.paymentPrice}</Td> : null}
+                        {el.region ? <Td>{el.region}</Td> : null}
+                        {el.regionDetail ? <Td>{el.regionDetail}</Td> : null}
+                        {el.talkContentId ? <Td>{el.talkContentId}</Td> : null}
+                        {el.talkTemplateId ? (
+                          <Td>{el.talkTemplateId}</Td>
+                        ) : null}
                       </tr>
                     ))}
                 </tbody>
@@ -181,9 +195,10 @@ const Th = styled.th`
   color: #555;
   font-weight: bold;
   vertical-align: middle;
+  min-width: 80px;
 `;
 const ButtonWrap = styled.div`
-  width: 1200px;
+  width: 1080px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -198,7 +213,7 @@ const Button = styled.button`
   padding: 10px 5px;
 `;
 const Contents = styled.div`
-  width: 1200px;
+  width: 1080px;
   margin: 0px auto;
   overflow: auto;
 `;

@@ -203,4 +203,4 @@ const UserButton = styled.div`
   }
 `;
 
-export default TopNav;
+export default React.memo(TopNav);

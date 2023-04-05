@@ -256,212 +256,214 @@ const Signup = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Wrapper>
-        {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
-        {alertMessage && <p>{alertMessage}</p>}
-        <StEmail>
-          <StEmailP>이메일</StEmailP>
-          <StInput
-            type="text"
-            {...register('email', {
-              required: '이 항목은 필수입니다',
-              validate: EmailValidation,
-            })}
-            name="email"
-            required
-            value={isEmail}
-            onChange={(e: any) => setEmail(e.target.value)}
-          />
-          <span>@</span>
-          {directInput ? (
-            <StInputWrapper>
-              {' '}
-              <StInput
-                type="text"
-                {...register('emailProvider', {
-                  required: '이 항목은 필수입니다',
-                })}
-                name="emailProvider"
-                value={
-                  formData.emailProvider === 'direct'
-                    ? ''
-                    : formData.emailProvider
-                }
-                onChange={handleInputChange}
-                onBlur={() => {
-                  if (!formData.emailProvider) {
-                    setDirectInput(false);
+        <StForm>
+          {isSubmitted && <p>회원가입이 완료되었습니다.</p>}
+          {alertMessage && <p>{alertMessage}</p>}
+          <StP>회원가입</StP>
+          <StEmail>
+            <StEmailP>이메일</StEmailP>
+            <StInput
+              type="text"
+              {...register('email', {
+                required: '이 항목은 필수입니다',
+                validate: EmailValidation,
+              })}
+              name="email"
+              required
+              value={isEmail}
+              onChange={(e: any) => setEmail(e.target.value)}
+            />
+            <span>@</span>
+            {directInput ? (
+              <StInputWrapper>
+                {' '}
+                <StInput
+                  type="text"
+                  {...register('emailProvider', {
+                    required: '이 항목은 필수입니다',
+                  })}
+                  name="emailProvider"
+                  value={
+                    formData.emailProvider === 'direct'
+                      ? ''
+                      : formData.emailProvider
                   }
-                }}
-                required
-              />
-            </StInputWrapper>
-          ) : (
-            <StSelect
-              name="emailProvider"
-              value={formData.emailProvider || 'gmail.com'}
-              onChange={handleSelectChange}
+                  onChange={handleInputChange}
+                  onBlur={() => {
+                    if (!formData.emailProvider) {
+                      setDirectInput(false);
+                    }
+                  }}
+                  required
+                />
+              </StInputWrapper>
+            ) : (
+              <StSelect
+                name="emailProvider"
+                value={formData.emailProvider || 'gmail.com'}
+                onChange={handleSelectChange}
+              >
+                {options.map(({ value, label }) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </StSelect>
+            )}
+
+            {errors.email || errors.emailProvider ? (
+              <StErrorMsg>
+                {errors.email?.message ||
+                  errors.emailProvider?.message ||
+                  '이메일을 입력해 주십시오.'}
+              </StErrorMsg>
+            ) : null}
+            <button
+              onClick={() => {
+                checkEmailDuplication(formData.email);
+                // checkEmailDuplication(formData.email).then((exists) => {
+                //   if (exists) {
+                //     alert('이미 존재하는 이메일입니다.');
+                //   } else {
+                //     alert('사용가능한 이메일입니다.');
+                //   }
+                // });
+              }}
             >
-              {options.map(({ value, label }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </StSelect>
-          )}
+              중복확인
+            </button>
+          </StEmail>
 
-          {errors.email || errors.emailProvider ? (
-            <StErrorMsg>
-              {errors.email?.message ||
-                errors.emailProvider?.message ||
-                '이메일을 입력해 주십시오.'}
-            </StErrorMsg>
-          ) : null}
-          <button
-            onClick={() => {
-              checkEmailDuplication(formData.email);
-              // checkEmailDuplication(formData.email).then((exists) => {
-              //   if (exists) {
-              //     alert('이미 존재하는 이메일입니다.');
-              //   } else {
-              //     alert('사용가능한 이메일입니다.');
-              //   }
-              // });
-            }}
-          >
-            중복확인
-          </button>
-        </StEmail>
-
-        <StBrand>
-          <StBrandP>소속명</StBrandP>
-          <StBrandInput
-            type="text"
-            {...register('companyName', {
-              required: true,
-              pattern: /^[A-Za-z0-9\s]+$/i,
-            })}
-            name="companyName"
-            required
-            placeholder="브랜드(기업)명을 입력해주세요"
-          />
-          {errors.companyName && (
-            <StErrorMsg>
-              {errors.companyName.message || '브랜드(기업)명을 입력해주세요'}
-            </StErrorMsg>
-          )}
-          <StBrandNumberP>소속대표전화</StBrandNumberP>
-          <StBrandNumberInput
-            type="text"
-            placeholder="대표 번호를 입력해주세요"
-            {...register('companyNumber', {
-              required: true,
-              validate: PhoneNumberValidation,
-            })}
-            name="companyNumber"
-            required
-            hasError={!!errors.companyNumber}
-          />
-          {errors.companyNumber && (
-            <StErrorMsg>
-              {errors.companyNumber.message || '대표 번호가 필요합니다'}
-            </StErrorMsg>
-          )}
-        </StBrand>
-        <StPicInfo>
-          <h1>담당자 이름</h1>
-          <StBrandInput
-            type="text"
-            {...register('name', {
-              required: true,
-              pattern: {
-                value: nameRegex,
-                message: '담당자 이름은 문자만 허용됩니다',
-              },
-            })}
-            name="name"
-            placeholder="담당자를 입력해주세요"
-            required
-          />
-          {errors.name && (
-            <StErrorMsg>
-              {errors.name.message || '담당자 이름이 필요합니다'}
-            </StErrorMsg>
-          )}
-          <StContectNumberInputWrapper>
-            <h1>담당자 번호</h1>
+          <StBrand>
+            <StBrandP>소속명</StBrandP>
             <StBrandInput
               type="text"
-              placeholder="담당자 번호를 입력해주세요"
-              {...register('phoneNumber', {
+              {...register('companyName', {
+                required: true,
+                pattern: /^[A-Za-z0-9\s]+$/i,
+              })}
+              name="companyName"
+              required
+              placeholder="브랜드(기업)명을 입력해주세요"
+            />
+            {errors.companyName && (
+              <StErrorMsg>
+                {errors.companyName.message || '브랜드(기업)명을 입력해주세요'}
+              </StErrorMsg>
+            )}
+            <StBrandNumberP>소속대표전화</StBrandNumberP>
+            <StBrandNumberInput
+              type="text"
+              placeholder="대표 번호를 입력해주세요"
+              {...register('companyNumber', {
                 required: true,
                 validate: PhoneNumberValidation,
               })}
-              name="phoneNumber"
+              name="companyNumber"
               required
-              hasError={!!errors.phoneNumber}
+              hasError={!!errors.companyNumber}
             />
-            {errors.phoneNumber && (
+            {errors.companyNumber && (
               <StErrorMsg>
-                {errors.phoneNumber.message || '담당자 번호를 입력해주세요'}
+                {errors.companyNumber.message || '대표 번호가 필요합니다'}
               </StErrorMsg>
             )}
-          </StContectNumberInputWrapper>
-          <StBrandNumberP>대표 이메일</StBrandNumberP>
-          <StInput2
-            type="text"
-            {...register('companyEmail', {
-              required: '이 항목은 필수입니다',
-              validate: EmailValidation,
-            })}
-            name="companyEmail"
-            required
-          />
-          <span>@</span>
-          {companyDirectInput ? (
-            <StInputWrapper>
-              <StInput2
+          </StBrand>
+          <StPicInfo>
+            <StPicP>담당자 이름</StPicP>
+            <StBrandInput
+              type="text"
+              {...register('name', {
+                required: true,
+                pattern: {
+                  value: nameRegex,
+                  message: '담당자 이름은 문자만 허용됩니다',
+                },
+              })}
+              name="name"
+              placeholder="담당자를 입력해주세요"
+              required
+            />
+            {errors.name && (
+              <StErrorMsg>
+                {errors.name.message || '담당자 이름이 필요합니다'}
+              </StErrorMsg>
+            )}
+            <StContectNumberInputWrapper>
+              <StPicP>담당자 번호</StPicP>
+              <StBrandInput
                 type="text"
-                {...register('companyEmailProvider', {
-                  required: '이 항목은 필수입니다',
-                  validate: EmailValidation,
+                placeholder="담당자 번호를 입력해주세요"
+                {...register('phoneNumber', {
+                  required: true,
+                  validate: PhoneNumberValidation,
                 })}
-                name="companyEmailProvider"
-                value={
-                  formData.companyEmailProvider === 'direct'
-                    ? ''
-                    : formData.companyEmailProvider
-                }
-                onChange={companyHandleInputChange}
-                onBlur={() => {
-                  if (!formData.companyEmailProvider) {
-                    setCompanyDirectInput(false);
-                  }
-                }}
+                name="phoneNumber"
                 required
+                hasError={!!errors.phoneNumber}
               />
-            </StInputWrapper>
-          ) : (
-            <StSelect2
-              name="companyEmailProvider"
-              value={formData.companyEmailProvider || 'gmail.com'}
-              onChange={handleCompanySelectChange}
-            >
-              {companyEmailOptions.map(({ value, label }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </StSelect2>
-          )}
+              {errors.phoneNumber && (
+                <StErrorMsg>
+                  {errors.phoneNumber.message || '담당자 번호를 입력해주세요'}
+                </StErrorMsg>
+              )}
+            </StContectNumberInputWrapper>
+            <StBrandNumberP>대표 이메일</StBrandNumberP>
+            <StInput2
+              type="text"
+              {...register('companyEmail', {
+                required: '이 항목은 필수입니다',
+                validate: EmailValidation,
+              })}
+              name="companyEmail"
+              required
+            />
+            <span>@</span>
+            {companyDirectInput ? (
+              <StInputWrapper>
+                <StInput2
+                  type="text"
+                  {...register('companyEmailProvider', {
+                    required: '이 항목은 필수입니다',
+                    validate: EmailValidation,
+                  })}
+                  name="companyEmailProvider"
+                  value={
+                    formData.companyEmailProvider === 'direct'
+                      ? ''
+                      : formData.companyEmailProvider
+                  }
+                  onChange={companyHandleInputChange}
+                  onBlur={() => {
+                    if (!formData.companyEmailProvider) {
+                      setCompanyDirectInput(false);
+                    }
+                  }}
+                  required
+                />
+              </StInputWrapper>
+            ) : (
+              <StSelect2
+                name="companyEmailProvider"
+                value={formData.companyEmailProvider || 'gmail.com'}
+                onChange={handleCompanySelectChange}
+              >
+                {companyEmailOptions.map(({ value, label }) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </StSelect2>
+            )}
 
-          {errors.email || errors.emailProvider ? (
-            <StErrorMsg>
-              {errors.email?.message ||
-                errors.emailProvider?.message ||
-                '이메일을 입력해 주십시오.'}
-            </StErrorMsg>
-          ) : null}
-          {/* <StPicRole>
+            {errors.email || errors.emailProvider ? (
+              <StErrorMsg>
+                {errors.email?.message ||
+                  errors.emailProvider?.message ||
+                  '이메일을 입력해 주십시오.'}
+              </StErrorMsg>
+            ) : null}
+            {/* <StPicRole>
             <label>역할:</label>
             <select
               {...register('role')}
@@ -472,53 +474,68 @@ const Signup = () => {
               <option value="admin">관리자</option>
             </select>
           </StPicRole> */}
-        </StPicInfo>
+          </StPicInfo>
 
-        <StPw>
-          <StPwP>비밀번호</StPwP>
-          <StPwinput
-            type="password"
-            {...register('password', {
-              required: true,
-              pattern: PasswordRegex,
-            })}
-            name="password"
-            placeholder="암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리"
-            required
-          />
-          {errors.password && (
-            <StErrorMsg>
-              {errors.password.message ||
-                '암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리'}
-            </StErrorMsg>
-          )}
-          <StPwP>비밀번호 확인</StPwP>
-          <StPwinput
-            type="password"
-            {...register('ConfirmPw', {
-              required: true,
-              validate: (value: string) => {
-                return value === Password.current;
-              },
-            })}
-            name="ConfirmPw"
-            placeholder="암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리"
-            required
-          />
-          {errors.ConfirmPw &&
-            errors.ConfirmPw.type === 'required' &&
-            '해당 항목은 필수입니다.'}
-          {errors.ConfirmPw &&
-            errors.ConfirmPw.type === 'validate' &&
-            '비밀번호가 일치하지 않습니다.'}
-        </StPw>
-        <StSignupButton>회원가입</StSignupButton>
-        <Link to="/login">이미 계정이 있으신가요? 여기서 로그인 하세요</Link>
+          <StPw>
+            <StPwP>비밀번호</StPwP>
+            <StPwinput
+              type="password"
+              {...register('password', {
+                required: true,
+                pattern: PasswordRegex,
+              })}
+              name="password"
+              placeholder="암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리"
+              required
+            />
+            {errors.password && (
+              <StErrorMsg>
+                {errors.password.message ||
+                  '암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리'}
+              </StErrorMsg>
+            )}
+            <StPwP>비밀번호 확인</StPwP>
+            <StPwinput
+              type="password"
+              {...register('ConfirmPw', {
+                required: true,
+                validate: (value: string) => {
+                  return value === Password.current;
+                },
+              })}
+              name="ConfirmPw"
+              placeholder="암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리"
+              required
+            />
+            {errors.ConfirmPw &&
+              errors.ConfirmPw.type === 'required' &&
+              '해당 항목은 필수입니다.'}
+            {errors.ConfirmPw &&
+              errors.ConfirmPw.type === 'validate' &&
+              '비밀번호가 일치하지 않습니다.'}
+          </StPw>
+          <StSignupButton>회원가입</StSignupButton>
+          <StLogin>
+            <Link to="/login">
+              이미 계정이 있으신가요? 여기서 로그인 하세요
+            </Link>
+          </StLogin>
+        </StForm>
       </Wrapper>
     </form>
   );
 };
 export default Signup;
+
+const StP = styled.p`
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  text-align: center;
+  color: #000000;
+`;
 
 const StInputWrapper = styled.div`
   position: relative;
@@ -539,7 +556,7 @@ const Wrapper = styled.div`
 `;
 
 const StEmail = styled(StInputWrapper)`
-  border: 2px solid;
+  /* border: 2px solid; */
   width: 600px;
 `;
 
@@ -550,6 +567,7 @@ const StEmailP = styled.p`
   line-height: 28px;
   display: flex;
   align-items: center;
+  margin-left: 10px;
   text-align: center;
   color: #000000;
   mix-blend-mode: darken;
@@ -560,6 +578,7 @@ const StInput = styled.input<StInputProps>`
   border-radius: 40px;
   width: 250px;
   margin: 10px auto;
+  margin-left: 10px;
   border: 2px solid #BDBDBD(170, 170, 170, 0.26);
   transition: border-color 0.2s ease-in-out;
   &:focus {
@@ -614,8 +633,11 @@ const StSelect2 = styled.select`
 `;
 
 const StBrandP = styled.p`
-  font-family: 'Roboto';
+  margin-left: 10px;
+  font-family: 'Inter';
   font-style: normal;
+  font-size: 16px;
+  line-height: 20px;
   display: flex;
   justify-content: left;
   align-items: center;
@@ -623,7 +645,7 @@ const StBrandP = styled.p`
   mix-blend-mode: darken;
 `;
 const StBrand = styled.div`
-  border: 2px solid;
+  /* border: 2px solid; */
   text-align: center;
   width: 600px;
 `;
@@ -650,8 +672,11 @@ const StContectNumberInputWrapper = styled.div<StInputProps>`
   border-color: ${({ hasError }) => (hasError ? 'red' : 'inherit')};
 `;
 const StBrandNumberP = styled.p`
-  font-family: 'Roboto';
+  margin-left: 10px;
+  font-family: 'Inter';
   font-style: normal;
+  font-size: 16px;
+  line-height: 20px;
   display: flex;
   align-items: center;
   text-align: center;
@@ -659,30 +684,37 @@ const StBrandNumberP = styled.p`
 `;
 const StPw = styled(StInputWrapper)`
   width: 600px;
-  border: 2px solid;
+  /* border: 2px solid; */
 `;
 const StPwP = styled.p`
-  font-family: 'Roboto';
+  margin-left: 10px;
+  font-family: 'Inter';
   font-style: normal;
-  font-weight: 300;
-  font-size: 20px;
-  line-height: 28px;
+  font-size: 16px;
+  line-height: 20px;
   display: flex;
   align-items: center;
   color: #000000;
   mix-blend-mode: darken;
 `;
+
+const StPicP = styled.p`
+  margin-left: 10px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-size: 16px;
+  line-height: 20px;
+`;
+
 const StPwinput = styled.input<StInputProps>`
   background: #d3d3d3;
   border-radius: 40px;
   width: 500px;
   margin: 10px auto;
+  margin-left: 10px;
   border: 2px solid rgba(170, 170, 170, 0.26);
   transition: border-color 0.2s ease-in-out;
-  align-items: center;
-  text-align: center;
-  display: flex;
-  justify-content: center;
+
   &:focus {
     border-color: #333;
   }
@@ -708,12 +740,29 @@ const StSignupButton = styled.button`
   transition: background-color 0.2s ease-in-out;
   cursor: pointer;
   &:hover {
-    background-color: #e65100;
+    background-color: #14b769;
   }
 `;
 const StPicInfo = styled.div`
   width: 600px;
-  border: 2px solid;
+  /* border: 2px solid; */
+`;
+
+const StForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* border: 1px solid black; */
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+`;
+
+const StLogin = styled.div`
+  margin: 20px;
+  font-family: 'Inter';
+  font-style: normal;
+
+  font-size: 16px;
+  line-height: 20px;
 `;
 
 const StBrandEmailInput = styled.input`

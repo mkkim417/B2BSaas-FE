@@ -23,32 +23,35 @@ function UserCopyModal({ group, content, closeModal }: Props) {
     group.map((item: any) => {
       groupArr.push(item.groupName);
     });
+    // console.log('content', content[0].groupId)
   });
 
   // 제출 버튼 핸들러
   const submitButtonHandler = (e: any) => {
     e.preventDefault();
-    const existGroupId = content[0].groupId;
-    const urls = content.map(
-      (item: any) =>
-        `${process.env.REACT_APP_SERVER_URL}/api/batch/clients/${item.clientId}/groups/${existGroupId}/copy/${selectedGroupId}`,
-      { headers: { authorization: `Bearer ${token}` } }
-    );
-    if (selectedGroupId === '') {
-      alert('복사할 그룹을 선택해주세요.');
-    } else {
-      axios
-        .all(urls.map((url: any) => axios.post(url)))
-        .then((response) => {
-          console.log(response);
-          alert('복사 완료!');
-          closeModal();
-        })
-        .catch((error) => {
-          console.log(error.response);
-          alert('복사 실패!ㅠㅠ');
-        });
-    }
+    // const existGroupId = content[0].groupId;
+    console.log('~~~~~')
+    console.log('content', content)
+    // const urls = content.map(
+    //   (item: any) =>
+    //     `${process.env.REACT_APP_SERVER_URL}/api/batch/clients/${item.clientId}/groups/${existGroupId}/copy/${selectedGroupId}`,
+    //   { headers: { authorization: `Bearer ${token}` } }
+    // );
+    // if (selectedGroupId === '') {
+    //   alert('복사할 그룹을 선택해주세요.');
+    // } else {
+    //   axios
+    //     .all(urls.map((url: any) => axios.post(url)))
+    //     .then((response) => {
+    //       console.log(response);
+    //       alert('복사 완료!');
+    //       closeModal();
+    //     })
+    //     .catch((error) => {
+    //       console.log(error.response);
+    //       alert('복사 실패!ㅠㅠ');
+    //     });
+    // }
   };
   return (
     <ModalWrap>

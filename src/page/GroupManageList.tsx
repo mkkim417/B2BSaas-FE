@@ -72,7 +72,11 @@ function GroupManageList() {
     {
       onSuccess: (response) => {
         console.log('그룹리스트 호출성공!', response.data);
+        // 그룹 복사,이동에 넣어줄 그룹리스트 state 담기
+        setGroupList(response.data)
         response.data.map((item:any) => {
+          // 이거 무슨 용도지.. 모르겠음
+
           if(!(clickGroup.includes(item.groupId))) {
             clickGroup.push(item.groupId)
             setClickGroup(clickGroup)
@@ -96,20 +100,22 @@ function GroupManageList() {
         )
         .then((res) => {
           setGroupClient(res.data.data);
+          console.log('그룹내 클라이언트', res.data.data.length)
+          // 이거 호출할때마다 데이터길이가 바뀌어서 안됨.
+          setIsGroupAllClients(res.data.data.length);
         });
-      console.log('그룹내 클라이언트', response)
+      console.log('그룹내 클라이언트', groupList)
 
       setGroupId(id);
       setGroupName(name);
-
-      groupList.map((item: any) => {
-        if (item.groupId === id) {
-          // 그룹 내 클라이언트 갯수 저장 => 페이징처리 위함
-          setIsGroupAllClients(item.clientCount);
+      // 그룹들 이름 넣어주기
+      groupData.data.map((item:any) => {
+        if(item.groupId === id) {
+          setIsGroupAllClients(item.clientCount)
         }
-      });
+      })
     },
-    [groupId]
+    [groupData]
   );
   /*************************************************************************************
     유저리스트 관련 코드
@@ -169,7 +175,7 @@ function GroupManageList() {
       // } else {
       //   setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
       // }
-    }, [userData, isAllclients, currentPage, getUserData, getClientInGroup]);
+    }, [userData,isAllclients, getUserData, getClientInGroup]);
   // 처음 렌더링시 전체고객리스트로 focus
   const allUserRef = useRef<HTMLButtonElement>(null);
   // 그룹 내 클라이언트 숫자
@@ -290,7 +296,7 @@ function GroupManageList() {
     } else if (!isChecked || checkedArr.includes(item.clientId)) {
       console.log('!isChecked', item.clientId);
       setCheckedArr((checkedArr) => checkedArr.filter((el) => el !== item));
-      console.log('체크해제 후 checkedList', checkedArr);
+      // console.log('체크해제 후 checkedList', checkedArr);
     }
   };
   // 고객 수정 버튼
@@ -499,8 +505,8 @@ function GroupManageList() {
               </>
             ) : (
               <>
-                {/* {isOpen && isOpen ? (
-                  <GroupButton onClick={onDelete}>삭제</GroupButton>
+                {isOpen && isOpen ? (
+                  <GroupButton >삭제</GroupButton>
                 ) : null}
                 {!isOpen ? (
                   <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
@@ -510,13 +516,25 @@ function GroupManageList() {
                   <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
                     선택취소
                   </GroupButton>
-                )} */}
+                )}
                 <GroupButton onClick={() => navigate('/uploadpage')}>
                   고객 등록
                 </GroupButton>
-                <GroupButton onClick={() => clickUserCopyModal()}>
+                {isOpen && isOpen ? (
+                  <GroupButton onClick={() => clickUserCopyModal()}>복사</GroupButton>
+                ) : null}
+                {!isOpen ? (
+                  <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
+                    선택복사
+                  </GroupButton>
+                ) : (
+                  <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
+                    선택취소
+                  </GroupButton>
+                )}
+                {/* <GroupButton onClick={() => clickUserCopyModal()}>
                   복사
-                </GroupButton>
+                </GroupButton> */}
                 <GroupButton onClick={() => clickUserMoveModal()}>
                   이동
                 </GroupButton>
@@ -587,10 +605,10 @@ function GroupManageList() {
                     <CardHeader key={item.clientId}>
                       {isOpen ? (
                         <Percentage width="6%">
-                          <input
+                          <CheckInputBox
                             type="checkbox"
-                            checked={checkedArr.includes(item.clientId)}
-                            onChange={(e) => checkUserHandler(e, item.clientId)}
+                            checked={checkedArr.includes(item)}
+                            onChange={(e) => checkUserHandler(e, item)}
                           />
                         </Percentage>
                       ) : (
@@ -598,7 +616,7 @@ function GroupManageList() {
                         </Percentage>
                       )}
                       <Percentage width="6%">
-                        <input
+                        {/* <input
                             type="checkbox"
                             checked={checkedArr.includes(item.clientId)}
                             onChange={(e) => checkUserHandler(e, item.clientId)}
@@ -607,7 +625,7 @@ function GroupManageList() {
                           type="checkbox"
                           checked={checkedArr.includes(item)}
                           onChange={(e: any) => checkUserHandler(e, item)}
-                        />
+                        /> */}
                       </Percentage>
                       <Percentage width="23%">{item.groupName}</Percentage>
                       <Percentage width="12%">{item.clientName}</Percentage>
@@ -716,7 +734,7 @@ const Container = styled.div`
   /* background-color: sandybrown; */
 `;
 export const HeaderContainer = styled.div`
-  height: 100px;
+  height: 80px;
   width: 100%;
   display: flex;
   align-items: center;

@@ -102,6 +102,7 @@ export const deleteGroupData = async (groupId: any) => {
   const response = await instance.delete(`/api/groups/${groupId}`);
   return response;
 };
+
 // 그룹 내 클라이언트 복사
 // 그룹 내 클라이언트 이동
 

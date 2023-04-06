@@ -564,16 +564,19 @@ function UploadPage() {
               <TextAria>
                 <div>신규추가할 고객목록을 작성한</div>
                 <div>양식 파일을 업로드해주세요</div>
-                <label htmlFor="fileData">
-                  <LabelWrap>파일찾기</LabelWrap>
-                </label>
               </TextAria>
+              <label htmlFor="fileData">
+                <LabelWrap>파일찾기</LabelWrap>
+              </label>
             </BottomContents>
           )}
           <BtnWrap>
             {isData && !isGroupComp ? (
               !isOpen ? (
-                <Button onClick={() => setOpen((prev) => !prev) as any}>
+                <Button
+                  width={'150px'}
+                  onClick={() => setOpen((prev) => !prev) as any}
+                >
                   선택삭제
                 </Button>
               ) : (
@@ -583,19 +586,30 @@ function UploadPage() {
               )
             ) : null}
             {isData && !isGroupComp ? (
-              <Button onClick={() => DummyDeleteFuction()}>취소</Button>
-            ) : null}
-            {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
-            {!isOpen ? (
-              !isClUpload ? (
+              <>
+                <Button onClick={() => DummyDeleteFuction()}>취소</Button>
                 <Button
                   ref={nextRef}
                   onClick={() => {
                     ClientBulkFetch(isData);
                   }}
+                  width={'180px'}
                 >
                   고객업로드 등록
                 </Button>
+              </>
+            ) : null}
+            {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
+            {!isOpen ? (
+              !isClUpload && !isData ? (
+                <>
+                  <DisButton
+                    onClick={() => alert('파일을 업로드해주세요')}
+                    width={'180px'}
+                  >
+                    고객업로드 등록
+                  </DisButton>
+                </>
               ) : null
             ) : null}
           </BtnWrap>
@@ -689,12 +703,14 @@ const DecoText = styled.div`
   margin-bottom: 10px;
 `;
 const LabelWrap = styled.div`
+  width: 180px;
+  height: 50px;
   cursor: pointer;
   text-align: center;
   margin-top: 30px;
   color: #fff;
   background-color: #14b769;
-  padding: 14px 60px;
+  padding: 14px;
   border-radius: 8px;
   font-size: 16px;
   font-weight: bold;
@@ -751,20 +767,35 @@ const BtnWrap = styled.div`
   justify-content: center;
   margin: 50px auto;
 `;
-const Button = styled.button`
-  border-radius: 15px;
+const Button = styled.button<{
+  width?: string;
+}>`
+  border-radius: 8px;
   color: #14b769;
-  width: 100px;
-  padding: 10px 20px;
+  width: ${(props) => (props.width ? props.width : '100px')};
+  padding: 15px 20px;
   border: 2px solid #14b769;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
   font-family: 'Inter', sans-serif;
   &:hover {
     background-color: #14b769;
     color: white;
     transition: 0.2s;
   }
+`;
+const DisButton = styled.button<{
+  width?: string;
+}>`
+  border-radius: 8px;
+  cursor: not-allowed;
+  color: #bdbdbd;
+  width: ${(props) => (props.width ? props.width : '100px')};
+  padding: 15px 20px;
+  background-color: #eee;
+  font-weight: bold;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
 `;
 const InputFile = styled.input`
   background-color: #fff;

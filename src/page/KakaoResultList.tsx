@@ -11,24 +11,22 @@ import useDetectClose from '../hook/useDetectClose';
 import { Link } from 'react-router-dom';
 import { getCookie } from '../util/cookie';
 import { Button, Thead } from './UploadPage';
+import SelectBoxs from '../components/SelectBoxs';
 function KakaoResultList() {
   //페이지네이션
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
+  const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState<number>(0);
-  // const [ product, setProduct ] = useState([])  // 리스트에 담아낼 아이템들
-  const [postPerPage] = useState(5); // 한 페이지에 보여질 아이템 수
-  const [indexOfLastPost, setIndexOfLastPost] = useState(0); // 현재 페이지의 마지막 아이템 인덱스
-  const [indexOfFirstPost, setIndexOfFirstPost] = useState(0); // 현재 페이지의 첫번째 아이템 인덱스
-  const [currentPosts, setCurrentPosts] = useState(0); //
+  const [postPerPage] = useState(5);
+  const [indexOfLastPost, setIndexOfLastPost] = useState(0);
+  const [indexOfFirstPost, setIndexOfFirstPost] = useState(0);
+  const [currentPosts, setCurrentPosts] = useState(0);
   const dropDownRef = useRef();
-
-  const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false); //커스텀훅
+  const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false);
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
-  const [isScheduleOpen, setScheduleOpen] = useState(false);
-
   const [isGroupList, setGroupList] = useState([]);
   const [isGroupClient, setGroupClient] = useState([]);
   const [currentValue, setCurrentValue] = useState();
+
   //그룹리스트
   const token = getCookie('userToken');
   const getGroupData = useCallback(async () => {
@@ -42,8 +40,6 @@ function KakaoResultList() {
   //발송조회리스트
   const kakaoResultListFetch = useCallback(
     async (groupId?: any, startDay?: string, endData?: string) => {
-      console.log(groupId);
-      ///api/talk/results/list?groupId={groupId}&startdate={YYYYMMDD:string}&enddate={YYYYMMDD:string}
       const skip = postPerPage * (currentPage - 1);
       if (startDay === undefined) {
         const response = await axios
@@ -69,6 +65,7 @@ function KakaoResultList() {
     },
     []
   );
+
   //발송상세조회
   const KakaoDetailBtn = useCallback(async (talkSendId: string) => {
     const response = await axios
@@ -127,6 +124,13 @@ function KakaoResultList() {
         <H1>전송결과조회</H1>
         <FlexWrap>
           <GrayWrap>고객그룹</GrayWrap>
+          {/* <SelectBoxs
+            currentCategoryValue={currentValue}
+            // className={`obj_${idx}`}
+            // propFunction={messagePreviewFunc}
+            optionData={['빈값입니다.']}
+          ></SelectBoxs> */}
+          {/* 셀렉트박스 넣을부분 */}
           <select name="" id="" onChange={(e) => handleOnChangeSelectValue(e)}>
             {isGroupList?.map((item: any, idx: number) => {
               return (
@@ -258,9 +262,10 @@ export const Table = styled.table`
   border-spacing: 0px 10px;
 `;
 export const GrayWrap = styled.div`
-  background-color: #f2f2f2;
-  border: 1px solid #c7c7c7;
-  color: #555;
+  margin-right: 10px;
+  color: #14b769;
+  border: 1px solid #14b769;
+  border-radius: 8px;
   font-weight: bold;
   padding: 10px;
   display: flex;
@@ -269,7 +274,6 @@ export const GrayWrap = styled.div`
 `;
 export const FlexWrap = styled.div`
   display: flex;
-  border: 1px solid #e7e7e7;
   height: 50px;
 `;
 export const Wrapper = styled.div`

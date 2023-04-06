@@ -10,6 +10,7 @@ import KakaoIcon from '../asset/svg/KakaoIcon';
 import ListResultIcon from '../asset/svg/ListResultIcon';
 import GroupMangeListIcon from '../asset/svg/GroupMangeListIcon';
 import CustomerAddIcon from '../asset/svg/CustomerAddIcon';
+import { motion } from 'framer-motion';
 
 const TopNav = () => {
   const Uploadpage = useMatch('/uploadpage');
@@ -49,6 +50,7 @@ const TopNav = () => {
                 {statistics ? (
                   <>
                     <ListIcon width={'35px'} heigth={'35px'} fill={'#14b769'} />
+                    <Circle layoutId="circle" />
                     <LiBlue>이용현황</LiBlue>
                   </>
                 ) : (
@@ -67,6 +69,10 @@ const TopNav = () => {
                       width={'35px'}
                       heigth={'35px'}
                       fill={'#14b769'}
+                    />
+                    <Circle
+                      animate={{ backgroundColor: ['red'] }}
+                      layoutId="circle"
                     />
                     <LiBlue>알림톡전송</LiBlue>
                   </>
@@ -226,9 +232,21 @@ const TopNav = () => {
     </>
   );
 };
+const Circle = styled(motion.span)`
+  position: absolute;
+  width: 5px;
+  height:5px;
+  border-radius:5px;
+  bottom: -5px;
+  left:0;
+  right:0;
+  margin:0 auto:
+  background-color:#14b769;
+`;
 const NavLink = styled(Link)`
   display: flex;
   align-items: center;
+  position: relative;
 `;
 const Li = styled.li`
   margin: 30px 40px;

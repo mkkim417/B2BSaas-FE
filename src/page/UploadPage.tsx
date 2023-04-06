@@ -617,7 +617,7 @@ function UploadPage() {
           {isGroupComp && isGroupComp ? (
             <BottomWrap>
               <H1>고객 정보 그룹 지정</H1>
-              <span>
+              <span style={{ margin: '15px 0px 30px' }}>
                 그룹 선택을 하지 않으면, 미지정 그룹에 자동으로 들어갑니다.
               </span>
               <SelectBoxs
@@ -661,9 +661,17 @@ function UploadPage() {
                 </>
               ) : null}
               <BtnWrap>
-                <Button onClick={() => DummyDeleteFuction()}>취소</Button>
+                <Button
+                  width={'90px'}
+                  padding={'10px'}
+                  onClick={() => DummyDeleteFuction()}
+                >
+                  취소
+                </Button>
 
                 <Button
+                  width={'90px'}
+                  padding={'10px'}
                   onClick={() => {
                     // mutationGroupSaveQuery(
                     //   mutation && mutation.variables,
@@ -726,9 +734,16 @@ const Th = styled.th`
   vertical-align: middle;
 `;
 const BottomWrap = styled.div`
-  width: 1280px;
-  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  margin: 0px auto;
   height: 100vh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  @media screen and (min-width: 1300px) {
+    width: 1000px;
+  }
 `;
 const TemplateWrap = styled.div`
   display: flex;
@@ -742,7 +757,7 @@ const TemplateDown = styled.div`
   padding: 15px;
 `;
 const Table = styled.table`
-  width: 100%;
+  width: 1000px;
   border-collapse: separate;
   border-spacing: 0px 10px;
 `;
@@ -750,11 +765,12 @@ export const MapWrapper = styled.div`
   border: 1px solid #dcdcdc;
   border-radius: 8px;
   padding: 20px 30px;
-  width: 1280px;
+  overflow: auto;
   margin: 10px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  @media screen and (min-width: 1300px) {
+    width: 1000px;
+  }
 `;
 const Td = styled.td`
   font-size: 14px;
@@ -812,15 +828,24 @@ const Input = styled.input`
   height: 40px;
 `;
 const Wrapper = styled.div`
-  margin: 0 auto;
-  width: 1280px;
-  display: flex;
+  padding-left: 280px;
+  display: block;
   gap: 30px;
   justify-content: center;
+  align-items: center;
+  @media screen and (min-width: 1300px) {
+    display: flex;
+  }
 `;
 const ContentsWrap = styled.div`
   width: 100%;
-  margin: 0 auto;
+  display: flex;
+  margin: 0px auto;
+  flex-direction: column;
+  @media screen and (min-width: 1300px) {
+    display: flex;
+    width: 1000px;
+  }
 `;
 const TopContents = styled.div``;
 
@@ -831,8 +856,6 @@ const BottomContents = styled.div`
   justify-content: center;
   border-radius: 15px;
   font-size: 12px;
-  width: 1280px;
-  margin: 0 auto;
   height: 250px;
   background-color: #fbfbfb;
   border: 2px dashed #9f9f9f;

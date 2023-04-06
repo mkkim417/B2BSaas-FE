@@ -3,6 +3,8 @@ import React from 'react';
 import { useMutation } from 'react-query';
 import styled from 'styled-components';
 import { deleteClientData } from '../../axios/api';
+import { getCookie } from '../../util/cookie';
+import { FootContainer } from './GroupDeleteModal';
 
 type Props = {
   title?: string;
@@ -10,7 +12,7 @@ type Props = {
   closeModal: () => void;
 };
 function UserDeleteModal({ title, checkValue, closeModal }: Props) {
-
+  // const token = getCookie('userToken')
   // mutate 선언
   const { mutate } = useMutation(deleteClientData, {
     onSuccess : (response) => {
@@ -55,29 +57,31 @@ function UserDeleteModal({ title, checkValue, closeModal }: Props) {
           <ContentContainer>
             <TitleContainer>
               <div>{title}</div>
-              <div>해당 고객을 삭제시, 관련 발송내역이 모두 삭제됩니다.</div>
             </TitleContainer>
             <DataHeader>
-              <RowPercent width="20%">이름</RowPercent>
-              <RowPercent width="30%">연락처</RowPercent>
-              <RowPercent width="50%">이메일</RowPercent>
+              <HeaderPercent width="20%">이름</HeaderPercent>
+              <HeaderPercent width="30%">연락처</HeaderPercent>
+              <HeaderPercent width="50%">이메일</HeaderPercent>
             </DataHeader>
             <DataContainer>
               {checkValue.map((item: any) => {
                 return (
-                  <DataHeader>
+                  <DataRow>
                     <RowPercent width="20%">{item.clientName}</RowPercent>
                     <RowPercent width="30%">{item.contact}</RowPercent>
                     <RowPercent width="50%">{item.clientEmail}</RowPercent>
-                  </DataHeader>
+                  </DataRow>
                 );
               })}
             </DataContainer>
           </ContentContainer>
+          <FootContainer>
+              <div>해당 고객을 삭제시, 관련 발송내역이 모두 삭제됩니다.</div>
+          </FootContainer>
           <ButtonContainer>
             {/* <ButtonBox>아니오</ButtonBox> */}
             <ButtonBox onClick={closeModal}>취소</ButtonBox>
-            <ButtonBox onClick={deleteDataHandler}>확인</ButtonBox>
+            <ConfirmButton onClick={deleteDataHandler}>확인</ConfirmButton>
           </ButtonContainer>
         </ModalContainer>
       </ModalBackGround>
@@ -108,7 +112,7 @@ const ModalContainer = styled.form`
   justify-content: center;
   align-items: center;
   border-radius: 1rem;
-  gap: 1rem;
+  gap: 0.5rem;
   padding: 2rem 2rem 2rem 2rem;
   border: 1px solid var(--color-white);
   background-color: white;
@@ -116,14 +120,14 @@ const ModalContainer = styled.form`
   left: 35%;
   top: 10%;
   width: 40%;
-  height: 80%;
+  height: 70%;
 `;
 
 const ContentContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  gap: 10px;
+  /* gap: 10px; */
   /* justify-content: center; */
   /* align-items: center; */
   /* margin-top: 30px; */
@@ -136,25 +140,50 @@ const ContentContainer = styled.div`
 const TitleContainer = styled.div`
   width: 100%;
   height: 10%;
+  font-weight: 500;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: beige;
+  /* background-color: beige; */
 `;
 const DataHeader = styled.div`
   width: 100%;
-  height: 8%;
+  height: 10%;
   display: flex;
   flex-direction: row;
   /* background-color: darkgreen; */
 `;
-const RowPercent = styled.div<{ width: any }>`
+const DataRow = styled.div`
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  /* background-color: blue; */
+`;
+const HeaderPercent = styled.div<{ width: any }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 18px;
   width: ${(item: any) => item.width};
   border: 1px solid black;
+  border-left: 1ch;
+  border-right: 1ch;
+  /* background-color: aqua; */
+`
+const RowPercent = styled.div<{ width: any }>`
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  width: ${(item: any) => item.width};
+  border: 1px solid #F3F3F3;
+  border-left: 1ch;
+  border-right: 1ch;
+  border-top: 1ch;
+  /* background-color: aqua; */
 `;
 const DataContainer = styled.div`
   width: 100%;
@@ -174,10 +203,20 @@ const ButtonContainer = styled.div`
   /* background-color: aqua; */
 `;
 const ButtonBox = styled.button`
-  border: 1px solid yellowgreen;
+  width: 100px;
+  /* border: 1px solid #14B869; */
+  border-radius: 10px;
   /* background-color: yellowgreen; */
   padding: 10px;
   font-size: 18px;
+  :hover{
+    background-color: #E6F8F0;
+    color: #14B869;
+  }
 `;
+const ConfirmButton = styled(ButtonBox)`
+  color: white;
+  background-color: #14B869;
+`
 
 export default UserDeleteModal;

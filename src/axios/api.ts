@@ -103,6 +103,16 @@ export const deleteGroupData = async (groupId: any) => {
   return response;
 };
 
+// 그룹 내 클라이언트 삭제
+export const deleteInGroupClient = async(checkValue:any) => {
+  const urls = checkValue.map((item:any) => `/api/batch/clients/${item.clientId}/groups/${item.groupId}`);
+  const response = await axios.all(
+    urls.map((url:any) => {
+      instance.post(url);
+    })
+  )
+  return response;
+}
 // 그룹 내 클라이언트 복사
 // 그룹 내 클라이언트 이동
 

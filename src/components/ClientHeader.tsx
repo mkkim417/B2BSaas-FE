@@ -55,7 +55,7 @@ const DefaultButton = styled.button`
   border-bottom: 2px solid #d9d9d9;
 `;
 const ColorButton = styled(DefaultButton)`
-  color: #4a72ff;
-  border-bottom: 2px solid #4a72ff;
+  color: #14b769;
+  border-bottom: 3px solid #14b769;
 `;
 export default ClientHeader;

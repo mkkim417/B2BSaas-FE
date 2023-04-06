@@ -106,4 +106,15 @@ export const deleteGroupData = async (groupId: any) => {
 // 그룹 내 클라이언트 복사
 // 그룹 내 클라이언트 이동
 
+// 카카오내용 불러오기
+export const fetchTemplatesList = async ({ groupId, clientIds }: any) => {
+  const response = await instance.post(
+    `${process.env.REACT_APP_SERVER_URL}/api/talk/clients/contents`,
+    {
+      groupId,
+      clientIds,
+    }
+  );
+  return response;
+};
 export { instance };

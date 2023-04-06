@@ -62,8 +62,7 @@ function GroupManageList() {
   // }, []);
 
   // 전체고객리스트 useRef
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   // 그룹리스트 API useQuery
   const { data: groupData } = useQuery<any, AxiosError>(
@@ -73,15 +72,15 @@ function GroupManageList() {
       onSuccess: (response) => {
         console.log('그룹리스트 호출성공!', response.data);
         // 그룹 복사,이동에 넣어줄 그룹리스트 state 담기
-        setGroupList(response.data)
-        response.data.map((item:any) => {
+        setGroupList(response.data);
+        response.data.map((item: any) => {
           // 이거 무슨 용도지.. 모르겠음
 
-          if(!(clickGroup.includes(item.groupId))) {
-            clickGroup.push(item.groupId)
-            setClickGroup(clickGroup)
+          if (!clickGroup.includes(item.groupId)) {
+            clickGroup.push(item.groupId);
+            setClickGroup(clickGroup);
           }
-        })
+        });
       },
     }
   );
@@ -100,20 +99,20 @@ function GroupManageList() {
         )
         .then((res) => {
           setGroupClient(res.data.data);
-          console.log('그룹내 클라이언트', res.data.data.length)
+          console.log('그룹내 클라이언트', res.data.data.length);
           // 이거 호출할때마다 데이터길이가 바뀌어서 안됨.
           setIsGroupAllClients(res.data.data.length);
         });
-      console.log('그룹내 클라이언트', groupList)
+      console.log('그룹내 클라이언트', groupList);
 
       setGroupId(id);
       setGroupName(name);
       // 그룹들 이름 넣어주기
-      groupData.data.map((item:any) => {
-        if(item.groupId === id) {
-          setIsGroupAllClients(item.clientCount)
+      groupData.data.map((item: any) => {
+        if (item.groupId === id) {
+          setIsGroupAllClients(item.clientCount);
         }
-      })
+      });
     },
     [groupData]
   );
@@ -139,43 +138,43 @@ function GroupManageList() {
     // setUserList(response.data.data.clients);
     // setAllclients(response.data.data.clientCount);
   }, []);
-  const { data: userData, refetch} = useQuery<any, AxiosError>(
+  const { data: userData, refetch } = useQuery<any, AxiosError>(
     ['getAllClientLists', currentPage],
     () => getAllClientList(currentPage),
     {
       onSuccess: (response) => {
-        console.log('고객리스트useQuery',response);
+        console.log('고객리스트useQuery', response);
         setCheckedArr([]);
         setIsClientState(true);
         setAllclients(userData?.data.clientCount);
       },
       onError: (error) => {
-        console.log(error)
-      }
+        console.log(error);
+      },
     }
   );
-    // 유저리스트 useEffect
-    useEffect(() => {
-      if (isClientState === true) {
-        refetch()
-        getAllClientList(currentPage)
-        allUserRef.current?.focus();
-        // getUserData(currentPage);
-        // setAllclients(userData?.data.clientCount);
-      } else {
-        getClientInGroup(groupId, groupName, currentPage);
-        // setCurrentPage1(1)
-      }
-  
-      // setCount(userList.length);
-      // setIndexOfLastPost(currentPage * postPerPage);
-      // setIndexOfFirstPost(indexOfLastPost - postPerPage);
-      // if (isClientState === true) {
-      //   setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
-      // } else {
-      //   setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
-      // }
-    }, [userData,isAllclients, getUserData, getClientInGroup]);
+  // 유저리스트 useEffect
+  useEffect(() => {
+    if (isClientState === true) {
+      refetch();
+      getAllClientList(currentPage);
+      allUserRef.current?.focus();
+      // getUserData(currentPage);
+      // setAllclients(userData?.data.clientCount);
+    } else {
+      getClientInGroup(groupId, groupName, currentPage);
+      // setCurrentPage1(1)
+    }
+
+    // setCount(userList.length);
+    // setIndexOfLastPost(currentPage * postPerPage);
+    // setIndexOfFirstPost(indexOfLastPost - postPerPage);
+    // if (isClientState === true) {
+    //   setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
+    // } else {
+    //   setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
+    // }
+  }, [userData, isAllclients, getUserData, getClientInGroup]);
   // 처음 렌더링시 전체고객리스트로 focus
   const allUserRef = useRef<HTMLButtonElement>(null);
   // 그룹 내 클라이언트 숫자
@@ -375,40 +374,29 @@ function GroupManageList() {
     //talkContentId,clientId,talkTemplateId
   });
   // console.log('kakaoGroupIdData : ', kakaoGroupIdData);
-  const kakaoAlertSend = async () => {
-    alert('카카오알람톡 전송준비중');
-    console.log('kakaoSendData : ', kakaoSendData);
-    let data = [] as any;
-    kakaoSendData.map((el: any) =>
-      data.push({
-        talkContentId: el.talkContentId,
-        clientId: el.clientId,
-        talkTemplateId: el.talkTemplateId,
-        groupId: kakaoGroupIdData,
-      })
-    );
-    console.log('kakaoGroupIdData data', data);
-    try {
-      const response = await axios
-        .post(`${process.env.REACT_APP_SERVER_URL}/api/talk/sends`, { data })
-        .then((res) => {
-          console.log('kakaoAlertSend : ', res.data);
-        });
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-      alert('다시 시도해주시기 바랍니다.');
-    }
+  const readyAlarmTalk = () => {
+    const ArrClientsIdsData = [] as string[];
+    groupClient.map((el: { clientId: string }) => {
+      ArrClientsIdsData.push(el.clientId);
+    });
+    console.log('ArrClientsIdsData : ', ArrClientsIdsData);
+    navigate(`/readyalarmtalk/${groupId}`, {
+      state: { ArrClientsIdsData },
+    });
+
+    // <Link to={`/readyalarmtalk/${groupId}`} state={{ clientIds: null }}></Link>;
   };
 
   // 그룹 클릭 Active 변화
   const [clickGroup, setClickGroup] = useState<any>([]);
   const [clickActive, setClickActive] = useState('');
 
-  const toogleActive = (e:any) => {
-    setClickActive((prev: any) => {return e.target.value});
-    console.log(e.target.value)
-  }
+  const toogleActive = (e: any) => {
+    setClickActive((prev: any) => {
+      return e.target.value;
+    });
+    console.log(e.target.value);
+  };
   return (
     <Container>
       <HeaderContainer>그룹관리</HeaderContainer>
@@ -418,30 +406,34 @@ function GroupManageList() {
           <GroupContentBox>
             <GroupContentItem
               value="client"
-              className={"btn" + ( "client" == clickActive ? "Active" : "")}
-              onClick={(e:any) => {
+              className={'btn' + ('client' == clickActive ? 'Active' : '')}
+              onClick={(e: any) => {
                 refetch();
-                setCurrentPage(1)
-                toogleActive(e);}} 
-              ref={allUserRef}>
+                setCurrentPage(1);
+                toogleActive(e);
+              }}
+              ref={allUserRef}
+            >
               전체 고객리스트({isAllclients})
             </GroupContentItem>
             {groupData?.data.map((item: any) => {
               return (
                 <>
-                    <GroupContentItem
-                      key={item.groupId}
-                      value={item.groupId}
-                      className={"btn" + (item.groupId == clickActive ? "Active" : "")}
-                      onClick={(e:any) => {
-                        getClientInGroup(item.groupId, item.groupName, 1);
-                        setCurrentPage1(1);
-                        setDeleteGroup(item);
-                        toogleActive(e);
-                      }}
-                    >
-                    {item.groupName}({item.clientCount}) 
-                    </GroupContentItem>
+                  <GroupContentItem
+                    key={item.groupId}
+                    value={item.groupId}
+                    className={
+                      'btn' + (item.groupId == clickActive ? 'Active' : '')
+                    }
+                    onClick={(e: any) => {
+                      getClientInGroup(item.groupId, item.groupName, 1);
+                      setCurrentPage1(1);
+                      setDeleteGroup(item);
+                      toogleActive(e);
+                    }}
+                  >
+                    {item.groupName}({item.clientCount})
+                  </GroupContentItem>
                 </>
               );
             })}
@@ -461,18 +453,16 @@ function GroupManageList() {
           <ClientHeaderRow>
             <DescriptBox>3월에 가입한 사람들~~</DescriptBox>
             {isClientState ? null : (
-              <GroupAlartButton
-              // onClick={kakaoAlertSend}
-              >
-                <Link to={`/alarmtalk/${groupId}`}>알림톡전송</Link>
-              </GroupAlartButton>
+              <GroupButton onClick={readyAlarmTalk}>알림톡전송</GroupButton>
             )}
           </ClientHeaderRow>
           <ButtonContainer>
             {isClientState ? (
               <>
                 {isOpen && isOpen ? (
-                  <GroupButton onClick={() => clickUserDeleteModal()}>삭제</GroupButton>
+                  <GroupButton onClick={() => clickUserDeleteModal()}>
+                    삭제
+                  </GroupButton>
                 ) : null}
                 {!isOpen ? (
                   <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
@@ -484,7 +474,9 @@ function GroupManageList() {
                   </GroupButton>
                 )}
                 {isOpen && isOpen ? (
-                  <GroupButton onClick={() => userEditHandler()}>고객정보 수정</GroupButton>
+                  <GroupButton onClick={() => userEditHandler()}>
+                    고객정보 수정
+                  </GroupButton>
                 ) : null}
                 {!isOpen ? (
                   <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
@@ -505,9 +497,7 @@ function GroupManageList() {
               </>
             ) : (
               <>
-                {isOpen && isOpen ? (
-                  <GroupButton >삭제</GroupButton>
-                ) : null}
+                {isOpen && isOpen ? <GroupButton>삭제</GroupButton> : null}
                 {!isOpen ? (
                   <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
                     선택삭제
@@ -521,7 +511,9 @@ function GroupManageList() {
                   고객 등록
                 </GroupButton>
                 {isOpen && isOpen ? (
-                  <GroupButton onClick={() => clickUserCopyModal()}>복사</GroupButton>
+                  <GroupButton onClick={() => clickUserCopyModal()}>
+                    복사
+                  </GroupButton>
                 ) : null}
                 {!isOpen ? (
                   <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
@@ -572,8 +564,7 @@ function GroupManageList() {
                           />
                         </Percentage>
                       ) : (
-                        <Percentage width="6%">
-                        </Percentage>
+                        <Percentage width="6%"></Percentage>
                       )}
                       {/* <Percentage width="6%">
                         <input
@@ -612,8 +603,7 @@ function GroupManageList() {
                           />
                         </Percentage>
                       ) : (
-                        <Percentage width="6%">
-                        </Percentage>
+                        <Percentage width="6%"></Percentage>
                       )}
                       <Percentage width="6%">
                         {/* <input
@@ -763,7 +753,7 @@ const GroupContainer = styled.div`
 const GroupContentBox = styled.div`
   /* width: 100%; */
   height: 92%;
-  border: 2px solid #EEEEEE;
+  border: 2px solid #eeeeee;
   border-radius: 20px;
   overflow: auto;
   padding: 10px;
@@ -783,7 +773,7 @@ const GroupContentItem = styled.button`
   border-radius: 8px;
   /* color: #4F4F4F; */
   font-weight: 700;
-  font-size : 16px;
+  font-size: 16px;
   /* border: 1px solid burlywood; */
   cursor: pointer;
   /* background-color: rgba(20, 183, 105, 0.05); */
@@ -807,16 +797,16 @@ const ButtonContainer = styled.div`
   align-items: center;
   justify-content: start;
   gap: 10px;
-`
+`;
 const GroupButton = styled.button`
   width: 100px;
   height: 40px;
-  color: #14B769;
+  color: #14b769;
   font-weight: 500;
   font-size: 16px;
   border-radius: 8px;
-  background-color: #FFFFFF;
-  border: 1px solid #14B769;
+  background-color: #ffffff;
+  border: 1px solid #14b769;
 `;
 const GroupAlartButton = styled.button`
   width: 100px;
@@ -825,8 +815,7 @@ const GroupAlartButton = styled.button`
   font-weight: 500;
   font-size: 16px;
   border-radius: 8px;
-  background-color: #14B769;
-
+  background-color: #14b769;
 `;
 const ClientContainer = styled.div`
   width: 75%;
@@ -846,7 +835,7 @@ const ClientHeaderBox = styled.div`
 const ClientHeaderRow = styled(ClientHeaderBox)`
   display: flex;
   justify-content: space-between;
-`
+`;
 const NameBox = styled.div`
   text-align: center;
   font-size: 22px;
@@ -854,13 +843,13 @@ const NameBox = styled.div`
   font-weight: 700;
 `;
 const DescriptBox = styled.div`
-  color: #4F4F4F;
+  color: #4f4f4f;
   font-size: 18px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   /* font-weight: 500; */
-`
+`;
 const ClientContentBox = styled.div`
   height: 70%;
   /* border: 2px solid blue; */
@@ -883,7 +872,7 @@ const CardHeader = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  border: 1px solid #EEEEEE;
+  border: 1px solid #eeeeee;
   border-left: 1ch;
   border-right: 1ch;
   cursor: pointer;
@@ -891,7 +880,7 @@ const CardHeader = styled.div`
   /* background-color: deeppink; */
   /* margin-bottom: 20px; */
   :hover {
-    background-color: rgba(20, 183, 105, 0.05);;
+    background-color: rgba(20, 183, 105, 0.05);
   }
 `;
 const Percentage = styled.div<{ width: any }>`
@@ -937,18 +926,18 @@ const CheckInputBox = styled.input`
   appearance: none;
   width: 1.5rem;
   height: 1.5rem;
-  border: 1.5px solid #EEEEEE;
+  border: 1.5px solid #eeeeee;
   border-radius: 0.35rem;
   cursor: pointer;
 
   :checked {
     width: 1.5rem;
     height: 1.5rem;
-    border: 1.5px solid #EEEEEE;
+    border: 1.5px solid #eeeeee;
     border-radius: 0.35rem;
     /* color: #14B769; */
-    background-color: #14B769;
+    background-color: #14b769;
     background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
   }
-`
+`;
 export default GroupManageList;

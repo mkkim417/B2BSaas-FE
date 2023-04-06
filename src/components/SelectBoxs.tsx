@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import useDetectClose from '../hook/useDetectClose';
 const SelectBoxs = ({
+  width = '',
   placeholder = '',
   optionData = '',
   currentCategoryValue = '',
@@ -25,6 +26,7 @@ const SelectBoxs = ({
   useEffect(() => {
     if (currentValue !== null) {
       propFunction(currentValue, className, isGroupId);
+      console.log(currentValue, className, isGroupId);
     }
   }, [currentValue, propFunction, isGroupId]);
   useEffect(() => {
@@ -32,6 +34,7 @@ const SelectBoxs = ({
   }, [currentCategoryValue, ResetHandler]);
   return (
     <SelectBox
+      width={width}
       ref={dropDownRef}
       onClick={() => setIsOpen((prev: any) => !prev)}
     >
@@ -54,15 +57,14 @@ const SelectBoxs = ({
     </SelectBox>
   );
 };
-const SelectBox = styled.div<{ ref: any }>`
-  margin-bottom: 30px;
+const SelectBox = styled.div<{ ref: any; width?: string }>`
   position: relative;
   height: 40px;
-  width: 200px;
+  width: ${(props) => (props.width ? props.width : '200px')};
   display: flex;
   align-items: center;
   color: #424242;
-  padding: 8px 28px;
+  padding: 9px 20px;
   border-radius: 8px;
   background-color: #ffffff;
   justify-content: space-between;

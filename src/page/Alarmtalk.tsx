@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import SelectBoxs from '../components/SelectBoxs';
 import { kakaoSendDataCreate } from '../redux/modules/kakaoSendData';
@@ -13,25 +13,20 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { getCookie } from '../util/cookie';
 import { HeaderContainer } from './GroupManageList';
+import { useMutation } from 'react-query';
+import { fetchTemplatesList } from '../axios/api';
+import { KorToEngTransData, engToKorTransData } from '../constants/alarmtalk';
 function Alarmtalk() {
   const [isTemplatesList, setTemplatesList] = useState<any>([]);
   const token = getCookie('userToken');
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  //console.log(location.state.ArrClientsIdsData);
   const params = useParams();
-  const sendKeyData = useSelector((state: any) => {
-    return state.sendKey.sendKey;
-  });
-  const sendListData = useSelector((state: any) => {
-    return state.sendList.sendList;
-  });
+
   const sendGroupNameData = useSelector((state: any) => {
     return state.sendGroupName.sendGroupName;
   });
-  const clientIdData = useSelector((state: any) => {
-    return state.clientsId.clientsId;
-  });
-
   const [isAutoModal, setAutoModal] = useState<boolean>(false);
   const [currentValue, setCurrentValue] = useState(null);
   const [isTarget, setTarget] = useState<string | undefined>(undefined);
@@ -40,39 +35,35 @@ function Alarmtalk() {
 
   const [isAllData, setAllData] = useState<any>();
   const [isViewData, setViewData] = useState<string>();
+  const [isTableData, setTableData] = useState([]);
+  const [isKeyData, setKeyData] = useState([]);
+  const [isSendModalData, setSendModalData] = useState({});
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
   };
-  const kakaoSendData = useSelector((state: any) => {
-    return state.kakaoSendData.kakaoSendData[0];
-    //talkContentId,clientId,talkTemplateId
-  });
-  //카카오발송
-  const kakaoAlertSend = async () => {
-    alert('카카오알람톡 전송준비중');
-    console.log('kakaoSendData : ', kakaoSendData);
-    let data = [] as any;
-    kakaoSendData.map((el: any) =>
-      data.push({
-        talkContentId: el.talkContentId,
-        clientId: el.clientId,
-        talkTemplateId: el.talkTemplateId,
-        // groupId: kakaoGroupIdData,
-      })
-    );
-    console.log('kakaoGroupIdData data', data);
-    try {
-      const response = await axios
-        .post(`${process.env.REACT_APP_SERVER_URL}/api/talk/sends`, { data })
-        .then((res) => {
-          console.log('kakaoAlertSend : ', res.data);
-        });
-      console.log(response);
-    } catch (error) {
+
+  // 카카오내용 불러오기
+  const { mutate } = useMutation(fetchTemplatesList, {
+    onSuccess: (res) => {
+      console.log(res.data.data);
+      setTableData(
+        res.data.data.map((el: any) => Object.assign(el.client, el.talkContent))
+      );
+      const engKeyData = res.data.data.map(
+        (el: any) =>
+          Object.keys(Object.assign(el.client, el.talkContent)) as any
+      )[0];
+      const korKeyData = [] as any;
+      for (let el of engKeyData) {
+        korKeyData.push(engToKorTransData[el]);
+      }
+      console.log(korKeyData);
+      setKeyData(korKeyData);
+    },
+    onError: (error) => {
       console.log(error);
-      alert('다시 시도해주시기 바랍니다.');
-    }
-  };
+    },
+  });
   //템플릿전체조회
   const fetchTemplateList = useCallback(async () => {
     try {
@@ -83,6 +74,7 @@ function Alarmtalk() {
           },
         })
         .then((res) => {
+          console.log('템플릿전체조회 : ', res.data.data);
           setTemplatesList(res.data.data);
           setAllData(res.data.data[0]);
           setViewData(res.data.data[0]['text']);
@@ -106,129 +98,100 @@ function Alarmtalk() {
           }
         )
         .then((res) => {
-          console.log(res.data);
+          console.log('fetchTemplateDetail : ', res.data.data);
           setReqTemplates(res.data.data);
         });
     } catch (error) {
       console.log(error);
     }
   }, []);
-  //전송내용불러오기 다시해야
-  const getKakaoExcelData = async () => {
-    try {
-      const response = await axios
-        .post(
-          `${process.env.REACT_APP_SERVER_URL}/api/talk/clients/contents`,
-          { groupId: 3, clientIds: [1, 2, 3] },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          console.log('kakaoAlertSend : ', res.data);
-        });
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-      alert('다시 시도해주시기 바랍니다.');
-    }
-  };
-
+  //알림톡DATA만드는fn
   const refactoringFunc = (TM_CODE: any) => {
-    console.log(isAllData); //
-    console.log('TM_CODE : ', TM_CODE); //현재성택된 템플릿명
-    console.log(sendListData); //엑셀데이터
-    // const targetData = document.getElementById(`${isTarget}`)?.innerHTML;
-    // console.log('targetData : ', targetData);
-    console.log('isTarget : ', isTarget);
     const labelObj = document.getElementsByTagName('label');
     let labelArr = [] as any;
     for (let i = 0; i < labelObj.length; i++) {
       labelArr.push(labelObj[i].innerHTML);
     }
-    console.log(sendListData[0]);
-    console.log(clientIdData);
     let data = [] as any;
     if (TM_CODE === 'TM_2223') {
-      sendListData[0]?.map((el: any, idx: number) => {
+      isTableData?.map((el: any, idx: number) => {
         data.push({
-          clientId: clientIdData[0][idx],
-          customerName: el[labelArr[0]],
-          organizationName: el[labelArr[1]],
-          templateCode: TM_CODE,
+          groupId: Number(params.id),
+          clientId: el.clientId,
+          customerName: el[KorToEngTransData[labelArr[0]]],
+          organizationName: el[KorToEngTransData[labelArr[1]]],
+          talkTemplateId: isAllData.talkTemplateId,
         });
       });
     } else if (TM_CODE === 'TM_2222') {
-      sendListData[0]?.map((el: any, idx: number) => {
+      isTableData?.map((el: any, idx: number) => {
         data.push({
-          clientId: clientIdData[0][idx],
-          customerName: el[labelArr[0]],
-          templateCode: TM_CODE,
+          groupId: Number(params.id),
+          clientId: el.clientId,
+          customerName: el[KorToEngTransData[labelArr[0]]],
+          talkTemplateId: isAllData.talkTemplateId,
         });
       });
     } else if (TM_CODE === 'TM_2220') {
-      sendListData[0]?.map((el: any, idx: number) => {
+      isTableData?.map((el: any, idx: number) => {
         data.push({
           groupId: Number(params.id),
-          clientId: clientIdData[0][idx],
-          customerName: el[labelArr[0]],
-          templateCode: TM_CODE,
+          clientId: el.clientId,
+          customerName: el[KorToEngTransData[labelArr[0]]],
+          talkTemplateId: isAllData.talkTemplateId,
         });
       });
     } else if (TM_CODE === 'TM_2217') {
-      sendListData[0]?.map((el: any, idx: number) => {
+      isTableData?.map((el: any, idx: number) => {
         data.push({
           groupId: Number(params.id),
-          clientId: clientIdData[0][idx],
-          organizationName: el[labelArr[0]],
-          orderNumber: el[labelArr[1]],
-          region: el[labelArr[2]],
-          regionDetail: el[labelArr[3]],
-          deliveryDate: el[labelArr[4]],
-          paymentPrice: el[labelArr[5]],
-          templateCode: TM_CODE,
+          clientId: el.clientId,
+          organizationName: el[KorToEngTransData[labelArr[0]]],
+          orderNumber: el[KorToEngTransData[labelArr[1]]],
+          region: el[KorToEngTransData[labelArr[2]]],
+          regionDetail: el[KorToEngTransData[labelArr[3]]],
+          deliveryDate: el[KorToEngTransData[labelArr[4]]],
+          paymentPrice: el[KorToEngTransData[labelArr[5]]],
+          talkTemplateId: isAllData.talkTemplateId,
         });
       });
     } else if (TM_CODE === 'TM_2216') {
-      sendListData[0]?.map((el: any, idx: number) => {
+      isTableData?.map((el: any, idx: number) => {
         data.push({
           groupId: Number(params.id),
-          clientId: clientIdData[0][idx],
-          customerName: el[labelArr[0]],
-          deliveryCompany: el[labelArr[1]],
-          deliveryTime: el[labelArr[2]],
-          deliveryNumber: el[labelArr[3]],
-          templateCode: TM_CODE,
+          clientId: el.clientId,
+          customerName: el[KorToEngTransData[labelArr[0]]],
+          deliveryCompany: el[KorToEngTransData[labelArr[1]]],
+          deliveryTime: el[KorToEngTransData[labelArr[2]]],
+          deliveryNumber: el[KorToEngTransData[labelArr[3]]],
+          talkTemplateId: isAllData.talkTemplateId,
         });
       });
     } else if (TM_CODE === 'TM_2048') {
-      sendListData[0]?.map((el: any, idx: number) => {
+      isTableData?.map((el: any, idx: number) => {
         data.push({
           groupId: Number(params.id),
-          clientId: clientIdData[0][idx],
-          organizationName: el[labelArr[0]],
-          orderNumber: el[labelArr[1]],
-          region: el[labelArr[2]],
-          regionDetail: el[labelArr[3]],
-          deliveryDate: el[labelArr[4]],
-          paymentPrice: el[labelArr[5]],
-          templateCode: TM_CODE,
+          clientId: el.clientId,
+          organizationName: el[KorToEngTransData[labelArr[0]]],
+          orderNumber: el[KorToEngTransData[labelArr[0]]],
+          region: el[KorToEngTransData[labelArr[0]]],
+          regionDetail: el[KorToEngTransData[labelArr[0]]],
+          deliveryDate: el[KorToEngTransData[labelArr[0]]],
+          paymentPrice: el[KorToEngTransData[labelArr[0]]],
+          talkTemplateId: isAllData.talkTemplateId,
         });
       });
     }
     return data;
   };
-
+  //카카오전송
   const kakaoSaveFetch = async () => {
-    console.log('isAllData.tmpCode : ', isAllData.talkTemplateCode);
     let data = refactoringFunc(isAllData.talkTemplateCode);
-    console.log(data);
+    console.log('data : ', data);
     try {
-      const response = await axios
+      await axios
         .post(
-          `${process.env.REACT_APP_SERVER_URL}/api/talk/both/contents/send`,
+          `${process.env.REACT_APP_SERVER_URL}/api/talk/contents`,
           { data },
           {
             headers: {
@@ -237,9 +200,9 @@ function Alarmtalk() {
           }
         )
         .then((res) => {
-          console.log(res.data);
-          dispatch(kakaoSendDataCreate(res.data.data));
-          navigate('/kakaoresultlist');
+          setAutoModal((prev) => !prev);
+          console.log('setSendModalData : ', res.data.data);
+          setSendModalData(res.data.data);
         });
       // navigate('/');
     } catch (error) {
@@ -248,11 +211,13 @@ function Alarmtalk() {
     }
   };
   const messagePreviewFunc = useCallback(
-    (text: string, target: string, groupId: string) => {
+    (text: string, target: string) => {
+      console.log(text, target);
       const obj_n = document.getElementById(`${target}`)?.innerHTML;
       setTarget(text);
+      console.log(obj_n);
       const targetData = document.getElementById(`${obj_n}`)?.innerHTML;
-      const ChangeData = sendListData[0][0][text];
+      const ChangeData = isTableData[0][KorToEngTransData[text]];
       const sumData =
         document
           .getElementById('view')
@@ -264,7 +229,7 @@ function Alarmtalk() {
       setViewData(sumData);
       return;
     },
-    [sendListData]
+    [isTableData]
   );
   // onChange setState비동기
   useEffect(() => {
@@ -276,10 +241,17 @@ function Alarmtalk() {
       setViewData(data[0]['text']);
       setReqData(JSON.parse(data[0].reqData));
     }
-  }, [currentValue]);
+  }, [currentValue, isTemplatesList]);
   useEffect(() => {
-    fetchTemplateList();
-  }, [fetchTemplateList]);
+    if (location && location?.state?.ArrClientsIdsData) {
+      fetchTemplateList();
+      mutate({
+        groupId: params?.id,
+        clientIds: location?.state.ArrClientsIdsData,
+      });
+    }
+    console.log(isTableData);
+  }, [fetchTemplateList, mutate]);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -297,7 +269,7 @@ function Alarmtalk() {
             >
               {isTemplatesList &&
                 isTemplatesList.map((el: any, idx: number) => (
-                  <option>{el.talkTemplateName}</option>
+                  <option key={el.talkTemplateId}>{el.talkTemplateName}</option>
                 ))}
             </select>
             {isReqData &&
@@ -305,12 +277,10 @@ function Alarmtalk() {
                 <div key={idx}>
                   <div id={`obj_${idx}`}>{el}</div>
                   <SelectBoxs
-                    // currentCategoryValue={currentValue}
-                    // className={`obj_${idx}`}
-                    // propFunction={messagePreviewFunc}
-                    optionData={
-                      (sendKeyData && sendKeyData[0]) || ['빈값입니다.']
-                    }
+                    currentCategoryValue={currentValue}
+                    className={`obj_${idx}`}
+                    propFunction={messagePreviewFunc}
+                    optionData={(isKeyData && isKeyData) || ['빈값입니다.']}
                   ></SelectBoxs>
                 </div>
               ))}
@@ -332,8 +302,7 @@ function Alarmtalk() {
             <Button onClick={() => navigate(-1)}>취소</Button>
             <Button
               onClick={() => {
-                //setAutoModal((prev) => !prev);
-                //kakaoSaveFetch();
+                kakaoSaveFetch();
               }}
             >
               전송
@@ -343,9 +312,10 @@ function Alarmtalk() {
         {isAutoModal && isAutoModal ? (
           <AutoModal
             closeModal={setAutoModal}
-            userNum={sendListData && sendListData[0]?.length}
+            userNum={100}
             groupName={sendGroupNameData && sendGroupNameData[0]}
             isAllData={isViewData}
+            isSendModalData={isSendModalData}
             currentValue={
               currentValue === null ? '택배번호 안내' : currentValue
             }
@@ -376,9 +346,8 @@ const Button = styled.button`
   padding: 5px 0px;
 `;
 export const Wrapper = styled.div`
-  padding-left: 200px;
+  padding-left: 250px;
   display: flex;
-  gap: 30px;
   -webkit-box-pack: center;
   align-items: center;
   justify-content: center;

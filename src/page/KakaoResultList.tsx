@@ -10,6 +10,7 @@ import Callander from '../asset/svg/Callander';
 import useDetectClose from '../hook/useDetectClose';
 import { Link } from 'react-router-dom';
 import { getCookie } from '../util/cookie';
+import { Button, Thead } from './UploadPage';
 function KakaoResultList() {
   //페이지네이션
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
@@ -130,7 +131,7 @@ function KakaoResultList() {
             {isGroupList?.map((item: any, idx: number) => {
               return (
                 <option key={item.groupId} value={item.groupId}>
-                  {item.groupName}({item.clientCount})
+                  {item.groupName}({item.clientCount}명)
                 </option>
               );
             })}
@@ -152,69 +153,76 @@ function KakaoResultList() {
           </CallanderWrap>
         </FlexWrap>
         {/* <Button onClick={SubmitBtnHandler}>조회</Button> */}
-        <Table>
-          <thead style={{ fontWeight: 'bold' }}>
-            <tr>
-              <Th>보낸날짜</Th>
-              <Th>총메시지</Th>
-              <Th>성공건수</Th>
-              <Th>실패건수</Th>
-              <Th>총성공률</Th>
-              <Th>그룹명</Th>
-              <Th>발송상태</Th>
-              <Th>상세</Th>
-            </tr>
-          </thead>
-          <tbody style={{ textAlign: 'center' }}>
-            {isGroupClient &&
-              isGroupClient.map((el: any, idx: number) => (
-                <tr key={idx}>
-                  <Td>{el.sendDate}</Td>
-                  <Td>{el.msgCount}</Td>
-                  <Td>{el.scnt}</Td>
-                  <Td>{el.fcnt}</Td>
-                  <Td>{(el.scnt / el.msgCount) * 100}%</Td>
-                  <Td>{el.groupName}</Td>
-                  <Td>{el.sendState}</Td>
-                  <Td>
-                    <StlyeBtn
-                    // onClick={() => {
-                    //   KakaoDetailBtn(el.talkSendId);
-                    // }}
-                    >
-                      <Link
-                        to={`/kakaodetaillist/${el.talkSendId}`}
-                        state={{
-                          groupName: `${el.groupName}`,
-                          sendState: `${el.sendState}`,
-                          fcnt: `${el.fcnt}`,
-                          success: `${(el.scnt / el.msgCount) * 100}`,
-                          sendDate: `${el.sendDate}`,
-                        }}
-                      >
-                        상세보기
-                      </Link>
-                    </StlyeBtn>
-                  </Td>
-                </tr>
-              ))}
-          </tbody>
-        </Table>
+        <MapWrapper>
+          <Table>
+            <Thead>
+              <tr>
+                <Th>보낸날짜</Th>
+                <Th>총메시지</Th>
+                <Th>성공건수</Th>
+                <Th>실패건수</Th>
+                <Th>총성공률</Th>
+                <Th>그룹명</Th>
+                <Th>발송상태</Th>
+                <Th>상세</Th>
+              </tr>
+            </Thead>
+            <tbody style={{ textAlign: 'center' }}>
+              {isGroupClient &&
+                isGroupClient.map((el: any, idx: number) => (
+                  <tr key={idx}>
+                    <Td>{el.sendDate}</Td>
+                    <Td>{el.msgCount}</Td>
+                    <Td>{el.scnt}</Td>
+                    <Td>{el.fcnt}</Td>
+                    <Td>{(el.scnt / el.msgCount) * 100}%</Td>
+                    <Td>{el.groupName}</Td>
+                    <Td>{el.sendState}</Td>
+                    <Td>
+                      <Button width="100px" padding="8px">
+                        <Link
+                          to={`/kakaodetaillist/${el.talkSendId}`}
+                          state={{
+                            groupName: `${el.groupName}`,
+                            sendState: `${el.sendState}`,
+                            fcnt: `${el.fcnt}`,
+                            success: `${(el.scnt / el.msgCount) * 100}`,
+                            sendDate: `${el.sendDate}`,
+                          }}
+                        >
+                          상세보기
+                        </Link>
+                      </Button>
+                    </Td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        </MapWrapper>
+        <PaginationBox>
+          <Pagination
+            activePage={currentPage}
+            itemsCountPerPage={5}
+            pageRangeDisplayed={5}
+            prevPageText={'<'}
+            nextPageText={'>'}
+            totalItemsCount={total}
+            onChange={setCurrentPage}
+          />
+        </PaginationBox>
       </Wrapper>
-      <PaginationBox>
-        <Pagination
-          activePage={currentPage}
-          itemsCountPerPage={5}
-          pageRangeDisplayed={5}
-          prevPageText={'<'}
-          nextPageText={'>'}
-          totalItemsCount={total}
-          onChange={setCurrentPage}
-        />
-      </PaginationBox>
     </motion.div>
   );
 }
+const MapWrapper = styled.div`
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 20px 30px;
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 const CallanderIconWrap = styled.div`
   display: flex;
   align-content: center;
@@ -229,19 +237,9 @@ const StlyeBtn = styled.span`
   align-items: center;
   justify-content: center;
 `;
-export const Th = styled.th`
-  border: 1px solid black;
-  background-color: #f2f2f2;
-  border: 1px solid #c7c7c7;
-  color: #555;
-  font-weight: bold;
-  padding: 15px;
-`;
+export const Th = styled.th``;
 export const Td = styled.td`
-  border-bottom: 1px solid black;
   vertical-align: middle;
-  color: #555;
-  padding: 15px;
   :nth-of-type(2) {
     text-align: center;
   }
@@ -251,13 +249,13 @@ const CallanderWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-left: 5px;
+  padding-left: 10px;
+  cursor: pointer;
 `;
 export const Table = styled.table`
-  border: 1px solid black;
   width: 100%;
-  border-collapse: seperate;
-  border-spacing: 20px 30px;
+  border-collapse: separate;
+  border-spacing: 0px 10px;
 `;
 export const GrayWrap = styled.div`
   background-color: #f2f2f2;
@@ -265,16 +263,6 @@ export const GrayWrap = styled.div`
   color: #555;
   font-weight: bold;
   padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-const Button = styled.div`
-  margin: 30px auto;
-  width: 140px;
-  height: 40px;
-  background-color: #000;
-  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -288,8 +276,7 @@ export const Wrapper = styled.div`
   margin: 0 auto;
   width: 1200px;
   padding-left: 250px;
-  padding-top: 50px;
-  gap: 30px;
+  padding-top: 250px;
   justify-content: center;
 `;
 export const H1 = styled.div`

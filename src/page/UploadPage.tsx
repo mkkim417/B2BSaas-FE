@@ -685,11 +685,11 @@ function UploadPage() {
   );
 }
 
-const Thead = styled.thead`
-  border-bottom: 1px solid #bdbdbd;
-  border-top: 1px solid #bdbdbd;
+export const Thead = styled.thead`
   > tr > th {
     font-weight: bold;
+    border-bottom: 1px solid #bdbdbd;
+    border-top: 1px solid #bdbdbd;
     font-size: 16px;
     color: #828282;
     font-family: 'Inter', sans-serif;
@@ -743,13 +743,15 @@ const TemplateDown = styled.div`
 `;
 const Table = styled.table`
   width: 100%;
+  border-collapse: separate;
+  border-spacing: 0px 10px;
 `;
-const MapWrapper = styled.div`
+export const MapWrapper = styled.div`
   border: 1px solid #dcdcdc;
   border-radius: 8px;
   padding: 20px 30px;
   width: 1280px;
-  margin: 0 auto;
+  margin: 10px auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -767,13 +769,14 @@ const BtnWrap = styled.div`
   justify-content: center;
   margin: 50px auto;
 `;
-const Button = styled.button<{
+export const Button = styled.button<{
   width?: string;
+  padding?: string;
 }>`
   border-radius: 8px;
   color: #14b769;
   width: ${(props) => (props.width ? props.width : '100px')};
-  padding: 15px 20px;
+  padding: ${(props) => (props.padding ? props.padding : '15px 20px')};
   border: 2px solid #14b769;
   font-weight: bold;
   font-size: 16px;

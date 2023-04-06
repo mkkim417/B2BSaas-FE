@@ -1,6 +1,11 @@
 import React from 'react';
 
-function ListIcon({ width, heigth }: any) {
+export interface Iicon {
+  width: string;
+  heigth: string;
+  fill?: string;
+}
+function ListIcon({ width, heigth, fill }: Iicon) {
   console.log(width, heigth);
   return (
     <svg
@@ -9,7 +14,7 @@ function ListIcon({ width, heigth }: any) {
       viewBox="0 0 24 24"
       width={width}
       height={heigth}
-      fill="#000000"
+      fill={fill ? fill : '#000'}
     >
       <g>
         <rect fill="none" height="24" width="24" />

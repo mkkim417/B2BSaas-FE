@@ -46,51 +46,92 @@ const TopNav = () => {
           <ul>
             <Li>
               <NavLink to={'/statistics'}>
-                <ListIcon width={'35px'} height={'35px'} />
                 {statistics ? (
-                  <LiBlue>이용현황</LiBlue>
+                  <>
+                    <ListIcon width={'35px'} heigth={'35px'} fill={'#14b769'} />
+                    <LiBlue>이용현황</LiBlue>
+                  </>
                 ) : (
-                  <NotLiBlue>이용현황</NotLiBlue>
+                  <>
+                    <ListIcon width={'35px'} heigth={'35px'} />
+                    <NotLiBlue>이용현황</NotLiBlue>
+                  </>
                 )}
               </NavLink>
             </Li>
             <Li>
               <NavLink to={'/readyalarmtalk'}>
-                <KakaoIcon width={'35px'} height={'35px'} />
                 {readyalarmtalk ? (
-                  <LiBlue>알림톡전송</LiBlue>
+                  <>
+                    <KakaoIcon
+                      width={'35px'}
+                      heigth={'35px'}
+                      fill={'#14b769'}
+                    />
+                    <LiBlue>알림톡전송</LiBlue>
+                  </>
                 ) : (
-                  <NotLiBlue>알림톡전송</NotLiBlue>
+                  <>
+                    <KakaoIcon width={'35px'} heigth={'35px'} />
+                    <NotLiBlue>알림톡전송</NotLiBlue>
+                  </>
                 )}
               </NavLink>
             </Li>
             <Li>
               <NavLink to={'/kakaoresultlist'}>
-                <ListResultIcon width={'35px'} height={'35px'} />
                 {kakaoresultlist ? (
-                  <LiBlue>전송결과조회</LiBlue>
+                  <>
+                    <ListResultIcon
+                      width={'35px'}
+                      heigth={'35px'}
+                      fill={'#14b769'}
+                    />
+                    <LiBlue>전송결과조회</LiBlue>
+                  </>
                 ) : (
-                  <NotLiBlue>전송결과조회</NotLiBlue>
+                  <>
+                    <ListResultIcon width={'35px'} heigth={'35px'} />
+                    <NotLiBlue>전송결과조회</NotLiBlue>
+                  </>
                 )}
               </NavLink>
             </Li>
             <Li>
               <NavLink to={'/groupManageList'}>
-                <GroupMangeListIcon width={'35px'} height={'35px'} />
                 {groupManageList ? (
-                  <LiBlue>고객관리</LiBlue>
+                  <>
+                    <GroupMangeListIcon
+                      width={'35px'}
+                      heigth={'35px'}
+                      fill={'#14b769'}
+                    />
+                    <LiBlue>고객관리</LiBlue>
+                  </>
                 ) : (
-                  <NotLiBlue>고객관리</NotLiBlue>
+                  <>
+                    <GroupMangeListIcon width={'35px'} heigth={'35px'} />
+                    <NotLiBlue>고객관리</NotLiBlue>
+                  </>
                 )}
               </NavLink>
             </Li>
             <Li>
               <NavLink to={'/uploadpage'}>
-                <CustomerAddIcon width={'35px'} height={'35px'} />
                 {Uploadpage ? (
-                  <LiBlue>고객등록</LiBlue>
+                  <>
+                    <CustomerAddIcon
+                      width={'35px'}
+                      heigth={'35px'}
+                      fill={'#14b769'}
+                    />
+                    <LiBlue>고객등록</LiBlue>
+                  </>
                 ) : (
-                  <NotLiBlue>고객등록</NotLiBlue>
+                  <>
+                    <CustomerAddIcon width={'35px'} heigth={'35px'} />
+                    <NotLiBlue>고객등록</NotLiBlue>
+                  </>
                 )}
               </NavLink>
             </Li>

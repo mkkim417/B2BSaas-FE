@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useMutation } from 'react-query';
 import styled from 'styled-components';
 import { getCookie } from '../../util/cookie';
 
@@ -10,8 +11,9 @@ type Props = {
 };
 function UserCopyModal({ group, content, closeModal }: Props) {
   const token = getCookie('userToken')
+
   // Select 그룹이름 담는 변수
-  const groupArr = [] as any;
+  const groupArr = ['----'] as any;
   // Select 선택값 변수 = newGroupId
   const [selectedGroupId, setSelectedGroupId] = useState('');
   // Select Change Handler
@@ -24,55 +26,74 @@ function UserCopyModal({ group, content, closeModal }: Props) {
       groupArr.push(item.groupName);
     });
     // console.log('content', content[0].groupId)
-  });
+  }, [group, content]);
 
   // 제출 버튼 핸들러
   const submitButtonHandler = (e: any) => {
     e.preventDefault();
-    // const existGroupId = content[0].groupId;
-    console.log('~~~~~')
-    console.log('content', content)
-    // const urls = content.map(
-    //   (item: any) =>
-    //     `${process.env.REACT_APP_SERVER_URL}/api/batch/clients/${item.clientId}/groups/${existGroupId}/copy/${selectedGroupId}`,
-    //   { headers: { authorization: `Bearer ${token}` } }
-    // );
-    // if (selectedGroupId === '') {
-    //   alert('복사할 그룹을 선택해주세요.');
-    // } else {
-    //   axios
-    //     .all(urls.map((url: any) => axios.post(url)))
-    //     .then((response) => {
-    //       console.log(response);
-    //       alert('복사 완료!');
-    //       closeModal();
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.response);
-    //       alert('복사 실패!ㅠㅠ');
-    //     });
-    // }
+    const existGroupId = content[0].groupId;
+    // console.log('~~~~~')
+    // console.log('content', content)
+    // console.log('token', token)
+    // 테스트용
+    const urls = content.map(
+      (item: any) =>
+        `https://dev.sendingo-be.store/api/batch/clients/${item.clientId}/groups/${existGroupId}/copy/${selectedGroupId}`);
+    
+    // console.log('urls', urls)
+    if (selectedGroupId === '') {
+      alert('복사할 그룹을 선택해주세요.');
+    } else {
+      axios
+        .all(
+          urls.map((url: any) => 
+          axios.post(url, {}, { headers: { authorization: `Bearer ${token}` }})))
+        .then((response) => {
+          console.log(response);
+          alert('복사 완료!');
+          closeModal();
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
+          if ( error.response.data.message === '이미 존재하는 그룹입니다.') {
+            alert('이미 존재하는 그룹입니다.')
+            closeModal();
+          } else if(error.response.data.message === '존재하지 않는 그룹입니다.') {
+            alert('존재하지 않는 그룹입니다.')
+            closeModal();
+          } else {
+            alert('복사에 실패하였습니다. 관리자에게 문의해주세요.');
+            closeModal();
+          }
+        });
+    }
   };
   return (
     <ModalWrap>
       <ModalBackGround>
         <ModalContainer>
           <ContentContainer>
-            <TitleContainer>복사시킬 그룹명을 선택해주세요!🌼</TitleContainer>
-            <DataHeader>
-              선택 :
-              <select onChange={selectHandler}>
+            <TitleContainer>복사시킬 그룹명을 선택해주세요🌼</TitleContainer>
+            <SelectHeader>
+              그룹선택 :
+              <SelectBox onChange={selectHandler}>
+                <option value="none">=====선택=====</option>
                 {group.map((item: any) => (
                   <option value={item.groupId} key={item.groupId}>
                     {item.groupName}
                   </option>
                 ))}
-              </select>
+              </SelectBox>
+            </SelectHeader>
+            <DataHeader>
+              <HeaderPercent width="20%">이름</HeaderPercent>
+              <HeaderPercent width="30%">연락처</HeaderPercent>
+              <HeaderPercent width="50%">이메일</HeaderPercent>
             </DataHeader>
             <DataContainer>
               {content.map((item: any) => {
                 return (
-                  <DataHeader>
+                  <DataHeader key={item.clientId}>
                     <RowPercent width="20%">{item.clientName}</RowPercent>
                     <RowPercent width="30%">{item.contact}</RowPercent>
                     <RowPercent width="50%">{item.clientEmail}</RowPercent>
@@ -83,7 +104,7 @@ function UserCopyModal({ group, content, closeModal }: Props) {
           </ContentContainer>
           <ButtonContainer>
             <ButtonBox onClick={closeModal}>취소</ButtonBox>
-            <ButtonBox onClick={submitButtonHandler}>확인</ButtonBox>
+            <ConfirmButton onClick={submitButtonHandler}>확인</ConfirmButton>
           </ButtonContainer>
         </ModalContainer>
       </ModalBackGround>
@@ -129,7 +150,7 @@ const ContentContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  gap: 10px;
+  /* gap: 10px; */
   /* justify-content: center; */
   /* align-items: center; */
   /* margin-top: 30px; */
@@ -143,27 +164,62 @@ const TitleContainer = styled.div`
   width: 100%;
   height: 10%;
   display: flex;
+  font-size: 24px;
+  font-weight: 500;
   align-items: center;
   justify-content: center;
   /* background-color: beige; */
+`;
+const SelectHeader = styled.div`
+  width: 100%;
+  height: 8%;
+  display: flex;
+  font-size: 18px;
+  align-items: center;
+  flex-direction: row;
+  /* background-color: pink; */
 `;
 const DataHeader = styled.div`
   width: 100%;
   height: 8%;
   display: flex;
+  font-size: 20px;
+  /* align-items: center; */
   flex-direction: row;
   /* background-color: darkgreen; */
 `;
-const RowPercent = styled.div<{ width: any }>`
+const SelectBox = styled.select`
+  width: 200px;
+  height: 40px;
+  font-size: 16px;
+  margin-left: 10px;
+`
+const HeaderPercent = styled.div<{ width: any }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 18px;
   width: ${(item: any) => item.width};
   border: 1px solid black;
+  border-left: 1ch;
+  border-right: 1ch;
+  /* background-color: aqua; */
+`
+const RowPercent = styled.div<{ width: any }>`
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  width: ${(item: any) => item.width};
+  border: 1px solid #F3F3F3;
+  border-left: 1ch;
+  border-right: 1ch;
+  border-top: 1ch;
 `;
 const DataContainer = styled.div`
   width: 100%;
-  height: 80%;
+  height: 70%;
   display: flex;
   flex-direction: column;
   overflow: scroll;
@@ -179,10 +235,20 @@ const ButtonContainer = styled.div`
   /* background-color: aqua; */
 `;
 const ButtonBox = styled.button`
-  border: 1px solid yellowgreen;
+  width: 100px;
+  /* border: 1px solid #14B869; */
+  border-radius: 10px;
   /* background-color: yellowgreen; */
   padding: 10px;
   font-size: 18px;
+  :hover{
+    background-color: #E6F8F0;
+    color: #14B869;
+  }
 `;
+const ConfirmButton = styled(ButtonBox)`
+  color: white;
+  background-color: #14B869;
+`
 
 export default UserCopyModal;

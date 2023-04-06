@@ -525,7 +525,7 @@ const Signup = () => {
               </StErrorMsg>
             )}
             {/* <StPwP>비밀번호 확인</StPwP> */}
-            <StPwinput
+            <StPwinput2
               type="password"
               {...register('ConfirmPw', {
                 required: true,
@@ -565,7 +565,7 @@ const StP = styled.p`
   line-height: 30px;
   text-align: center;
   color: #000000;
-  margin: 20px;
+  margin-top: 40px;
 `;
 
 const StInputWrapper = styled.div`
@@ -582,7 +582,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 100%;
   gap: 30px;
   font-family: 'Inter';
   font-style: normal;
@@ -596,13 +596,13 @@ const StEmail = styled(StInputWrapper)`
 const StEmailP = styled.p`
   font-family: 'Roboto';
   font-style: normal;
-  font-weight: 300;
+  font-weight: 700;
   line-height: 28px;
   display: flex;
   align-items: center;
-
+  padding: 30px 0 10px 0;
   text-align: center;
-  color: #000000;
+  color: #909090;
   mix-blend-mode: darken;
 `;
 
@@ -613,8 +613,9 @@ const StInput = styled.input<StInputProps>`
   box-sizing: border-box;
   border-radius: 8px;
   width: 380px;
-  height: 50px;
+  height: 48px;
   margin: 10px auto;
+  padding: 15px 0 15px 20px;
   display: flex;
   align-items: center;
   border: 1px solid #BDBDBD;
@@ -645,9 +646,15 @@ const StInput2 = styled.input<StInputProps>`
    background: #FFFFFF
   box-sizing: border-box;
   border-radius: 8px;
+  font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 18px;
   width: 380px;
   height: 50px;
   margin: 10px auto;
+  padding: 15px 0 15px 20px;
   display: flex;
   align-items: center;
   border: 1px solid #BDBDBD;
@@ -676,11 +683,16 @@ const StSelect2 = styled.select`
 
 const StInput3 = styled.input`
   background: #eeeeee;
-  box-sizing: border-box;
   border-radius: 8px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
   width: 380px;
   height: 48px;
   margin: 10px auto;
+  padding: 15px 0 15px 20px;
   display: flex;
   align-items: center;
   border: 1px solid #bdbdbd;
@@ -696,11 +708,13 @@ const StBrandP = styled.p`
   font-family: 'Inter';
   font-style: normal;
   font-size: 16px;
+  font-weight: 700;
   line-height: 20px;
   display: flex;
   justify-content: left;
+  margin: 30px 0 10px 0;
   align-items: center;
-  color: #000000;
+  color: #909090;
   mix-blend-mode: darken;
 `;
 
@@ -708,6 +722,12 @@ const StBrandInput = styled.input<StInputProps>`
   background: #ffffff;
   border-radius: 8px;
   border: 1px solid #bdbdbd;
+  padding: 15px 0 15px 20px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
   width: 380px;
   height: 48px;
   margin: 10px auto;
@@ -720,6 +740,12 @@ const StBrandNumberInput = styled.input<StInputProps>`
   background: #ffffff;
   border: 1px solid #bdbdbd;
   border-radius: 8px;
+  padding: 15px 0 15px 20px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
   /* border-color: ${({ hasError }) => (hasError ? 'red' : 'inherit')}; */
   justify-content: left;
   width: 230px;
@@ -732,6 +758,7 @@ const Stbutton = styled.button`
   background: #eeeeee;
   border-radius: 8px;
   margin-left: 10px;
+  color: #bdbdbd;
   font-family: 'Inter';
   font-style: normal;
   font-weight: 700;
@@ -747,12 +774,14 @@ const StBrandNumberP = styled.p`
   margin: 10px auto;
   font-family: 'Inter';
   font-style: normal;
+  font-weight: 700;
   font-size: 16px;
   line-height: 20px;
+  margin: 30px 0 10px 0;
   display: flex;
   align-items: center;
   text-align: center;
-  color: #000000;
+  color: #909090;
 `;
 
 const Stdiv = styled.div`
@@ -770,10 +799,13 @@ const StPwP = styled.p`
   font-family: 'Inter';
   font-style: normal;
   font-size: 16px;
+  font-weight: 700;
+
   line-height: 20px;
+  margin: 30px 0 10px 0;
   display: flex;
   align-items: center;
-  color: #000000;
+  color: #909090;
   mix-blend-mode: darken;
 `;
 
@@ -791,6 +823,30 @@ const StPwinput = styled.input<StInputProps>`
   width: 380px;
   height: 48px;
   margin: 10px auto;
+  padding: 15px 0 15px 20px;
+  border: 1px solid #bdbdbd;
+  transition: border-color 0.2s ease-in-out;
+
+  &:focus {
+    border-color: #333;
+  }
+  &:focus + ${StErrorMsg} {
+    visibility: visible;
+  }
+  ${({ hasError }) =>
+    hasError &&
+    `
+    border-color: red;
+  `}
+`;
+
+const StPwinput2 = styled.input<StInputProps>`
+  background: #ffffff;
+  border-radius: 8px;
+  width: 380px;
+  height: 48px;
+  /* margin: 10px auto; */
+  padding: 15px 0 15px 20px;
   border: 1px solid #bdbdbd;
   transition: border-color 0.2s ease-in-out;
 
@@ -808,22 +864,22 @@ const StPwinput = styled.input<StInputProps>`
 `;
 
 const StSignupButton = styled.button`
-  background-color: #eeeeee;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   width: 380px;
   height: 48px;
-  color: #000000;
+  color: #bdbdbd;
+  background: #eeeeee;
   font-size: 1.25rem;
   font-weight: bold;
-  padding: 10px 40px;
+  padding: 14px 0 14px 0;
   border: none;
-  border-radius: 5px;
-  margin: 20px;
-  transition: background-color 0.2s ease-in-out;
-  cursor: pointer;
-  &:hover {
-    background-color: #14b769;
-  }
+  border-radius: 8px;
+  margin: 60px 40px 40px 40px;
 `;
+
 const StPicInfo = styled.div`
   width: 380px;
   /* border: 2px solid; */
@@ -833,17 +889,23 @@ const StForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 460px;
   /* border: 1px solid black; */
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 `;
 
 const StLogin = styled.div`
-  margin: 20px;
+  margin: 30px 0 20px 0;
   font-family: 'Inter';
   font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  /* identical to box height, or 129% */
+  text-align: center;
 
-  font-size: 16px;
-  line-height: 20px;
+  /* Grey01 */
+  color: #909090;
 `;
 
 const Stspan = styled.span`

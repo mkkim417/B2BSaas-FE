@@ -5,44 +5,32 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useDetectClose from '../hook/useDetectClose';
 import { kakaoGroupIdCreate } from '../redux/modules/kakaoGroupId';
+import { getCookie } from '../util/cookie';
 const AutoModal = (props: any) => {
+  console.log('props.isSendModalData : ', props.isSendModalData);
   const dropDownRef = useRef();
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false); //커스텀훅
-  const [isGorupDesc, setGorupDesc] = useState();
-  const [isGorupName, setGorupName] = useState(props.groupName[0]);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const isGorupDescChage = (e: any) => {
-    setGorupDesc(e.target.value);
-  };
 
-  const ClientsIdData = useSelector((state: any) => {
-    return state.clientsId.clientsId[0];
-  });
-  const ClientListData = useSelector((state: any) => {
-    return state.sendList.sendList;
-  });
-
-  console.log('ClientListData : ', ClientListData);
-  console.log('ClientsIdData : ', ClientsIdData);
   const onSubmit = async () => {
-    console.log('props.groupName : ', props.groupName);
-    if (isGorupDesc === undefined || null || '') {
-      alert('그룹설명을 해주세요');
-      return;
-    }
-    let clientIds = ClientsIdData;
-    console.log('clientIds : ', clientIds);
+    const data = [] as any[];
+    const token = getCookie('userToken');
+    props.isSendModalData.map((el: any) => data.push(el));
     try {
-      const response = await axios
-        .post(`https://dev.sendingo-be.store/api/batch/groups`, {
-          clientIds: ClientsIdData,
-          groupName: isGorupName,
-          groupDescription: isGorupDesc,
-        })
+      await axios
+        .post(
+          `${process.env.REACT_APP_SERVER_URL}/api/talk/sends`,
+          {
+            data,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .then((res) => {
           console.log(res.data);
-          dispatch(kakaoGroupIdCreate(res.data.groupId));
           navigate('/groupmanageList');
         });
     } catch (error) {
@@ -57,84 +45,41 @@ const AutoModal = (props: any) => {
       <ModalBlock ref={dropDownRef}>
         <XboxWrap onClick={() => props.closeModal(false)}></XboxWrap>
         <ContentsWrap>
-          <BoxMent>그룹 생성</BoxMent>
-          <TwiceWrap>
-            <Flex width="50%">
-              <Strong>
-                그룹명<Red>*</Red>
-              </Strong>
-              <Input
-                type="text"
-                defaultValue={props.groupName}
-                onChange={(e) => {
-                  setGorupName(e.target.value);
-                }}
-              />
-            </Flex>
-            <Flex width="50%">
-              <Strong>유저수</Strong> {props.userNum}
-            </Flex>
-          </TwiceWrap>
-          <Flex width="100%">
-            <Strong>그룹설명</Strong>
-            <Input
-              width="80%"
-              type="text"
-              placeholder="그룹설명"
-              value={isGorupDesc}
-              onChange={isGorupDescChage}
-            />
+          <BoxMent>알림톡전송</BoxMent>
+          <Flex flexDirection="column">
+            <Strong>미리보기</Strong>
+            <KakaoBox>
+              <YellowWrap>{props.currentValue}</YellowWrap>
+              <WhiteWrap
+                dangerouslySetInnerHTML={{ __html: props.isAllData }}
+              ></WhiteWrap>
+            </KakaoBox>
           </Flex>
-          <TwiceWrap>
-            <Flex width="50%" flexDirection="column" alignItems="initial">
-              <Strong>미리보기</Strong>
-              <KakaoBox>
-                <YellowWrap>{props.currentValue}</YellowWrap>
-                <WhiteWrap
-                  dangerouslySetInnerHTML={{ __html: props.isAllData }}
-                ></WhiteWrap>
-              </KakaoBox>
-            </Flex>
-            <Flex width="50%" flexDirection="column" alignItems="initial">
-              <Strong>정보</Strong>
-              <Flex width="100%" flexDirection="column">
-                <Flex width="100%">
-                  <Flex width="50%">고객명</Flex>
-                  <Flex width="50%">회사명</Flex>
-                </Flex>
-                <Flex width="100%">
-                  <Flex width="50%">운송장번호</Flex>
-                  <Flex width="50%">송장번호</Flex>
-                </Flex>
-              </Flex>
-            </Flex>
-          </TwiceWrap>
         </ContentsWrap>
-
         <div>
           <ButtonWrap>
             <div>
               <Button
                 width="100px"
                 height="40px"
-                bgColor="#fff"
-                border="3px solid #000"
-                color="#000"
+                bgColor="#000"
+                border="3px solid #fff"
+                color="#fff"
                 onClick={() => props.closeModal(false)}
               >
-                닫기
+                취소
               </Button>
             </div>
             <ButtonGap>
               <Button
                 width="100px"
                 height="40px"
-                bgColor="#fff"
-                border="3px solid #000"
-                color="#000"
+                bgColor="#000"
+                border="3px solid #fff"
+                color="#fff"
                 onClick={onSubmit}
               >
-                그룹저장
+                전송
               </Button>
             </ButtonGap>
           </ButtonWrap>
@@ -156,15 +101,11 @@ const Input = styled.input<{
   justify-content: space-between;
 `;
 const Flex = styled.div<{
-  width?: string;
   flexDirection?: string;
-  alignItems?: string;
 }>`
   align-items: center;
   display: flex;
   margin-top: 10px;
-  align-items: ${(props) => (props.alignItems ? props.alignItems : 'center')};
-  width: ${(props) => (props.width ? props.width : '50%')};
   flex-direction: ${(props) =>
     props.flexDirection ? props.flexDirection : 'initial'};
 `;
@@ -245,17 +186,17 @@ const ModalBlock = styled.div<{ ref?: any }>`
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 6.5rem;
   border-radius: 10px;
-  padding: 3rem 3rem;
+  padding: 3rem;
   background-color: white;
   color: black;
   width: 750px;
-  height: 600px;
+  height: 450px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 1px 1px 1px 1px gray;
+  box-shadow: gray 1px 1px 1px 1px;
+  -webkit-box-pack: justify;
   justify-content: space-between;
 `;
 const Button = styled.button<{

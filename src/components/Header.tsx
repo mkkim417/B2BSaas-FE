@@ -38,7 +38,8 @@ const TwiceWraper = styled.div`
   display: flex;
 `;
 export const Logo = styled.li`
-  width: 150px;
+  width: 200px;
+  margin: 0 auto;
   border: 1px solid #909090;
   height: 60px;
   color: #909090;

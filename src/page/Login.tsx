@@ -36,9 +36,8 @@ function Login() {
       const token = response.token;
       console.log(jwt_decode(token));
 
-      setCookie('userToken', token)
-      console.log('getCookie', getCookie('userToken'))
-
+      setCookie('userToken', token);
+      console.log('getCookie', getCookie('userToken'));
 
       navigate(-1);
     },
@@ -53,17 +52,17 @@ function Login() {
   };
 
   return (
-    <Wrapper>
+    <LoginWrapper>
       <StForm onSubmit={handleSubmit(onSubmit)}>
         {alertMessage && <p>{alertMessage}</p>}
         <StEmail>
           <StLogin>로그인</StLogin>
-          <h1>아이디(이메일)</h1>
+          <Sth1>이메일ID</Sth1>
           <Stinput
             type="email"
             {...register('email', { required: true })}
             name="email"
-            placeholder="sendingo@gmail.com"
+            placeholder="이메일을 입력해주세요"
           />
           {errors.email && (
             <StErrorMsg>
@@ -72,12 +71,12 @@ function Login() {
           )}
         </StEmail>
         <StPw>
-          <h1>비밀번호</h1>
+          <Sth1>비밀번호</Sth1>
           <StPwinput
             type="password"
             {...register('password', { required: true })}
             name="password"
-            placeholder="비밀번호는 8~20자리입니다."
+            placeholder="비밀번호를 입력해주세요."
           />
           {errors.password && (
             <StErrorMsg>
@@ -86,11 +85,13 @@ function Login() {
           )}
         </StPw>
         <StLoginButton type="submit">로그인</StLoginButton>
-        <Stsignup>
-          <Link to="/signup">계정이 없으신가요? 여기서 가입하세요.</Link>
-        </Stsignup>
       </StForm>
-    </Wrapper>
+      <Stsignup>
+        <Link to="/signup">
+          계정이 없으신가요? 여기서 <Stspan>회원가입</Stspan>하세요.
+        </Link>
+      </Stsignup>
+    </LoginWrapper>
   );
 }
 
@@ -109,19 +110,29 @@ const StLogin = styled.h1`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 20px;
+  margin: 40px 0 40px 0;
   font-family: 'Inter';
   font-style: normal;
   font-weight: 700;
-  font-size: 16px;
-  line-height: 20px;
+  font-size: 24px;
+  line-height: 30px;
+  text-align: center;
 `;
 
 const Stinput = styled.input`
-  background: rgba(170, 170, 170, 0.26);
+  background: #ffffff;
+  border: 1px solid #bdbdbd;
   border-radius: 8px;
-  width: 350px;
+  width: 380px;
+  height: 48px;
   margin: 10px auto;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #bdbdbd;
+  padding: 15px 0 15px 20px;
 `;
 
 const StPw = styled.div`
@@ -134,24 +145,33 @@ const StPw = styled.div`
 `;
 
 const StPwinput = styled.input`
-  background: #d3d3d3;
+  background: #ffffff;
+  border: 1px solid #bdbdbd;
   border-radius: 8px;
-  width: 350px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #bdbdbd;
+  width: 380px;
+  height: 48px;
   margin: 10px auto;
+  padding: 15px 0 15px 20px;
 `;
 
 const StLoginButton = styled.button`
-  background: #14b769;
+  background: #eeeeee;
   border-radius: 8px;
-  width: 350px;
-  height: 30px;
-  margin: 10px auto;
+  width: 380px;
+  height: 48px;
+  margin: 60px 40px 40px 40px;
   font-family: 'Inter';
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
   line-height: 20px;
-  color: #ffffff;
+  color: #bdbdbd;
 `;
 
 const StErrorMsg = styled.span`
@@ -163,15 +183,42 @@ const StForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   /* border: 1px solid black; */
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 `;
 
 const Stsignup = styled.div`
-  margin: 20px;
+  margin-top: 30px;
+
   font-family: 'Inter';
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
   line-height: 20px;
+  color: #909090;
+`;
+
+const Sth1 = styled.h1`
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 16px;
+  color: #909090;
+`;
+
+const LoginWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Inter';
+  font-style: normal;
+`;
+
+const Stspan = styled.span`
+  text-decoration: underline;
 `;

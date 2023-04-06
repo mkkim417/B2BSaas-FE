@@ -29,4 +29,4 @@ export const Wrapper = styled.div`
   gap: 30px;
 `;
 
-export default Statistics;
+export default React.memo(Statistics);

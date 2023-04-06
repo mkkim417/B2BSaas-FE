@@ -49,7 +49,6 @@ export default function CustomEditor({
           toolbarClassName="editorToolbar-hidden"
           editorClassName="editor-class"
           onEditorStateChange={onEditorStateChange}
-          // toolbar={{ options: ['inline', 'list', 'textAlign', 'link','image'] }}
           toolbar={{
             inline: { inDropdown: true },
             list: { inDropdown: true },

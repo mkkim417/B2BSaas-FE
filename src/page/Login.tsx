@@ -131,7 +131,7 @@ const Stinput = styled.input`
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  color: #bdbdbd;
+  color: #000000;
   padding: 15px 0 15px 20px;
 `;
 
@@ -153,7 +153,7 @@ const StPwinput = styled.input`
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  color: #bdbdbd;
+  color: #000000;
   width: 380px;
   height: 48px;
   margin: 10px auto;
@@ -161,7 +161,7 @@ const StPwinput = styled.input`
 `;
 
 const StLoginButton = styled.button`
-  background: #eeeeee;
+  background: #14b769;
   border-radius: 8px;
   width: 380px;
   height: 48px;
@@ -171,7 +171,7 @@ const StLoginButton = styled.button`
   font-weight: 700;
   font-size: 16px;
   line-height: 20px;
-  color: #bdbdbd;
+  color: #ffffff;
 `;
 
 const StErrorMsg = styled.span`

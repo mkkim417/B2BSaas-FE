@@ -275,6 +275,11 @@ const Signup = () => {
               onChange={(e: any) => setEmail(e.target.value)}
               placeholder="ID로 사용할 이메일을 입력해주세요"
             />
+            {errors.email && (
+              <StErrorMsg>
+                {errors.email.message || '이메일을 입력해주세요'}
+              </StErrorMsg>
+            )}
             {/* <span>@</span>
             {directInput ? (
               <StInputWrapper>
@@ -426,6 +431,11 @@ const Signup = () => {
               required
               placeholder="기업 이메일을 입력해주세요"
             />
+            {errors.companyEmail && (
+              <StErrorMsg>
+                {errors.companyEmail.message || '기업 이메일을 입력해주세요'}
+              </StErrorMsg>
+            )}
             <StBrandNumberP>휴대폰번호</StBrandNumberP>
             <Stdiv>
               <StBrandNumberInput
@@ -439,12 +449,12 @@ const Signup = () => {
                 required
                 hasError={!!errors.companyNumber}
               />
+              <Stbutton>인증번호 받기</Stbutton>
               {errors.companyNumber && (
                 <StErrorMsg>
                   {errors.companyNumber.message || '대표 번호가 필요합니다'}
                 </StErrorMsg>
               )}
-              <Stbutton>인증번호 받기</Stbutton>
             </Stdiv>
             <StInput3 type="text" placeholder="인증번호를 입력해주세요" />
             {/* <span>@</span>
@@ -571,8 +581,8 @@ const StP = styled.p`
 
 const StInputWrapper = styled.div`
   position: relative;
-  margin: 10px;
 `;
+
 const StErrorMsg = styled.span`
   color: red;
   /* visibility: hidden; */
@@ -615,7 +625,7 @@ const StInput = styled.input<StInputProps>`
   border-radius: 8px;
   width: 380px;
   height: 48px;
-  margin: 10px auto;
+  margin: 10px 0 0 0;
   padding: 15px 0 15px 20px;
   display: flex;
   align-items: center;
@@ -654,7 +664,7 @@ font-size: 14px;
 line-height: 18px;
   width: 380px;
   height: 50px;
-  margin: 10px auto;
+  margin: 10px 0 0 0 ;
   padding: 15px 0 15px 20px;
   display: flex;
   align-items: center;
@@ -871,8 +881,8 @@ const StSignupButton = styled.button`
   align-items: center;
   width: 380px;
   height: 48px;
-  color: #bdbdbd;
-  background: #eeeeee;
+  color: #ffffff;
+  background: #14b769;
   font-size: 1.25rem;
   font-weight: bold;
   padding: 14px 0 14px 0;

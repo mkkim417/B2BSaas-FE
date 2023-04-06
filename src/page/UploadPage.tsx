@@ -482,15 +482,7 @@ function UploadPage() {
               justifyContent: 'center',
             }}
           >
-            <TopContents>
-              <InputFile
-                type="file"
-                id="fileData"
-                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                onChange={readExcel}
-                ref={fileInput}
-              ></InputFile>
-            </TopContents>
+            <TopContents></TopContents>
             {/* 템플릿다운로드 */}
             <TemplateWrap>
               <TemplateDown>
@@ -584,6 +576,15 @@ function UploadPage() {
                 </label>
               </BottomContents>
             )}
+            <div style={{ margin: '10px 20px', textAlign: 'right' }}>
+              <InputFile
+                type="file"
+                id="fileData"
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                onChange={readExcel}
+                ref={fileInput}
+              ></InputFile>
+            </div>
             <BtnWrap>
               {isData && !isGroupComp ? (
                 !isOpen ? (
@@ -612,6 +613,7 @@ function UploadPage() {
                   </Button>
                 </>
               ) : null}
+
               {isOpen && isOpen ? (
                 <Button onClick={onDelete}>삭제</Button>
               ) : null}
@@ -729,14 +731,17 @@ const DecoText = styled.div`
 const LabelWrap = styled.div`
   width: 180px;
   height: 50px;
+  display: flex;
   cursor: pointer;
   text-align: center;
   margin-top: 30px;
-  color: #fff;
-  background-color: #14b769;
+  color: rgb(255, 255, 255);
+  background-color: rgb(20, 183, 105);
   padding: 14px;
   border-radius: 8px;
   font-size: 16px;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
 `;
 const TextAria = styled.div`
@@ -834,14 +839,17 @@ const DisButton = styled.button<{
 `;
 const InputFile = styled.input`
   background-color: #fff;
-  width: 300px;
+  width: 150px;
   padding: 5px;
+  border-radius: 7px;
 `;
 const Input = styled.input`
+  margin-top: 20px;
   width: 200px;
+  border: 1px solid #ddd;
   border-radius: 8px;
   padding: 5px 10px;
-  height: 40px;
+  height: 45px;
 `;
 const Wrapper = styled.div`
   padding-left: 280px;

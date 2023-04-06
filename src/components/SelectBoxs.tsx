@@ -59,7 +59,7 @@ const SelectBoxs = ({
 };
 const SelectBox = styled.div<{ ref: any; width?: string }>`
   position: relative;
-  height: 40px;
+  height: 45px;
   width: ${(props) => (props.width ? props.width : '200px')};
   display: flex;
   align-items: center;

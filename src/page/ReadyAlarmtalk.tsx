@@ -3,13 +3,13 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { getCookie } from '../util/cookie';
-import { Table } from './KakaoResultList';
+import { H1, Table } from './KakaoResultList';
 import styled from 'styled-components';
-import { HeaderContainer } from './GroupManageList';
 import Pagination from 'react-js-pagination';
 import { PaginationBox1 } from '../components/PaginationStyled';
 import { useMutation } from 'react-query';
 import { fetchTemplatesList } from '../axios/api';
+import { MapWrapper, Thead } from './UploadPage';
 function ReadyAlarmtalk() {
   const params = useParams();
   const token = getCookie('userToken');
@@ -99,10 +99,10 @@ function ReadyAlarmtalk() {
       <Wrapper>
         {isNullComponent === false ? (
           <>
-            <Contents>
-              <HeaderContainer>알림톡 전송 내용 조회</HeaderContainer>
+            <H1>알림톡 전송 내용 조회</H1>
+            <MapWrapper>
               <Table>
-                <thead style={{ fontWeight: 'bold' }}>
+                <Thead style={{ fontWeight: 'bold' }}>
                   <tr>
                     {isKeyData &&
                       isKeyData
@@ -111,7 +111,7 @@ function ReadyAlarmtalk() {
                           <Th key={idx}>{transData[el]}</Th>
                         ))}
                   </tr>
-                </thead>
+                </Thead>
                 <tbody style={{ textAlign: 'center' }}>
                   {isTableData &&
                     isTableData.map((el: any, idx: number) => (
@@ -147,7 +147,7 @@ function ReadyAlarmtalk() {
                     ))}
                 </tbody>
               </Table>
-            </Contents>
+            </MapWrapper>
             <ButtonWrap>
               <Button onClick={() => navigate('/groupmanageList')}>
                 그룹다시선택

@@ -108,7 +108,11 @@ const TopNav = () => {
               >
                 로그아웃
               </UserButton>
-            ) : null}
+            ) : (
+              <Link to="/login">
+                <UserButton>로그인</UserButton>
+              </Link>
+            )}
           </FlexWrap>
         </UserContatiner>
 

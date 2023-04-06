@@ -222,7 +222,7 @@ const MapWrapper = styled.div`
   border: 1px solid #dcdcdc;
   border-radius: 8px;
   padding: 20px 30px;
-  margin: 10px auto;
+  margin: 15px auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -271,6 +271,7 @@ export const GrayWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 10px;
 `;
 export const FlexWrap = styled.div`
   display: flex;

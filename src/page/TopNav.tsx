@@ -38,7 +38,7 @@ const TopNav = () => {
             </Logo>
           </div>
           <UserWrap>
-            <Box width="35px" height="35px" />
+            <Box width="25px" height="25px" />
             <div>
               <div>소속회사명</div>
               <Username>김샌드</Username>
@@ -49,13 +49,18 @@ const TopNav = () => {
               <NavLink to={'/statistics'}>
                 {statistics ? (
                   <>
-                    <ListIcon width={'35px'} heigth={'35px'} fill={'#14b769'} />
-                    <Circle layoutId="circle" />
+                    <ListIcon width={'25px'} heigth={'25px'} fill={'#14b769'} />
+                    <Circle
+                      animate={{
+                        backgroundColor: ['red'],
+                      }}
+                      layoutId="circle"
+                    />
                     <LiBlue>이용현황</LiBlue>
                   </>
                 ) : (
                   <>
-                    <ListIcon width={'35px'} heigth={'35px'} />
+                    <ListIcon width={'25px'} heigth={'25px'} />
                     <NotLiBlue>이용현황</NotLiBlue>
                   </>
                 )}
@@ -66,19 +71,21 @@ const TopNav = () => {
                 {readyalarmtalk ? (
                   <>
                     <KakaoIcon
-                      width={'35px'}
-                      heigth={'35px'}
+                      width={'25px'}
+                      heigth={'25px'}
                       fill={'#14b769'}
                     />
                     <Circle
-                      animate={{ backgroundColor: ['red'] }}
+                      animate={{
+                        backgroundColor: ['#14b769'],
+                      }}
                       layoutId="circle"
                     />
                     <LiBlue>알림톡전송</LiBlue>
                   </>
                 ) : (
                   <>
-                    <KakaoIcon width={'35px'} heigth={'35px'} />
+                    <KakaoIcon width={'25px'} heigth={'25px'} />
                     <NotLiBlue>알림톡전송</NotLiBlue>
                   </>
                 )}
@@ -89,15 +96,19 @@ const TopNav = () => {
                 {kakaoresultlist ? (
                   <>
                     <ListResultIcon
-                      width={'35px'}
-                      heigth={'35px'}
+                      width={'25px'}
+                      heigth={'25px'}
                       fill={'#14b769'}
+                    />
+                    <Circle
+                      animate={{ backgroundColor: ['lime'] }}
+                      layoutId="circle"
                     />
                     <LiBlue>전송결과조회</LiBlue>
                   </>
                 ) : (
                   <>
-                    <ListResultIcon width={'35px'} heigth={'35px'} />
+                    <ListResultIcon width={'25px'} heigth={'25px'} />
                     <NotLiBlue>전송결과조회</NotLiBlue>
                   </>
                 )}
@@ -108,15 +119,19 @@ const TopNav = () => {
                 {groupManageList ? (
                   <>
                     <GroupMangeListIcon
-                      width={'35px'}
-                      heigth={'35px'}
+                      width={'25px'}
+                      heigth={'25px'}
                       fill={'#14b769'}
+                    />
+                    <Circle
+                      animate={{ backgroundColor: ['blue'] }}
+                      layoutId="circle"
                     />
                     <LiBlue>고객관리</LiBlue>
                   </>
                 ) : (
                   <>
-                    <GroupMangeListIcon width={'35px'} heigth={'35px'} />
+                    <GroupMangeListIcon width={'25px'} heigth={'25px'} />
                     <NotLiBlue>고객관리</NotLiBlue>
                   </>
                 )}
@@ -127,15 +142,19 @@ const TopNav = () => {
                 {Uploadpage ? (
                   <>
                     <CustomerAddIcon
-                      width={'35px'}
-                      heigth={'35px'}
+                      width={'25px'}
+                      heigth={'25px'}
                       fill={'#14b769'}
+                    />
+                    <Circle
+                      animate={{ backgroundColor: ['darkred'] }}
+                      layoutId="circle"
                     />
                     <LiBlue>고객등록</LiBlue>
                   </>
                 ) : (
                   <>
-                    <CustomerAddIcon width={'35px'} heigth={'35px'} />
+                    <CustomerAddIcon width={'25px'} heigth={'25px'} />
                     <NotLiBlue>고객등록</NotLiBlue>
                   </>
                 )}
@@ -234,14 +253,13 @@ const TopNav = () => {
 };
 const Circle = styled(motion.span)`
   position: absolute;
-  width: 5px;
-  height:5px;
-  border-radius:5px;
-  bottom: -5px;
-  left:0;
-  right:0;
-  margin:0 auto:
-  background-color:#14b769;
+  width: 8px;
+  height: 8px;
+  border-radius: 8px;
+  bottom: 9px;
+  left: -16px;
+  right: 0px;
+  background-color: #14b769;
 `;
 const NavLink = styled(Link)`
   display: flex;

@@ -47,7 +47,11 @@ function UploadPage() {
     return state.clientsId.clientsId[0];
   });
   const onNextClick = () => {
-    nextRef.current?.scrollIntoView({ behavior: 'smooth' });
+    nextRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest',
+    });
   };
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
@@ -459,7 +463,7 @@ function UploadPage() {
   //   '차집합 :',
   //   isData && isData.filter((x: any) => !checkedList.includes(x))
   // )
-  console.log(isClientId);
+  console.log('nextRef : ', nextRef);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -470,41 +474,51 @@ function UploadPage() {
       <Wrapper>
         <ContentsWrap>
           {/* 상단 파일선택 */}
-          <TopContents>
-            <InputFile
-              type="file"
-              id="fileData"
-              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-              onChange={readExcel}
-              ref={fileInput}
-            ></InputFile>
-          </TopContents>
-          {/* 템플릿다운로드 */}
-          <TemplateWrap>
-            <TemplateDown>
-              <a href={'/oneTest.xlsx'} download>
-                템플릿다운로드
-              </a>
-            </TemplateDown>
-            <span>
-              템플릿 파일에 추가할 고객 목록을 작성하여 업로드 해주세요.
-            </span>
-          </TemplateWrap>
-          {/* 드롭다운 */}
-          <TemplateWrap>
-            <select
-              name=""
-              id=""
-              onChange={(e) => handleOnChangeSelectValue(e)}
-            >
-              {isTemplatesList &&
-                isTemplatesList.map((el: any) => (
-                  <option key={el.talkTemplateId}>{el.talkTemplateName}</option>
-                ))}
-            </select>
-          </TemplateWrap>
-          <DecoText>파일등록</DecoText>
-          {/* {isReqData &&
+          <div
+            style={{
+              height: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+          >
+            <TopContents>
+              <InputFile
+                type="file"
+                id="fileData"
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                onChange={readExcel}
+                ref={fileInput}
+              ></InputFile>
+            </TopContents>
+            {/* 템플릿다운로드 */}
+            <TemplateWrap>
+              <TemplateDown>
+                <a href={'/oneTest.xlsx'} download>
+                  템플릿다운로드
+                </a>
+              </TemplateDown>
+              <span>
+                템플릿 파일에 추가할 고객 목록을 작성하여 업로드 해주세요.
+              </span>
+            </TemplateWrap>
+            {/* 드롭다운 */}
+            <TemplateWrap>
+              <select
+                name=""
+                id=""
+                onChange={(e) => handleOnChangeSelectValue(e)}
+              >
+                {isTemplatesList &&
+                  isTemplatesList.map((el: any) => (
+                    <option key={el.talkTemplateId}>
+                      {el.talkTemplateName}
+                    </option>
+                  ))}
+              </select>
+            </TemplateWrap>
+            <DecoText>파일등록</DecoText>
+            {/* {isReqData &&
             isReqData.map((el: any, idx: any) => (
               <div key={idx}>
                 <div id={`obj_${idx}`}>{el}</div>
@@ -518,104 +532,106 @@ function UploadPage() {
                 ></SelectBoxs>
               </div>
             ))} */}
-          {/* 테이블 */}
-          {isData && isData ? (
-            <MapWrapper>
-              <Table>
-                <Thead>
-                  <tr>
-                    {isOpen && isOpen ? <th>선택</th> : null}
-                    {isKeyData &&
-                      isKeyData.map((li: any, idx: number) => (
-                        <Th key={idx}>{li}</Th>
+            {/* 테이블 */}
+            {isData && isData ? (
+              <MapWrapper>
+                <Table>
+                  <Thead>
+                    <tr>
+                      {isOpen && isOpen ? <th>선택</th> : null}
+                      {isKeyData &&
+                        isKeyData.map((li: any, idx: number) => (
+                          <Th key={idx}>{li}</Th>
+                        ))}
+                    </tr>
+                  </Thead>
+                  <tbody style={{ textAlign: 'center' }}>
+                    {isData &&
+                      isData.map((el: any, idx: number) => (
+                        <tr key={idx}>
+                          {isOpen && isOpen ? (
+                            <Td>
+                              <input
+                                type="checkbox"
+                                key={idx}
+                                checked={checkedList.includes(el)}
+                                onChange={(e) => checkHandler(e, el)}
+                              />
+                            </Td>
+                          ) : null}
+                          {isKeyData &&
+                            isKeyData.map((li: any, idx: number) =>
+                              li === '전화번호' && el[li].includes('-') ? (
+                                <Td>{el[li].replace(/-/gi, '')}</Td>
+                              ) : (
+                                <Td key={idx}>{el[li]}</Td>
+                              )
+                            )}
+                        </tr>
                       ))}
-                  </tr>
-                </Thead>
-                <tbody style={{ textAlign: 'center' }}>
-                  {isData &&
-                    isData.map((el: any, idx: number) => (
-                      <tr key={idx}>
-                        {isOpen && isOpen ? (
-                          <Td>
-                            <input
-                              type="checkbox"
-                              key={idx}
-                              checked={checkedList.includes(el)}
-                              onChange={(e) => checkHandler(e, el)}
-                            />
-                          </Td>
-                        ) : null}
-                        {isKeyData &&
-                          isKeyData.map((li: any, idx: number) =>
-                            li === '전화번호' && el[li].includes('-') ? (
-                              <Td>{el[li].replace(/-/gi, '')}</Td>
-                            ) : (
-                              <Td key={idx}>{el[li]}</Td>
-                            )
-                          )}
-                      </tr>
-                    ))}
-                </tbody>
-              </Table>
-            </MapWrapper>
-          ) : (
-            //   <Pagination page={activePage} onChange={setPage} total={total} />
-            <BottomContents onDrop={onDropFiles} onDragOver={dragOver}>
-              <TextAria>
-                <div>신규추가할 고객목록을 작성한</div>
-                <div>양식 파일을 업로드해주세요</div>
-              </TextAria>
-              <label htmlFor="fileData">
-                <LabelWrap>파일찾기</LabelWrap>
-              </label>
-            </BottomContents>
-          )}
-          <BtnWrap>
-            {isData && !isGroupComp ? (
-              !isOpen ? (
-                <Button
-                  width={'150px'}
-                  onClick={() => setOpen((prev) => !prev) as any}
-                >
-                  선택삭제
-                </Button>
-              ) : (
-                <Button onClick={() => setOpen((prev) => !prev) as any}>
-                  선택취소
-                </Button>
-              )
-            ) : null}
-            {isData && !isGroupComp ? (
-              <>
-                <Button onClick={() => DummyDeleteFuction()}>취소</Button>
-                <Button
-                  ref={nextRef}
-                  onClick={() => {
-                    ClientBulkFetch(isData);
-                  }}
-                  width={'180px'}
-                >
-                  고객업로드 등록
-                </Button>
-              </>
-            ) : null}
-            {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
-            {!isOpen ? (
-              !isClUpload && !isData ? (
+                  </tbody>
+                </Table>
+              </MapWrapper>
+            ) : (
+              //   <Pagination page={activePage} onChange={setPage} total={total} />
+              <BottomContents onDrop={onDropFiles} onDragOver={dragOver}>
+                <TextAria>
+                  <div>신규추가할 고객목록을 작성한</div>
+                  <div>양식 파일을 업로드해주세요</div>
+                </TextAria>
+                <label htmlFor="fileData">
+                  <LabelWrap>파일찾기</LabelWrap>
+                </label>
+              </BottomContents>
+            )}
+            <BtnWrap>
+              {isData && !isGroupComp ? (
+                !isOpen ? (
+                  <Button
+                    width={'150px'}
+                    onClick={() => setOpen((prev) => !prev) as any}
+                  >
+                    선택삭제
+                  </Button>
+                ) : (
+                  <Button onClick={() => setOpen((prev) => !prev) as any}>
+                    선택취소
+                  </Button>
+                )
+              ) : null}
+              {isData && !isGroupComp ? (
                 <>
-                  <DisButton
-                    onClick={() => alert('파일을 업로드해주세요')}
+                  <Button onClick={() => DummyDeleteFuction()}>취소</Button>
+                  <Button
+                    onClick={() => {
+                      ClientBulkFetch(isData);
+                    }}
                     width={'180px'}
                   >
                     고객업로드 등록
-                  </DisButton>
+                  </Button>
                 </>
-              ) : null
-            ) : null}
-          </BtnWrap>
+              ) : null}
+              {isOpen && isOpen ? (
+                <Button onClick={onDelete}>삭제</Button>
+              ) : null}
+              {!isOpen ? (
+                !isClUpload && !isData ? (
+                  <>
+                    <DisButton
+                      onClick={() => alert('파일을 업로드해주세요')}
+                      width={'180px'}
+                    >
+                      고객업로드 등록
+                    </DisButton>
+                  </>
+                ) : null
+              ) : null}
+            </BtnWrap>
+          </div>
           {/* 그룹지정컨텐츠 */}
           {isGroupComp && isGroupComp ? (
-            <BottomWrap>
+            <BottomWrap ref={nextRef}>
               <H1>고객 정보 그룹 지정</H1>
               <span style={{ margin: '15px 0px 30px' }}>
                 그룹 선택을 하지 않으면, 미지정 그룹에 자동으로 들어갑니다.
@@ -733,7 +749,7 @@ const TextAria = styled.div`
 const Th = styled.th`
   vertical-align: middle;
 `;
-const BottomWrap = styled.div`
+const BottomWrap = styled.div<{ ref: any }>`
   width: 100%;
   display: flex;
   margin: 0px auto;
@@ -749,7 +765,7 @@ const TemplateWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 `;
 const TemplateDown = styled.div`
   text-align: center;
@@ -761,7 +777,7 @@ const Table = styled.table`
   border-collapse: separate;
   border-spacing: 0px 10px;
 `;
-export const MapWrapper = styled.div`
+export const MapWrapper = styled.div<{ ref?: any }>`
   border: 1px solid #dcdcdc;
   border-radius: 8px;
   padding: 20px 30px;
@@ -783,7 +799,7 @@ const BtnWrap = styled.div`
   align-items: center;
   gap: 10px;
   justify-content: center;
-  margin: 50px auto;
+  margin-top: 50px;
 `;
 export const Button = styled.button<{
   width?: string;
@@ -842,8 +858,8 @@ const ContentsWrap = styled.div`
   display: flex;
   margin: 0px auto;
   flex-direction: column;
+  justify-content: center;
   @media screen and (min-width: 1300px) {
-    display: flex;
     width: 1000px;
   }
 `;

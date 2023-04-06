@@ -57,7 +57,7 @@ function Login() {
         {alertMessage && <p>{alertMessage}</p>}
         <StEmail>
           <StLogin>로그인</StLogin>
-          <Sth1>아이디(이메일)</Sth1>
+          <Sth1>이메일ID</Sth1>
           <Stinput
             type="email"
             {...register('email', { required: true })}
@@ -110,13 +110,13 @@ const StLogin = styled.h1`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 20px;
+  margin: 40px 0 40px 0;
   font-family: 'Inter';
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
+  line-height: 30px;
   text-align: center;
-  line-height: 20px;
 `;
 
 const Stinput = styled.input`
@@ -126,6 +126,13 @@ const Stinput = styled.input`
   width: 380px;
   height: 48px;
   margin: 10px auto;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #bdbdbd;
+  padding: 15px 0 15px 20px;
 `;
 
 const StPw = styled.div`
@@ -141,9 +148,16 @@ const StPwinput = styled.input`
   background: #ffffff;
   border: 1px solid #bdbdbd;
   border-radius: 8px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #bdbdbd;
   width: 380px;
   height: 48px;
   margin: 10px auto;
+  padding: 15px 0 15px 20px;
 `;
 
 const StLoginButton = styled.button`
@@ -151,7 +165,7 @@ const StLoginButton = styled.button`
   border-radius: 8px;
   width: 380px;
   height: 48px;
-  margin: 10px auto;
+  margin: 60px 40px 40px 40px;
   font-family: 'Inter';
   font-style: normal;
   font-weight: 700;
@@ -170,14 +184,12 @@ const StForm = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 460px;
-  height: 436px;
   /* border: 1px solid black; */
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 `;
 
 const Stsignup = styled.div`
-  margin: 20px;
+  margin-top: 30px;
 
   font-family: 'Inter';
   font-style: normal;
@@ -202,7 +214,7 @@ const LoginWrapper = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  gap: 30px;
+  width: 100vw;
   font-family: 'Inter';
   font-style: normal;
 `;

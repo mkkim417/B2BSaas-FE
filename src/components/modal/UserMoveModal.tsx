@@ -30,42 +30,53 @@ function UserMoveModal({ group, content, closeModal }: Props) {
     const existGroupId = content[0].groupId;
     const urls = content.map(
       (item: any) =>
-        `${process.env.REACT_APP_SERVER_URL}/api/batch/clients/${item.clientId}/groups/${existGroupId}/move/${selectedGroupId}`,
-      { headers: { authorization: `Bearer ${token}` } }
-    );
+        `${process.env.REACT_APP_SERVER_URL}/api/batch/clients/${item.clientId}/groups/${existGroupId}/move/${selectedGroupId}`);
     if (selectedGroupId === '') {
       alert('이동할 그룹을 선택해주세요.');
     } else {
       axios
-        .all(urls.map((url: any) => axios.post(url)))
+        .all(urls.map((url: any) => axios.post(url, {}, { headers: { authorization: `Bearer ${token}` } })))
         .then((response) => {
           console.log(response);
           alert('이동 완료!');
           closeModal();
-          // window.location.reload()
         })
         .catch((error) => {
-          console.log(error.response);
-          alert('이동 실패!ㅠㅠ');
+          console.log(error.response.data.message);
+          if ( error.response.data.message === '이미 존재하는 그룹입니다.') {
+            alert('이미 존재하는 그룹입니다.')
+            closeModal();
+          } else if(error.response.data.message === '존재하지 않는 그룹입니다.') {
+            alert('존재하지 않는 그룹입니다.')
+            closeModal();
+          } else {
+            alert('복사에 실패하였습니다. 관리자에게 문의해주세요.');
+            closeModal();
+          }
         });
     }
-    window.location.reload();
+    // window.location.reload();
   };
   return (
     <ModalWrap>
       <ModalBackGround>
         <ModalContainer>
           <ContentContainer>
-            <TitleContainer>이동시킬 그룹명을 선택해주세요!🌷</TitleContainer>
-            <DataHeader>
+            <TitleContainer>이동시킬 그룹명을 선택해주세요🌷</TitleContainer>
+            <SelectHeader>
               선택 :
-              <select onChange={selectHandler}>
+              <SelectBox onChange={selectHandler}>
                 {group.map((item: any) => (
                   <option value={item.groupId} key={item.groupId}>
                     {item.groupName}
                   </option>
                 ))}
-              </select>
+              </SelectBox>
+            </SelectHeader>
+            <DataHeader>
+              <HeaderPercent width="20%">이름</HeaderPercent>
+              <HeaderPercent width="30%">연락처</HeaderPercent>
+              <HeaderPercent width="50%">이메일</HeaderPercent>
             </DataHeader>
             <DataContainer>
               {content.map((item: any) => {
@@ -81,7 +92,7 @@ function UserMoveModal({ group, content, closeModal }: Props) {
           </ContentContainer>
           <ButtonContainer>
             <ButtonBox onClick={closeModal}>취소</ButtonBox>
-            <ButtonBox onClick={submitButtonHandler}>확인</ButtonBox>
+            <ConfirmButton onClick={submitButtonHandler}>확인</ConfirmButton>
           </ButtonContainer>
         </ModalContainer>
       </ModalBackGround>
@@ -141,31 +152,66 @@ const TitleContainer = styled.div`
   width: 100%;
   height: 10%;
   display: flex;
+  font-size: 24px;
+  font-weight: 500;
   align-items: center;
   justify-content: center;
-  background-color: beige;
+  /* background-color: beige; */
+`;
+
+const SelectHeader = styled.div`
+  width: 100%;
+  height: 8%;
+  display: flex;
+  font-size: 18px;
+  align-items: center;
+  flex-direction: row;
+  /* background-color: pink; */
 `;
 const DataHeader = styled.div`
   width: 100%;
   height: 8%;
+  font-size: 20px;
   display: flex;
   flex-direction: row;
-  background-color: darkgreen;
+  /* background-color: darkgreen; */
 `;
-const RowPercent = styled.div<{ width: any }>`
+const SelectBox = styled.select`
+  width: 200px;
+  height: 40px;
+  font-size: 16px;
+  margin-left: 10px;
+`
+const HeaderPercent = styled.div<{ width: any }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 18px;
   width: ${(item: any) => item.width};
   border: 1px solid black;
+  border-left: 1ch;
+  border-right: 1ch;
+  /* background-color: aqua; */
+`
+const RowPercent = styled.div<{ width: any }>`
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  width: ${(item: any) => item.width};
+  border: 1px solid #F3F3F3;
+  border-left: 1ch;
+  border-right: 1ch;
+  border-top: 1ch;
 `;
 const DataContainer = styled.div`
   width: 100%;
-  height: 80%;
+  height: 70%;
   display: flex;
   flex-direction: column;
   overflow: scroll;
-  background-color: blueviolet;
+  /* background-color: blueviolet; */
 `;
 const ButtonContainer = styled.div`
   width: 100%;
@@ -177,9 +223,19 @@ const ButtonContainer = styled.div`
   /* background-color: aqua; */
 `;
 const ButtonBox = styled.button`
-  border: 1px solid yellowgreen;
+  width: 100px;
+  /* border: 1px solid #14B869; */
+  border-radius: 10px;
   /* background-color: yellowgreen; */
   padding: 10px;
   font-size: 18px;
+  :hover{
+    background-color: #E6F8F0;
+    color: #14B869;
+  }
 `;
+const ConfirmButton = styled(ButtonBox)`
+  color: white;
+  background-color: #14B869;
+`
 export default UserMoveModal;

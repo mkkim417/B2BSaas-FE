@@ -5,6 +5,11 @@ import styled from 'styled-components';
 import Accordion from '../components/Accordion';
 import { Logo } from '../components/Header';
 import { handleLogout, isLoggedin } from '../util/cookie';
+import ListIcon from '../asset/svg/ListIcon';
+import KakaoIcon from '../asset/svg/KakaoIcon';
+import ListResultIcon from '../asset/svg/ListResultIcon';
+import GroupMangeListIcon from '../asset/svg/GroupMangeListIcon';
+import CustomerAddIcon from '../asset/svg/CustomerAddIcon';
 
 const TopNav = () => {
   const Uploadpage = useMatch('/uploadpage');
@@ -32,12 +37,64 @@ const TopNav = () => {
             </Logo>
           </div>
           <UserWrap>
-            <CompanyComp>소속회사명</CompanyComp>
-            <Display>
-              <NameComp>김샌드</NameComp>
-              <LevelComp>관리자레벨명</LevelComp>
-            </Display>
+            <Box width="35px" height="35px" />
+            <div>
+              <div>소속회사명</div>
+              <Username>김샌드</Username>
+            </div>
           </UserWrap>
+          <ul>
+            <Li>
+              <NavLink to={'/statistics'}>
+                <ListIcon width={'35px'} height={'35px'} />
+                {statistics ? (
+                  <LiBlue>이용현황</LiBlue>
+                ) : (
+                  <NotLiBlue>이용현황</NotLiBlue>
+                )}
+              </NavLink>
+            </Li>
+            <Li>
+              <NavLink to={'/readyalarmtalk'}>
+                <KakaoIcon width={'35px'} height={'35px'} />
+                {readyalarmtalk ? (
+                  <LiBlue>알림톡전송</LiBlue>
+                ) : (
+                  <NotLiBlue>알림톡전송</NotLiBlue>
+                )}
+              </NavLink>
+            </Li>
+            <Li>
+              <NavLink to={'/kakaoresultlist'}>
+                <ListResultIcon width={'35px'} height={'35px'} />
+                {kakaoresultlist ? (
+                  <LiBlue>전송결과조회</LiBlue>
+                ) : (
+                  <NotLiBlue>전송결과조회</NotLiBlue>
+                )}
+              </NavLink>
+            </Li>
+            <Li>
+              <NavLink to={'/groupManageList'}>
+                <GroupMangeListIcon width={'35px'} height={'35px'} />
+                {groupManageList ? (
+                  <LiBlue>고객관리</LiBlue>
+                ) : (
+                  <NotLiBlue>고객관리</NotLiBlue>
+                )}
+              </NavLink>
+            </Li>
+            <Li>
+              <NavLink to={'/uploadpage'}>
+                <CustomerAddIcon width={'35px'} height={'35px'} />
+                {Uploadpage ? (
+                  <LiBlue>고객등록</LiBlue>
+                ) : (
+                  <NotLiBlue>고객등록</NotLiBlue>
+                )}
+              </NavLink>
+            </Li>
+          </ul>
           <FlexWrap>
             {isLoggedIn ? (
               <UserButton
@@ -54,7 +111,8 @@ const TopNav = () => {
             ) : null}
           </FlexWrap>
         </UserContatiner>
-        <Accordion
+
+        {/* <Accordion
           title="이용현황"
           contents={
             <div>
@@ -114,7 +172,6 @@ const TopNav = () => {
                   ) : (
                     <Li>그룹관리</Li>
                   )}
-                  {/* <Li>그룹관리</Li> */}
                 </Link>
               </Ul>
             </div>
@@ -122,12 +179,44 @@ const TopNav = () => {
         />
         <Link to={'/uploadpage'}>
           <Accordion title="대량발송" />
-        </Link>
+        </Link> */}
       </Wrapper>
       {<Outlet />}
     </>
   );
 };
+const NavLink = styled(Link)`
+  display: flex;
+  align-items: center;
+`;
+const Li = styled.li`
+  margin: 30px 40px;
+`;
+const Username = styled.div`
+  font-weight: bold;
+  font-family: 'Inter';
+  font-size: 18px;
+  margin-top: 4px;
+`;
+const Box = styled.div<{
+  width?: string;
+  height?: string;
+}>`
+  margin-right: 10px;
+  width: ${(props) => (props.width ? props.width : '32px')};
+  height: ${(props) => (props.height ? props.height : '32px')};
+  border-radius: 8px;
+  background: #d9d9d9;
+`;
+const Flex = styled.div<{
+  flexDirection?: string;
+}>`
+  align-items: center;
+  display: flex;
+  margin-top: 10px;
+  flex-direction: ${(props) =>
+    props.flexDirection ? props.flexDirection : 'initial'};
+`;
 const NameComp = styled.div`
   color: #555;
   font-weight: bold;
@@ -147,7 +236,8 @@ const LevelComp = styled(CompanyComp)`
   font-size: 12px;
 `;
 const UserWrap = styled.div`
-  margin-left: 30px;
+  display: flex;
+  margin: 30px 40px;
 `;
 const FlexWrap = styled.div`
   display: flex;
@@ -160,13 +250,15 @@ const Ul = styled.ul`
   border-top: 1px solid #909090;
   background-color: #fbfbfb;
 `;
-const Li = styled.li`
-  margin-left: 30px;
-  padding: 10px 0px;
-  color: #909090;
+const NotLiBlue = styled.div`
+  font-family: 'Inter', sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  margin-left: 10px;
 `;
-const LiBlue = styled(Li)`
-  color: #007bff;
+const LiBlue = styled(NotLiBlue)`
+  margin-left: 10px;
+  color: #14b769;
 `;
 const Header = styled.div`
   display: flex;
@@ -182,11 +274,11 @@ const Header = styled.div`
   z-index: 1;
 `;
 const Wrapper = styled.div`
-  width: 250px;
+  width: 280px;
   height: 100vh;
   position: fixed;
   /* left: 0%; */
-  background-color: #f2f2f2;
+  background-color: #f8f8f8;
   z-index: 1;
 `;
 const UserContatiner = styled.div`

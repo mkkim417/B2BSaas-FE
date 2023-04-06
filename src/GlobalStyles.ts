@@ -1,6 +1,7 @@
 import reset from 'styled-reset';
 import { createGlobalStyle } from 'styled-components';
 const GlobalStyles = createGlobalStyle` 
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
     ${reset} // styled-reset이라는 패키지를 설치해야한다. 몇가지만 reset해 줄 경우 사용하지 않아도 무방하다.
     a{
         text-decoration: none;
@@ -25,6 +26,9 @@ const GlobalStyles = createGlobalStyle`
       padding: 0;
       cursor: pointer;
     }
+    input::file-selector-button {
+    display:none
+  }
 `;
 
 export default GlobalStyles;

@@ -160,6 +160,8 @@ function UploadPage() {
     reader.onload = async function () {
       let data = reader.result;
       let workBook = XLSX.read(data, { type: 'binary' });
+      console.log(data);
+      console.log(workBook);
       if (workBook.bookType !== 'xlsx') {
         // csv
         let file = event.target.files[0];
@@ -471,6 +473,7 @@ function UploadPage() {
           <TopContents>
             <InputFile
               type="file"
+              id="fileData"
               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
               onChange={readExcel}
               ref={fileInput}
@@ -500,6 +503,7 @@ function UploadPage() {
                 ))}
             </select>
           </TemplateWrap>
+          <DecoText>파일등록</DecoText>
           {/* {isReqData &&
             isReqData.map((el: any, idx: any) => (
               <div key={idx}>
@@ -518,7 +522,7 @@ function UploadPage() {
           {isData && isData ? (
             <MapWrapper>
               <Table>
-                <thead style={{ fontWeight: 'bold', fontSize: '18px' }}>
+                <Thead>
                   <tr>
                     {isOpen && isOpen ? <th>선택</th> : null}
                     {isKeyData &&
@@ -526,7 +530,7 @@ function UploadPage() {
                         <Th key={idx}>{li}</Th>
                       ))}
                   </tr>
-                </thead>
+                </Thead>
                 <tbody style={{ textAlign: 'center' }}>
                   {isData &&
                     isData.map((el: any, idx: number) => (
@@ -557,7 +561,13 @@ function UploadPage() {
           ) : (
             //   <Pagination page={activePage} onChange={setPage} total={total} />
             <BottomContents onDrop={onDropFiles} onDragOver={dragOver}>
-              <div>생성된 고객이 없습니다. CSV 파일을 넣어주세요.</div>
+              <TextAria>
+                <div>신규추가할 고객목록을 작성한</div>
+                <div>양식 파일을 업로드해주세요</div>
+                <label htmlFor="fileData">
+                  <LabelWrap>파일찾기</LabelWrap>
+                </label>
+              </TextAria>
             </BottomContents>
           )}
           <BtnWrap>
@@ -572,7 +582,7 @@ function UploadPage() {
                 </Button>
               )
             ) : null}
-            {!isGroupComp ? (
+            {isData && !isGroupComp ? (
               <Button onClick={() => DummyDeleteFuction()}>취소</Button>
             ) : null}
             {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
@@ -661,11 +671,46 @@ function UploadPage() {
   );
 }
 
+const Thead = styled.thead`
+  border-bottom: 1px solid #bdbdbd;
+  border-top: 1px solid #bdbdbd;
+  > tr > th {
+    font-weight: bold;
+    font-size: 16px;
+    color: #828282;
+    font-family: 'Inter', sans-serif;
+    padding: 15px 0px;
+  }
+`;
+const DecoText = styled.div`
+  font-weight: bold;
+  color: #909090;
+  font-size: 16px;
+  margin-bottom: 10px;
+`;
+const LabelWrap = styled.div`
+  cursor: pointer;
+  text-align: center;
+  margin-top: 30px;
+  color: #fff;
+  background-color: #14b769;
+  padding: 14px 60px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+`;
+const TextAria = styled.div`
+  color: #909090;
+  font-weight: bold;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.3;
+`;
 const Th = styled.th`
   vertical-align: middle;
 `;
 const BottomWrap = styled.div`
-  width: 800px;
+  width: 1280px;
   margin: 0 auto;
   height: 100vh;
 `;
@@ -682,19 +727,22 @@ const TemplateDown = styled.div`
 `;
 const Table = styled.table`
   width: 100%;
-  border: 1px solid #333333;
 `;
 const MapWrapper = styled.div`
-  width: 800px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 20px 30px;
+  width: 1280px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 const Td = styled.td`
-  font-size: 16px;
+  font-size: 14px;
   padding: 10px;
-  border: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  box-sizing: border-box;
 `;
 const BtnWrap = styled.div`
   display: flex;
@@ -705,15 +753,23 @@ const BtnWrap = styled.div`
 `;
 const Button = styled.button`
   border-radius: 15px;
-  background-color: #000;
-  color: #fff;
-  width: 85px;
-  padding: 5px;
+  color: #14b769;
+  width: 100px;
+  padding: 10px 20px;
+  border: 2px solid #14b769;
+  font-weight: bold;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  &:hover {
+    background-color: #14b769;
+    color: white;
+    transition: 0.2s;
+  }
 `;
 const InputFile = styled.input`
-  border: 1px solid #000;
   background-color: #fff;
   width: 300px;
+  padding: 5px;
 `;
 const Input = styled.input`
   width: 200px;
@@ -722,7 +778,8 @@ const Input = styled.input`
   height: 40px;
 `;
 const Wrapper = styled.div`
-  padding-left: 250px;
+  margin: 0 auto;
+  width: 1280px;
   display: flex;
   gap: 30px;
   justify-content: center;
@@ -731,18 +788,7 @@ const ContentsWrap = styled.div`
   width: 100%;
   margin: 0 auto;
 `;
-const TopContents = styled.div`
-  justify-content: space-evenly;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  width: 800px;
-  margin: 0 auto;
-  border-radius: 15px;
-  height: 100px;
-  background-color: #ededed;
-  margin: 30px auto;
-`;
+const TopContents = styled.div``;
 
 const BottomContents = styled.div`
   display: flex;
@@ -751,9 +797,10 @@ const BottomContents = styled.div`
   justify-content: center;
   border-radius: 15px;
   font-size: 12px;
-  width: 800px;
+  width: 1280px;
   margin: 0 auto;
   height: 250px;
-  background-color: #ededed;
+  background-color: #fbfbfb;
+  border: 2px dashed #9f9f9f;
 `;
 export default UploadPage;

@@ -206,9 +206,9 @@ const Signup = () => {
 
   // mutate 선언
   const { mutate } = useMutation(postSignUp, {
-    onSuccess : (response) => {
-      console.log(response)
-      alert('회원가입 완료!')
+    onSuccess: (response) => {
+      console.log(response);
+      alert('회원가입 완료!');
       navigate('/login');
     },
     onError: (error) => {
@@ -261,7 +261,7 @@ const Signup = () => {
           {alertMessage && <p>{alertMessage}</p>}
           <StP>회원가입</StP>
           <StEmail>
-            <StEmailP>이메일</StEmailP>
+            <StEmailP>이메일ID</StEmailP>
             <StInput
               type="text"
               {...register('email', {
@@ -272,8 +272,9 @@ const Signup = () => {
               required
               value={isEmail}
               onChange={(e: any) => setEmail(e.target.value)}
+              placeholder="ID로 사용할 이메일을 입력해주세요"
             />
-            <span>@</span>
+            {/* <span>@</span>
             {directInput ? (
               <StInputWrapper>
                 {' '}
@@ -331,11 +332,12 @@ const Signup = () => {
               }}
             >
               중복확인
-            </button>
+            </button> */}
+            {/* selectbox~중복확인버튼 주석처리 */}
           </StEmail>
 
           <StBrand>
-            <StBrandP>소속명</StBrandP>
+            <StBrandP>기업명</StBrandP>
             <StBrandInput
               type="text"
               {...register('companyName', {
@@ -344,33 +346,37 @@ const Signup = () => {
               })}
               name="companyName"
               required
-              placeholder="브랜드(기업)명을 입력해주세요"
+              placeholder="기업명을 입력해주세요"
             />
             {errors.companyName && (
               <StErrorMsg>
-                {errors.companyName.message || '브랜드(기업)명을 입력해주세요'}
+                {errors.companyName.message || '기업명을 입력해주세요'}
               </StErrorMsg>
             )}
-            <StBrandNumberP>소속대표전화</StBrandNumberP>
-            <StBrandNumberInput
-              type="text"
-              placeholder="대표 번호를 입력해주세요"
-              {...register('companyNumber', {
-                required: true,
-                validate: PhoneNumberValidation,
-              })}
-              name="companyNumber"
-              required
-              hasError={!!errors.companyNumber}
-            />
-            {errors.companyNumber && (
-              <StErrorMsg>
-                {errors.companyNumber.message || '대표 번호가 필요합니다'}
-              </StErrorMsg>
-            )}
+            {/* <StBrandNumberP>휴대폰번호</StBrandNumberP>
+            <Stdiv>
+              <StBrandNumberInput
+                type="text"
+                placeholder="예시 01012345678"
+                {...register('companyNumber', {
+                  required: true,
+                  validate: PhoneNumberValidation,
+                })}
+                name="companyNumber"
+                required
+                hasError={!!errors.companyNumber}
+              />
+              {errors.companyNumber && (
+                <StErrorMsg>
+                  {errors.companyNumber.message || '대표 번호가 필요합니다'}
+                </StErrorMsg>
+              )}
+              <Stbutton>인증번호 받기</Stbutton>
+            </Stdiv>
+            <StInput3 type="text" placeholder="인증번호를 입력해주세요" /> */}
           </StBrand>
           <StPicInfo>
-            <StPicP>담당자 이름</StPicP>
+            {/* <StPicP>담당자 이름</StPicP>
             <StBrandInput
               type="text"
               {...register('name', {
@@ -407,8 +413,8 @@ const Signup = () => {
                   {errors.phoneNumber.message || '담당자 번호를 입력해주세요'}
                 </StErrorMsg>
               )}
-            </StContectNumberInputWrapper>
-            <StBrandNumberP>대표 이메일</StBrandNumberP>
+            </StContectNumberInputWrapper> */}
+            <StBrandNumberP>기업 이메일</StBrandNumberP>
             <StInput2
               type="text"
               {...register('companyEmail', {
@@ -417,8 +423,30 @@ const Signup = () => {
               })}
               name="companyEmail"
               required
+              placeholder="기업 이메일을 입력해주세요"
             />
-            <span>@</span>
+            <StBrandNumberP>휴대폰번호</StBrandNumberP>
+            <Stdiv>
+              <StBrandNumberInput
+                type="text"
+                placeholder="예시 01012345678"
+                {...register('companyNumber', {
+                  required: true,
+                  validate: PhoneNumberValidation,
+                })}
+                name="companyNumber"
+                required
+                hasError={!!errors.companyNumber}
+              />
+              {errors.companyNumber && (
+                <StErrorMsg>
+                  {errors.companyNumber.message || '대표 번호가 필요합니다'}
+                </StErrorMsg>
+              )}
+              <Stbutton>인증번호 받기</Stbutton>
+            </Stdiv>
+            <StInput3 type="text" placeholder="인증번호를 입력해주세요" />
+            {/* <span>@</span>
             {companyDirectInput ? (
               <StInputWrapper>
                 <StInput2
@@ -462,7 +490,9 @@ const Signup = () => {
                   errors.emailProvider?.message ||
                   '이메일을 입력해 주십시오.'}
               </StErrorMsg>
-            ) : null}
+            ) : null} */}
+            {/* @~기업이메일 selectbox 주석처리 */}
+
             {/* <StPicRole>
             <label>역할:</label>
             <select
@@ -485,7 +515,7 @@ const Signup = () => {
                 pattern: PasswordRegex,
               })}
               name="password"
-              placeholder="암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리"
+              placeholder="비밀번호를 입력해주세요"
               required
             />
             {errors.password && (
@@ -494,7 +524,7 @@ const Signup = () => {
                   '암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리'}
               </StErrorMsg>
             )}
-            <StPwP>비밀번호 확인</StPwP>
+            {/* <StPwP>비밀번호 확인</StPwP> */}
             <StPwinput
               type="password"
               {...register('ConfirmPw', {
@@ -504,7 +534,7 @@ const Signup = () => {
                 },
               })}
               name="ConfirmPw"
-              placeholder="암호는 대문자 1자리 이상 포함 영문, 숫자 포함 8~20 자리"
+              placeholder="비밀번호를 다시 한번 입력해주세요"
               required
             />
             {errors.ConfirmPw &&
@@ -514,13 +544,13 @@ const Signup = () => {
               errors.ConfirmPw.type === 'validate' &&
               '비밀번호가 일치하지 않습니다.'}
           </StPw>
-          <StSignupButton>회원가입</StSignupButton>
-          <StLogin>
-            <Link to="/login">
-              이미 계정이 있으신가요? 여기서 로그인 하세요
-            </Link>
-          </StLogin>
+          <StSignupButton>가입하기</StSignupButton>
         </StForm>
+        <StLogin>
+          <Link to="/login">
+            이미 계정이 있으신가요? 여기서 <Stspan>로그인</Stspan> 하세요
+          </Link>
+        </StLogin>
       </Wrapper>
     </form>
   );
@@ -535,6 +565,7 @@ const StP = styled.p`
   line-height: 30px;
   text-align: center;
   color: #000000;
+  margin: 20px;
 `;
 
 const StInputWrapper = styled.div`
@@ -553,11 +584,13 @@ const Wrapper = styled.div`
   justify-content: center;
   height: 100vh;
   gap: 30px;
+  font-family: 'Inter';
+  font-style: normal;
 `;
 
 const StEmail = styled(StInputWrapper)`
   /* border: 2px solid; */
-  width: 600px;
+  width: 380px;
 `;
 
 const StEmailP = styled.p`
@@ -567,19 +600,24 @@ const StEmailP = styled.p`
   line-height: 28px;
   display: flex;
   align-items: center;
-  margin-left: 10px;
+
   text-align: center;
   color: #000000;
   mix-blend-mode: darken;
 `;
 
+/* Rectangle 120 */
+
 const StInput = styled.input<StInputProps>`
-  background: #FFFFFF(170, 170, 170, 0.26);
-  border-radius: 40px;
-  width: 250px;
+  background: #FFFFFF
+  box-sizing: border-box;
+  border-radius: 8px;
+  width: 380px;
+  height: 50px;
   margin: 10px auto;
-  margin-left: 10px;
-  border: 2px solid #BDBDBD(170, 170, 170, 0.26);
+  display: flex;
+  align-items: center;
+  border: 1px solid #BDBDBD;
   transition: border-color 0.2s ease-in-out;
   &:focus {
     border-color: #333;
@@ -590,25 +628,29 @@ const StInput = styled.input<StInputProps>`
   ${({ hasError }: StInputProps) =>
     hasError &&
     `
-    border-color: red;
+    border-color: transparent;
   `}
 `;
 
 const StSelect = styled.select`
-  background: #FFFFFF(170, 170, 170, 0.26);
+  background: #FFFFFF
   border-radius: 40px;
   width: 250px;
   margin: 10px auto;
-  border: 2px solid rgba(170, 170, 170, 0.26);
+  border: 2px solid rgba
   transition: border-color 0.2s ease-in-out;
 `;
 
 const StInput2 = styled.input<StInputProps>`
-  background: #FFFFFF(170, 170, 170, 0.26);
-  border-radius: 40px;
-  width: 250px;
-  margin-left: 10px;
-  border: 2px solid #BDBDBD(170, 170, 170, 0.26);
+   background: #FFFFFF
+  box-sizing: border-box;
+  border-radius: 8px;
+  width: 380px;
+  height: 50px;
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
+  border: 1px solid #BDBDBD;
   transition: border-color 0.2s ease-in-out;
   &:focus {
     border-color: #333;
@@ -616,24 +658,41 @@ const StInput2 = styled.input<StInputProps>`
   &:focus + ${StErrorMsg} {
     visibility: visible;
   }
-  ${({ hasError }) =>
+  ${({ hasError }: StInputProps) =>
     hasError &&
     `
-    border-color: red;
+    border-color: transparent;
   `}
 `;
 
 const StSelect2 = styled.select`
-  background: #FFFFFF(170, 170, 170, 0.26);
+  background: #FFFFFF
   border-radius: 40px;
   width: 250px;
   margin: 10px auto;
-  border: 2px solid rgba(170, 170, 170, 0.26);
+  border: 2px solid rgba
   transition: border-color 0.2s ease-in-out;
 `;
 
+const StInput3 = styled.input`
+  background: #eeeeee;
+  box-sizing: border-box;
+  border-radius: 8px;
+  width: 380px;
+  height: 48px;
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
+  border: 1px solid #bdbdbd;
+`;
+
+const StBrand = styled.div`
+  /* border: 2px solid; */
+
+  width: 380px;
+`;
+
 const StBrandP = styled.p`
-  margin-left: 10px;
   font-family: 'Inter';
   font-style: normal;
   font-size: 16px;
@@ -644,35 +703,48 @@ const StBrandP = styled.p`
   color: #000000;
   mix-blend-mode: darken;
 `;
-const StBrand = styled.div`
-  /* border: 2px solid; */
-  text-align: center;
-  width: 600px;
-`;
+
 const StBrandInput = styled.input<StInputProps>`
   background: #ffffff;
-  border-radius: 40px;
-  margin: 10px;
+  border-radius: 8px;
+  border: 1px solid #bdbdbd;
+  width: 380px;
+  height: 48px;
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
   display: flex;
   justify-content: left;
-  width: 500px;
 `;
 const StBrandNumberInput = styled.input<StInputProps>`
   background: #ffffff;
-  border-radius: 40px;
-  border-color: ${({ hasError }) => (hasError ? 'red' : 'inherit')};
-  margin: 10px;
-  display: flex;
-  border: 2px solid;
+  border: 1px solid #bdbdbd;
+  border-radius: 8px;
+  /* border-color: ${({ hasError }) => (hasError ? 'red' : 'inherit')}; */
   justify-content: left;
-  width: 500px;
+  width: 230px;
+  height: 48px;
 `;
+
+const Stbutton = styled.button`
+  width: 138px;
+  height: 46px;
+  background: #eeeeee;
+  border-radius: 8px;
+  margin-left: 10px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 18px;
+`;
+
 const StContectNumberInputWrapper = styled.div<StInputProps>`
   margin-right: 20px;
   border-color: ${({ hasError }) => (hasError ? 'red' : 'inherit')};
 `;
 const StBrandNumberP = styled.p`
-  margin-left: 10px;
+  margin: 10px auto;
   font-family: 'Inter';
   font-style: normal;
   font-size: 16px;
@@ -682,12 +754,19 @@ const StBrandNumberP = styled.p`
   text-align: center;
   color: #000000;
 `;
+
+const Stdiv = styled.div`
+width: 380px
+height: 132px
+  display: flex;
+  justify-content: center;
+`;
+
 const StPw = styled(StInputWrapper)`
-  width: 600px;
+  width: 380px;
   /* border: 2px solid; */
 `;
 const StPwP = styled.p`
-  margin-left: 10px;
   font-family: 'Inter';
   font-style: normal;
   font-size: 16px;
@@ -707,12 +786,12 @@ const StPicP = styled.p`
 `;
 
 const StPwinput = styled.input<StInputProps>`
-  background: #d3d3d3;
-  border-radius: 40px;
-  width: 500px;
+  background: #ffffff;
+  border-radius: 8px;
+  width: 380px;
+  height: 48px;
   margin: 10px auto;
-  margin-left: 10px;
-  border: 2px solid rgba(170, 170, 170, 0.26);
+  border: 1px solid #bdbdbd;
   transition: border-color 0.2s ease-in-out;
 
   &:focus {
@@ -730,13 +809,15 @@ const StPwinput = styled.input<StInputProps>`
 
 const StSignupButton = styled.button`
   background-color: #eeeeee;
+  width: 380px;
+  height: 48px;
   color: #000000;
   font-size: 1.25rem;
   font-weight: bold;
   padding: 10px 40px;
   border: none;
   border-radius: 5px;
-  margin-top: 20px;
+  margin: 20px;
   transition: background-color 0.2s ease-in-out;
   cursor: pointer;
   &:hover {
@@ -744,7 +825,7 @@ const StSignupButton = styled.button`
   }
 `;
 const StPicInfo = styled.div`
-  width: 600px;
+  width: 380px;
   /* border: 2px solid; */
 `;
 
@@ -763,6 +844,10 @@ const StLogin = styled.div`
 
   font-size: 16px;
   line-height: 20px;
+`;
+
+const Stspan = styled.span`
+  text-decoration: underline;
 `;
 
 const StBrandEmailInput = styled.input`

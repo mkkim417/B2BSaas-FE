@@ -19,6 +19,7 @@ import {
   Wrapper,
 } from './UploadPage';
 function ReadyAlarmtalk() {
+  console.log('hello');
   const params = useParams();
   const token = getCookie('userToken');
   const location = useLocation();
@@ -193,7 +194,10 @@ function ReadyAlarmtalk() {
             <>
               <ButtonWrap>
                 <NoticeFont>아직 등록된 클라이언트가 없으시네요 😊</NoticeFont>
-                <Button width={'150px'}onClick={() => navigate('/groupmanageList')}>
+                <Button
+                  width={'150px'}
+                  onClick={() => navigate('/groupmanageList')}
+                >
                   고객그룹등록하기
                 </Button>
               </ButtonWrap>
@@ -245,5 +249,5 @@ const NoticeFont = styled.div`
   font-size: 18px;
   font-weight: 900;
   color: black;
-`
+`;
 export default ReadyAlarmtalk;

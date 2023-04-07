@@ -26,6 +26,8 @@ import KakaoDetailList from '../page/KakaoDetailList';
 import PricePoicy from '../page/PricePolicy';
 import { getCookie } from '../util/cookie';
 import PrivateRoute from '../util/PrivateRoute';
+import ReadyAlarmtalk from '../page/ReadyAlarmtalk';
+import HomeHeader from '../components/HomeHeader';
 
 const Router = () => {
   const token = getCookie('userToken');
@@ -34,7 +36,14 @@ const Router = () => {
       {/* <TopNav /> */}
       <AnimatePresence>
         <Routes>
-          <Route element={<TopNav />}>
+          <Route
+            element={
+              <>
+                <HomeHeader />
+                <TopNav />
+              </>
+            }
+          >
             <Route element={<PrivateRoute authentication={true} />}>
               <Route path="/uploadpage" element={<UploadPage />} />
             </Route>
@@ -52,7 +61,9 @@ const Router = () => {
               <Route path="/statistics" element={<Statistics />} />
             </Route>
             <Route element={<PrivateRoute authentication={true} />}>
-              <Route path="/alarmtalk/:id" element={<Alarmtalk />} />
+              <Route path="/alarmtalk" element={<Alarmtalk />}>
+                <Route path="/alarmtalk/:id" element={<Alarmtalk />} />
+              </Route>
             </Route>
             <Route path="/signup" element={<Signup />} />
             <Route path="/email" element={<Email />} />
@@ -67,6 +78,14 @@ const Router = () => {
                 path="/clientregistration"
                 element={<ClientRegistration />}
               />
+            </Route>
+            <Route element={<PrivateRoute authentication={true} />}>
+              <Route path="/readyalarmtalk" element={<ReadyAlarmtalk />}>
+                <Route
+                  path="/readyalarmtalk/:id"
+                  element={<ReadyAlarmtalk />}
+                />
+              </Route>
             </Route>
             <Route element={<PrivateRoute authentication={true} />}>
               <Route path="/groupmanageList" element={<GroupManageList />} />

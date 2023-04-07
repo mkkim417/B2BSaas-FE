@@ -38,9 +38,7 @@ const UserEditModal = ({
   const { mutate } = useMutation(eidtClientData, {
     onSuccess: (response) => {
       console.log(response);
-      alert('저장 성공!');
       closeModal();
-      window.location.reload();
     },
     onError: (error) => {
       console.log(error);
@@ -50,11 +48,8 @@ const UserEditModal = ({
 
   // submit button handler
   const submitHandler = async (e: any, closeModal: any) => {
-    e.preventDefault();
-
     // 연락처에서 '-' 제거
     const _contact = data.contact.replace(/-/g, '');
-    alert(`name: ${data.clientName}, contact : ${_contact}`);
 
     // 빈칸 확인 조건처리
     if (
@@ -237,6 +232,7 @@ const InputBox = styled.div`
   /* height: 28px; */
   font-weight: 500;
   font-size: 20px;
+  margin-bottom: 5px;
 `;
 const TitleBox = styled.div`
   /* height: 28px; */
@@ -244,10 +240,12 @@ const TitleBox = styled.div`
   font-size: 24px;
 `;
 const InputContainer = styled.input`
-  height: 32px;
-  border: 2px solid #4a72ff;
+  width: 100%;
+  height: 35px;
+  border: 2px solid #14B869;
   border-radius: 10px;
 `;
+
 const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
@@ -258,11 +256,18 @@ const ButtonContainer = styled.div`
   /* background-color: aqua; */
 `;
 const ButtonBox = styled.button`
-  border: 2px solid #4a72ff;
+  width: 100px;
+  /* border: 1px solid #14B869; */
   border-radius: 10px;
-  /* background-color: yellowgreen; */
   padding: 10px;
   font-size: 18px;
+  :hover{
+    background-color: #E6F8F0;
+    color: #14B869;
+  }
 `;
-
+const ConfirmButton = styled(ButtonBox)`
+  color: white;
+  background-color: #14B869;
+`
 export default UserEditModal;

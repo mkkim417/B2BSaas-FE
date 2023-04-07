@@ -1,66 +1,65 @@
-import React from 'react';
+import { connect } from 'http2';
+import React from 'react'
 import { useMutation } from 'react-query';
 import styled from 'styled-components';
-import { deleteInGroupClient } from '../../axios/api';
+import { deleteGroupData } from '../../axios/api';
 
 type Props = {
   title?: string;
-  checkValue?: any;
-  closeModal: () => void;
+  content?: any;
+  closeModal?: () => void;
 };
-function UserInGroupDeleteModal({ title, checkValue, closeModal }: Props) {
-  
-  //mutate 선언
-  const { mutate } = useMutation(deleteInGroupClient, {
-    onSuccess : (response) => {
-      console.log(response);
-      alert('삭제가 완료되었습니다.')
-      closeModal();
+function GroupDeleteModal({ title, content, closeModal }: Props) {
+
+  const { mutate } = useMutation(deleteGroupData, {
+    onSuccess: (response) => {
+      console.log('success', response);
+      alert('삭제 성공')
     },
     onError: (error) => {
-      console.log(error);
-      alert('삭제를 실패하였습니다.');
-    }
+      console.log('error', error);
+    },
   })
-  const deleteDataHandler = (e: any) => {
-    e.preventDefault();
-    mutate(checkValue)
-  };
+  const onSubmitHandler = async() => {
+    // mutate(content.groupId)
+    console.log(content)
+  }
   return (
     <ModalWrap>
       <ModalBackGround>
         <ModalContainer>
           <ContentContainer>
-            <TitleContainer>{title}</TitleContainer>
-            <DataHeader>
-              <HeaderPercent width="20%">이름</HeaderPercent>
-              <HeaderPercent width="30%">연락처</HeaderPercent>
-              <HeaderPercent width="50%">이메일</HeaderPercent>
-            </DataHeader>
-            <DataContainer>
-              {checkValue.map((item: any) => {
-                return (
-                  <DataRow key={item.clientId}>
-                    <RowPercent width="20%">{item.clientName}</RowPercent>
-                    <RowPercent width="30%">{item.contact}</RowPercent>
-                    <RowPercent width="50%">{item.clientEmail}</RowPercent>
-                  </DataRow>
-                );
-              })}
-            </DataContainer>
+            <TitleContainer>
+              <div>정말 삭제하시겠습니까?</div>
+            </TitleContainer>
+              <DataContainer>
+                <div>
+                  <InputBox>그룹명</InputBox>
+                  <InputContainer
+                    value={content.groupName}
+                    disabled
+                  />
+                </div>
+                <div>
+                  <InputBox>그룹 인원수</InputBox>
+                  <InputContainer
+                    value={content.clientCount}
+                    disabled/>
+                </div>
+              </DataContainer>
+              <FootContainer>
+                <div>해당 그룹 삭제시, 관련 발송내역도 모두 삭제됩니다.</div>
+              </FootContainer>
           </ContentContainer>
-          <FootContainer>
-              <div>그룹에서 삭제되어도, 고객리스트에는 정보가 남아있습니다.</div>
-          </FootContainer>
           <ButtonContainer>
             {/* <ButtonBox>아니오</ButtonBox> */}
             <ButtonBox onClick={closeModal}>취소</ButtonBox>
-            <ButtonBox onClick={deleteDataHandler}>확인</ButtonBox>
+            <ConfirmButton onClick={onSubmitHandler}>확인</ConfirmButton>
           </ButtonContainer>
         </ModalContainer>
       </ModalBackGround>
     </ModalWrap>
-  );
+  )
 }
 
 // 전체 모달 감싸주는 컴포넌틑
@@ -92,9 +91,9 @@ const ModalContainer = styled.form`
   background-color: white;
   position: absolute;
   left: 35%;
-  top: 10%;
+  top: 20%;
   width: 40%;
-  height: 80%;
+  height: 60%;
 `;
 
 const ContentContainer = styled.div`
@@ -114,60 +113,15 @@ const ContentContainer = styled.div`
 const TitleContainer = styled.div`
   width: 100%;
   height: 10%;
-  font-weight: 500;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
   /* background-color: beige; */
 `;
-const DataHeader = styled.div`
-  width: 100%;
-  height: 10%;
-  display: flex;
-  flex-direction: row;
-  /* background-color: darkgreen; */
-`;
-const HeaderPercent = styled.div<{ width: any }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  width: ${(item: any) => item.width};
-  border: 1px solid black;
-  border-left: 1ch;
-  border-right: 1ch;
-  /* background-color: aqua; */
-`
-const DataRow = styled.div`
-  width: 100%;
-  height: 10%;
-  display: flex;
-  flex-direction: row;
-  /* background-color: blue; */
-`;
-
-const RowPercent = styled.div<{ width: any }>`
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  width: ${(item: any) => item.width};
-  border: 1px solid #F3F3F3;
-  border-left: 1ch;
-  border-right: 1ch;
-  border-top: 1ch;
-`;
-const DataContainer = styled.div`
-  width: 100%;
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-  overflow: scroll;
-  /* background-color: blueviolet; */
-`;
-const FootContainer = styled(TitleContainer)`
+export const FootContainer = styled(TitleContainer)`
   font-size: 18px;
   font-weight: 500;
   color: #209653;
@@ -175,6 +129,51 @@ const FootContainer = styled(TitleContainer)`
   border-radius: 10px;
   font-style: italic;
 `
+const DataHeader = styled.div`
+  width: 100%;
+  height: 8%;
+  display: flex;
+  flex-direction: row;
+  /* background-color: darkgreen; */
+`;
+const RowPercent = styled.div<{ width: any }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${(item: any) => item.width};
+  border: 1px solid black;
+`;
+const DataContainer = styled.div`
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 50px;
+  /* margin: 0px 500px 0px 500px; */
+  padding: 0px 150px 0px 150px;
+  /* overflow: scroll; */
+  /* background-color: blueviolet; */
+
+`;
+const DataRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px
+`
+const InputBox = styled.div`
+  /* height: 28px; */
+  font-weight: 500;
+  font-size: 20px;
+  margin-bottom: 5px;
+`;
+const InputContainer = styled.input`
+  width: 100%;
+  height: 35px;
+  font-size: 16px;
+  border: 2px solid #14B869;
+  border-radius: 10px;
+`;
 const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
@@ -200,4 +199,5 @@ const ConfirmButton = styled(ButtonBox)`
   color: white;
   background-color: #14B869;
 `
-export default UserInGroupDeleteModal;
+
+export default GroupDeleteModal

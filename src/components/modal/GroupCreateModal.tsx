@@ -7,7 +7,7 @@ import { postGroupData } from '../../axios/api';
 import { PaginationBox } from '../NotUsedPages/UserList';
 
 type Props = {
-  closeModal?: () => void;
+  closeModal: () => void;
 };
 const GroupCreateModal = ({ closeModal }: Props) => {
   // const token = localStorage.getItem('Token');
@@ -30,6 +30,7 @@ const GroupCreateModal = ({ closeModal }: Props) => {
   const { mutate } = useMutation(postGroupData, {
     onSuccess: (response) => {
       console.log(response);
+      closeModal();
     },
     onError: (error) => {
       console.log(error);
@@ -38,17 +39,11 @@ const GroupCreateModal = ({ closeModal }: Props) => {
 
   // submit button handler
   const submitHandler = async (e: any, closeModal: any) => {
-    alert(`groupName : ${data.groupName}, groupDes : ${data.groupDescription}`);
-    // e.preventDefault();
-    // alert('저장!')
     if (!(data.groupName === '' && data.groupDescription === '')) {
-      // axios.post(`${process.env.REACT_APP_SERVER_URL}/api/groups`, data, {
-      //   headers: { authorization: `Bearer ${token}` },
-      // });
-      mutate(data);
+      // 빈칸없다면 그룹생성 API post
+      mutate(data)
 
-      alert('저장 성공!');
-      closeModal();
+
     } else {
       alert('빈칸을 채워주세요.');
     }
@@ -59,12 +54,13 @@ const GroupCreateModal = ({ closeModal }: Props) => {
       <ModalBackGround>
         <ModalContainer>
           <TitleContainer>
-            <TitleBox>빈 그룹 생성</TitleBox>
+            <TitleBox>그룹을 생성해주세요</TitleBox>
           </TitleContainer>
           {/* <DataHeader>
             여긴어디
           </DataHeader> */}
           <DataContainer>
+            <div>
             <InputBox>그룹명</InputBox>
             <InputContainer
               name="groupName"
@@ -73,6 +69,8 @@ const GroupCreateModal = ({ closeModal }: Props) => {
               placeholder="그룹명을 입력해주세요"
               onChange={onChangeHandler}
             />
+            </div>
+            <div>
             <InputBox>그룹설명</InputBox>
             <InputContainer
               name="groupDescription"
@@ -81,13 +79,14 @@ const GroupCreateModal = ({ closeModal }: Props) => {
               placeholder="그룹설명을 입력해주세요"
               onChange={onChangeHandler}
             />
+            </div>
           </DataContainer>
           <ButtonContainer>
             {/* <ButtonBox>아니오</ButtonBox> */}
             <ButtonBox onClick={closeModal}>취소</ButtonBox>
-            <ButtonBox onClick={(e) => submitHandler(e, closeModal)}>
+            <ConfirmButton onClick={(e) => submitHandler(e, closeModal)}>
               확인
-            </ButtonBox>
+            </ConfirmButton>
           </ButtonContainer>
         </ModalContainer>
       </ModalBackGround>
@@ -171,7 +170,7 @@ const DataContainer = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
-  gap: 10px;
+  gap: 50px;
   /* margin: 0px 500px 0px 500px; */
   padding: 0px 150px 0px 150px;
   /* overflow: scroll; */
@@ -181,6 +180,7 @@ const InputBox = styled.div`
   /* height: 28px; */
   font-weight: 500;
   font-size: 20px;
+  margin-bottom: 5px;
 `;
 const TitleBox = styled.div`
   /* height: 28px; */
@@ -188,8 +188,9 @@ const TitleBox = styled.div`
   font-size: 24px;
 `;
 const InputContainer = styled.input`
-  height: 32px;
-  border: 2px solid #4a72ff;
+  width: 100%;
+  height: 35px;
+  border: 2px solid #14B869;
   border-radius: 10px;
 `;
 const ButtonContainer = styled.div`
@@ -202,11 +203,19 @@ const ButtonContainer = styled.div`
   /* background-color: aqua; */
 `;
 const ButtonBox = styled.button`
-  border: 2px solid #4a72ff;
+  width: 100px;
+  /* border: 1px solid #14B869; */
   border-radius: 10px;
-  /* background-color: yellowgreen; */
   padding: 10px;
   font-size: 18px;
+  :hover{
+    background-color: #E6F8F0;
+    color: #14B869;
+  }
 `;
+const ConfirmButton = styled(ButtonBox)`
+  color: white;
+  background-color: #14B869;
+`
 
 export default GroupCreateModal;

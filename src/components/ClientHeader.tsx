@@ -33,10 +33,12 @@ function ClientHeader() {
 
 const HeaderContainer = styled.div`
   display: flex;
+  position: fixed;
   height: 60px;
   justify-content: end;
   padding-right: 50px;
   gap: 30px;
+  right: 0;
   /* margin-top: 30px; */
   /* background-color: salmon; */
 `;
@@ -55,7 +57,7 @@ const DefaultButton = styled.button`
   border-bottom: 2px solid #d9d9d9;
 `;
 const ColorButton = styled(DefaultButton)`
-  color: #4a72ff;
-  border-bottom: 2px solid #4a72ff;
+  color: #14b769;
+  border-bottom: 3px solid #14b769;
 `;
 export default ClientHeader;

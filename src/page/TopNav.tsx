@@ -23,6 +23,7 @@ const TopNav = () => {
   const clientCreate = useMatch('/singleusercreate');
   const clientRegistration = useMatch('/clientregistration');
   const groupManageList = useMatch('/groupmanageList');
+  const alarmtalk = useMatch('/alarmtalk');
   const kakaoresultlist = useMatch('/kakaoresultlist');
   const readyalarmtalk = useMatch('/readyalarmtalk');
 

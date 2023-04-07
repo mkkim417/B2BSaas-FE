@@ -173,7 +173,7 @@ const StPwinput = styled.input`
   padding: 15px 0 15px 20px;
 `;
 
-const StLoginButton = styled.button<{ disable?: boolean }>`
+export const StLoginButton = styled.button<{ disable?: boolean }>`
   background: ${(props) => (props.disable === true ? '#eee' : '#14b769')};
   color: ${(props) => (props.disable === true ? '#bdbdbd' : '#fff')};
   border-radius: 8px;
@@ -186,7 +186,7 @@ const StLoginButton = styled.button<{ disable?: boolean }>`
   font-size: 16px;
   line-height: 20px;
 `;
-const StLoginButton2 = styled(StLoginButton)``;
+export const StLoginButton2 = styled(StLoginButton)``;
 
 const StErrorMsg = styled.span`
   color: red;

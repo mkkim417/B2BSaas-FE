@@ -98,12 +98,13 @@ function Login() {
 export default Login;
 
 const StEmail = styled.div`
-  margin: 10px;
   font-family: 'Inter';
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
   line-height: 20px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const StLogin = styled.h1`
@@ -142,6 +143,8 @@ const StPw = styled.div`
   font-weight: 700;
   font-size: 16px;
   line-height: 20px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const StPwinput = styled.input`
@@ -161,7 +164,7 @@ const StPwinput = styled.input`
 `;
 
 const StLoginButton = styled.button`
-  background: #14b769;
+  background: #eeeeee;
   border-radius: 8px;
   width: 380px;
   height: 48px;
@@ -172,6 +175,9 @@ const StLoginButton = styled.button`
   font-size: 16px;
   line-height: 20px;
   color: #ffffff;
+  &:hover {
+    background: #14b769;
+  }
 `;
 
 const StErrorMsg = styled.span`

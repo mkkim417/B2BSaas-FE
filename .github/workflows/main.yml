@@ -1,11 +1,10 @@
-# main.yml
-name: master
+# sub-branch-deploy-work.yml
+name: sub-branch
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]    # main 브랜치에서 push, pull_request 이벤트가 일어났을 때 실행
+    branches:
+      - sub-branch    # sub-branch[branch name] 브랜치에서 push 이벤트가 일어났을 때 실행
 
 jobs:
   build:
@@ -23,18 +22,15 @@ jobs:
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
 
-      - name: Install Dependencies
+      - name: Install Dependencies # node module install
         run: yarn
 
-      - name: Build
+      - name: Build # project build
         run: yarn build
 
-      - name: Deploy
+      - name: Deploy 
         env:
-          AWS_ACCESS_KEY_ID: ${{ AKIAVSHQSHCDD4PCEDSL }}
-          AWS_SECRET_ACCESS_KEY: ${{ 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 }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 cp \
-            --recursive \
-            --region ap-northeast-2 \
-            build s3://프로젝트이름
+          aws s3 sync ./build s3://s3-react-4

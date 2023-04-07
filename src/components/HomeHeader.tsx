@@ -112,6 +112,7 @@ const HeaderContainer = styled.div`
   border-bottom: 1px solid #e1e1e1;
   padding: 0px 20px;
   width: 100%;
+  background-color: #fff;
   top: 0;
   align-items: center;
   z-index: 2;

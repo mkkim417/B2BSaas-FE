@@ -854,7 +854,7 @@ const Input = styled.input`
   height: 45px;
 `;
 export const Wrapper = styled.div`
-  padding-left: 280px;
+  padding-left: 80px;
   display: block;
   gap: 30px;
   justify-content: center;

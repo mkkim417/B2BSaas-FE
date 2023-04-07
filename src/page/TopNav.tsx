@@ -34,119 +34,125 @@ const TopNav = () => {
         <UserContatiner>
           <ul style={{ marginTop: '60px' }}>
             <Li>
-              <NavLink to={'/statistics'}>
-                {statistics ? (
-                  <>
-                    <ListIcon width={'25px'} heigth={'25px'} fill={'#14b769'} />
-                    <Circle
-                      animate={{
-                        backgroundColor: ['lime'],
-                      }}
-                      layoutId="circle"
-                    />
-                    {/* <LiBlue>이용현황</LiBlue> */}
-                  </>
-                ) : (
-                  <>
-                    <ListIcon width={'25px'} heigth={'25px'} />
-                    {/* <NotLiBlue>이용현황</NotLiBlue> */}
-                  </>
-                )}
-              </NavLink>
+              <InLi active={statistics ? true : false}>
+                <NavLink to={'/statistics'}>
+                  {statistics ? (
+                    <>
+                      <ListIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
+                      <Circle
+                        animate={{
+                          backgroundColor: ['lime'],
+                        }}
+                        layoutId="circle"
+                      />
+                      {/* <LiBlue>이용현황</LiBlue> */}
+                    </>
+                  ) : (
+                    <>
+                      <ListIcon width={'25px'} heigth={'25px'} />
+                      {/* <NotLiBlue>이용현황</NotLiBlue> */}
+                    </>
+                  )}
+                </NavLink>
+              </InLi>
             </Li>
             <Li>
-              <NavLink to={'/readyalarmtalk'}>
-                {readyalarmtalk ? (
-                  <>
-                    <KakaoIcon
-                      width={'25px'}
-                      heigth={'25px'}
-                      fill={'#14b769'}
-                    />
-                    <Circle
-                      animate={{
-                        backgroundColor: ['lime'],
-                      }}
-                      layoutId="circle"
-                    />
-                    {/* <LiBlue>알림톡전송</LiBlue> */}
-                  </>
-                ) : (
-                  <>
-                    <KakaoIcon width={'25px'} heigth={'25px'} />
-                    {/* <NotLiBlue>알림톡전송</NotLiBlue> */}
-                  </>
-                )}
-              </NavLink>
+              <InLi active={readyalarmtalk ? true : false}>
+                <NavLink to={'/readyalarmtalk'}>
+                  {readyalarmtalk ? (
+                    <>
+                      <KakaoIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
+                      <Circle
+                        animate={{
+                          backgroundColor: ['lime'],
+                        }}
+                        layoutId="circle"
+                      />
+                      {/* <LiBlue>알림톡전송</LiBlue> */}
+                    </>
+                  ) : (
+                    <>
+                      <KakaoIcon width={'25px'} heigth={'25px'} />
+                      {/* <NotLiBlue>알림톡전송</NotLiBlue> */}
+                    </>
+                  )}
+                </NavLink>
+              </InLi>
             </Li>
             <Li>
-              <NavLink to={'/kakaoresultlist'}>
-                {kakaoresultlist ? (
-                  <>
-                    <ListResultIcon
-                      width={'25px'}
-                      heigth={'25px'}
-                      fill={'#14b769'}
-                    />
-                    <Circle
-                      animate={{ backgroundColor: ['lime'] }}
-                      layoutId="circle"
-                    />
-                    {/* <LiBlue>전송결과조회</LiBlue> */}
-                  </>
-                ) : (
-                  <>
-                    <ListResultIcon width={'25px'} heigth={'25px'} />
-                    {/* <NotLiBlue>전송결과조회</NotLiBlue> */}
-                  </>
-                )}
-              </NavLink>
+              <InLi active={kakaoresultlist ? true : false}>
+                <NavLink to={'/kakaoresultlist'}>
+                  {kakaoresultlist ? (
+                    <>
+                      <ListResultIcon
+                        width={'25px'}
+                        heigth={'25px'}
+                        fill={'#fff'}
+                      />
+                      <Circle
+                        animate={{ backgroundColor: ['lime'] }}
+                        layoutId="circle"
+                      />
+                      {/* <LiBlue>전송결과조회</LiBlue> */}
+                    </>
+                  ) : (
+                    <>
+                      <ListResultIcon width={'25px'} heigth={'25px'} />
+                      {/* <NotLiBlue>전송결과조회</NotLiBlue> */}
+                    </>
+                  )}
+                </NavLink>
+              </InLi>
             </Li>
             <Li>
-              <NavLink to={'/groupManageList'}>
-                {groupManageList ? (
-                  <>
-                    <GroupMangeListIcon
-                      width={'25px'}
-                      heigth={'25px'}
-                      fill={'#14b769'}
-                    />
-                    <Circle
-                      animate={{ backgroundColor: ['lime'] }}
-                      layoutId="circle"
-                    />
-                    {/* <LiBlue>고객관리</LiBlue> */}
-                  </>
-                ) : (
-                  <>
-                    <GroupMangeListIcon width={'25px'} heigth={'25px'} />
-                    {/* <NotLiBlue>고객관리</NotLiBlue> */}
-                  </>
-                )}
-              </NavLink>
+              <InLi active={groupManageList ? true : false}>
+                <NavLink to={'/groupManageList'}>
+                  {groupManageList ? (
+                    <>
+                      <GroupMangeListIcon
+                        width={'25px'}
+                        heigth={'25px'}
+                        fill={'#fff'}
+                      />
+                      <Circle
+                        animate={{ backgroundColor: ['lime'] }}
+                        layoutId="circle"
+                      />
+                      {/* <LiBlue>고객관리</LiBlue> */}
+                    </>
+                  ) : (
+                    <>
+                      <GroupMangeListIcon width={'25px'} heigth={'25px'} />
+                      {/* <NotLiBlue>고객관리</NotLiBlue> */}
+                    </>
+                  )}
+                </NavLink>
+              </InLi>
             </Li>
             <Li>
-              <NavLink to={'/uploadpage'}>
-                {Uploadpage ? (
-                  <>
-                    <CustomerAddIcon
-                      width={'25px'}
-                      heigth={'25px'}
-                      fill={'#14b769'}
-                    />
-                    <Circle
-                      animate={{ backgroundColor: ['lime'] }}
-                      layoutId="circle"
-                    />
-                    {/* <LiBlue>고객등록</LiBlue> */}
-                  </>
-                ) : (
-                  <>
-                    <CustomerAddIcon width={'25px'} heigth={'25px'} />
-                    {/* <NotLiBlue>고객등록</NotLiBlue> */}
-                  </>
-                )}
-              </NavLink>
+              <InLi active={Uploadpage ? true : false}>
+                <NavLink to={'/uploadpage'}>
+                  {Uploadpage ? (
+                    <>
+                      <CustomerAddIcon
+                        width={'25px'}
+                        heigth={'25px'}
+                        fill={'#fff'}
+                      />
+                      <Circle
+                        animate={{ backgroundColor: ['lime'] }}
+                        layoutId="circle"
+                      />
+                      {/* <LiBlue>고객등록</LiBlue> */}
+                    </>
+                  ) : (
+                    <>
+                      <CustomerAddIcon width={'25px'} heigth={'25px'} />
+                      {/* <NotLiBlue>고객등록</NotLiBlue> */}
+                    </>
+                  )}
+                </NavLink>
+              </InLi>
             </Li>
           </ul>
           <FlexWrap>
@@ -249,8 +255,8 @@ const Circle = styled(motion.span)`
   height: 8px;
   z-index: 1;
   border-radius: 8px;
-  bottom: 8px;
-  left: 10px;
+  bottom: 23px;
+  left: 21px;
   right: 0px;
 `;
 const NavLink = styled(Link)`
@@ -259,8 +265,24 @@ const NavLink = styled(Link)`
   justify-content: center;
   position: relative;
 `;
-const Li = styled.li`
+const InLi = styled.div<{ active?: boolean }>`
+  background: ${(props) => (props.active ? 'black' : 'white')};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 15px;
+  transition: 0.3s;
+`;
+
+const Li = styled.li<{ active?: boolean }>`
+  height: 50px;
   margin: 30px 0px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  background-color: ${(props) => (props.active ? 'palegreen' : null)};
 `;
 
 const Flex = styled.div<{

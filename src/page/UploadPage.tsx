@@ -720,9 +720,10 @@ export const Thead = styled.thead`
     color: #828282;
     font-family: 'Inter', sans-serif;
     padding: 15px 0px;
+    min-width: 80px;
   }
 `;
-const DecoText = styled.div`
+export const DecoText = styled.div`
   font-weight: bold;
   color: #909090;
   font-size: 16px;
@@ -751,10 +752,10 @@ const TextAria = styled.div`
   font-family: 'Inter', sans-serif;
   line-height: 1.3;
 `;
-const Th = styled.th`
+export const Th = styled.th`
   vertical-align: middle;
 `;
-const BottomWrap = styled.div<{ ref: any }>`
+export const BottomWrap = styled.div<{ ref?: any }>`
   width: 100%;
   display: flex;
   margin: 0px auto;
@@ -793,7 +794,7 @@ export const MapWrapper = styled.div<{ ref?: any }>`
     width: 1000px;
   }
 `;
-const Td = styled.td`
+export const Td = styled.td`
   font-size: 14px;
   padding: 10px;
   border-bottom: 1px solid #333333;
@@ -811,12 +812,13 @@ export const Button = styled.button<{
   padding?: string;
 }>`
   border-radius: 8px;
+  word-break: keep-all;
   color: #14b769;
   width: ${(props) => (props.width ? props.width : '100px')};
   padding: ${(props) => (props.padding ? props.padding : '15px 20px')};
   border: 2px solid #14b769;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
   font-family: 'Inter', sans-serif;
   &:hover {
     background-color: #14b769;
@@ -851,7 +853,7 @@ const Input = styled.input`
   padding: 5px 10px;
   height: 45px;
 `;
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   padding-left: 280px;
   display: block;
   gap: 30px;
@@ -861,7 +863,7 @@ const Wrapper = styled.div`
     display: flex;
   }
 `;
-const ContentsWrap = styled.div`
+export const ContentsWrap = styled.div`
   width: 100%;
   display: flex;
   margin: 0px auto;

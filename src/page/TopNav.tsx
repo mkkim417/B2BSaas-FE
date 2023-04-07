@@ -32,19 +32,7 @@ const TopNav = () => {
     <>
       <Wrapper>
         <UserContatiner>
-          <div style={{ marginBottom: '40px' }}>
-            <Logo>
-              <Link to={'/'}>Logo</Link>
-            </Logo>
-          </div>
-          <UserWrap>
-            <Box width="25px" height="25px" />
-            <div>
-              <div>소속회사명</div>
-              <Username>김샌드</Username>
-            </div>
-          </UserWrap>
-          <ul>
+          <ul style={{ marginTop: '60px' }}>
             <Li>
               <NavLink to={'/statistics'}>
                 {statistics ? (
@@ -52,16 +40,16 @@ const TopNav = () => {
                     <ListIcon width={'25px'} heigth={'25px'} fill={'#14b769'} />
                     <Circle
                       animate={{
-                        backgroundColor: ['red'],
+                        backgroundColor: ['lime'],
                       }}
                       layoutId="circle"
                     />
-                    <LiBlue>이용현황</LiBlue>
+                    {/* <LiBlue>이용현황</LiBlue> */}
                   </>
                 ) : (
                   <>
                     <ListIcon width={'25px'} heigth={'25px'} />
-                    <NotLiBlue>이용현황</NotLiBlue>
+                    {/* <NotLiBlue>이용현황</NotLiBlue> */}
                   </>
                 )}
               </NavLink>
@@ -77,16 +65,16 @@ const TopNav = () => {
                     />
                     <Circle
                       animate={{
-                        backgroundColor: ['#14b769'],
+                        backgroundColor: ['lime'],
                       }}
                       layoutId="circle"
                     />
-                    <LiBlue>알림톡전송</LiBlue>
+                    {/* <LiBlue>알림톡전송</LiBlue> */}
                   </>
                 ) : (
                   <>
                     <KakaoIcon width={'25px'} heigth={'25px'} />
-                    <NotLiBlue>알림톡전송</NotLiBlue>
+                    {/* <NotLiBlue>알림톡전송</NotLiBlue> */}
                   </>
                 )}
               </NavLink>
@@ -104,12 +92,12 @@ const TopNav = () => {
                       animate={{ backgroundColor: ['lime'] }}
                       layoutId="circle"
                     />
-                    <LiBlue>전송결과조회</LiBlue>
+                    {/* <LiBlue>전송결과조회</LiBlue> */}
                   </>
                 ) : (
                   <>
                     <ListResultIcon width={'25px'} heigth={'25px'} />
-                    <NotLiBlue>전송결과조회</NotLiBlue>
+                    {/* <NotLiBlue>전송결과조회</NotLiBlue> */}
                   </>
                 )}
               </NavLink>
@@ -124,15 +112,15 @@ const TopNav = () => {
                       fill={'#14b769'}
                     />
                     <Circle
-                      animate={{ backgroundColor: ['blue'] }}
+                      animate={{ backgroundColor: ['lime'] }}
                       layoutId="circle"
                     />
-                    <LiBlue>고객관리</LiBlue>
+                    {/* <LiBlue>고객관리</LiBlue> */}
                   </>
                 ) : (
                   <>
                     <GroupMangeListIcon width={'25px'} heigth={'25px'} />
-                    <NotLiBlue>고객관리</NotLiBlue>
+                    {/* <NotLiBlue>고객관리</NotLiBlue> */}
                   </>
                 )}
               </NavLink>
@@ -147,22 +135,22 @@ const TopNav = () => {
                       fill={'#14b769'}
                     />
                     <Circle
-                      animate={{ backgroundColor: ['darkred'] }}
+                      animate={{ backgroundColor: ['lime'] }}
                       layoutId="circle"
                     />
-                    <LiBlue>고객등록</LiBlue>
+                    {/* <LiBlue>고객등록</LiBlue> */}
                   </>
                 ) : (
                   <>
                     <CustomerAddIcon width={'25px'} heigth={'25px'} />
-                    <NotLiBlue>고객등록</NotLiBlue>
+                    {/* <NotLiBlue>고객등록</NotLiBlue> */}
                   </>
                 )}
               </NavLink>
             </Li>
           </ul>
           <FlexWrap>
-            {isLoggedIn ? (
+            {/* {isLoggedIn ? (
               <UserButton
                 onClick={() => {
                   const isConfirmed =
@@ -178,7 +166,7 @@ const TopNav = () => {
               <Link to="/login">
                 <UserButton>로그인</UserButton>
               </Link>
-            )}
+            )} */}
           </FlexWrap>
         </UserContatiner>
 
@@ -188,7 +176,7 @@ const TopNav = () => {
             <div>
               <Ul>
                 <Link to={'/statistics'}>
-                  {statistics ? <LiBlue>그래프</LiBlue> : <Li>그래프</Li>}
+                  // {statistics ? <LiBlue>그래프</LiBlue> : <Li>그래프</Li>}
                 </Link>
               </Ul>
             </div>
@@ -201,14 +189,14 @@ const TopNav = () => {
               <Ul>
                 <Link to={'/readyalarmtalk'}>
                   {readyalarmtalk ? (
-                    <LiBlue>알림톡전송</LiBlue>
+                    // <LiBlue>알림톡전송</LiBlue>
                   ) : (
                     <Li>알림톡전송</Li>
                   )}
                 </Link>
                 <Link to={'/kakaoresultlist'}>
                   {kakaoresultlist ? (
-                    <LiBlue>전송결과</LiBlue>
+                    // <LiBlue>전송결과</LiBlue>
                   ) : (
                     <Li>전송결과</Li>
                   )}
@@ -224,21 +212,21 @@ const TopNav = () => {
               <Ul>
                 <Link to={'/uploadpage'}>
                   {Uploadpage ? (
-                    <LiBlue>고객등록(다건)</LiBlue>
+                    // <LiBlue>고객등록(다건)</LiBlue>
                   ) : (
                     <Li>고객등록(다건)</Li>
                   )}
                 </Link>
                 <Link to={'/clientRegistration'}>
                   {clientRegistration ? (
-                    <LiBlue>고객등록</LiBlue>
+                    // <LiBlue>고객등록</LiBlue>
                   ) : (
                     <Li>고객등록</Li>
                   )}
                 </Link>
                 <Link to={'/groupmanageList'}>
                   {groupManageList ? (
-                    <LiBlue>그룹관리</LiBlue>
+                    // <LiBlue>그룹관리</LiBlue>
                   ) : (
                     <Li>그룹관리</Li>
                   )}
@@ -259,36 +247,22 @@ const Circle = styled(motion.span)`
   position: absolute;
   width: 8px;
   height: 8px;
+  z-index: 1;
   border-radius: 8px;
-  bottom: 9px;
-  left: -16px;
+  bottom: 8px;
+  left: 10px;
   right: 0px;
-  background-color: #14b769;
 `;
 const NavLink = styled(Link)`
   display: flex;
   align-items: center;
+  justify-content: center;
   position: relative;
 `;
 const Li = styled.li`
-  margin: 30px 40px;
+  margin: 30px 0px;
 `;
-const Username = styled.div`
-  font-weight: bold;
-  font-family: 'Inter';
-  font-size: 18px;
-  margin-top: 4px;
-`;
-const Box = styled.div<{
-  width?: string;
-  height?: string;
-}>`
-  margin-right: 10px;
-  width: ${(props) => (props.width ? props.width : '32px')};
-  height: ${(props) => (props.height ? props.height : '32px')};
-  border-radius: 8px;
-  background: #d9d9d9;
-`;
+
 const Flex = styled.div<{
   flexDirection?: string;
 }>`
@@ -331,16 +305,16 @@ const Ul = styled.ul`
   border-top: 1px solid #909090;
   background-color: #fbfbfb;
 `;
-const NotLiBlue = styled.div`
-  font-family: 'Inter', sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  margin-left: 10px;
-`;
-const LiBlue = styled(NotLiBlue)`
-  margin-left: 10px;
-  color: #14b769;
-`;
+// const NotLiBlue = styled.div`
+//   font-family: 'Inter', sans-serif;
+//   font-weight: bold;
+//   font-size: 16px;
+//   margin-left: 10px;
+// `;
+// const LiBlue = styled(NotLiBlue)`
+//   margin-left: 10px;
+//   color: #14b769;
+// `;
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -355,11 +329,11 @@ const Header = styled.div`
   z-index: 1;
 `;
 const Wrapper = styled.div`
-  width: 280px;
+  width: 80px;
+  border-right: 1px solid #bdbdbd;
   height: 100vh;
   position: fixed;
-  /* left: 0%; */
-  background-color: #f8f8f8;
+  top: 0%;
   z-index: 1;
 `;
 const UserContatiner = styled.div`

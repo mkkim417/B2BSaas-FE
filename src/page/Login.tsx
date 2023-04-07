@@ -32,18 +32,13 @@ function Login() {
 
   const { mutate } = useMutation(postLogin, {
     onSuccess: (response) => {
-      alert('로그인 성공.');
+      alert(response.data.message);
       const token = response.token;
-      console.log(jwt_decode(token));
-
       setCookie('userToken', token);
-      console.log('getCookie', getCookie('userToken'));
-
       navigate(-1);
     },
-    onError: (error) => {
-      console.error(error);
-      alert('로그인 실패.');
+    onError: async (error: any) => {
+      alert(error.response.data.message);
     },
   });
 
@@ -145,6 +140,7 @@ const StPw = styled.div`
 `;
 
 const StPwinput = styled.input`
+  display: block;
   background: #ffffff;
   border: 1px solid #bdbdbd;
   border-radius: 8px;

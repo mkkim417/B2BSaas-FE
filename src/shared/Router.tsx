@@ -27,6 +27,7 @@ import PricePoicy from '../page/PricePolicy';
 import { getCookie } from '../util/cookie';
 import PrivateRoute from '../util/PrivateRoute';
 import ReadyAlarmtalk from '../page/ReadyAlarmtalk';
+import HomeHeader from '../components/HomeHeader';
 
 const Router = () => {
   const token = getCookie('userToken');
@@ -35,7 +36,14 @@ const Router = () => {
       {/* <TopNav /> */}
       <AnimatePresence>
         <Routes>
-          <Route element={<TopNav />}>
+          <Route
+            element={
+              <>
+                <HomeHeader />
+                <TopNav />
+              </>
+            }
+          >
             <Route element={<PrivateRoute authentication={true} />}>
               <Route path="/uploadpage" element={<UploadPage />} />
             </Route>

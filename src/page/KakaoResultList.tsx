@@ -280,7 +280,7 @@ export const FlexWrap = styled.div`
 export const Wrapper = styled.div`
   margin: 0 auto;
   width: 1200px;
-  padding-left: 250px;
+  padding-left: 280px;
   padding-top: 250px;
   justify-content: center;
 `;

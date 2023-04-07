@@ -3,13 +3,21 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { getCookie } from '../util/cookie';
-import { Table } from './KakaoResultList';
+import { H1, Table } from './KakaoResultList';
 import styled from 'styled-components';
-import { HeaderContainer } from './GroupManageList';
 import Pagination from 'react-js-pagination';
 import { PaginationBox1 } from '../components/PaginationStyled';
 import { useMutation } from 'react-query';
 import { fetchTemplatesList } from '../axios/api';
+import {
+  Button,
+  ContentsWrap,
+  MapWrapper,
+  Td,
+  Th,
+  Thead,
+  Wrapper,
+} from './UploadPage';
 function ReadyAlarmtalk() {
   const params = useParams();
   const token = getCookie('userToken');
@@ -97,105 +105,117 @@ function ReadyAlarmtalk() {
       exit={{ opacity: 0 }}
     >
       <Wrapper>
-        {isNullComponent === false ? (
-          <>
-            <Contents>
-              <HeaderContainer>알림톡 전송 내용 조회</HeaderContainer>
-              <Table>
-                <thead style={{ fontWeight: 'bold' }}>
-                  <tr>
-                    {isKeyData &&
-                      isKeyData
-                        .sort()
-                        .map((el: any, idx: number) => (
-                          <Th key={idx}>{transData[el]}</Th>
-                        ))}
-                  </tr>
-                </thead>
-                <tbody style={{ textAlign: 'center' }}>
-                  {isTableData &&
-                    isTableData.map((el: any, idx: number) => (
-                      <tr key={el.clientId}>
-                        {el.clientEmail ? <Td>{el.clientEmail}</Td> : null}
-                        {el.clientId ? <Td>{el.clientId}</Td> : null}
-                        {el.clientName ? <Td>{el.clientName}</Td> : null}
-                        {el.contact ? <Td>{el.contact}</Td> : null}
-                        {el.createdAt ? <Td>{el.createdAt}</Td> : null}
-                        {el.customerName ? <Td>{el.customerName}</Td> : null}
-                        {el.deliveryCompany ? (
-                          <Td>{el.deliveryCompany}</Td>
-                        ) : null}
-                        {el.deliveryDate ? <Td>{el.deliveryDate}</Td> : null}
-                        {el.deliveryNumber ? (
-                          <Td>{el.deliveryNumber}</Td>
-                        ) : null}
-                        {el.deliveryTime ? <Td>{el.deliveryTime}</Td> : null}
-                        {el.groupId ? <Td>{el.groupId}</Td> : null}
-                        {el.groupName ? <Td>{el.groupName}</Td> : null}
-                        {el.orderNumber ? <Td>{el.orderNumber}</Td> : null}
-                        {el.organizationName ? (
-                          <Td>{el.organizationName}</Td>
-                        ) : null}
-                        {el.paymentPrice ? <Td>{el.paymentPrice}</Td> : null}
-                        {el.region ? <Td>{el.region}</Td> : null}
-                        {el.regionDetail ? <Td>{el.regionDetail}</Td> : null}
-                        {el.talkContentId ? <Td>{el.talkContentId}</Td> : null}
-                        {el.talkTemplateId ? (
-                          <Td>{el.talkTemplateId}</Td>
-                        ) : null}
-                      </tr>
-                    ))}
-                </tbody>
-              </Table>
-            </Contents>
-            <ButtonWrap>
-              <Button onClick={() => navigate('/groupmanageList')}>
-                그룹다시선택
-              </Button>
-              <PaginationBox1>
-                <Pagination
-                  activePage={1}
-                  // itemsCountPerPage={15}
-                  pageRangeDisplayed={10}
-                  prevPageText={'<'}
-                  nextPageText={'>'}
-                  totalItemsCount={1}
-                  onChange={setPage}
-                />
-              </PaginationBox1>
-              <Button onClick={DoneAlertalkSend}>알림톡 전송 준비 완료</Button>
-            </ButtonWrap>
-          </>
-        ) : (
-          <>
-            <ButtonWrap>
-              <Button onClick={() => navigate('/groupmanageList')}>
-                고객그룹등록하기
-              </Button>
-            </ButtonWrap>
-          </>
-        )}
+        <BottomWrap>
+          {isNullComponent === false ? (
+            <>
+              <div style={{ textAlign: 'center', width: '1080px' }}>
+                <H1>알림톡 전송 내용 조회</H1>
+              </div>
+              <MapWrapper>
+                <Table>
+                  <Thead>
+                    <tr>
+                      {isKeyData &&
+                        isKeyData
+                          .sort()
+                          .map((el: any, idx: number) => (
+                            <Th key={idx}>{transData[el]}</Th>
+                          ))}
+                    </tr>
+                  </Thead>
+                  <tbody style={{ textAlign: 'center' }}>
+                    {isTableData &&
+                      isTableData.map((el: any, idx: number) => (
+                        <tr key={el.clientId}>
+                          {el.clientEmail ? <Td>{el.clientEmail}</Td> : null}
+                          {el.clientId ? <Td>{el.clientId}</Td> : null}
+                          {el.clientName ? <Td>{el.clientName}</Td> : null}
+                          {el.contact ? <Td>{el.contact}</Td> : null}
+                          {el.createdAt ? <Td>{el.createdAt}</Td> : null}
+                          {el.customerName ? <Td>{el.customerName}</Td> : null}
+                          {el.deliveryCompany ? (
+                            <Td>{el.deliveryCompany}</Td>
+                          ) : null}
+                          {el.deliveryDate ? <Td>{el.deliveryDate}</Td> : null}
+                          {el.deliveryNumber ? (
+                            <Td>{el.deliveryNumber}</Td>
+                          ) : null}
+                          {el.deliveryTime ? <Td>{el.deliveryTime}</Td> : null}
+                          {el.groupId ? <Td>{el.groupId}</Td> : null}
+                          {el.groupName ? <Td>{el.groupName}</Td> : null}
+                          {el.orderNumber ? <Td>{el.orderNumber}</Td> : null}
+                          {el.organizationName ? (
+                            <Td>{el.organizationName}</Td>
+                          ) : null}
+                          {el.paymentPrice ? <Td>{el.paymentPrice}</Td> : null}
+                          {el.region ? <Td>{el.region}</Td> : null}
+                          {el.regionDetail ? <Td>{el.regionDetail}</Td> : null}
+                          {el.talkContentId ? (
+                            <Td>{el.talkContentId}</Td>
+                          ) : null}
+                          {el.talkTemplateId ? (
+                            <Td>{el.talkTemplateId}</Td>
+                          ) : null}
+                        </tr>
+                      ))}
+                  </tbody>
+                </Table>
+              </MapWrapper>
+              <ButtonWrap>
+                <Button
+                  width={'120px'}
+                  padding={'10px'}
+                  onClick={() => navigate('/groupmanageList')}
+                >
+                  그룹다시선택
+                </Button>
+                <PaginationBox1>
+                  <Pagination
+                    activePage={1}
+                    // itemsCountPerPage={15}
+                    pageRangeDisplayed={10}
+                    prevPageText={'<'}
+                    nextPageText={'>'}
+                    totalItemsCount={1}
+                    onChange={setPage}
+                  />
+                </PaginationBox1>
+                <Button
+                  width={'110px'}
+                  padding={'10px'}
+                  onClick={DoneAlertalkSend}
+                >
+                  알림톡 전송 준비 완료
+                </Button>
+              </ButtonWrap>
+            </>
+          ) : (
+            <>
+              <ButtonWrap>
+                <Button onClick={() => navigate('/groupmanageList')}>
+                  고객그룹등록하기
+                </Button>
+              </ButtonWrap>
+            </>
+          )}
+        </BottomWrap>
       </Wrapper>
     </motion.div>
   );
 }
-const Td = styled.td`
-  border-bottom: 1px solid black;
+export const BottomWrap = styled.div<{ ref?: any }>`
+  width: 100%;
+  margin: 0px auto;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   vertical-align: middle;
-  color: #555;
-  padding: 5px;
-  :nth-of-type(2) {
-    text-align: center;
+  display: table-cell;
+  @media screen and (min-width: 1300px) {
+    display: flex;
+    width: 1000px;
   }
-`;
-const Th = styled.th`
-  border: 1px solid black;
-  background-color: #f2f2f2;
-  border: 1px solid #c7c7c7;
-  color: #555;
-  font-weight: bold;
-  vertical-align: middle;
-  min-width: 80px;
 `;
 const ButtonWrap = styled.div`
   width: 1080px;
@@ -204,25 +224,5 @@ const ButtonWrap = styled.div`
   justify-content: space-between;
   gap: 10px;
   margin-top: 50px;
-`;
-const Button = styled.button`
-  border-radius: 15px;
-  background-color: #000;
-  color: #fff;
-  width: 85px;
-  padding: 10px 5px;
-`;
-const Contents = styled.div`
-  width: 1080px;
-  margin: 0px auto;
-  overflow: auto;
-`;
-const Wrapper = styled.div`
-  padding-left: 250px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 `;
 export default ReadyAlarmtalk;

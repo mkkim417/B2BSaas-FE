@@ -10,6 +10,7 @@ import KakaoIcon from '../asset/svg/KakaoIcon';
 import ListResultIcon from '../asset/svg/ListResultIcon';
 import GroupMangeListIcon from '../asset/svg/GroupMangeListIcon';
 import CustomerAddIcon from '../asset/svg/CustomerAddIcon';
+import { motion } from 'framer-motion';
 
 const TopNav = () => {
   const Uploadpage = useMatch('/uploadpage');
@@ -31,72 +32,131 @@ const TopNav = () => {
     <>
       <Wrapper>
         <UserContatiner>
-          <div style={{ marginBottom: '40px' }}>
-            <Logo>
-              <Link to={'/'}>Logo</Link>
-            </Logo>
-          </div>
-          <UserWrap>
-            <Box width="35px" height="35px" />
-            <div>
-              <div>소속회사명</div>
-              <Username>김샌드</Username>
-            </div>
-          </UserWrap>
-          <ul>
+          <ul style={{ marginTop: '60px' }}>
             <Li>
-              <NavLink to={'/statistics'}>
-                <ListIcon width={'35px'} height={'35px'} />
-                {statistics ? (
-                  <LiBlue>이용현황</LiBlue>
-                ) : (
-                  <NotLiBlue>이용현황</NotLiBlue>
-                )}
-              </NavLink>
+              <InLi active={statistics ? true : false}>
+                <NavLink to={'/statistics'}>
+                  {statistics ? (
+                    <>
+                      <ListIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
+                      <Circle
+                        animate={{
+                          backgroundColor: ['lime'],
+                        }}
+                        layoutId="circle"
+                      />
+                      {/* <LiBlue>이용현황</LiBlue> */}
+                    </>
+                  ) : (
+                    <>
+                      <ListIcon width={'25px'} heigth={'25px'} />
+                      {/* <NotLiBlue>이용현황</NotLiBlue> */}
+                    </>
+                  )}
+                </NavLink>
+              </InLi>
             </Li>
             <Li>
-              <NavLink to={'/readyalarmtalk'}>
-                <KakaoIcon width={'35px'} height={'35px'} />
-                {readyalarmtalk ? (
-                  <LiBlue>알림톡전송</LiBlue>
-                ) : (
-                  <NotLiBlue>알림톡전송</NotLiBlue>
-                )}
-              </NavLink>
+              <InLi active={readyalarmtalk ? true : false}>
+                <NavLink to={'/readyalarmtalk'}>
+                  {readyalarmtalk ? (
+                    <>
+                      <KakaoIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
+                      <Circle
+                        animate={{
+                          backgroundColor: ['lime'],
+                        }}
+                        layoutId="circle"
+                      />
+                      {/* <LiBlue>알림톡전송</LiBlue> */}
+                    </>
+                  ) : (
+                    <>
+                      <KakaoIcon width={'25px'} heigth={'25px'} />
+                      {/* <NotLiBlue>알림톡전송</NotLiBlue> */}
+                    </>
+                  )}
+                </NavLink>
+              </InLi>
             </Li>
             <Li>
-              <NavLink to={'/kakaoresultlist'}>
-                <ListResultIcon width={'35px'} height={'35px'} />
-                {kakaoresultlist ? (
-                  <LiBlue>전송결과조회</LiBlue>
-                ) : (
-                  <NotLiBlue>전송결과조회</NotLiBlue>
-                )}
-              </NavLink>
+              <InLi active={kakaoresultlist ? true : false}>
+                <NavLink to={'/kakaoresultlist'}>
+                  {kakaoresultlist ? (
+                    <>
+                      <ListResultIcon
+                        width={'25px'}
+                        heigth={'25px'}
+                        fill={'#fff'}
+                      />
+                      <Circle
+                        animate={{ backgroundColor: ['lime'] }}
+                        layoutId="circle"
+                      />
+                      {/* <LiBlue>전송결과조회</LiBlue> */}
+                    </>
+                  ) : (
+                    <>
+                      <ListResultIcon width={'25px'} heigth={'25px'} />
+                      {/* <NotLiBlue>전송결과조회</NotLiBlue> */}
+                    </>
+                  )}
+                </NavLink>
+              </InLi>
             </Li>
             <Li>
-              <NavLink to={'/groupManageList'}>
-                <GroupMangeListIcon width={'35px'} height={'35px'} />
-                {groupManageList ? (
-                  <LiBlue>고객관리</LiBlue>
-                ) : (
-                  <NotLiBlue>고객관리</NotLiBlue>
-                )}
-              </NavLink>
+              <InLi active={groupManageList ? true : false}>
+                <NavLink to={'/groupManageList'}>
+                  {groupManageList ? (
+                    <>
+                      <GroupMangeListIcon
+                        width={'25px'}
+                        heigth={'25px'}
+                        fill={'#fff'}
+                      />
+                      <Circle
+                        animate={{ backgroundColor: ['lime'] }}
+                        layoutId="circle"
+                      />
+                      {/* <LiBlue>고객관리</LiBlue> */}
+                    </>
+                  ) : (
+                    <>
+                      <GroupMangeListIcon width={'25px'} heigth={'25px'} />
+                      {/* <NotLiBlue>고객관리</NotLiBlue> */}
+                    </>
+                  )}
+                </NavLink>
+              </InLi>
             </Li>
             <Li>
-              <NavLink to={'/uploadpage'}>
-                <CustomerAddIcon width={'35px'} height={'35px'} />
-                {Uploadpage ? (
-                  <LiBlue>고객등록</LiBlue>
-                ) : (
-                  <NotLiBlue>고객등록</NotLiBlue>
-                )}
-              </NavLink>
+              <InLi active={Uploadpage ? true : false}>
+                <NavLink to={'/uploadpage'}>
+                  {Uploadpage ? (
+                    <>
+                      <CustomerAddIcon
+                        width={'25px'}
+                        heigth={'25px'}
+                        fill={'#fff'}
+                      />
+                      <Circle
+                        animate={{ backgroundColor: ['lime'] }}
+                        layoutId="circle"
+                      />
+                      {/* <LiBlue>고객등록</LiBlue> */}
+                    </>
+                  ) : (
+                    <>
+                      <CustomerAddIcon width={'25px'} heigth={'25px'} />
+                      {/* <NotLiBlue>고객등록</NotLiBlue> */}
+                    </>
+                  )}
+                </NavLink>
+              </InLi>
             </Li>
           </ul>
           <FlexWrap>
-            {isLoggedIn ? (
+            {/* {isLoggedIn ? (
               <UserButton
                 onClick={() => {
                   const isConfirmed =
@@ -108,7 +168,11 @@ const TopNav = () => {
               >
                 로그아웃
               </UserButton>
-            ) : null}
+            ) : (
+              <Link to="/login">
+                <UserButton>로그인</UserButton>
+              </Link>
+            )} */}
           </FlexWrap>
         </UserContatiner>
 
@@ -118,7 +182,7 @@ const TopNav = () => {
             <div>
               <Ul>
                 <Link to={'/statistics'}>
-                  {statistics ? <LiBlue>그래프</LiBlue> : <Li>그래프</Li>}
+                  // {statistics ? <LiBlue>그래프</LiBlue> : <Li>그래프</Li>}
                 </Link>
               </Ul>
             </div>
@@ -131,14 +195,14 @@ const TopNav = () => {
               <Ul>
                 <Link to={'/readyalarmtalk'}>
                   {readyalarmtalk ? (
-                    <LiBlue>알림톡전송</LiBlue>
+                    // <LiBlue>알림톡전송</LiBlue>
                   ) : (
                     <Li>알림톡전송</Li>
                   )}
                 </Link>
                 <Link to={'/kakaoresultlist'}>
                   {kakaoresultlist ? (
-                    <LiBlue>전송결과</LiBlue>
+                    // <LiBlue>전송결과</LiBlue>
                   ) : (
                     <Li>전송결과</Li>
                   )}
@@ -154,21 +218,21 @@ const TopNav = () => {
               <Ul>
                 <Link to={'/uploadpage'}>
                   {Uploadpage ? (
-                    <LiBlue>고객등록(다건)</LiBlue>
+                    // <LiBlue>고객등록(다건)</LiBlue>
                   ) : (
                     <Li>고객등록(다건)</Li>
                   )}
                 </Link>
                 <Link to={'/clientRegistration'}>
                   {clientRegistration ? (
-                    <LiBlue>고객등록</LiBlue>
+                    // <LiBlue>고객등록</LiBlue>
                   ) : (
                     <Li>고객등록</Li>
                   )}
                 </Link>
                 <Link to={'/groupmanageList'}>
                   {groupManageList ? (
-                    <LiBlue>그룹관리</LiBlue>
+                    // <LiBlue>그룹관리</LiBlue>
                   ) : (
                     <Li>그룹관리</Li>
                   )}
@@ -185,29 +249,42 @@ const TopNav = () => {
     </>
   );
 };
+const Circle = styled(motion.span)`
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  z-index: 1;
+  border-radius: 8px;
+  bottom: 23px;
+  left: 21px;
+  right: 0px;
+`;
 const NavLink = styled(Link)`
   display: flex;
   align-items: center;
+  justify-content: center;
+  position: relative;
 `;
-const Li = styled.li`
-  margin: 30px 40px;
+const InLi = styled.div<{ active?: boolean }>`
+  background: ${(props) => (props.active ? 'black' : 'white')};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 15px;
+  transition: 0.3s;
 `;
-const Username = styled.div`
-  font-weight: bold;
-  font-family: 'Inter';
-  font-size: 18px;
-  margin-top: 4px;
+
+const Li = styled.li<{ active?: boolean }>`
+  height: 50px;
+  margin: 30px 0px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  background-color: ${(props) => (props.active ? 'palegreen' : null)};
 `;
-const Box = styled.div<{
-  width?: string;
-  height?: string;
-}>`
-  margin-right: 10px;
-  width: ${(props) => (props.width ? props.width : '32px')};
-  height: ${(props) => (props.height ? props.height : '32px')};
-  border-radius: 8px;
-  background: #d9d9d9;
-`;
+
 const Flex = styled.div<{
   flexDirection?: string;
 }>`
@@ -250,16 +327,16 @@ const Ul = styled.ul`
   border-top: 1px solid #909090;
   background-color: #fbfbfb;
 `;
-const NotLiBlue = styled.div`
-  font-family: 'Inter', sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  margin-left: 10px;
-`;
-const LiBlue = styled(NotLiBlue)`
-  margin-left: 10px;
-  color: #14b769;
-`;
+// const NotLiBlue = styled.div`
+//   font-family: 'Inter', sans-serif;
+//   font-weight: bold;
+//   font-size: 16px;
+//   margin-left: 10px;
+// `;
+// const LiBlue = styled(NotLiBlue)`
+//   margin-left: 10px;
+//   color: #14b769;
+// `;
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -274,11 +351,11 @@ const Header = styled.div`
   z-index: 1;
 `;
 const Wrapper = styled.div`
-  width: 280px;
+  width: 80px;
+  border-right: 1px solid #bdbdbd;
   height: 100vh;
   position: fixed;
-  /* left: 0%; */
-  background-color: #f8f8f8;
+  top: 0%;
   z-index: 1;
 `;
 const UserContatiner = styled.div`

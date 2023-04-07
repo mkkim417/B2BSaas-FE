@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Wrapper } from './Home';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import jwt_decode from 'jwt-decode';
 import { useMutation } from 'react-query';
 import { postLogin } from '../axios/api';
 import { getCookie, setCookie } from '../util/cookie';
+import useInput from '../hook/useInput';
 
 interface FormValues {
   email: string;
@@ -18,7 +19,8 @@ interface FormValues {
 function Login() {
   const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState('');
-
+  const [isEmail, onChangeEmail] = useInput();
+  const [isPw, onChangePw] = useInput();
   const {
     register,
     handleSubmit,
@@ -26,31 +28,28 @@ function Login() {
   } = useForm<FormValues>();
 
   const token = getCookie('userToken');
-  if (token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  }
 
   const { mutate } = useMutation(postLogin, {
     onSuccess: (response) => {
-      alert('로그인 성공.');
+      alert(response.data.message);
       const token = response.token;
-      console.log(jwt_decode(token));
-
       setCookie('userToken', token);
-      console.log('getCookie', getCookie('userToken'));
-
       navigate(-1);
     },
-    onError: (error) => {
-      console.error(error);
-      alert('로그인 실패.');
+    onError: async (error: any) => {
+      alert(error.response.data.message);
     },
   });
 
+  useEffect(() => {
+    if (token) {
+      navigate('/');
+    }
+  }, []);
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     mutate(data);
   };
-
+  console.log(isEmail, isPw);
   return (
     <LoginWrapper>
       <StForm onSubmit={handleSubmit(onSubmit)}>
@@ -63,6 +62,8 @@ function Login() {
             {...register('email', { required: true })}
             name="email"
             placeholder="이메일을 입력해주세요"
+            value={isEmail}
+            onChange={onChangeEmail}
           />
           {errors.email && (
             <StErrorMsg>
@@ -77,6 +78,8 @@ function Login() {
             {...register('password', { required: true })}
             name="password"
             placeholder="비밀번호를 입력해주세요."
+            value={isPw}
+            onChange={onChangePw}
           />
           {errors.password && (
             <StErrorMsg>
@@ -84,7 +87,15 @@ function Login() {
             </StErrorMsg>
           )}
         </StPw>
-        <StLoginButton type="submit">로그인</StLoginButton>
+        {isEmail.length > 0 && isPw.length > 0 ? (
+          <StLoginButton disable={false} type="submit">
+            로그인
+          </StLoginButton>
+        ) : (
+          <StLoginButton2 disable={true} type="submit">
+            로그인
+          </StLoginButton2>
+        )}
       </StForm>
       <Stsignup>
         <Link to="/signup">
@@ -120,6 +131,7 @@ const StLogin = styled.h1`
 `;
 
 const Stinput = styled.input`
+  display: flex;
   background: #ffffff;
   border: 1px solid #bdbdbd;
   border-radius: 8px;
@@ -131,7 +143,7 @@ const Stinput = styled.input`
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  color: #bdbdbd;
+  color: #000000;
   padding: 15px 0 15px 20px;
 `;
 
@@ -145,6 +157,7 @@ const StPw = styled.div`
 `;
 
 const StPwinput = styled.input`
+  display: block;
   background: #ffffff;
   border: 1px solid #bdbdbd;
   border-radius: 8px;
@@ -153,15 +166,16 @@ const StPwinput = styled.input`
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  color: #bdbdbd;
+  color: #000000;
   width: 380px;
   height: 48px;
   margin: 10px auto;
   padding: 15px 0 15px 20px;
 `;
 
-const StLoginButton = styled.button`
-  background: #eeeeee;
+const StLoginButton = styled.button<{ disable?: boolean }>`
+  background: ${(props) => (props.disable === true ? '#eee' : '#14b769')};
+  color: ${(props) => (props.disable === true ? '#bdbdbd' : '#fff')};
   border-radius: 8px;
   width: 380px;
   height: 48px;
@@ -171,8 +185,8 @@ const StLoginButton = styled.button`
   font-weight: 700;
   font-size: 16px;
   line-height: 20px;
-  color: #bdbdbd;
 `;
+const StLoginButton2 = styled(StLoginButton)``;
 
 const StErrorMsg = styled.span`
   color: red;
@@ -193,9 +207,9 @@ const Stsignup = styled.div`
 
   font-family: 'Inter';
   font-style: normal;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 20px;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
   color: #909090;
 `;
 

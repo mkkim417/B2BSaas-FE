@@ -47,7 +47,11 @@ function UploadPage() {
     return state.clientsId.clientsId[0];
   });
   const onNextClick = () => {
-    nextRef.current?.scrollIntoView({ behavior: 'smooth' });
+    nextRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest',
+    });
   };
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
@@ -459,7 +463,7 @@ function UploadPage() {
   //   '차집합 :',
   //   isData && isData.filter((x: any) => !checkedList.includes(x))
   // )
-  console.log(isClientId);
+  console.log('nextRef : ', nextRef);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -470,41 +474,43 @@ function UploadPage() {
       <Wrapper>
         <ContentsWrap>
           {/* 상단 파일선택 */}
-          <TopContents>
-            <InputFile
-              type="file"
-              id="fileData"
-              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-              onChange={readExcel}
-              ref={fileInput}
-            ></InputFile>
-          </TopContents>
-          {/* 템플릿다운로드 */}
-          <TemplateWrap>
-            <TemplateDown>
-              <a href={'/oneTest.xlsx'} download>
-                템플릿다운로드
-              </a>
-            </TemplateDown>
-            <span>
-              템플릿 파일에 추가할 고객 목록을 작성하여 업로드 해주세요.
-            </span>
-          </TemplateWrap>
-          {/* 드롭다운 */}
-          <TemplateWrap>
-            <select
-              name=""
-              id=""
-              onChange={(e) => handleOnChangeSelectValue(e)}
-            >
-              {isTemplatesList &&
-                isTemplatesList.map((el: any) => (
-                  <option key={el.talkTemplateId}>{el.talkTemplateName}</option>
-                ))}
-            </select>
-          </TemplateWrap>
-          <DecoText>파일등록</DecoText>
-          {/* {isReqData &&
+          <div
+            style={{
+              height: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+          >
+            <TopContents></TopContents>
+            {/* 템플릿다운로드 */}
+            <TemplateWrap>
+              <TemplateDown>
+                <a href={'/oneTest.xlsx'} download>
+                  템플릿다운로드
+                </a>
+              </TemplateDown>
+              <span>
+                템플릿 파일에 추가할 고객 목록을 작성하여 업로드 해주세요.
+              </span>
+            </TemplateWrap>
+            {/* 드롭다운 */}
+            <TemplateWrap>
+              <select
+                name=""
+                id=""
+                onChange={(e) => handleOnChangeSelectValue(e)}
+              >
+                {isTemplatesList &&
+                  isTemplatesList.map((el: any) => (
+                    <option key={el.talkTemplateId}>
+                      {el.talkTemplateName}
+                    </option>
+                  ))}
+              </select>
+            </TemplateWrap>
+            <DecoText>파일등록</DecoText>
+            {/* {isReqData &&
             isReqData.map((el: any, idx: any) => (
               <div key={idx}>
                 <div id={`obj_${idx}`}>{el}</div>
@@ -518,106 +524,118 @@ function UploadPage() {
                 ></SelectBoxs>
               </div>
             ))} */}
-          {/* 테이블 */}
-          {isData && isData ? (
-            <MapWrapper>
-              <Table>
-                <Thead>
-                  <tr>
-                    {isOpen && isOpen ? <th>선택</th> : null}
-                    {isKeyData &&
-                      isKeyData.map((li: any, idx: number) => (
-                        <Th key={idx}>{li}</Th>
+            {/* 테이블 */}
+            {isData && isData ? (
+              <MapWrapper>
+                <Table>
+                  <Thead>
+                    <tr>
+                      {isOpen && isOpen ? <th>선택</th> : null}
+                      {isKeyData &&
+                        isKeyData.map((li: any, idx: number) => (
+                          <Th key={idx}>{li}</Th>
+                        ))}
+                    </tr>
+                  </Thead>
+                  <tbody style={{ textAlign: 'center' }}>
+                    {isData &&
+                      isData.map((el: any, idx: number) => (
+                        <tr key={idx}>
+                          {isOpen && isOpen ? (
+                            <Td>
+                              <input
+                                type="checkbox"
+                                key={idx}
+                                checked={checkedList.includes(el)}
+                                onChange={(e) => checkHandler(e, el)}
+                              />
+                            </Td>
+                          ) : null}
+                          {isKeyData &&
+                            isKeyData.map((li: any, idx: number) =>
+                              li === '전화번호' && el[li].includes('-') ? (
+                                <Td>{el[li].replace(/-/gi, '')}</Td>
+                              ) : (
+                                <Td key={idx}>{el[li]}</Td>
+                              )
+                            )}
+                        </tr>
                       ))}
-                  </tr>
-                </Thead>
-                <tbody style={{ textAlign: 'center' }}>
-                  {isData &&
-                    isData.map((el: any, idx: number) => (
-                      <tr key={idx}>
-                        {isOpen && isOpen ? (
-                          <Td>
-                            <input
-                              type="checkbox"
-                              key={idx}
-                              checked={checkedList.includes(el)}
-                              onChange={(e) => checkHandler(e, el)}
-                            />
-                          </Td>
-                        ) : null}
-                        {isKeyData &&
-                          isKeyData.map((li: any, idx: number) =>
-                            li === '전화번호' && el[li].includes('-') ? (
-                              <Td>{el[li].replace(/-/gi, '')}</Td>
-                            ) : (
-                              <Td key={idx}>{el[li]}</Td>
-                            )
-                          )}
-                      </tr>
-                    ))}
-                </tbody>
-              </Table>
-            </MapWrapper>
-          ) : (
-            //   <Pagination page={activePage} onChange={setPage} total={total} />
-            <BottomContents onDrop={onDropFiles} onDragOver={dragOver}>
-              <TextAria>
-                <div>신규추가할 고객목록을 작성한</div>
-                <div>양식 파일을 업로드해주세요</div>
-              </TextAria>
-              <label htmlFor="fileData">
-                <LabelWrap>파일찾기</LabelWrap>
-              </label>
-            </BottomContents>
-          )}
-          <BtnWrap>
-            {isData && !isGroupComp ? (
-              !isOpen ? (
-                <Button
-                  width={'150px'}
-                  onClick={() => setOpen((prev) => !prev) as any}
-                >
-                  선택삭제
-                </Button>
-              ) : (
-                <Button onClick={() => setOpen((prev) => !prev) as any}>
-                  선택취소
-                </Button>
-              )
-            ) : null}
-            {isData && !isGroupComp ? (
-              <>
-                <Button onClick={() => DummyDeleteFuction()}>취소</Button>
-                <Button
-                  ref={nextRef}
-                  onClick={() => {
-                    ClientBulkFetch(isData);
-                  }}
-                  width={'180px'}
-                >
-                  고객업로드 등록
-                </Button>
-              </>
-            ) : null}
-            {isOpen && isOpen ? <Button onClick={onDelete}>삭제</Button> : null}
-            {!isOpen ? (
-              !isClUpload && !isData ? (
+                  </tbody>
+                </Table>
+              </MapWrapper>
+            ) : (
+              //   <Pagination page={activePage} onChange={setPage} total={total} />
+              <BottomContents onDrop={onDropFiles} onDragOver={dragOver}>
+                <TextAria>
+                  <div>신규추가할 고객목록을 작성한</div>
+                  <div>양식 파일을 업로드해주세요</div>
+                </TextAria>
+                <label htmlFor="fileData">
+                  <LabelWrap>파일찾기</LabelWrap>
+                </label>
+              </BottomContents>
+            )}
+            <div style={{ margin: '10px 20px', textAlign: 'right' }}>
+              <InputFile
+                type="file"
+                id="fileData"
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                onChange={readExcel}
+                ref={fileInput}
+              ></InputFile>
+            </div>
+            <BtnWrap>
+              {isData && !isGroupComp ? (
+                !isOpen ? (
+                  <Button
+                    width={'150px'}
+                    onClick={() => setOpen((prev) => !prev) as any}
+                  >
+                    선택삭제
+                  </Button>
+                ) : (
+                  <Button onClick={() => setOpen((prev) => !prev) as any}>
+                    선택취소
+                  </Button>
+                )
+              ) : null}
+              {isData && !isGroupComp ? (
                 <>
-                  <DisButton
-                    onClick={() => alert('파일을 업로드해주세요')}
+                  <Button onClick={() => DummyDeleteFuction()}>취소</Button>
+                  <Button
+                    onClick={() => {
+                      ClientBulkFetch(isData);
+                    }}
                     width={'180px'}
                   >
                     고객업로드 등록
-                  </DisButton>
+                  </Button>
                 </>
-              ) : null
-            ) : null}
-          </BtnWrap>
+              ) : null}
+
+              {isOpen && isOpen ? (
+                <Button onClick={onDelete}>삭제</Button>
+              ) : null}
+              {!isOpen ? (
+                !isClUpload && !isData ? (
+                  <>
+                    <DisButton
+                      onClick={() => alert('파일을 업로드해주세요')}
+                      width={'180px'}
+                    >
+                      고객업로드 등록
+                    </DisButton>
+                  </>
+                ) : null
+              ) : null}
+            </BtnWrap>
+          </div>
           {/* 그룹지정컨텐츠 */}
           {isGroupComp && isGroupComp ? (
-            <BottomWrap>
+            <BottomWrap ref={nextRef}>
               <H1>고객 정보 그룹 지정</H1>
-              <span>
+              <span style={{ margin: '15px 0px 30px' }}>
                 그룹 선택을 하지 않으면, 미지정 그룹에 자동으로 들어갑니다.
               </span>
               <SelectBoxs
@@ -661,9 +679,17 @@ function UploadPage() {
                 </>
               ) : null}
               <BtnWrap>
-                <Button onClick={() => DummyDeleteFuction()}>취소</Button>
+                <Button
+                  width={'90px'}
+                  padding={'10px'}
+                  onClick={() => DummyDeleteFuction()}
+                >
+                  취소
+                </Button>
 
                 <Button
+                  width={'90px'}
+                  padding={'10px'}
                   onClick={() => {
                     // mutationGroupSaveQuery(
                     //   mutation && mutation.variables,
@@ -685,18 +711,19 @@ function UploadPage() {
   );
 }
 
-const Thead = styled.thead`
-  border-bottom: 1px solid #bdbdbd;
-  border-top: 1px solid #bdbdbd;
+export const Thead = styled.thead`
   > tr > th {
     font-weight: bold;
+    border-bottom: 1px solid #bdbdbd;
+    border-top: 1px solid #bdbdbd;
     font-size: 16px;
     color: #828282;
     font-family: 'Inter', sans-serif;
     padding: 15px 0px;
+    min-width: 80px;
   }
 `;
-const DecoText = styled.div`
+export const DecoText = styled.div`
   font-weight: bold;
   color: #909090;
   font-size: 16px;
@@ -705,14 +732,17 @@ const DecoText = styled.div`
 const LabelWrap = styled.div`
   width: 180px;
   height: 50px;
+  display: flex;
   cursor: pointer;
   text-align: center;
   margin-top: 30px;
-  color: #fff;
-  background-color: #14b769;
+  color: rgb(255, 255, 255);
+  background-color: rgb(20, 183, 105);
   padding: 14px;
   border-radius: 8px;
   font-size: 16px;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
 `;
 const TextAria = styled.div`
@@ -722,19 +752,26 @@ const TextAria = styled.div`
   font-family: 'Inter', sans-serif;
   line-height: 1.3;
 `;
-const Th = styled.th`
+export const Th = styled.th`
   vertical-align: middle;
 `;
-const BottomWrap = styled.div`
-  width: 1280px;
-  margin: 0 auto;
+export const BottomWrap = styled.div<{ ref?: any }>`
+  width: 100%;
+  display: flex;
+  margin: 0px auto;
   height: 100vh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  @media screen and (min-width: 1300px) {
+    width: 1000px;
+  }
 `;
 const TemplateWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 `;
 const TemplateDown = styled.div`
   text-align: center;
@@ -742,19 +779,22 @@ const TemplateDown = styled.div`
   padding: 15px;
 `;
 const Table = styled.table`
-  width: 100%;
+  width: 1000px;
+  border-collapse: separate;
+  border-spacing: 0px 10px;
 `;
-const MapWrapper = styled.div`
+export const MapWrapper = styled.div<{ ref?: any }>`
   border: 1px solid #dcdcdc;
   border-radius: 8px;
   padding: 20px 30px;
-  width: 1280px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: auto;
+  margin: 10px auto;
+  width: 100%;
+  @media screen and (min-width: 1300px) {
+    width: 1000px;
+  }
 `;
-const Td = styled.td`
+export const Td = styled.td`
   font-size: 14px;
   padding: 10px;
   border-bottom: 1px solid #333333;
@@ -765,18 +805,20 @@ const BtnWrap = styled.div`
   align-items: center;
   gap: 10px;
   justify-content: center;
-  margin: 50px auto;
+  margin-top: 50px;
 `;
-const Button = styled.button<{
+export const Button = styled.button<{
   width?: string;
+  padding?: string;
 }>`
   border-radius: 8px;
+  word-break: keep-all;
   color: #14b769;
   width: ${(props) => (props.width ? props.width : '100px')};
-  padding: 15px 20px;
+  padding: ${(props) => (props.padding ? props.padding : '15px 20px')};
   border: 2px solid #14b769;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
   font-family: 'Inter', sans-serif;
   &:hover {
     background-color: #14b769;
@@ -799,25 +841,37 @@ const DisButton = styled.button<{
 `;
 const InputFile = styled.input`
   background-color: #fff;
-  width: 300px;
+  width: 150px;
   padding: 5px;
+  border-radius: 7px;
 `;
 const Input = styled.input`
+  margin-top: 20px;
   width: 200px;
+  border: 1px solid #ddd;
   border-radius: 8px;
   padding: 5px 10px;
-  height: 40px;
+  height: 45px;
 `;
-const Wrapper = styled.div`
-  margin: 0 auto;
-  width: 1280px;
-  display: flex;
+export const Wrapper = styled.div`
+  padding-left: 80px;
+  display: block;
   gap: 30px;
   justify-content: center;
+  align-items: center;
+  @media screen and (min-width: 1300px) {
+    display: flex;
+  }
 `;
-const ContentsWrap = styled.div`
+export const ContentsWrap = styled.div`
   width: 100%;
-  margin: 0 auto;
+  display: flex;
+  margin: 0px auto;
+  flex-direction: column;
+  justify-content: center;
+  @media screen and (min-width: 1300px) {
+    width: 1000px;
+  }
 `;
 const TopContents = styled.div``;
 
@@ -828,8 +882,6 @@ const BottomContents = styled.div`
   justify-content: center;
   border-radius: 15px;
   font-size: 12px;
-  width: 1280px;
-  margin: 0 auto;
   height: 250px;
   background-color: #fbfbfb;
   border: 2px dashed #9f9f9f;

@@ -1,14 +1,15 @@
 import React from 'react';
+import { Iicon } from './ListIcon';
 
-function CustomerAddIcon({ width, heigth }: any) {
+function CustomerAddIcon({ width, heigth, fill }: Iicon) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      enable-background="new 0 0 24 24"
+      enableBackground="new 0 0 24 24"
       viewBox="0 0 24 24"
-      fill="#000000"
       width={width}
       height={heigth}
+      fill={fill ? fill : '#000'}
     >
       <g>
         <rect fill="none" height="24" width="24" />

@@ -848,22 +848,23 @@ function GroupManageList() {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100vw;
   height: 100vh;
-  padding-left: 250px;
+  padding-left: 80px;
   /* padding-top: 50px; */
   /* padding-bottom: 50px; */
   /* background-color: sandybrown; */
 `;
 export const HeaderContainer = styled.div`
-  height: 80px;
+  height: 60px;
   width: 100%;
   display: flex;
   align-items: center;
   padding-left: 80px;
-  /* margin-top: 20px; */
+  margin-top: 60px;
   /* margin-bottom: 20px; */
   /* padding-left: 30px; */
-  font-size: 28px;
+  font-size: 34px;
   font-weight: 900;
   /* background-color: crimson; */
 `;
@@ -894,7 +895,6 @@ const GroupContentBox = styled.div`
 const GroupContentItem = styled.button`
   display: flex;
   /* align-items: center; */
-
   justify-content: center;
   flex-direction: column;
   width: 90%;
@@ -962,6 +962,7 @@ const GroupClickButton = styled.button`
   background-color: #14b869;
   border: 1px solid #14b769;
 `;
+
 const GroupAlartButton = styled.button`
   width: 100px;
   height: 40px;

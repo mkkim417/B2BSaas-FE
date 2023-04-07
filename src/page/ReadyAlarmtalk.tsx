@@ -104,7 +104,7 @@ function ReadyAlarmtalk() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <Wrapper>
+      <Container>
         <BottomWrap>
           {isNullComponent === false ? (
             <>
@@ -192,17 +192,30 @@ function ReadyAlarmtalk() {
           ) : (
             <>
               <ButtonWrap>
-                <Button onClick={() => navigate('/groupmanageList')}>
+                <NoticeFont>아직 등록된 클라이언트가 없으시네요 😊</NoticeFont>
+                <Button width={'150px'}onClick={() => navigate('/groupmanageList')}>
                   고객그룹등록하기
                 </Button>
               </ButtonWrap>
             </>
           )}
         </BottomWrap>
-      </Wrapper>
+      </Container>
     </motion.div>
   );
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  padding-left: 80px;
+  /* padding-top: 50px; */
+  /* padding-bottom: 50px; */
+  /* background-color: sandybrown; */
+`;
+
 export const BottomWrap = styled.div<{ ref?: any }>`
   width: 100%;
   margin: 0px auto;
@@ -219,10 +232,18 @@ export const BottomWrap = styled.div<{ ref?: any }>`
 `;
 const ButtonWrap = styled.div`
   width: 1080px;
+  height: 300px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  justify-content: center;
+  gap: 30px;
   margin-top: 50px;
+  /* background-color: red; */
 `;
+const NoticeFont = styled.div`
+  font-size: 18px;
+  font-weight: 900;
+  color: black;
+`
 export default ReadyAlarmtalk;

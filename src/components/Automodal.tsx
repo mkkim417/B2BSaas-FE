@@ -128,12 +128,14 @@ export const WhiteWrap = styled.div`
   padding: 10px;
   height: 130px;
 `;
-export const KakaoBox = styled.div`
+export const KakaoBoxContainer = styled.div`
   width: 300px;
-  height: 200px;
+  height: 450px;
+  border-radius: 10px;
   background-color: lightblue;
   padding: 15px 30px;
-  margin-top: 15px;
+  margin-top: 40px;
+  margin-left: 10px;
 `;
 export const YellowWrap = styled.div`
   background-color: yellow;
@@ -145,6 +147,7 @@ export const YellowWrap = styled.div`
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  margin-top: 20px;
 `;
 const ButtonGap = styled.div`
   display: flex;
@@ -175,6 +178,16 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
+export const KakaoBox = styled.div`
+  width: 300px;
+  height: 450px;
+  border-radius: 10px;
+  background-color: lightblue;
+  padding: 15px 30px;
+  margin-top: 40px;
+  margin-left: 10px;
+`;
 const Background = styled.div`
   position: fixed;
   width: 100%;
@@ -190,8 +203,8 @@ const ModalBlock = styled.div<{ ref?: any }>`
   padding: 3rem;
   background-color: white;
   color: black;
-  width: 750px;
-  height: 450px;
+  width: 600px;
+  height: 700px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -226,5 +239,8 @@ const BoxMent = styled.div`
   font-size: 26px;
   text-align: left;
 `;
-const ContentsWrap = styled.div``;
+const ContentsWrap = styled.div`
+  height: 500px;
+  /* background-color: red; */
+`;
 export default AutoModal;

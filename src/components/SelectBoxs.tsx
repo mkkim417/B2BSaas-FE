@@ -99,7 +99,7 @@ const SelectOptions = styled.ul<{ ref?: any }>`
   padding: 0;
   border-radius: 8px;
   background-color: #fff;
-  border: 1px solid #14b769;
+  border: 2px solid #14b769;
   box-sizing: border-box;
   color: #000;
   max-height: none;

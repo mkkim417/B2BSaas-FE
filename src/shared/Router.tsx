@@ -24,7 +24,6 @@ import GroupManageList from '../page/GroupManageList';
 import KakaoResultList from '../page/KakaoResultList';
 import KakaoDetailList from '../page/KakaoDetailList';
 import PricePoicy from '../page/PricePolicy';
-import { getCookie } from '../util/cookie';
 import PrivateRoute from '../util/PrivateRoute';
 import ReadyAlarmtalk from '../page/ReadyAlarmtalk';
 import HomeHeader from '../components/HomeHeader';

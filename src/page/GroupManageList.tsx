@@ -50,9 +50,14 @@ function GroupManageList() {
   // 그룹리스트 onClick 아이디 변수
   const [groupId, setGroupId] = useState('');
   // 그룹리스트 이름 textarea 변수
-  const [groupName, setGroupName] = useState('');
+  const [groupName, setGroupName] = useState('전체 고객리스트');
   // 그룹리스트 설명 변수
   const [groupDescription, setGroupDescription] = useState('');
+  // 서치검색 키워드 변수
+  const [ searchKeyword, setSearchKeyword ] = useState('');
+  // 그룹 내 서치검색 키워드 변수
+  const [ searchGroupInKeyword, setSearchGroupInKeyword ] = useState('');
+
   // 그룹리스트 GET API
   // const getGroupData = useCallback(async () => {
   //   const response = await axios.get(
@@ -124,6 +129,8 @@ function GroupManageList() {
   const [isAllclients, setAllclients] = useState<any>(0);
   // 유저리스트 담는 변수
   const [userList, setUserList] = useState([] as any);
+  // 처음 렌더링시 전체고객리스트로 focus
+  const allUserRef = useRef<HTMLButtonElement>(null);
   // 유저리스트 GET API
   const getUserData = useCallback(async (page: any) => {
     // setCheckedArr([]);
@@ -147,6 +154,8 @@ function GroupManageList() {
         setCheckedArr([]);
         setIsClientState(true);
         setAllclients(userData?.data.clientCount);
+        // 여따가 담아서 쓰자!
+        setUserList(response.data.clients)
       },
       onError: (error) => {
         console.log(error);
@@ -156,7 +165,8 @@ function GroupManageList() {
     // 유저리스트 useEffect
     useEffect(() => {
       if (isClientState === true) {
-        refetch()
+        refetch()    
+        // console.log(userList)  
         // getAllClientList(currentPage)
         allUserRef.current?.focus();
         // getUserData(currentPage);
@@ -165,7 +175,6 @@ function GroupManageList() {
         getClientInGroup(groupId, groupName, groupDescription, currentPage);
         // setCurrentPage1(1)
       }
-  
       // setCount(userList.length);
       // setIndexOfLastPost(currentPage * postPerPage);
       // setIndexOfFirstPost(indexOfLastPost - postPerPage);
@@ -175,8 +184,31 @@ function GroupManageList() {
       //   setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
       // }
     }, [refetch, userData,isAllclients, getUserData, getClientInGroup]);
-  // 처음 렌더링시 전체고객리스트로 focus
-  const allUserRef = useRef<HTMLButtonElement>(null);
+
+  // 고객리스트에서 검색호출 API
+  const getSearchData = async() => {
+    
+    const response = await axios.get(
+      `${process.env.REACT_APP_SERVER_URL}/api/clients?keyword=${searchKeyword}&index=${currentPage}`, {
+        headers: { authorization: `Bearer ${token}`}
+    })
+    // console.log('검색필터 주소', `${process.env.REACT_APP_SERVER_URL}/api/clients?keyword=${searchKeyword}&index=${currentPage}`)
+    // console.log('검색필터 API결과', response.data.data.keyword)
+    setUserList(response.data.data.keyword)
+    return response;
+  }
+  
+  // 검색필터 useEffect
+  useEffect(() => {
+    if ( searchKeyword.length > 0 ) {
+      getSearchData()
+      // setAllclients(userList.length)
+    } else if (searchKeyword.length === 0) {
+      refetch()
+      // setAllclients(userData?.data.clientCount)
+    }
+    
+  }, [searchKeyword])
   // 그룹 내 클라이언트 숫자
   const [isGroupAllClients, setIsGroupAllClients] = useState<any>(0);
 
@@ -411,8 +443,9 @@ function GroupManageList() {
                 refetch();
                 setCurrentPage(1)
                 toogleActive(e)
-                setOpen(false)}} 
-                
+                setOpen(false)
+                setGroupName('전체 고객리스트')
+                setGroupDescription('')}}          
               ref={allUserRef}>
               전체 고객리스트({isAllclients})
             </GroupContentItem>
@@ -454,12 +487,13 @@ function GroupManageList() {
           <ClientHeaderRow>
             <DescriptBox>{groupDescription}</DescriptBox>
             {isClientState ? null : (
-              <GroupButton onClick={readyAlarmTalk}>알림톡전송</GroupButton>
+              <GroupClickButton onClick={readyAlarmTalk}>알림톡전송</GroupClickButton>
             )}
           </ClientHeaderRow>
           <ButtonContainer>
             {isClientState ? (
               <>
+                <div>
                 {isOpen && isOpen ? (
                   <GroupClickButton onClick={() => clickUserDeleteModal()}>고객정보 삭제</GroupClickButton>
                 ) : null}
@@ -484,7 +518,12 @@ function GroupManageList() {
                     수정취소
                   </GroupButton>
                 )}
-
+                </div>
+                <SearchInput 
+                  placeholder='Search'
+                  type="search"
+                  onChange={(e:any) => {
+                    setSearchKeyword(e.target.value)}}/>
                 {/* <ClientButton onClick={() => userEditHandler()}>
                   고객 정보 수정
                 </ClientButton> */}
@@ -494,6 +533,7 @@ function GroupManageList() {
               </>
             ) : (
               <>
+              <div>
                 <GroupButton onClick={() => navigate('/uploadpage')}>
                   고객 등록
                 </GroupButton>
@@ -536,6 +576,7 @@ function GroupManageList() {
                     이동취소
                   </GroupButton>
                 )}
+                </div>
                 {/* <GroupButton onClick={() => clickUserMoveModal()}>
                   이동
                 </GroupButton> */}
@@ -574,7 +615,7 @@ function GroupManageList() {
             {isClientState ? (
               // userList.slice(indexOfFirstPost, indexOfLastPost) &&
               userData?.data.clients.length > 0 ? (
-                userData?.data.clients.map((item: any) => {
+                userList?.map((item: any) => {
                   return (
                     <CardHeader key={item.clientId}>
                       {isOpen ? (
@@ -655,7 +696,19 @@ function GroupManageList() {
           <ClientPageBox>
             <PaginationBox1>
               {isClientState ? (
-                <Pagination
+                <>
+                { searchKeyword.length > 0 ? (
+                  <Pagination
+                  activePage={currentPage}
+                  // itemsCountPerPage={15}
+                  pageRangeDisplayed={10}
+                  prevPageText={'<'}
+                  nextPageText={'>'}
+                  totalItemsCount={userList.length}
+                  onChange={setPage1}
+                />
+                ) : (
+                  <Pagination
                   activePage={currentPage}
                   // itemsCountPerPage={15}
                   pageRangeDisplayed={10}
@@ -664,6 +717,17 @@ function GroupManageList() {
                   totalItemsCount={isAllclients}
                   onChange={setPage1}
                 />
+                ) }
+                </>
+                // <Pagination
+                //   activePage={currentPage}
+                //   // itemsCountPerPage={15}
+                //   pageRangeDisplayed={10}
+                //   prevPageText={'<'}
+                //   nextPageText={'>'}
+                //   totalItemsCount={isAllclients}
+                //   onChange={setPage1}
+                // />
               ) : (
                 <Pagination
                   activePage={currentPage1}
@@ -750,7 +814,7 @@ export const HeaderContainer = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  padding-left: 40px;
+  padding-left: 80px;
   /* margin-top: 20px; */
   /* margin-bottom: 20px; */
   /* padding-left: 30px; */
@@ -769,7 +833,7 @@ const ContentContainer = styled.div`
 const GroupContainer = styled.div`
   width: 25%;
   height: 95%;
-  margin: 0px 30px 0px 30px;
+  margin: 0px 30px 0px 60px;
   /* background-color: bisque; */
 `;
 const GroupContentBox = styled.div`
@@ -817,19 +881,31 @@ const ButtonContainer = styled.div`
   height: 8%;
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: space-between;
+  gap: 10px;
+`;
+const ButtonGap = styled.div`
   gap: 10px;
 `;
 const GroupButton = styled.button`
-  width: 100px;
+  width: 90px;
   height: 40px;
   color: #14b769;
+  margin-right: 5px;
   font-weight: 500;
   font-size: 16px;
   border-radius: 8px;
   background-color: #ffffff;
   border: 1px solid #14b769;
 `;
+const SearchInput = styled.input`
+  width: 250px;
+  height: 35px;
+  border: none;
+  box-shadow: 0px 0px 10px #82bca1;
+  border-radius: 8px;
+`;
+
 const GroupClickButton = styled.button`
   width: 100px;
   height: 40px;
@@ -837,6 +913,7 @@ const GroupClickButton = styled.button`
   font-weight: 500;
   font-size: 16px;
   border-radius: 8px;
+  margin-right: 5px;
   background-color: #14B869;
   border: 1px solid #14B769;
 `;

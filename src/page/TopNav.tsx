@@ -137,10 +137,10 @@ const TopNav = () => {
               </InLi>
             </Li>
             <Li>
-              <InLi active={Uploadpage ? true : false}
+              <InLi active={clientRegistration ? true : false}
                 onClick={() => {setMenuOpen(menuOpen => !menuOpen)}}>
-                <NavLink to={'/uploadpage'}>
-                  {Uploadpage ? (
+                <NavLink to={'/clientregistration'}>
+                  {clientRegistration ? (
                     <>
                       <CustomerAddIcon
                         width={'25px'}
@@ -253,149 +253,6 @@ const TopNav = () => {
           <Accordion title="대량발송" />
         </Link> */}
       </Wrapper>
-      { menuOpen ? (
-      <SlideWrapper>
-      <UserContatiner>
-          <ul style={{ marginTop: '60px' }}>
-            <Li>
-              <Test active={statistics ? true : false}>
-                <NavLink to={'/statistics'}>
-                  {statistics ? (
-                    <>
-                      <div>통계와 그래프</div>
-                      {/* <ListIcon width={'25px'} heigth={'25px'} fill={'#fff'} /> */}
-                      <Circle
-                        animate={{
-                          backgroundColor: ['lime'],
-                        }}
-                        layoutId="circle"
-                      />
-                      {/* <LiBlue>이용현황</LiBlue> */}
-                    </>
-                  ) : (
-                    <>
-                      <div>통계와 그래프</div>
-                      {/* <ListIcon width={'25px'} heigth={'25px'} /> */}
-                      {/* <NotLiBlue>이용현황</NotLiBlue> */}
-                    </>
-                  )}
-                </NavLink>
-              </Test>
-            </Li>
-            <Li>
-              <Test active={readyalarmtalk ? true : false}>
-                <NavLink to={'/readyalarmtalk'}>
-                  {readyalarmtalk ? (
-                    <>
-                      <div>알림톡전송</div>
-                      {/* <KakaoIcon width={'25px'} heigth={'25px'} fill={'#fff'} /> */}
-                      <Circle
-                        animate={{
-                          backgroundColor: ['lime'],
-                        }}
-                        layoutId="circle"
-                      />
-                      {/* <LiBlue>알림톡전송</LiBlue> */}
-                    </>
-                  ) : (
-                    <>
-                      <div>알림톡전송</div>
-                      {/* <KakaoIcon width={'25px'} heigth={'25px'} /> */}
-                      {/* <NotLiBlue>알림톡전송</NotLiBlue> */}
-                    </>
-                  )}
-                </NavLink>
-              </Test>
-            </Li>
-            <Li>
-              <Test active={kakaoresultlist ? true : false}>
-                <NavLink to={'/kakaoresultlist'}>
-                  {kakaoresultlist ? (
-                    <>
-                      <div>전송결과조회</div>
-                      <Circle
-                        animate={{ backgroundColor: ['lime'] }}
-                        layoutId="circle"
-                      />
-                      {/* <LiBlue>전송결과조회</LiBlue> */}
-                    </>
-                  ) : (
-                    <>
-                      <div>전송결과조회</div>
-                      {/* <ListResultIcon width={'25px'} heigth={'25px'} /> */}
-                      {/* <NotLiBlue>전송결과조회</NotLiBlue> */}
-                    </>
-                  )}
-                </NavLink>
-              </Test>
-            </Li>
-            <Li>
-              <Test active={groupManageList ? true : false}>
-                <NavLink to={'/groupManageList'}>
-                  {groupManageList ? (
-                    <>
-                      <div>고객관리</div>
-                      <Circle
-                        animate={{ backgroundColor: ['lime'] }}
-                        layoutId="circle"
-                      />
-                      {/* <LiBlue>고객관리</LiBlue> */}
-                    </>
-                  ) : (
-                    <>
-                      <div>고객관리</div>
-                      {/* <GroupMangeListIcon width={'25px'} heigth={'25px'} /> */}
-                      {/* <NotLiBlue>고객관리</NotLiBlue> */}
-                    </>
-                  )}
-                </NavLink>
-              </Test>
-            </Li>
-            <Li>
-              <Test active={Uploadpage ? true : false}>
-                <NavLink to={'/uploadpage'}>
-                  {Uploadpage ? (
-                    <>
-                      <div>고객등록</div>
-                      {/* <CustomerAddIcon width={'25px'} heigth={'25px'} fill={'#fff'} /> */}
-                      <Circle
-                        animate={{ backgroundColor: ['lime'] }}
-                        layoutId="circle"
-                      />
-                      {/* <LiBlue>고객등록</LiBlue> */}
-                    </>
-                  ) : (
-                    <>
-                      <div>고객등록</div>
-                      {/* <CustomerAddIcon width={'25px'} heigth={'25px'} /> */}
-                      {/* <NotLiBlue>고객등록</NotLiBlue> */}
-                    </>
-                  )}
-                </NavLink>
-              </Test>
-            </Li>
-          </ul>
-          <FlexWrap>
-            {/* {isLoggedIn ? (
-              <UserButton
-                onClick={() => {
-                  const isConfirmed =
-                    window.confirm('정말 로그아웃 하시겠습니까?');
-                  if (isConfirmed) {
-                    handleLogout();
-                  }
-                }}
-              >
-                로그아웃
-              </UserButton>
-            ) : (
-              <Link to="/login">
-                <UserButton>로그인</UserButton>
-              </Link>
-            )} */}
-          </FlexWrap>
-        </UserContatiner>
-      </SlideWrapper>) : null}
       {<Outlet />}
     </TotalWrapper>
   );

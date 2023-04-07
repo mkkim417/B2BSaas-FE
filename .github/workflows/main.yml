@@ -1,37 +1,38 @@
-# sub-branch-deploy-work.yml
-name: main-branch
+name: Deploy to Production
 
 on:
   push:
     branches:
-      - 0hyeon # sub-branch[branch name] 브랜치에서 push 이벤트가 일어났을 때 실행
+      - 0hyeon
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
-        uses: actions/checkout@main
+        uses: actions/checkout@master
 
-      - name: Cache node modules # node modules 캐싱
+      - name: Cache node modules
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: ${{ runner.OS }}-master-build-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
 
-      - name: Install Dependencies # node module install
-        run: yarn
+      - name: Install Dependencies
+        run: npm install
 
-      - name: Build # project build
-        run: yarn build
+      - name: Build
+        run: npm run build
 
       - name: Deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          REACT_APP_SERVER_URL: ${{ secrets.REACT_APP_SERVER_URL }}
         run: |
-          aws s3 sync ./build s3://s3-react-4
+          aws s3 cp \
+            --recursive \
+            --region ap-northeast-2 \
+            build s3://s3-react-4

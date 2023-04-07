@@ -30,7 +30,6 @@ import ReadyAlarmtalk from '../page/ReadyAlarmtalk';
 import HomeHeader from '../components/HomeHeader';
 
 const Router = () => {
-  const token = getCookie('userToken');
   return (
     <BrowserRouter>
       {/* <TopNav /> */}

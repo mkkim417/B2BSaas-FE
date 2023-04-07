@@ -13,10 +13,10 @@ import Signup from '../page/Signup';
 import Login from '../page/Login';
 import Mypage from '../page/Mypage';
 import GroupInUserList from '../components/NotUsedPages/GroupInUserList';
-import Email from '../page/Email';
+// import Email from '../page/Email';
 import SplitServicePage from '../page/SplitServicePage';
-import EmailTemplates from '../page/EmailTemplates';
-import { motion } from 'framer-motion';
+// import EmailTemplates from '../page/EmailTemplates';
+// import { motion } from 'framer-motion';
 import { AnimatePresence } from 'framer-motion';
 import SingleUserCreate from '../page/SingleUserCreate';
 import ClientRegistration from '../page/ClientRegistration';
@@ -66,12 +66,12 @@ const Router = () => {
               </Route>
             </Route>
             <Route path="/signup" element={<Signup />} />
-            <Route path="/email" element={<Email />} />
+            {/* <Route path="/email" element={<Email />} /> */}
             <Route path="/login" element={<Login />} />
             <Route path="/mypage" element={<Mypage />} />
             <Route path="/splitservicepage" element={<SplitServicePage />} />
             <Route path="/groupinuserlist/:id" element={<GroupInUserList />} />
-            <Route path="/emailtemplates" element={<EmailTemplates />} />
+            {/* <Route path="/emailtemplates" element={<EmailTemplates />} /> */}
             <Route path="/singleusercreate" element={<SingleUserCreate />} />
             <Route element={<PrivateRoute authentication={true} />}>
               <Route

@@ -1,8 +1,4 @@
-import {
-  UseFormRegister,
-  FieldValues,
-  UseFormGetValues,
-} from 'react-hook-form';
+import { UseFormRegister, FieldValues } from 'react-hook-form';
 
 /* Input Types */
 type InputTypes =

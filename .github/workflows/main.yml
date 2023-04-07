@@ -10,6 +10,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Run tests
+        run: |
+          npm install
+          npm run test
+        env:
+          NODE_ENV: test
+
       - name: Checkout source code
         uses: actions/checkout@main
 

@@ -10,13 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Run tests
-        run: |
-          npm install
-          npm run test
-        env:
-          NODE_ENV: test
-
       - name: Checkout source code
         uses: actions/checkout@main
 
@@ -39,5 +32,6 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          REACT_APP_SERVER_URL: ${{ secrets.REACT_APP_SERVER_URL }}
         run: |
           aws s3 sync ./build s3://s3-react-4

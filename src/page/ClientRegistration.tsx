@@ -21,8 +21,10 @@ function ClientRegistration() {
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  /* height: 100vh; */
-  padding-left: 250px;
+  width: 100vw;
+  height: 100vh;
+  margin-top: 60px;
+  padding-left: 280px;
   /* background-color: sandybrown; */
 `;
 

@@ -145,9 +145,9 @@ function SingleUserCreate() {
           />
         </RowContatiner>
         <ButtonContainer>
-          <SubmitButton type="submit" onClick={submitHandler}>
+          <ConfirmButton type="submit" onClick={submitHandler}>
             등록
-          </SubmitButton>
+          </ConfirmButton>
         </ButtonContainer>
       </ContentContainer>
       {isSuccessModal && (
@@ -168,6 +168,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
+  margin-top: 80px;
+  /* background-color: aquamarine; */
 `;
 const ContentContainer = styled.form`
   width: 50%;
@@ -181,6 +183,7 @@ const RowContatiner = styled.div`
   height: 25%;
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 10px;
   /* background-color: beige; */
 `;
@@ -188,12 +191,19 @@ const NameContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #5B5B5B;
   width: 20%;
-  border: 1px solid black;
+  height: 40px;
+  /* border: 1px solid black; */
 `;
 const InputContainer = styled.input`
   display: flex;
-
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0px 0px 10px #666867;
   width: 80%;
 `;
 const ButtonContainer = styled.div`
@@ -221,5 +231,21 @@ const InputBox = styled.input`
   width: 500px;
   height: 40px;
 `;
+const ButtonBox = styled.button`
+  width: 100px;
+  /* border: 1px solid #14B869; */
+  border-radius: 10px;
+  /* background-color: yellowgreen; */
+  padding: 10px;
+  font-size: 18px;
+  :hover{
+    background-color: #E6F8F0;
+    color: #14B869;
+  }
+`;
+const ConfirmButton = styled(ButtonBox)`
+  color: white;
+  background-color: #14B869;
+`
 
 export default SingleUserCreate;

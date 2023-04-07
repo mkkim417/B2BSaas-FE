@@ -19,7 +19,6 @@ import {
   Wrapper,
 } from './UploadPage';
 function ReadyAlarmtalk() {
-  console.log('hello');
   const params = useParams();
   const token = getCookie('userToken');
   const location = useLocation();

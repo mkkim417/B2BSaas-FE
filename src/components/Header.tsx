@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { isLoggedin } from '../util/cookie';
 
 function Header() {
+  const isLoggedIn = isLoggedin();
   return (
     <HeaderContainer>
       <ContentsWrapper>
@@ -19,10 +21,18 @@ function Header() {
           </LeftContainer>
         </TwiceWraper>
         <SignupContainer>
-          <Link to={'/login'}>로그인</Link>
-          <BlackBox>
-            <Link to={'/signup'}>무료로 시작하기</Link>
-          </BlackBox>
+          {isLoggedIn ? (
+            <BlackBox>
+              <Link to={'/groupManageList'}>서비스 시작하기</Link>
+            </BlackBox>
+          ) : (
+            <>
+              <Link to={'/login'}>로그인</Link>
+              <BlackBox>
+                <Link to={'/signup'}>무료로 시작하기</Link>
+              </BlackBox>
+            </>
+          )}
         </SignupContainer>
       </ContentsWrapper>
     </HeaderContainer>
@@ -37,10 +47,10 @@ const BlackBox = styled.div`
 const TwiceWraper = styled.div`
   display: flex;
 `;
-export const Logo = styled.li`
-  width: 200px;
+export const Logo = styled.li<{ border?: string; borderBottom?: string }>`
   margin: 0 auto;
-  border: 1px solid #909090;
+  border: ${(props) => (props.border ? props.border : null)};
+  border-bottom: ${(props) => (props.borderBottom ? props.borderBottom : null)};
   height: 60px;
   color: #909090;
   box-sizing: border-box;

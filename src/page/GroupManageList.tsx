@@ -72,14 +72,14 @@ function GroupManageList() {
     () => getAllGroupList(),
     {
       onSuccess: (response) => {
-        console.log('그룹리스트 호출성공!', response.data);
+        // console.log('그룹리스트 호출성공!', response.data);
         // 그룹 복사,이동에 넣어줄 그룹리스트 state 담기
         setGroupList(response.data);
         response.data.map((item: any) => {
           // 이거 무슨 용도지.. 모르겠음
-          if(!(clickGroup.includes(item.groupId))) {
-            clickGroup.push(item.groupId)
-            setClickGroup(clickGroup)
+          if (!clickGroup.includes(item.groupId)) {
+            clickGroup.push(item.groupId);
+            setClickGroup(clickGroup);
           }
         });
       },
@@ -105,7 +105,7 @@ function GroupManageList() {
       // 리스트에 표시할 그룹이름 넣어주기
       setGroupName(name);
       // 리스트에 표시할 그룹설명 넣어주기
-      setGroupDescription(descript)
+      setGroupDescription(descript);
 
       // 그룹들 이름 넣어주기
       groupData.data.map((item: any) => {
@@ -143,7 +143,7 @@ function GroupManageList() {
     () => getAllClientList(currentPage),
     {
       onSuccess: (response) => {
-        console.log('고객리스트useQuery', response);
+        // console.log('고객리스트useQuery', response);
         setCheckedArr([]);
         setIsClientState(true);
         setAllclients(userData?.data.clientCount);
@@ -153,28 +153,28 @@ function GroupManageList() {
       },
     }
   );
-    // 유저리스트 useEffect
-    useEffect(() => {
-      if (isClientState === true) {
-        refetch()
-        // getAllClientList(currentPage)
-        allUserRef.current?.focus();
-        // getUserData(currentPage);
-        // setAllclients(userData?.data.clientCount);
-      } else {
-        getClientInGroup(groupId, groupName, groupDescription, currentPage);
-        // setCurrentPage1(1)
-      }
-  
-      // setCount(userList.length);
-      // setIndexOfLastPost(currentPage * postPerPage);
-      // setIndexOfFirstPost(indexOfLastPost - postPerPage);
-      // if (isClientState === true) {
-      //   setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
-      // } else {
-      //   setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
-      // }
-    }, [refetch, userData,isAllclients, getUserData, getClientInGroup]);
+  // 유저리스트 useEffect
+  useEffect(() => {
+    if (isClientState === true) {
+      refetch();
+      // getAllClientList(currentPage)
+      allUserRef.current?.focus();
+      // getUserData(currentPage);
+      // setAllclients(userData?.data.clientCount);
+    } else {
+      getClientInGroup(groupId, groupName, groupDescription, currentPage);
+      // setCurrentPage1(1)
+    }
+
+    // setCount(userList.length);
+    // setIndexOfLastPost(currentPage * postPerPage);
+    // setIndexOfFirstPost(indexOfLastPost - postPerPage);
+    // if (isClientState === true) {
+    //   setCurrentPosts(userList.slice(indexOfFirstPost, indexOfLastPost));
+    // } else {
+    //   setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
+    // }
+  }, [refetch, userData, isAllclients, getUserData, getClientInGroup]);
   // 처음 렌더링시 전체고객리스트로 focus
   const allUserRef = useRef<HTMLButtonElement>(null);
   // 그룹 내 클라이언트 숫자
@@ -409,30 +409,38 @@ function GroupManageList() {
               className={'btn' + ('client' == clickActive ? 'Active' : '')}
               onClick={(e: any) => {
                 refetch();
-                setCurrentPage(1)
-                toogleActive(e)
-                setOpen(false)}} 
-                
-              ref={allUserRef}>
+                setCurrentPage(1);
+                toogleActive(e);
+                setOpen(false);
+              }}
+              ref={allUserRef}
+            >
               전체 고객리스트({isAllclients})
             </GroupContentItem>
             {groupData?.data.map((item: any) => {
               return (
                 <>
-                    <GroupContentItem
-                      key={item.groupId}
-                      value={item.groupId}
-                      className={"btn" + (item.groupId == clickActive ? "Active" : "")}
-                      onClick={(e:any) => {
-                        setOpen(false)
-                        getClientInGroup(item.groupId, item.groupName, item.groupDescription, 1);
-                        setCurrentPage1(1);
-                        setDeleteGroup(item);
-                        toogleActive(e);
-                      }}
-                    >
-                    {item.groupName}({item.clientCount}) 
-                    </GroupContentItem>
+                  <GroupContentItem
+                    key={item.groupId}
+                    value={item.groupId}
+                    className={
+                      'btn' + (item.groupId == clickActive ? 'Active' : '')
+                    }
+                    onClick={(e: any) => {
+                      setOpen(false);
+                      getClientInGroup(
+                        item.groupId,
+                        item.groupName,
+                        item.groupDescription,
+                        1
+                      );
+                      setCurrentPage1(1);
+                      setDeleteGroup(item);
+                      toogleActive(e);
+                    }}
+                  >
+                    {item.groupName}({item.clientCount})
+                  </GroupContentItem>
                 </>
               );
             })}
@@ -445,9 +453,7 @@ function GroupManageList() {
         {/* 여기부터는 클라이언트 리스트 공간 */}
         <ClientContainer>
           <ClientHeaderBox>
-            <NameBox>
-              {groupName}
-            </NameBox>
+            <NameBox>{groupName}</NameBox>
             {/* <TextArea defaultValue={groupName} /> */}
             <NameBox>{checkedArr.length}</NameBox>
           </ClientHeaderBox>
@@ -461,7 +467,9 @@ function GroupManageList() {
             {isClientState ? (
               <>
                 {isOpen && isOpen ? (
-                  <GroupClickButton onClick={() => clickUserDeleteModal()}>고객정보 삭제</GroupClickButton>
+                  <GroupClickButton onClick={() => clickUserDeleteModal()}>
+                    고객정보 삭제
+                  </GroupClickButton>
                 ) : null}
                 {!isOpen ? (
                   <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
@@ -473,7 +481,9 @@ function GroupManageList() {
                   </GroupButton>
                 )}
                 {isOpen && isOpen ? (
-                  <GroupClickButton onClick={() => userEditHandler()}>고객정보 수정</GroupClickButton>
+                  <GroupClickButton onClick={() => userEditHandler()}>
+                    고객정보 수정
+                  </GroupClickButton>
                 ) : null}
                 {!isOpen ? (
                   <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
@@ -498,7 +508,9 @@ function GroupManageList() {
                   고객 등록
                 </GroupButton>
                 {isOpen && isOpen ? (
-                  <GroupClickButton onClick={() => clickGroupUserDeleteModal()} >삭제</GroupClickButton>
+                  <GroupClickButton onClick={() => clickGroupUserDeleteModal()}>
+                    삭제
+                  </GroupClickButton>
                 ) : null}
                 {!isOpen ? (
                   <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
@@ -510,7 +522,9 @@ function GroupManageList() {
                   </GroupButton>
                 )}
                 {isOpen && isOpen ? (
-                  <GroupClickButton onClick={() => clickUserCopyModal()}>복사</GroupClickButton>
+                  <GroupClickButton onClick={() => clickUserCopyModal()}>
+                    복사
+                  </GroupClickButton>
                 ) : null}
                 {!isOpen ? (
                   <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
@@ -525,7 +539,9 @@ function GroupManageList() {
                   복사
                 </GroupButton> */}
                 {isOpen && isOpen ? (
-                  <GroupClickButton onClick={() => clickUserMoveModal()}>이동</GroupClickButton>
+                  <GroupClickButton onClick={() => clickUserMoveModal()}>
+                    이동
+                  </GroupClickButton>
                 ) : null}
                 {!isOpen ? (
                   <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
@@ -837,8 +853,8 @@ const GroupClickButton = styled.button`
   font-weight: 500;
   font-size: 16px;
   border-radius: 8px;
-  background-color: #14B869;
-  border: 1px solid #14B769;
+  background-color: #14b869;
+  border: 1px solid #14b769;
 `;
 
 const GroupAlartButton = styled.button`

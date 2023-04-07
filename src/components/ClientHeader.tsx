@@ -33,10 +33,12 @@ function ClientHeader() {
 
 const HeaderContainer = styled.div`
   display: flex;
+  position: fixed;
   height: 60px;
   justify-content: end;
   padding-right: 50px;
   gap: 30px;
+  right: 0;
   /* margin-top: 30px; */
   /* background-color: salmon; */
 `;

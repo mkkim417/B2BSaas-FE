@@ -59,6 +59,7 @@ const Signup = () => {
     formState: { errors, isValid },
     handleSubmit,
     watch,
+    getValues,
   } = useForm<FormValues>({
     mode: 'onChange',
   });
@@ -82,34 +83,34 @@ const Signup = () => {
   const ConfirmPw = useRef<string>();
   ConfirmPw.current = watch('ConfirmPw');
 
-  const [isEmail, setEmail] = useState();
-
   const EmailValidation: Validate<string, FormValues> = (value) => {
+    console.log(value);
     const emailRegex = /^[a-zA-Z0-9._%+-]+@?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const fullEmail = value + '@' + formData.emailProvider;
+    const fullEmail = value;
     return emailRegex.test(fullEmail) ? true : '올바른 주소를 입력하세요';
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
-    if (name === 'email') {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        email: value,
-      }));
-    } else if (name === 'emailProvider') {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        emailProvider: value,
-        email: prevFormData.email + '@' + value,
-      }));
-    } else {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: value,
-      }));
-    }
-  };
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { value, name } = e.target;
+  //   console.log(value, name);
+  //   if (name === 'email') {
+  //     setFormData((prevFormData) => ({
+  //       ...prevFormData,
+  //       email: value,
+  //     }));
+  //   } else if (name === 'emailProvider') {
+  //     setFormData((prevFormData) => ({
+  //       ...prevFormData,
+  //       emailProvider: value,
+  //       email: prevFormData.email + '@' + value,
+  //     }));
+  //   } else {
+  //     setFormData((prevFormData) => ({
+  //       ...prevFormData,
+  //       [name]: value,
+  //     }));
+  //   }
+  // };
 
   const companyHandleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
@@ -169,21 +170,17 @@ const Signup = () => {
   };
 
   const checkEmailDuplication = async (email: string) => {
-    console.log('formData.emailProvider : ', formData.emailProvider);
-    console.log('isEmail', isEmail);
-    console.log('isEmail', isEmail + formData.emailProvider);
-
-    if (!email) {
+    if (!formData.email) {
       alert('이메일을 입력해주세요.');
       return;
     }
-
     try {
       const response = await axios
         .post('https://dev.sendingo-be.store/api/users/signup/existemail', {
-          email: isEmail + '@' + formData.emailProvider,
+          email: formData.email,
         })
         .then((res) => {
+          console.log(res.data);
           alert(res.data.message);
           setDupliEmail(true);
         });
@@ -217,6 +214,7 @@ const Signup = () => {
     },
   });
   const onSubmit = async (data: FormValues) => {
+    console.log(data);
     if (!isDupliEmail) {
       alert('이메일 중복을 확인해주세요');
       return;
@@ -229,16 +227,6 @@ const Signup = () => {
 
     const email = `${data.email}@${formData.emailProvider}`;
     const email2 = `${data.companyEmail}@${formData.companyEmailProvider}`;
-
-    // const requestBody = {
-    //   email: EmailValidation(formData.email, formData),
-    //   password: data.password,
-    //   name: data.name,
-    //   phoneNumber: data.phoneNumber,
-    //   companyName: data.companyName,
-    //   companyNumber: data.companyNumber,
-    //   role: 1,
-    // };
     const sendEmail = email + formData.email;
     const sendEmail2 = email2 + formData.companyEmail;
     mutate({
@@ -252,7 +240,8 @@ const Signup = () => {
       companyEmail: sendEmail2,
     });
   };
-
+  console.log(formData.email);
+  console.log(errors);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Wrapper>
@@ -265,13 +254,26 @@ const Signup = () => {
             <StInput
               type="text"
               {...register('email', {
-                required: '이 항목은 필수입니다',
-                validate: EmailValidation,
+                required: true,
+                pattern: {
+                  value: EmailValidation,
+                  message: '유효한 이메일 형식이 아닙니다',
+                } as any,
+                // validate: {
+                //   async checkDuplicate(value: string): Promise<boolean> {
+                //     if (value) {
+                //       const isDuplicate = await checkEmailDuplication(value);
+                //       if (isDuplicate as any) {
+                //         throw new Error('중복된 이메일입니다');
+                //       }
+                //     }
+                //   },
+                // },
               })}
               name="email"
               required
-              value={isEmail}
-              onChange={(e: any) => setEmail(e.target.value)}
+              // onChange={(e) => handleInputChange(e)}
+              // value={formData.email || ''}
               placeholder="ID로 사용할 이메일을 입력해주세요"
             />
             {errors.email && (
@@ -279,53 +281,9 @@ const Signup = () => {
                 {errors.email.message || '이메일을 입력해주세요'}
               </StErrorMsg>
             )}
-            {/* <span>@</span>
-            {directInput ? (
-              <StInputWrapper>
-                {' '}
-                <StInput
-                  type="text"
-                  {...register('emailProvider', {
-                    required: '이 항목은 필수입니다',
-                  })}
-                  name="emailProvider"
-                  value={
-                    formData.emailProvider === 'direct'
-                      ? ''
-                      : formData.emailProvider
-                  }
-                  onChange={handleInputChange}
-                  onBlur={() => {
-                    if (!formData.emailProvider) {
-                      setDirectInput(false);
-                    }
-                  }}
-                  required
-                />
-              </StInputWrapper>
-            ) : (
-              <StSelect
-                name="emailProvider"
-                value={formData.emailProvider || 'gmail.com'}
-                onChange={handleSelectChange}
-              >
-                {options.map(({ value, label }) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </StSelect>
-            )}
-
-            {errors.email || errors.emailProvider ? (
-              <StErrorMsg>
-                {errors.email?.message ||
-                  errors.emailProvider?.message ||
-                  '이메일을 입력해 주십시오.'}
-              </StErrorMsg>
-            ) : null}
             <button
               onClick={() => {
+                console.log(formData.email);
                 checkEmailDuplication(formData.email);
                 // checkEmailDuplication(formData.email).then((exists) => {
                 //   if (exists) {
@@ -337,8 +295,7 @@ const Signup = () => {
               }}
             >
               중복확인
-            </button> */}
-            {/* selectbox~중복확인버튼 주석처리 */}
+            </button>
           </StEmail>
 
           <StBrand>
@@ -424,7 +381,7 @@ const Signup = () => {
               type="text"
               {...register('companyEmail', {
                 required: '이 항목은 필수입니다',
-                validate: EmailValidation,
+                // validate: EmailValidation,
               })}
               name="companyEmail"
               required
@@ -896,6 +853,7 @@ const StPicInfo = styled.div`
 `;
 
 const StForm = styled.form`
+  margin-top: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;

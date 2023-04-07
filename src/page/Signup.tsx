@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-// import { Wrapper } from './Home';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useForm, SubmitHandler, Validate } from 'react-hook-form';

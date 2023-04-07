@@ -10,6 +10,7 @@ import Statistics from '../page/Statistics';
 import Alarmtalk from '../page/Alarmtalk';
 import Header from '../components/Header';
 import Signup from '../page/Signup';
+import SignupTest from '../page/SignupTest';
 import Login from '../page/Login';
 import Mypage from '../page/Mypage';
 import GroupInUserList from '../components/NotUsedPages/GroupInUserList';
@@ -66,6 +67,7 @@ const Router = () => {
               </Route>
             </Route>
             <Route path="/signup" element={<Signup />} />
+            <Route path="/SignupTest" element={<SignupTest />} />
             <Route path="/email" element={<Email />} />
             <Route path="/login" element={<Login />} />
             <Route path="/mypage" element={<Mypage />} />

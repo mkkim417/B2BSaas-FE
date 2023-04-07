@@ -23,6 +23,7 @@ const TopNav = () => {
   const clientCreate = useMatch('/singleusercreate');
   const clientRegistration = useMatch('/clientregistration');
   const groupManageList = useMatch('/groupmanageList');
+  const alarmtalk = useMatch('/alarmtalk');
   const kakaoresultlist = useMatch('/kakaoresultlist');
   const readyalarmtalk = useMatch('/readyalarmtalk');
 
@@ -57,9 +58,9 @@ const TopNav = () => {
               </InLi>
             </Li>
             <Li>
-              <InLi active={readyalarmtalk ? true : false}>
-                <NavLink to={'/readyalarmtalk'}>
-                  {readyalarmtalk ? (
+              <InLi active={alarmtalk ? true : false}>
+                <NavLink to={'/alarmtalk'}>
+                  {alarmtalk ? (
                     <>
                       <KakaoIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
                       <Circle

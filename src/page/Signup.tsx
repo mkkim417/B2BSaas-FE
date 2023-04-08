@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { postSignUp } from '../axios/api';
 import ReactHookInput from '../components/form/ReactHookInput';
 import { getCookie } from '../util/cookie';
+import { Link } from 'react-router-dom';
 interface FormState {
   errors: any;
   dirty: boolean;
@@ -126,6 +127,9 @@ const Signup = () => {
             ) : (
               <StLoginButton2 disable={true}>회원가입</StLoginButton2>
             )}
+            <LoginWrap>
+              <Link to={'/login'}>로그인</Link>
+            </LoginWrap>
           </Form>
         </TopWrapper>
       </Container>
@@ -133,6 +137,16 @@ const Signup = () => {
   );
 };
 export default Signup;
+
+const LoginWrap = styled.div`
+  font-size: 11px;
+  border-bottom: 1px solid #909090;
+  color: #909090;
+  width: 40px;
+  margin: 0 auto;
+  text-align: center;
+  padding-bottom: 2px;
+`;
 export const StLoginButton = styled.button<{ disable?: boolean }>`
   background: ${(props) => (props.disable === true ? '#eee' : '#14b769')};
   color: ${(props) => (props.disable === true ? '#bdbdbd' : '#fff')};
@@ -176,9 +190,10 @@ const TopWrapper = styled.div`
   width: 100%;
 `;
 
-const Container = styled(motion.div)`
+export const Container = styled(motion.div)`
   position: absolute;
   width: 460px;
+  margin-top: 100px;
   border-radius: 5px;
   left: calc(50% - 250px);
   top: calc(50% - 400px);
@@ -207,7 +222,6 @@ const Form = styled.form`
   flex-direction: column;
   justify-content: space-between;
   margin-top: 50px;
-  margin-bottom: 20px;
 `;
 
 const Submit = styled.button`

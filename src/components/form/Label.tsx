@@ -26,6 +26,8 @@ export const TitleLabel = styled.div`
 
 const ErrorMessage = styled.div`
   color: red;
+  font-weight: normal;
+  font-family: 'Inter';
   font-size: 0.9rem;
   text-align: right;
   width: 265px;

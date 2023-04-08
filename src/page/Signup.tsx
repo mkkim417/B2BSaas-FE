@@ -1,10 +1,12 @@
-import { UseFormReturn, useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { postSignUp } from '../axios/api';
 import ReactHookInput from '../components/form/ReactHookInput';
+import { getCookie } from '../util/cookie';
 interface FormState {
   errors: any;
   dirty: boolean;
@@ -53,6 +55,12 @@ const Signup = () => {
       companyEmail,
     });
   };
+  const token = getCookie('userToken');
+  useEffect(() => {
+    if (token) {
+      navigate('/');
+    }
+  }, []);
   return (
     <>
       <Container>

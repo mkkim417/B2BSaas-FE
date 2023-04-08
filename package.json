@@ -52,7 +52,7 @@
     "styled-reset": "^4.4.5",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.1/xlsx-0.19.1.tgz",
+    "xlsx": "^0.18.5",
     "yarn": "^1.22.19"
   },
   "scripts": {

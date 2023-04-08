@@ -29,16 +29,19 @@ const TopNav = () => {
 
   // console.log('Uploadpage : ', Uploadpage);
   // console.log('Home : ', Home);
-  const [ menuOpen, setMenuOpen ] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <TotalWrapper>
       <Wrapper>
         <UserContatiner>
           <ul style={{ marginTop: '60px' }}>
             <Li>
-              <InLi 
+              <InLi
                 active={statistics ? true : false}
-                onClick={() => {setMenuOpen(menuOpen => !menuOpen)}}>
+                onClick={() => {
+                  setMenuOpen((menuOpen) => !menuOpen);
+                }}
+              >
                 <NavLink to={'/statistics'}>
                   {statistics ? (
                     <>
@@ -61,8 +64,12 @@ const TopNav = () => {
               </InLi>
             </Li>
             <Li>
-              <InLi active={readyalarmtalk ? true : false}
-                onClick={() => {setMenuOpen(menuOpen => !menuOpen)}}>
+              <InLi
+                active={readyalarmtalk ? true : false}
+                onClick={() => {
+                  setMenuOpen((menuOpen) => !menuOpen);
+                }}
+              >
                 <NavLink to={'/readyalarmtalk'}>
                   {readyalarmtalk ? (
                     <>
@@ -85,8 +92,12 @@ const TopNav = () => {
               </InLi>
             </Li>
             <Li>
-              <InLi active={kakaoresultlist ? true : false}
-                onClick={() => {setMenuOpen(menuOpen => !menuOpen)}}>
+              <InLi
+                active={kakaoresultlist ? true : false}
+                onClick={() => {
+                  setMenuOpen((menuOpen) => !menuOpen);
+                }}
+              >
                 <NavLink to={'/kakaoresultlist'}>
                   {kakaoresultlist ? (
                     <>
@@ -111,8 +122,12 @@ const TopNav = () => {
               </InLi>
             </Li>
             <Li>
-              <InLi active={groupManageList ? true : false}
-                onClick={() => {setMenuOpen(menuOpen => !menuOpen)}}>
+              <InLi
+                active={groupManageList ? true : false}
+                onClick={() => {
+                  setMenuOpen((menuOpen) => !menuOpen);
+                }}
+              >
                 <NavLink to={'/groupManageList'}>
                   {groupManageList ? (
                     <>
@@ -137,8 +152,12 @@ const TopNav = () => {
               </InLi>
             </Li>
             <Li>
-              <InLi active={clientRegistration ? true : false}
-                onClick={() => {setMenuOpen(menuOpen => !menuOpen)}}>
+              <InLi
+                active={clientRegistration ? true : false}
+                onClick={() => {
+                  setMenuOpen((menuOpen) => !menuOpen);
+                }}
+              >
                 <NavLink to={'/clientregistration'}>
                   {clientRegistration ? (
                     <>
@@ -294,7 +313,7 @@ const Test = styled.div<{ active?: boolean }>`
   box-shadow: 0px 0px 10px ${(props) => (props.active ? '#14B869' : '')};
   border-radius: 15px;
   transition: 0.3s;
-`
+`;
 const Li = styled.li<{ active?: boolean }>`
   height: 50px;
   margin: 30px 0px;
@@ -391,11 +410,8 @@ const SlideWrapper = styled.div`
 `;
 const TotalWrapper = styled.div`
   height: 100vh;
-  display: flex;
-  flex-direction: row;
-  position: fi;
   /* background-color: aquamarine; */
-`
+`;
 const UserContatiner = styled.div`
   display: flex;
   flex-direction: column;

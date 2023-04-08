@@ -25,14 +25,14 @@ function SendMessage() {
     let reader = new FileReader();
     reader.onload = function () {
       let data = reader.result;
-      let workBook = XLSX.read(data, { type: 'binary' });
+      let workBook = XLSX.read(data, { type: 'binary' }) as any;
 
       if (workBook.bookType !== 'xlsx' && workBook.bookType !== 'csv') {
         alert('csv, xlsx형식을 넣어주세요.');
         return;
       }
 
-      workBook.SheetNames.forEach(function (sheetName) {
+      workBook.SheetNames.forEach(function (sheetName: any) {
         console.log('SheetName: ' + sheetName);
         let rows = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName]);
         const jsonData = JSON.stringify(rows);

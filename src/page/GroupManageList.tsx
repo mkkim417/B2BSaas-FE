@@ -96,6 +96,7 @@ function GroupManageList() {
   // 그룹 클릭시 그룹 내 클라이언트리스트 호출
   const getClientInGroup = useCallback(
     async (id: any, name: any, descript: any, page: any) => {
+      console.log(id, name, descript);
       setCheckedArr([]);
       setIsClientState(false);
       const response = await axios
@@ -504,7 +505,7 @@ function GroupManageList() {
           <ButtonContainer>
             {isClientState ? (
               <>
-                <div>
+                <div style={{ display: 'flex', gap: '7px' }}>
                   {isOpen && isOpen ? (
                     <GroupClickButton onClick={() => clickUserDeleteModal()}>
                       고객정보 삭제
@@ -647,74 +648,80 @@ function GroupManageList() {
               </>
             )}
           </ButtonContainer>
-          <ClientContentHeader>
-            <CardHeader>
-              <HeaderPercentage width="6%">선택</HeaderPercentage>
-              <HeaderPercentage width="23%">그룹명</HeaderPercentage>
-              <HeaderPercentage width="12%">이름</HeaderPercentage>
-              <HeaderPercentage width="22%">연락처</HeaderPercentage>
-              <HeaderPercentage width="37%">이메일</HeaderPercentage>
-            </CardHeader>
-          </ClientContentHeader>
-          <ClientContentBox>
-            {isClientState ? (
-              // userList.slice(indexOfFirstPost, indexOfLastPost) &&
-              userData?.data.clients.length > 0 ? (
-                userList?.map((item: any) => {
-                  return (
-                    <CardHeader key={item.clientId}>
-                      {isOpen ? (
-                        <Percentage width="6%">
-                          <CheckInputBox
-                            type="checkbox"
-                            checked={checkedArr.includes(item)}
-                            onChange={(e) => checkUserHandler(e, item)}
-                          />
-                        </Percentage>
-                      ) : (
-                        <Percentage width="6%"></Percentage>
-                      )}
-                      {/* <Percentage width="6%">
+          <div
+            style={{
+              border: '1px solid #eee',
+              borderRadius: '15px',
+            }}
+          >
+            <ClientContentHeader>
+              <CardHeader>
+                <HeaderPercentage width="6%">선택</HeaderPercentage>
+                <HeaderPercentage width="23%">그룹명</HeaderPercentage>
+                <HeaderPercentage width="12%">이름</HeaderPercentage>
+                <HeaderPercentage width="22%">연락처</HeaderPercentage>
+                <HeaderPercentage width="37%">이메일</HeaderPercentage>
+              </CardHeader>
+            </ClientContentHeader>
+            <ClientContentBox>
+              {isClientState ? (
+                // userList.slice(indexOfFirstPost, indexOfLastPost) &&
+                userData?.data.clients.length > 0 ? (
+                  userList?.map((item: any) => {
+                    return (
+                      <CardHeader key={item.clientId}>
+                        {isOpen ? (
+                          <Percentage width="6%">
+                            <CheckInputBox
+                              type="checkbox"
+                              checked={checkedArr.includes(item)}
+                              onChange={(e) => checkUserHandler(e, item)}
+                            />
+                          </Percentage>
+                        ) : (
+                          <Percentage width="6%"></Percentage>
+                        )}
+                        {/* <Percentage width="6%">
                         <input
                           type="checkbox"
                           checked={checkedArr.includes(item)}
                           onChange={(e: any) => checkUserHandler(e, item)}
                         />
                       </Percentage> */}
-                      <Percentage width="23%">{item.groupName}</Percentage>
-                      <Percentage width="12%">{item.clientName}</Percentage>
-                      <Percentage width="22%">
-                        {item.contact.replace(
-                          /^(\d{2,3})(\d{3,4})(\d{4})$/,
-                          `$1-$2-$3`
-                        )}
-                      </Percentage>
-                      <Percentage width="37%">{item.clientEmail}</Percentage>
-                    </CardHeader>
-                  );
-                })
-              ) : (
-                <CenterContent>더 이상 고객목록이 없습니다.</CenterContent>
-              )
-            ) : groupClient.length > 0 ? (
-              groupClient
-                // .slice(indexOfFirstPost, indexOfLastPost)
-                .map((item: any) => {
-                  return (
-                    <CardHeader key={item.clientId}>
-                      {isOpen ? (
-                        <Percentage width="6%">
-                          <CheckInputBox
-                            type="checkbox"
-                            checked={checkedArr.includes(item)}
-                            onChange={(e) => checkUserHandler(e, item)}
-                          />
+                        <Percentage width="23%">{item.groupName}</Percentage>
+                        <Percentage width="12%">{item.clientName}</Percentage>
+                        <Percentage width="22%">
+                          {item.contact.replace(
+                            /^(\d{2,3})(\d{3,4})(\d{4})$/,
+                            `$1-$2-$3`
+                          )}
                         </Percentage>
-                      ) : (
-                        <Percentage width="6%"></Percentage>
-                      )}
-                      <Percentage width="6%">
-                        {/* <input
+                        <Percentage width="37%">{item.clientEmail}</Percentage>
+                      </CardHeader>
+                    );
+                  })
+                ) : (
+                  <CenterContent>더 이상 고객목록이 없습니다.</CenterContent>
+                )
+              ) : groupClient.length > 0 ? (
+                groupClient
+                  // .slice(indexOfFirstPost, indexOfLastPost)
+                  .map((item: any) => {
+                    return (
+                      <CardHeader key={item.clientId}>
+                        {isOpen ? (
+                          <Percentage width="6%">
+                            <CheckInputBox
+                              type="checkbox"
+                              checked={checkedArr.includes(item)}
+                              onChange={(e) => checkUserHandler(e, item)}
+                            />
+                          </Percentage>
+                        ) : (
+                          <Percentage width="6%"></Percentage>
+                        )}
+                        <Percentage width="6%">
+                          {/* <input
                             type="checkbox"
                             checked={checkedArr.includes(item.clientId)}
                             onChange={(e) => checkUserHandler(e, item.clientId)}
@@ -724,20 +731,21 @@ function GroupManageList() {
                           checked={checkedArr.includes(item)}
                           onChange={(e: any) => checkUserHandler(e, item)}
                         /> */}
-                      </Percentage>
-                      <Percentage width="23%">{item.groupName}</Percentage>
-                      <Percentage width="12%">{item.clientName}</Percentage>
-                      <Percentage width="22%">{item.contact}</Percentage>
-                      <Percentage width="37%">{item.clientEmail}</Percentage>
-                    </CardHeader>
-                  );
-                })
-            ) : (
-              <CenterContent>
-                추가된 고객 목록이 없습니다. 고객을 추가해주세요.
-              </CenterContent>
-            )}
-          </ClientContentBox>
+                        </Percentage>
+                        <Percentage width="23%">{item.groupName}</Percentage>
+                        <Percentage width="12%">{item.clientName}</Percentage>
+                        <Percentage width="22%">{item.contact}</Percentage>
+                        <Percentage width="37%">{item.clientEmail}</Percentage>
+                      </CardHeader>
+                    );
+                  })
+              ) : (
+                <CenterContent>
+                  추가된 고객 목록이 없습니다. 고객을 추가해주세요.
+                </CenterContent>
+              )}
+            </ClientContentBox>
+          </div>
           <ClientPageBox>
             <PaginationBox1>
               {isClientState ? (
@@ -869,21 +877,27 @@ export const HeaderContainer = styled.div`
   /* background-color: crimson; */
 `;
 const ContentContainer = styled.div`
+  max-width: 1600px;
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: row;
+  margin: 0 auto;
+  justify-content: space-between;
   /* margin-bottom: 100px; */
   /* background-color: cyan; */
 `;
 const GroupContainer = styled.div`
-  width: 25%;
   height: 95%;
-  margin: 0px 30px 0px 60px;
+  margin: 0px 10px;
+  width: 250px;
+  @media screen and (min-width: 1300px) {
+    margin: 0px 45px;
+    width: 300px;
+  }
   /* background-color: bisque; */
 `;
 const GroupContentBox = styled.div`
-  /* width: 100%; */
   height: 92%;
   border: 2px solid #eeeeee;
   border-radius: 20px;
@@ -933,8 +947,8 @@ const ButtonGap = styled.div`
   gap: 10px;
 `;
 const GroupButton = styled.button`
-  width: 90px;
-  height: 40px;
+  width: 110px;
+  height: 50px;
   color: #14b769;
   margin-right: 5px;
   font-weight: 500;
@@ -942,18 +956,23 @@ const GroupButton = styled.button`
   border-radius: 8px;
   background-color: #ffffff;
   border: 1px solid #14b769;
+  transition: 0.2s;
+  :hover {
+    background-color: #14b769;
+    color: #fff;
+  }
 `;
 const SearchInput = styled.input`
   width: 250px;
-  height: 35px;
-  border: none;
-  box-shadow: 0px 0px 10px #82bca1;
+  height: 45px;
   border-radius: 8px;
+  border: 1px solid #bdbdbd;
+  padding-left: 10px;
 `;
 
 const GroupClickButton = styled.button`
-  width: 100px;
-  height: 40px;
+  width: 110px;
+  height: 50px;
   color: white;
   font-weight: 500;
   font-size: 16px;
@@ -973,6 +992,8 @@ const GroupAlartButton = styled.button`
   background-color: #14b769;
 `;
 const ClientContainer = styled.div`
+  max-width: 1200px;
+  width: 100%;
   width: 75%;
   height: 95%;
   margin: 0px 30px 0px 0px;
@@ -1014,14 +1035,12 @@ const ClientContentBox = styled.div`
 
 const ClientContentHeader = styled.div`
   /* height: 5%; */
-  border: 1px solid black;
-  border-left: 1ch;
-  border-right: 1ch;
   /* background-color: aqua; */
 `;
 const CardHeader = styled.div`
   width: 100%;
-  height: 36px;
+  height: 4.5vh;
+
   /* height: 30px; */
   /* margin: 0px 50px 0px 50px; */
   display: flex;
@@ -1051,11 +1070,13 @@ const Percentage = styled.div<{ width: any }>`
 
 const HeaderPercentage = styled(Percentage)<{ width: any }>`
   height: 36px;
+  background-color: #f9fafc;
+  color: #909090;
   display: flex;
   justify-content: center;
   align-items: center;
   /* border: 1px solid black; */
-  background-color: white;
+
   width: ${(props: any) => props.width};
 `;
 
@@ -1081,7 +1102,7 @@ const CheckInputBox = styled.input`
   appearance: none;
   width: 1.5rem;
   height: 1.5rem;
-  border: 1.5px solid #eeeeee;
+  border: 1.5px solid #bdbdbd;
   border-radius: 0.35rem;
   cursor: pointer;
 

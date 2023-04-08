@@ -192,7 +192,7 @@ function ReadyAlarmtalk() {
           ) : (
             <>
               <ButtonWrap>
-                <NoticeFont>아직 등록된 클라이언트가 없으시네요 😊</NoticeFont>
+                <NoticeFont>아직 선택된 그룹이 없으시네요 😊</NoticeFont>
                 <Button
                   width={'150px'}
                   onClick={() => navigate('/groupmanageList')}
@@ -237,7 +237,6 @@ const ButtonWrap = styled.div`
   width: 1080px;
   height: 300px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 30px;

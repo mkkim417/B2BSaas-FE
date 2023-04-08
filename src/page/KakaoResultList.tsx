@@ -122,40 +122,50 @@ function KakaoResultList() {
     >
       <Wrapper>
         <H1>전송결과조회</H1>
-        <FlexWrap>
-          <GrayWrap>고객그룹</GrayWrap>
-          {/* <SelectBoxs
+        <FlexWrapResult>
+          <FlexWrap>
+            <GrayWrap>고객그룹</GrayWrap>
+            {/* <SelectBoxs
             currentCategoryValue={currentValue}
             // className={`obj_${idx}`}
             // propFunction={messagePreviewFunc}
             optionData={['빈값입니다.']}
           ></SelectBoxs> */}
-          {/* 셀렉트박스 넣을부분 */}
-          <select name="" id="" onChange={(e) => handleOnChangeSelectValue(e)}>
-            {isGroupList?.map((item: any, idx: number) => {
-              return (
-                <option key={item.groupId} value={item.groupId}>
-                  {item.groupName}({item.clientCount}명)
-                </option>
-              );
-            })}
-          </select>
-        </FlexWrap>
-        <FlexWrap>
-          <GrayWrap>조회기간</GrayWrap>
-          <CallanderWrap ref={dropDownRef as any}>
-            {isOpen ? (
-              <Group position="center">
+            {/* 셀렉트박스 넣을부분 */}
+            <select
+              name=""
+              id=""
+              onChange={(e) => handleOnChangeSelectValue(e)}
+            >
+              {isGroupList?.map((item: any, idx: number) => {
+                return (
+                  <option key={item.groupId} value={item.groupId}>
+                    {item.groupName}({item.clientCount}명)
+                  </option>
+                );
+              })}
+            </select>
+          </FlexWrap>
+          <FlexWrap>
+            <GrayWrap>조회기간</GrayWrap>
+            <CallanderWrap ref={dropDownRef as any}>
+              {isOpen ? (
                 <Group position="center">
-                  <DatePicker type="range" value={value} onChange={setValue} />
+                  <Group position="center">
+                    <DatePicker
+                      type="range"
+                      value={value}
+                      onChange={setValue}
+                    />
+                  </Group>
                 </Group>
-              </Group>
-            ) : null}
-            <div onClick={() => setIsOpen((prev: any) => !prev) as any}>
-              <Callander />
-            </div>
-          </CallanderWrap>
-        </FlexWrap>
+              ) : null}
+              <div onClick={() => setIsOpen((prev: any) => !prev) as any}>
+                <Callander />
+              </div>
+            </CallanderWrap>
+          </FlexWrap>
+        </FlexWrapResult>
         {/* <Button onClick={SubmitBtnHandler}>조회</Button> */}
         <MapWrapper>
           <Table>
@@ -218,7 +228,13 @@ function KakaoResultList() {
     </motion.div>
   );
 }
+const FlexWrapResult = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
 const MapWrapper = styled.div`
+  width: 100%;
   border: 1px solid #dcdcdc;
   border-radius: 8px;
   padding: 20px 30px;
@@ -278,12 +294,13 @@ export const FlexWrap = styled.div`
   height: 50px;
 `;
 export const Wrapper = styled.div`
-  margin: 0 auto;
-  width: 1200px;
-  margin-left: 180px;
-  padding-left: 280px;
-  padding-top: 250px;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  flex-direction: column;
+  width: 1000px;
+  height: 100vh;
+  margin: 0 auto;
 `;
 export const H1 = styled.div`
   font-size: 30px;

@@ -163,7 +163,7 @@ function UploadPage() {
     let reader = new FileReader();
     reader.onload = async function () {
       let data = reader.result;
-      let workBook = XLSX.read(data, { type: 'binary' });
+      let workBook = XLSX.read(data, { type: 'binary' }) as any;
       console.log(data);
       console.log(workBook);
       if (workBook.bookType !== 'xlsx') {
@@ -180,7 +180,7 @@ function UploadPage() {
         }
         return;
       }
-      workBook.SheetNames.forEach(function (sheetName) {
+      workBook.SheetNames.forEach(function (sheetName: any) {
         let rows = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName]);
         const jsonData = JSON.stringify(rows);
         const pareData = JSON.parse(jsonData);

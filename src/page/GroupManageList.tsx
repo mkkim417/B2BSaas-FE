@@ -47,6 +47,8 @@ function GroupManageList() {
 
   // 그룹리스트 담는 변수
   const [groupList, setGroupList] = useState([] as any);
+  // 그룹리스트 내 클라이언트 담는 변수
+  const [groupClient, setGroupClient] = useState([] as any);
   // 그룹리스트 onClick 아이디 변수
   const [groupId, setGroupId] = useState('');
   // 그룹리스트 이름 textarea 변수
@@ -55,8 +57,10 @@ function GroupManageList() {
   const [groupDescription, setGroupDescription] = useState('');
   // 서치검색 키워드 변수
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [groupSearchKeyword, setGroupSearchKeyword] = useState('');
   // 그룹 내 서치검색 키워드 변수
   const [searchGroupInKeyword, setSearchGroupInKeyword] = useState('');
+
 
   // 그룹리스트 GET API
   // const getGroupData = useCallback(async () => {
@@ -68,9 +72,6 @@ function GroupManageList() {
   //   setGroupList(response.data.data);
   // }, []);
 
-  // 전체고객리스트 useRef
-  useEffect(() => {}, []);
-
   // 그룹리스트 API useQuery
   const { data: groupData } = useQuery<any, AxiosError>(
     ['getAllGroupList'],
@@ -81,7 +82,7 @@ function GroupManageList() {
         // 그룹 복사,이동에 넣어줄 그룹리스트 state 담기
         setGroupList(response.data);
         response.data.map((item: any) => {
-          // 이거 무슨 용도지.. 모르겠음
+          // 이거 무슨 용도였지,, 까먹음
           if (!clickGroup.includes(item.groupId)) {
             clickGroup.push(item.groupId);
             setClickGroup(clickGroup);
@@ -90,8 +91,7 @@ function GroupManageList() {
       },
     }
   );
-  // 그룹리스트 내 클라이언트 변수
-  const [groupClient, setGroupClient] = useState([] as any);
+
 
   // 그룹 클릭시 그룹 내 클라이언트리스트 호출
   const getClientInGroup = useCallback(
@@ -106,7 +106,7 @@ function GroupManageList() {
           { headers: { Authorization: `Bearer ${token}` } }
         )
         .then((res) => {
-          console.log('그룹내클라이언트야 담겨?', res)
+          console.log('클라이언트 그룹내 호출', res.data.data)
           setGroupClient(res.data.data);
         });
       setGroupId(id);
@@ -121,9 +121,31 @@ function GroupManageList() {
           setIsGroupAllClients(item.clientCount);
         }
       });
-    },
-    [groupData]
+    },[groupData]
   );
+
+  // 그룹 내에서 검색호출 API
+  const getGroupSearchData = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_SERVER_URL}/api/clients/${groupId}?index=${currentPage}&keyword=${groupSearchKeyword}`,
+      {
+        headers: { authorization: `Bearer ${token}` },
+      }
+    );
+    console.log('그룹 내 검색API주소', `${process.env.REACT_APP_SERVER_URL}/api/clients/${groupId}?index=${currentPage}&keyword=${groupSearchKeyword}`,)
+    console.log('검색필터 결과', response.data.data)
+    setGroupClient(response.data.data)
+  }
+
+  // 그룹 검색 useEffet
+  useEffect(() => {
+    if (groupSearchKeyword.length > 0) {
+      getGroupSearchData()
+    } else if ( groupSearchKeyword.length === 0 ) {
+      getClientInGroup(groupId, groupName, groupDescription, currentPage)
+    }
+  }, [groupSearchKeyword])
+
   /*************************************************************************************
     유저리스트 관련 코드
   ************************************************************************************ */
@@ -134,19 +156,12 @@ function GroupManageList() {
   const [userList, setUserList] = useState([] as any);
   // 처음 렌더링시 전체고객리스트로 focus
   const allUserRef = useRef<HTMLButtonElement>(null);
+
   // 유저리스트 GET API
   const getUserData = useCallback(async (page: any) => {
     // setCheckedArr([]);
     // setIsClientState(true);
     // console.log('IsClientState', isClientState);
-    // `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${1}`
-    // const response = await axios.get(
-    //   `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${page}`,
-    //   { headers: { authorization: `Bearer ${token}` } }
-    // );
-    // console.log('UserList API', token);
-    // setUserList(response.data.data.clients);
-    // setAllclients(response.data.data.clientCount);
   }, []);
   const { data: userData, refetch } = useQuery<any, AxiosError>(
     ['getAllClientLists', currentPage],
@@ -193,7 +208,7 @@ function GroupManageList() {
   // /api/clients?index=${index}&keyword=${keyword}
   // `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${currentPage}&keyword=${searchKeyword}`
   // 고객리스트에서 검색호출 API
-  const getSearchData = useCallback(async () => {
+  const getSearchData = async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${currentPage}&keyword=${searchKeyword}`,
       {
@@ -201,12 +216,10 @@ function GroupManageList() {
       }
     );
     // console.log('검색필터 주소', `${process.env.REACT_APP_SERVER_URL}/api/clients?keyword=${searchKeyword}&index=${currentPage}`)
-    
-    console.log('키워드', searchKeyword, '검색필터 API결과', response.data.data.clients)
-    // setUserList(response.data.data.keyword);
+    // console.log('검색필터 API결과', response.data.data.clients)
     setUserList(response.data.data.clients);
-    return response.data.data.clients;
-  },[searchKeyword]);
+    return response;
+  }
 
   // 검색필터 useEffect
   useEffect(() => {
@@ -630,6 +643,13 @@ function GroupManageList() {
                     </GroupButton>
                   )}
                 </div>
+                <SearchInput
+                  placeholder="Search"
+                  type="search"
+                  onChange={(e: any) => {
+                    setGroupSearchKeyword(e.target.value);
+                  }}
+                />
                 {/* <GroupButton onClick={() => clickUserMoveModal()}>
                   이동
                 </GroupButton> */}
@@ -955,7 +975,7 @@ const ButtonGap = styled.div`
 `;
 const GroupButton = styled.button`
   width: 110px;
-  height: 50px;
+  height: 40px;
   color: #14b769;
   margin-right: 5px;
   font-weight: 500;
@@ -979,7 +999,7 @@ const SearchInput = styled.input`
 
 const GroupClickButton = styled.button`
   width: 110px;
-  height: 50px;
+  height: 40px;
   color: white;
   font-weight: 500;
   font-size: 16px;

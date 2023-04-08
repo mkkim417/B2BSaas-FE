@@ -171,7 +171,7 @@ function UploadPage() {
         type: 'binary',
         encoding: 'utf-8',
       } as any);
-      if (workBook.bookType !== 'xlsx') {
+      if (workBook.bookType !== ('xlsx' as any)) {
         // csv
         let file = event.target.files[0];
         if (file) {

@@ -21,7 +21,7 @@ function GroupDeleteModal({ title, content, closeModal }: Props) {
     },
   })
   const onSubmitHandler = async() => {
-    // mutate(content.groupId)
+    mutate(content.groupId)
     console.log(content)
   }
   return (

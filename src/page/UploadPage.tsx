@@ -167,8 +167,10 @@ function UploadPage() {
     let reader = new FileReader();
     reader.onload = async function () {
       let data = reader.result;
-      let workBook = XLSX.read(data, {
+      let workBook: any = XLSX.read(data, {
         type: 'binary',
+        cellDates: true,
+        cellStyles: true,
         encoding: 'utf-8',
       } as any);
       if (workBook.bookType !== 'xlsx') {

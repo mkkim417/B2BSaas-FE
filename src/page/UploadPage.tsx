@@ -158,14 +158,19 @@ function UploadPage() {
     setKeyData(Object.keys(Object.assign({}, ...array)));
   };
   //xlsx저장함수
+  interface ParsingOptions {
+    type: string;
+    encoding?: string;
+  }
   function readExcel(event: any) {
     let input = event.target;
     let reader = new FileReader();
     reader.onload = async function () {
       let data = reader.result;
-      let workBook = XLSX.read(data, { type: 'binary' }) as any;
-      console.log(data);
-      console.log(workBook);
+      let workBook = XLSX.read(data, {
+        type: 'binary',
+        encoding: 'utf-8',
+      } as any);
       if (workBook.bookType !== 'xlsx') {
         // csv
         let file = event.target.files[0];

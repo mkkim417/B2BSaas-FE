@@ -99,12 +99,14 @@ function GroupManageList() {
       console.log(id, name, descript);
       setCheckedArr([]);
       setIsClientState(false);
+      // /api/clients/:groupId&index={index}&keyword=${keyword}
       const response = await axios
         .get(
-          `${process.env.REACT_APP_SERVER_URL}/api/clients?groupId=${id}&index=${page}`,
+          `${process.env.REACT_APP_SERVER_URL}/api/clients/${id}?&index=${page}`,
           { headers: { Authorization: `Bearer ${token}` } }
         )
         .then((res) => {
+          console.log('그룹내클라이언트야 담겨?', res)
           setGroupClient(res.data.data);
         });
       setGroupId(id);
@@ -187,19 +189,24 @@ function GroupManageList() {
     // }
   }, [refetch, userData, isAllclients, getUserData, getClientInGroup]);
 
+  // /api/clients?index=${index}&keyword=${keyword}
+  // /api/clients?index=${index}&keyword=${keyword}
+  // `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${currentPage}&keyword=${searchKeyword}`
   // 고객리스트에서 검색호출 API
-  const getSearchData = async () => {
+  const getSearchData = useCallback(async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/clients?keyword=${searchKeyword}&index=${currentPage}`,
+      `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${currentPage}&keyword=${searchKeyword}`,
       {
         headers: { authorization: `Bearer ${token}` },
       }
     );
     // console.log('검색필터 주소', `${process.env.REACT_APP_SERVER_URL}/api/clients?keyword=${searchKeyword}&index=${currentPage}`)
-    // console.log('검색필터 API결과', response.data.data.keyword)
-    setUserList(response.data.data.keyword);
-    return response;
-  };
+    
+    console.log('키워드', searchKeyword, '검색필터 API결과', response.data.data.clients)
+    // setUserList(response.data.data.keyword);
+    setUserList(response.data.data.clients);
+    return response.data.data.clients;
+  },[searchKeyword]);
 
   // 검색필터 useEffect
   useEffect(() => {
@@ -210,7 +217,7 @@ function GroupManageList() {
       refetch();
       // setAllclients(userData?.data.clientCount)
     }
-  }, [searchKeyword]);
+  }, [searchKeyword, getSearchData]);
 
   // 그룹 내 클라이언트 숫자
   const [isGroupAllClients, setIsGroupAllClients] = useState<any>(0);
@@ -666,7 +673,7 @@ function GroupManageList() {
             <ClientContentBox>
               {isClientState ? (
                 // userList.slice(indexOfFirstPost, indexOfLastPost) &&
-                userData?.data.clients.length > 0 ? (
+                userList?.length > 0 ? (
                   userList?.map((item: any) => {
                     return (
                       <CardHeader key={item.clientId}>

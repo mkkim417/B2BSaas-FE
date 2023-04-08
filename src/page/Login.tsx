@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Wrapper } from './Home';
 import styled from 'styled-components';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import jwt_decode from 'jwt-decode';
 import { useMutation } from 'react-query';
 import { postLogin } from '../axios/api';
 import { getCookie, setCookie } from '../util/cookie';
-import useInput from '../hook/useInput';
+import ReactHookInput from '../components/form/ReactHookInput';
+import { FormState } from '../libs/client/types/formType';
+import { Container } from './Signup';
 
 interface FormValues {
   email: string;
@@ -18,15 +18,14 @@ interface FormValues {
 
 function Login() {
   const navigate = useNavigate();
-  const [alertMessage, setAlertMessage] = useState('');
-  const [isEmail, onChangeEmail] = useInput();
-  const [isPw, onChangePw] = useInput();
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>();
-
+    formState: { errors, isValid },
+    getValues,
+  }: any = useForm<FormState>({
+    mode: 'onChange',
+  });
   const token = getCookie('userToken');
 
   const { mutate } = useMutation(postLogin, {
@@ -40,54 +39,36 @@ function Login() {
       alert(error.response.data.message);
     },
   });
-
+  const onValid = async (data: { email: string; password: string }) => {
+    mutate(data);
+  };
   useEffect(() => {
     if (token) {
       navigate('/');
     }
   }, []);
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    mutate(data);
-  };
-  console.log(isEmail, isPw);
   return (
-    <LoginWrapper>
-      <StForm onSubmit={handleSubmit(onSubmit)}>
-        {alertMessage && <p>{alertMessage}</p>}
+    <Container>
+      <StForm onSubmit={handleSubmit(onValid)}>
         <StEmail>
           <StLogin>로그인</StLogin>
           <Sth1>이메일ID</Sth1>
-          <Stinput
-            type="email"
-            {...register('email', { required: true })}
-            name="email"
-            placeholder="이메일을 입력해주세요"
-            value={isEmail}
-            onChange={onChangeEmail}
-          />
-          {errors.email && (
-            <StErrorMsg>
-              {errors.email.message || '이메일을 입력해주세요'}
-            </StErrorMsg>
-          )}
         </StEmail>
         <StPw>
-          <Sth1>비밀번호</Sth1>
-          <StPwinput
-            type="password"
-            {...register('password', { required: true })}
-            name="password"
-            placeholder="비밀번호를 입력해주세요."
-            value={isPw}
-            onChange={onChangePw}
+          <ReactHookInput
+            type="아이디"
+            register={register}
+            errorMessage={errors.email?.message}
+            placeholder="이메일 입력해주세요."
           />
-          {errors.password && (
-            <StErrorMsg>
-              {errors.password.message || '비밀번호를 입력해주세요'}
-            </StErrorMsg>
-          )}
+          <ReactHookInput
+            type="비밀번호"
+            register={register}
+            errorMessage={errors.password?.message}
+            placeholder="비밀번호 입력해주세요."
+          />
         </StPw>
-        {isEmail.length > 0 && isPw.length > 0 ? (
+        {isValid ? (
           <StLoginButton disable={false} type="submit">
             로그인
           </StLoginButton>
@@ -102,7 +83,7 @@ function Login() {
           계정이 없으신가요? 여기서 <Stspan>회원가입</Stspan>하세요.
         </Link>
       </Stsignup>
-    </LoginWrapper>
+    </Container>
   );
 }
 
@@ -198,8 +179,6 @@ const StForm = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* border: 1px solid black; */
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 `;
 
 const Stsignup = styled.div`

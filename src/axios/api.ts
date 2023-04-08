@@ -67,7 +67,6 @@ export const postGroupData = async (data: any) => {
   const response = await instance.post('/api/groups', data);
   return response;
 };
-
 // 전체 클라이언트 리스트 불러오기
 export const getAllClientList = async (page: any) => {
   const response = await instance.get(`/api/clients?index=${page}`);

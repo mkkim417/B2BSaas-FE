@@ -71,6 +71,29 @@ const EmailInput = ({
           type="text"
           placeholder={placeholder}
         />
+      ) : type === '아이디' ? (
+        <Input
+          errorId={!!errorMessage}
+          {...register('email', {
+            required: '*',
+            validate: {
+              hasAlpha: (value) => {
+                const hasAlpha = !!value.match(/[a-zA-Z]/g);
+
+                return hasAlpha ? true : '알파벳으로 작성해주세요.';
+              },
+              isEmail: (value) => {
+                const isEmail = !!value.match(
+                  /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+                );
+
+                return isEmail ? true : '이메일 형식이 아닙니다.';
+              },
+            },
+          })}
+          type="text"
+          placeholder={placeholder}
+        />
       ) : type === '기업명' ? (
         <Input
           errorId={!!errorMessage}
@@ -158,7 +181,12 @@ const EmailInput = ({
           errorId={!!errorMessage}
           {...register('companyNumber', {
             required: '*',
-            validate: {},
+            validate: {
+              isNumber: (val) => {
+                const isNumber = !!val.match(/^[0-9]+$/);
+                return isNumber ? true : '숫자만 입력해주세요.';
+              },
+            },
           })}
           type="text"
           placeholder={placeholder}
@@ -169,11 +197,11 @@ const EmailInput = ({
           {...register('password', {
             required: '*',
             validate: {
-              isNum: (value) => {
-                const isNum = !!value.match(
+              isPassword: (value) => {
+                const isPassword = !!value.match(
                   /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,20}$/
                 );
-                return isNum
+                return isPassword
                   ? true
                   : '대문자 1자리 이상 포함 영문, 숫자 포함 8~20자리 입력해주세요.';
               },

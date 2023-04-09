@@ -167,7 +167,7 @@ function UploadPage() {
     let reader = new FileReader();
     reader.onload = async function () {
       let data = reader.result;
-      let workBook: any = XLSX.read(data, {
+      let workBook = XLSX.read(data, {
         type: 'binary',
         cellDates: true,
         cellStyles: true,
@@ -187,6 +187,7 @@ function UploadPage() {
         }
         return;
       }
+
       workBook.SheetNames.forEach(function (sheetName: any) {
         let rows = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName]);
         const jsonData = JSON.stringify(rows);

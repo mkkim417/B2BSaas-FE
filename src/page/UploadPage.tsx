@@ -162,18 +162,34 @@ function UploadPage() {
     type: string;
     encoding?: string;
   }
+  interface MyParsingOptions extends XLSX.ParsingOptions {
+    encoding?: string;
+  }
   function readExcel(event: any) {
     let input = event.target;
     let reader = new FileReader();
     reader.onload = async function () {
       let data = reader.result;
-      let workBook: any = XLSX.read(data, {
+      let workBook: XLSX.WorkBook = XLSX.read(data, {
         type: 'binary',
         cellDates: true,
         cellStyles: true,
         encoding: 'utf-8',
-      } as any);
-      if (workBook.bookType !== 'xlsx') {
+      } as MyParsingOptions);
+      if (workBook.Workbook) {
+        // 'xlsx' 또는 'xlsm'과 같은 값을 반환합니다.
+        // xlsx
+        workBook.SheetNames.forEach(function (sheetName: any) {
+          let rows = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName]);
+          const jsonData = JSON.stringify(rows);
+          const pareData = JSON.parse(jsonData);
+          const keyData = Object.keys(pareData[0]);
+          let requiredData = ['이름', '전화번호', '이메일'];
+          if ((refatoringFunc(keyData, requiredData) as any) !== true) return;
+          setKeyData(keyData);
+          setData(pareData);
+        });
+      } else {
         // csv
         let file = event.target.files[0];
         if (file) {
@@ -185,21 +201,11 @@ function UploadPage() {
 
           reader.readAsText(file);
         }
-        return;
       }
-      workBook.SheetNames.forEach(function (sheetName: any) {
-        let rows = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName]);
-        const jsonData = JSON.stringify(rows);
-        const pareData = JSON.parse(jsonData);
-        const keyData = Object.keys(pareData[0]);
-        let requiredData = ['이름', '전화번호', '이메일'];
-        if ((refatoringFunc(keyData, requiredData) as any) !== true) return;
-        setKeyData(keyData);
-        setData(pareData);
-      });
     };
     reader.readAsBinaryString(input.files[0]);
   }
+
   //템플릿전체조회fn
   const fetchTemplateList = useCallback(async () => {
     try {

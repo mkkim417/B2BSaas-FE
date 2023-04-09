@@ -230,7 +230,7 @@ function GroupManageList() {
       refetch();
       // setAllclients(userData?.data.clientCount)
     }
-  }, [searchKeyword, getSearchData]);
+  }, [searchKeyword]);
 
   // 그룹 내 클라이언트 숫자
   const [isGroupAllClients, setIsGroupAllClients] = useState<any>(0);

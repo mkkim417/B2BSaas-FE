@@ -30,7 +30,7 @@ function UserList() {
   // 유저리스트 get API
   const getUserData = useCallback(async () => {
     const response = await axios.get(
-      'https://dev.sendingo-be.store/api/clients'
+      `${process.env.REACT_APP_SERVER_URL}/api/clients`
     );
     setUserList(response.data.data);
     setFilterList(response.data.data);

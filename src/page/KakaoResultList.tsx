@@ -133,7 +133,11 @@ function KakaoResultList() {
           ></SelectBoxs> */}
             {/* 셀렉트박스 넣을부분 */}
             <select
-              style={{ height: '40px' }}
+              style={{
+                height: '40px',
+                border: '2px solid #000',
+                fontWeight: 'bold',
+              }}
               name=""
               id=""
               onChange={(e) => handleOnChangeSelectValue(e)}
@@ -233,18 +237,21 @@ function KakaoResultList() {
   );
 }
 const AlertNoGroup = styled.div`
-  font-family: 'Inter';
+  font-family: 'TheJamsil5Bold';
   font-weight: bold;
+  background: linear-gradient(to top, rgb(54, 254, 173) 40%, transparent 40%);
   padding: 10px;
+  margin-top: 15px;
 `;
 export const FlexWrapResult = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  align-items: center;
 `;
 export const MapWrapper = styled.div`
   width: 100%;
-  border: 1px solid #dcdcdc;
+  border: 2px solid #000;
   border-radius: 8px;
   padding: 20px 30px;
   margin: 15px auto;
@@ -290,7 +297,8 @@ export const Table = styled.table`
 export const GrayWrap = styled.div`
   margin-right: 10px;
   color: #14b769;
-  border: 1px solid #14b769;
+  font-family: 'TheJamsil5Bold';
+  border: 2px solid #14b769;
   border-radius: 8px;
   font-weight: bold;
   padding: 10px;
@@ -310,18 +318,19 @@ export const Wrapper = styled.div`
   width: 1000px;
   height: 100vh;
   margin: 0 auto;
-  padding-left: 80px;
+  /* padding-left: 80px; */
   /* @media screen and (min-width: 1200px) {
     padding-left: inherit;
   } */
 `;
 export const H1 = styled.div`
-  margin-top: 100px;
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 20px;
+  font-family: 'TheJamsil5Bold';
   text-align: left;
   color: #000;
+  background: linear-gradient(to top, #36fead 40%, transparent 40%);
   @media (max-width: 768px) {
     font-size: 20px;
   }

@@ -93,12 +93,13 @@ function HomeHeader() {
   );
 }
 const UserButton = styled.div`
-  color: #909090;
+  color: #000;
   text-decoration: underline;
-  font-weight: normal;
+  font-size: 15px;
+  font-weight: bold;
   cursor: pointer;
   :nth-of-type(2) {
-    font-weight: 100;
+    /* font-weight: 100; */
   }
 `;
 const Username = styled.div`
@@ -153,7 +154,7 @@ const ContentsWrapper = styled.div`
   justify-content: space-between;
 `;
 const HeaderContainer = styled.div`
-  border-bottom: 1px solid #e1e1e1;
+  border-bottom: 2px solid #000;
   padding: 0px 20px;
   width: 100%;
   background-color: #fff;

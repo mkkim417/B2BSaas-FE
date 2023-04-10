@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import { motion } from 'framer-motion';
-import axios from 'axios';
 import { getCookie } from '../util/cookie';
 import { FlexWrapResult, H1, Table, Wrapper } from './KakaoResultList';
 import styled from 'styled-components';
@@ -9,7 +8,7 @@ import Pagination from 'react-js-pagination';
 import { PaginationBox1 } from '../components/PaginationStyled';
 import { useMutation } from 'react-query';
 import { fetchTemplatesList } from '../axios/api';
-import { Button, ContentsWrap, MapWrapper, Td, Th, Thead } from './UploadPage';
+import { Button, MapWrapper, Td, Th, Thead } from './UploadPage';
 function ReadyAlarmtalk() {
   const params = useParams();
   const token = getCookie('userToken');
@@ -68,7 +67,6 @@ function ReadyAlarmtalk() {
       setNullComponent(true);
     }
   }, [mutate]);
-  console.log(isKeyData);
   const transData = {
     clientEmail: '이메일',
     clientId: 'ID',
@@ -181,15 +179,13 @@ function ReadyAlarmtalk() {
             </>
           ) : (
             <>
-              <ButtonWrap>
-                <NoticeFont>아직 선택된 그룹이 없으시네요 😊</NoticeFont>
-                <Button
-                  width={'150px'}
-                  onClick={() => navigate('/groupmanageList')}
-                >
-                  고객그룹등록하기
-                </Button>
-              </ButtonWrap>
+              <NoticeFont>아직 선택된 그룹이 없으시네요 😊</NoticeFont>
+              <Button
+                width={'150px'}
+                onClick={() => navigate('/groupmanageList')}
+              >
+                고객그룹등록하기
+              </Button>
             </>
           )}
         </FlexWrapResult>
@@ -223,6 +219,7 @@ const ButtonWrap = styled.div`
 `;
 const NoticeFont = styled.div`
   font-size: 18px;
+  margin: 10px 0px 20px;
   font-weight: 900;
   color: black;
 `;

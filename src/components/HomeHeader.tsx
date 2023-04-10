@@ -2,27 +2,26 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { handleLogout, isLoggedin } from '../util/cookie';
+import { LogoInamge } from './Header';
 function HomeHeader() {
   const isLoggedIn = isLoggedin();
   return (
     <HeaderContainer>
       <ContentsWrapper>
         <Logo>
-          <Link to={'/'}>Logo</Link>
+          <Link to={'/'}>
+            <LogoInamge />
+          </Link>
         </Logo>
         <TwiceWraper>
           <LeftContainer></LeftContainer>
         </TwiceWraper>
         <FlexWrap>
+          <UserButton>
+            <a href="http://pf.kakao.com/_NsTkxj/chat">문의하기</a>
+          </UserButton>
           {isLoggedIn ? (
             <>
-              <UserWrap>
-                <Box width="25px" height="25px" />
-                <div>
-                  <div>소속회사명</div>
-                  <Username>김샌드</Username>
-                </div>
-              </UserWrap>
               <UserButton
                 onClick={() => {
                   const isConfirmed =
@@ -34,6 +33,13 @@ function HomeHeader() {
               >
                 로그아웃
               </UserButton>
+              <UserWrap>
+                <Box width="25px" height="25px" />
+                <div>
+                  <div>소속회사명</div>
+                  <Username>김샌드</Username>
+                </div>
+              </UserWrap>
             </>
           ) : (
             <Link to="/login">
@@ -54,6 +60,7 @@ function HomeHeader() {
 const UserButton = styled.div`
   color: #909090;
   text-decoration: underline;
+  font-weight: normal;
   cursor: pointer;
   :nth-of-type(2) {
     font-weight: 100;
@@ -80,6 +87,8 @@ const FlexWrap = styled.div`
   justify-content: space-around;
   font-size: 14px;
   font-weight: bold;
+  align-items: center;
+  gap: 30px;
 `;
 const UserWrap = styled.div`
   display: flex;

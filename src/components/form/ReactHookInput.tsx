@@ -35,7 +35,7 @@ const EmailInput = ({
                 try {
                   await axios
                     .post(
-                      'https://dev.sendingo-be.store/api/users/signup/existemail',
+                      `${process.env.REACT_APP_SERVER_URL}/api/users/signup/existemail`,
                       {
                         email,
                       }

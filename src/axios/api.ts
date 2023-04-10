@@ -6,7 +6,7 @@ interface Login {
   password: string;
 }
 const instance = axios.create({
-  baseURL: `https://dev.sendingo-be.store`,
+  baseURL: `${process.env.REACT_APP_SERVER_URL}`,
   withCredentials: true,
 });
 instance.interceptors.request.use(function (config) {
@@ -46,6 +46,7 @@ export const postLogin = async (data: Login) => {
       response.headers.authorization || response.headers.Authorization;
     const token = authHeader ? authHeader.split(' ')[1] : null;
     // localStorage.setItem('Token', token);
+    console.log('로그인에 뭐넘오나~', response)
     return { response, token, data: response.data };
   } catch (error) {
     console.error(error);
@@ -102,16 +103,29 @@ export const deleteGroupData = async (groupId: any) => {
   return response;
 };
 
-// 그룹 내 클라이언트 삭제
-export const deleteInGroupClient = async(checkValue:any) => {
-  const urls = checkValue.map((item:any) => `/api/batch/clients/${item.clientId}/groups/${item.groupId}`);
-  const response = await axios.all(
+// 그룹 내 클라이언트 등록
+export const postInGroupClient = async(data : any) => {
+  const urls = data.map((item:any) => `/api/batch/clients/:clientId/groups/:groupId`);
+  const response =await axios.all(
     urls.map((url:any) => {
       instance.post(url);
     })
   )
-  return response;
 }
+
+
+// 그룹 내 클라이언트 삭제
+export const deleteInGroupClient = async (checkValue: any) => {
+  const urls = checkValue.map(
+    (item: any) => `/api/batch/clients/${item.clientId}/groups/${item.groupId}`
+  );
+  const response = await axios.all(
+    urls.map((url: any) => {
+      instance.post(url);
+    })
+  );
+  return response;
+};
 // 그룹 내 클라이언트 복사
 // 그룹 내 클라이언트 이동
 

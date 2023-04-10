@@ -22,8 +22,22 @@ const TopNav = () => {
   // console.log('Uploadpage : ', Uploadpage);
   // console.log('Home : ', Home);
   const [menuOpen, setMenuOpen] = useState(false);
+  const test = ['Overview', 'notificatinos'];
+  function sideMenuBar(test: string[]) {
+    return (
+      <FixedWrap>
+        {test.map((el) => (
+          <>
+            <li>{el}</li>
+            <li>!!</li>
+          </>
+        ))}
+      </FixedWrap>
+    );
+  }
   return (
     <TotalWrapper>
+      {sideMenuBar(test)}
       <Wrapper>
         <UserContatiner>
           <ul style={{ marginTop: '60px' }}>
@@ -45,12 +59,10 @@ const TopNav = () => {
                         layoutId="circle"
                       />
                       통계
-                      {/* <LiBlue>이용현황</LiBlue> */}
                     </>
                   ) : (
                     <>
                       <ListIcon width={'25px'} heigth={'25px'} />
-                      {/* <NotLiBlue>이용현황</NotLiBlue> */}
                     </>
                   )}
                 </NavLink>
@@ -179,27 +191,8 @@ const TopNav = () => {
               </InLi>
             </Li>
           </ul>
-          <FlexWrap>
-            {/* {isLoggedIn ? (
-              <UserButton
-                onClick={() => {
-                  const isConfirmed =
-                    window.confirm('정말 로그아웃 하시겠습니까?');
-                  if (isConfirmed) {
-                    handleLogout();
-                  }
-                }}
-              >
-                로그아웃
-              </UserButton>
-            ) : (
-              <Link to="/login">
-                <UserButton>로그인</UserButton>
-              </Link>
-            )} */}
-          </FlexWrap>
+          <FlexWrap></FlexWrap>
         </UserContatiner>
-
         {/* <Accordion
           title="이용현황"
           contents={
@@ -273,6 +266,17 @@ const TopNav = () => {
     </TotalWrapper>
   );
 };
+const FixedWrap = styled.ul`
+  display: none;
+  position: fixed;
+  left: 0;
+  z-index: 0;
+  padding-top: 80px;
+  padding-left: 80px;
+  height: 100vh;
+  background: orange;
+  width: 250px;
+`;
 const Circle = styled(motion.span)`
   position: absolute;
   width: 8px;
@@ -392,10 +396,10 @@ const Wrapper = styled.div`
   width: 80px;
   border-right: 1px solid #bdbdbd;
   height: 100vh;
+  background: #fff;
   position: fixed;
   top: 0%;
   z-index: 1;
-  /* background-color: red; */
 `;
 const SlideWrapper = styled.div`
   width: 200px;

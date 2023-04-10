@@ -465,7 +465,6 @@ function GroupManageList() {
   };
   return (
     <Container>
-      <HeaderContainer>그룹관리</HeaderContainer>
       <ContentContainer>
         {/* 그룹리스트 공간 */}
         <GroupContainer>
@@ -714,7 +713,7 @@ function GroupManageList() {
           </ButtonContainer>
           <div
             style={{
-              border: '1px solid #eee',
+              border: '2px solid #000',
               borderRadius: '15px',
             }}
           >
@@ -937,7 +936,7 @@ export const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   padding-left: 80px;
-  margin-top: 10px;
+  margin-top: 90px;
   /* margin-bottom: 20px; */
   /* padding-left: 30px; */
   font-size: 34px;
@@ -945,13 +944,13 @@ export const HeaderContainer = styled.div`
   /* background-color: crimson; */
 `;
 const ContentContainer = styled.div`
-  max-width: 1600px;
+  max-width: 1800px;
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: row;
   margin: 0 auto;
-  justify-content: space-between;
+  margin-top: 100px;
   /* margin-bottom: 100px; */
   /* background-color: cyan; */
 `;
@@ -961,13 +960,13 @@ const GroupContainer = styled.div`
   width: 250px;
   @media screen and (min-width: 1300px) {
     margin: 0px 45px;
-    width: 300px;
+    width: 250px;
   }
   /* background-color: bisque; */
 `;
 const GroupContentBox = styled.div`
   height: 92%;
-  border: 2px solid #eeeeee;
+  border: 2px solid #000;
   border-radius: 20px;
   overflow: auto;
   padding: 10px;
@@ -980,6 +979,7 @@ const GroupContentItem = styled.button`
   justify-content: center;
   flex-direction: column;
   width: 90%;
+  font-family: 'TheJamsil5Bold';
   height: 60px;
   margin: 10px auto;
   padding: 10px;
@@ -1019,11 +1019,11 @@ const GroupButton = styled.button`
   height: 40px;
   color: #14b769;
   margin-right: 5px;
-  font-weight: 500;
+  font-weight: bold;
   font-size: 16px;
   border-radius: 8px;
   background-color: #ffffff;
-  border: 1px solid #14b769;
+  border: 2px solid #14b769;
   transition: 0.2s;
   :hover {
     background-color: #14b769;
@@ -1034,7 +1034,7 @@ const SearchInput = styled.input`
   width: 250px;
   height: 45px;
   border-radius: 8px;
-  border: 1px solid #bdbdbd;
+  border: 2px solid #000;
   padding-left: 10px;
 `;
 
@@ -1085,6 +1085,8 @@ const NameBox = styled.div`
   font-size: 22px;
   color: #333333;
   font-weight: 700;
+  background: linear-gradient(to top, #36fead 40%, transparent 40%);
+  font-family: 'TheJamsil5Bold';
 `;
 const DescriptBox = styled.div`
   color: #4f4f4f;
@@ -1130,6 +1132,8 @@ const Percentage = styled.div<{ width: any }>`
   display: flex;
   justify-content: center;
   align-items: center;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
   /* margin-top: 3px; */
   /* border: 1px solid #EEEEEE; */
   /* background-color: #ead3cc; */
@@ -1138,8 +1142,8 @@ const Percentage = styled.div<{ width: any }>`
 
 const HeaderPercentage = styled(Percentage)<{ width: any }>`
   height: 36px;
-  background-color: #f9fafc;
-  color: #909090;
+  color: #000;
+  font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1160,6 +1164,7 @@ const ClientButton = styled.button`
 `;
 const CenterContent = styled.div`
   width: 100%;
+  padding: 15px;
   height: 100%;
   display: flex;
   justify-content: center;

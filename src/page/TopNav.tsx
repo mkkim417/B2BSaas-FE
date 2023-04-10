@@ -22,20 +22,31 @@ const TopNav = () => {
   // console.log('Uploadpage : ', Uploadpage);
   // console.log('Home : ', Home);
   const [menuOpen, setMenuOpen] = useState(false);
-  const test = ['Overview', 'notificatinos'];
-  const [selectedTab, setSelectedTab] = useState();
-  function sideMenuBar(test: string[]) {
+  const [isMenuBoolean, setMenuBoolean] = useState(false);
+  const [isMenuData, setMenuData] = useState<string[]>([]);
+  const [isMenuLink, setMenuLink] = useState<string[]>([]);
+
+  const variants = {
+    open: { opacity: 1, x: 0 },
+    closed: { opacity: 0, x: '-100%' },
+  };
+  function sideMenuBar(test: string[], link: string[]) {
     return (
       <FixedWrap
-        initial={{ x: -280, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: -280, opacity: 0 }}
-        transition={{ duration: 0.3 }}
+        animate={isMenuBoolean ? 'open' : 'closed'}
+        variants={variants}
+        transition={{ duration: 0.5 }}
       >
-        {test.map((el) => (
+        {test.map((el, idx) => (
           <>
-            <li>{el}</li>
-            <li>!!</li>
+            <li>
+              <LinkComp
+                to={`${link[idx]}`}
+                onClick={() => setMenuBoolean((prev) => !prev)}
+              >
+                {el}
+              </LinkComp>
+            </li>
           </>
         ))}
       </FixedWrap>
@@ -43,7 +54,7 @@ const TopNav = () => {
   }
   return (
     <TotalWrapper>
-      {sideMenuBar(test)}
+      {sideMenuBar(isMenuData, isMenuLink)}
       <Wrapper>
         <UserContatiner>
           <ul style={{ marginTop: '60px' }}>
@@ -52,7 +63,11 @@ const TopNav = () => {
                 active={statistics ? true : false}
                 onClick={() => {
                   setMenuOpen((menuOpen) => !menuOpen);
-                  alert('hello');
+                  setMenuBoolean((prev) => !prev);
+                  if (isMenuBoolean === false) {
+                    setMenuData(['통계분석']);
+                    setMenuLink(['/statistics']);
+                  }
                 }}
               >
                 <NavLink to={'/statistics'}>
@@ -65,7 +80,6 @@ const TopNav = () => {
                         }}
                         layoutId="circle"
                       />
-                      통계
                     </>
                   ) : (
                     <>
@@ -80,6 +94,11 @@ const TopNav = () => {
                 active={readyalarmtalk ? true : false}
                 onClick={() => {
                   setMenuOpen((menuOpen) => !menuOpen);
+                  setMenuBoolean((prev) => !prev);
+                  if (isMenuBoolean === false) {
+                    setMenuData(['알림톡전송']);
+                    setMenuLink(['/readyalarmtalk']);
+                  }
                 }}
               >
                 <NavLink to={'/readyalarmtalk'}>
@@ -92,13 +111,10 @@ const TopNav = () => {
                         }}
                         layoutId="circle"
                       />
-                      알림톡
-                      {/* <LiBlue>알림톡전송</LiBlue> */}
                     </>
                   ) : (
                     <>
                       <KakaoIcon width={'25px'} heigth={'25px'} />
-                      {/* <NotLiBlue>알림톡전송</NotLiBlue> */}
                     </>
                   )}
                 </NavLink>
@@ -109,6 +125,11 @@ const TopNav = () => {
                 active={kakaoresultlist ? true : false}
                 onClick={() => {
                   setMenuOpen((menuOpen) => !menuOpen);
+                  setMenuBoolean((prev) => !prev);
+                  if (isMenuBoolean === false) {
+                    setMenuData(['전송결과조회']);
+                    setMenuLink(['/kakaoresultlist']);
+                  }
                 }}
               >
                 <NavLink to={'/kakaoresultlist'}>
@@ -123,13 +144,10 @@ const TopNav = () => {
                         animate={{ backgroundColor: ['lime'] }}
                         layoutId="circle"
                       />
-                      전송결과
-                      {/* <LiBlue>전송결과조회</LiBlue> */}
                     </>
                   ) : (
                     <>
                       <ListResultIcon width={'25px'} heigth={'25px'} />
-                      {/* <NotLiBlue>전송결과조회</NotLiBlue> */}
                     </>
                   )}
                 </NavLink>
@@ -140,6 +158,11 @@ const TopNav = () => {
                 active={groupManageList ? true : false}
                 onClick={() => {
                   setMenuOpen((menuOpen) => !menuOpen);
+                  setMenuBoolean((prev) => !prev);
+                  if (isMenuBoolean === false) {
+                    setMenuData(['그룹관리']);
+                    setMenuLink(['/groupManageList']);
+                  }
                 }}
               >
                 <NavLink to={'/groupManageList'}>
@@ -154,13 +177,10 @@ const TopNav = () => {
                         animate={{ backgroundColor: ['lime'] }}
                         layoutId="circle"
                       />
-                      고객관리
-                      {/* <LiBlue>고객관리</LiBlue> */}
                     </>
                   ) : (
                     <>
                       <GroupMangeListIcon width={'25px'} heigth={'25px'} />
-                      {/* <NotLiBlue>고객관리</NotLiBlue> */}
                     </>
                   )}
                 </NavLink>
@@ -171,6 +191,11 @@ const TopNav = () => {
                 active={clientRegistration ? true : false}
                 onClick={() => {
                   setMenuOpen((menuOpen) => !menuOpen);
+                  setMenuBoolean((prev) => !prev);
+                  if (isMenuBoolean === false) {
+                    setMenuData(['고객등록']);
+                    setMenuLink(['/clientregistration']);
+                  }
                 }}
               >
                 <NavLink to={'/clientregistration'}>
@@ -185,13 +210,10 @@ const TopNav = () => {
                         animate={{ backgroundColor: ['lime'] }}
                         layoutId="circle"
                       />
-                      고객등록
-                      {/* <LiBlue>고객등록</LiBlue> */}
                     </>
                   ) : (
                     <>
                       <CustomerAddIcon width={'25px'} heigth={'25px'} />
-                      {/* <NotLiBlue>고객등록</NotLiBlue> */}
                     </>
                   )}
                 </NavLink>
@@ -206,7 +228,7 @@ const TopNav = () => {
             <div>
               <Ul>
                 <Link to={'/statistics'}>
-                  // {statistics ? <LiBlue>그래프</LiBlue> : <Li>그래프</Li>}
+                  
                 </Link>
               </Ul>
             </div>
@@ -219,14 +241,14 @@ const TopNav = () => {
               <Ul>
                 <Link to={'/readyalarmtalk'}>
                   {readyalarmtalk ? (
-                    // <LiBlue>알림톡전송</LiBlue>
+                    
                   ) : (
                     <Li>알림톡전송</Li>
                   )}
                 </Link>
                 <Link to={'/kakaoresultlist'}>
                   {kakaoresultlist ? (
-                    // <LiBlue>전송결과</LiBlue>
+                    
                   ) : (
                     <Li>전송결과</Li>
                   )}
@@ -242,21 +264,21 @@ const TopNav = () => {
               <Ul>
                 <Link to={'/uploadpage'}>
                   {Uploadpage ? (
-                    // <LiBlue>고객등록(다건)</LiBlue>
+                    
                   ) : (
                     <Li>고객등록(다건)</Li>
                   )}
                 </Link>
                 <Link to={'/clientRegistration'}>
                   {clientRegistration ? (
-                    // <LiBlue>고객등록</LiBlue>
+                    
                   ) : (
                     <Li>고객등록</Li>
                   )}
                 </Link>
                 <Link to={'/groupmanageList'}>
                   {groupManageList ? (
-                    // <LiBlue>그룹관리</LiBlue>
+                    
                   ) : (
                     <Li>그룹관리</Li>
                   )}
@@ -273,15 +295,27 @@ const TopNav = () => {
     </TotalWrapper>
   );
 };
+const LinkComp = styled(Link)``;
 const FixedWrap = styled(motion.ul)`
+  /* display: none; */
   position: fixed;
   left: 0;
   z-index: 0;
-  padding-top: 80px;
-  padding-left: 80px;
+  margin-top: 30px;
+  padding-top: 60px;
+  padding-left: 66px;
   height: 100vh;
-  background: orange;
-  width: 250px;
+  background: #fff;
+  width: 200px;
+  border-right: 1px solid #bdbdbd;
+  > li {
+    margin-bottom: 15px;
+    margin-left: 20px;
+    font-weight: bold;
+    list-style: auto;
+    font-family: 'Inter';
+    font-size: 14px;
+  }
 `;
 const Circle = styled(motion.span)`
   position: absolute;
@@ -289,8 +323,8 @@ const Circle = styled(motion.span)`
   height: 8px;
   z-index: 1;
   border-radius: 8px;
-  bottom: 26px;
-  left: 18px;
+  bottom: 16px;
+  left: 16px;
   right: 0px;
 `;
 const NavLink = styled(Link)`
@@ -299,11 +333,11 @@ const NavLink = styled(Link)`
   justify-content: center;
   position: relative;
   flex-direction: column;
-  color: white;
+  color: #fff;
   font-size: 7px;
 `;
 const InLi = styled.div<{ active?: boolean }>`
-  background: ${(props) => (props.active ? 'black' : 'white')};
+  background: ${(props) => (props.active ? 'black' : null)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -375,13 +409,13 @@ const Ul = styled.ul`
   border-top: 1px solid #909090;
   background-color: #fbfbfb;
 `;
-// const NotLiBlue = styled.div`
+
 //   font-family: 'Inter', sans-serif;
 //   font-weight: bold;
 //   font-size: 16px;
 //   margin-left: 10px;
 // `;
-// const LiBlue = styled(NotLiBlue)`
+
 //   margin-left: 10px;
 //   color: #14b769;
 // `;
@@ -399,8 +433,8 @@ const Header = styled.div`
   z-index: 1;
 `;
 const Wrapper = styled.div`
-  width: 80px;
-  border-right: 1px solid #bdbdbd;
+  width: 55px;
+  border-right: 2px solid #000;
   height: 100vh;
   background: #fff;
   position: fixed;

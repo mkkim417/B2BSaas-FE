@@ -23,9 +23,15 @@ const TopNav = () => {
   // console.log('Home : ', Home);
   const [menuOpen, setMenuOpen] = useState(false);
   const test = ['Overview', 'notificatinos'];
+  const [selectedTab, setSelectedTab] = useState();
   function sideMenuBar(test: string[]) {
     return (
-      <FixedWrap>
+      <FixedWrap
+        initial={{ x: -280, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: -280, opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
         {test.map((el) => (
           <>
             <li>{el}</li>
@@ -46,6 +52,7 @@ const TopNav = () => {
                 active={statistics ? true : false}
                 onClick={() => {
                   setMenuOpen((menuOpen) => !menuOpen);
+                  alert('hello');
                 }}
               >
                 <NavLink to={'/statistics'}>
@@ -266,8 +273,7 @@ const TopNav = () => {
     </TotalWrapper>
   );
 };
-const FixedWrap = styled.ul`
-  display: none;
+const FixedWrap = styled(motion.ul)`
   position: fixed;
   left: 0;
   z-index: 0;

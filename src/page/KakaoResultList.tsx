@@ -133,6 +133,7 @@ function KakaoResultList() {
           ></SelectBoxs> */}
             {/* 셀렉트박스 넣을부분 */}
             <select
+              style={{ height: '40px' }}
               name=""
               id=""
               onChange={(e) => handleOnChangeSelectValue(e)}
@@ -212,6 +213,9 @@ function KakaoResultList() {
                 ))}
             </tbody>
           </Table>
+          {isGroupClient && isGroupClient.length === 0 ? (
+            <AlertNoGroup>그룹내 전송된 내역이 없습니다.</AlertNoGroup>
+          ) : null}
         </MapWrapper>
         <PaginationBox>
           <Pagination
@@ -228,17 +232,23 @@ function KakaoResultList() {
     </motion.div>
   );
 }
-const FlexWrapResult = styled.div`
+const AlertNoGroup = styled.div`
+  font-family: 'Inter';
+  font-weight: bold;
+  padding: 10px;
+`;
+export const FlexWrapResult = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
 `;
-const MapWrapper = styled.div`
+export const MapWrapper = styled.div`
   width: 100%;
   border: 1px solid #dcdcdc;
   border-radius: 8px;
   padding: 20px 30px;
   margin: 15px auto;
+  flex-direction: column;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -287,11 +297,10 @@ export const GrayWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
 `;
 export const FlexWrap = styled.div`
   display: flex;
-  height: 50px;
+  margin-bottom: 10px;
 `;
 export const Wrapper = styled.div`
   display: flex;
@@ -301,8 +310,13 @@ export const Wrapper = styled.div`
   width: 1000px;
   height: 100vh;
   margin: 0 auto;
+  padding-left: 80px;
+  /* @media screen and (min-width: 1200px) {
+    padding-left: inherit;
+  } */
 `;
 export const H1 = styled.div`
+  margin-top: 100px;
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 20px;

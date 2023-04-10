@@ -16,6 +16,7 @@ import { HeaderContainer } from './GroupManageList';
 import { useMutation } from 'react-query';
 import { fetchTemplatesList } from '../axios/api';
 import { KorToEngTransData, engToKorTransData } from '../constants/alarmtalk';
+import { Wrapper } from './KakaoResultList';
 function Alarmtalk() {
   const [isTemplatesList, setTemplatesList] = useState<any>([]);
   const token = getCookie('userToken');
@@ -261,57 +262,66 @@ function Alarmtalk() {
       <Wrapper>
         <Container>
           <HeadFont>
-          <HeaderContainer>알림톡 전송</HeaderContainer>
+            <HeaderContainer>알림톡 전송</HeaderContainer>
           </HeadFont>
-        <ContentContainer>
-        <LeftContents>
-          <>
-          <TempleteDiv>
-            <TemplateSelectBox
-              name=""
-              id=""
-              onChange={(e) => handleOnChangeSelectValue(e)}
-            >
-              {isTemplatesList &&
-                isTemplatesList.map((el: any, idx: number) => (
-                  <option key={el.talkTemplateId}>{el.talkTemplateName}</option>
-                ))}
-            </TemplateSelectBox>
-            </TempleteDiv>
-            <SelectDiv>
-            {isReqData &&
-              isReqData.map((el: any, idx: any) => (
-                <div key={idx}>
-                  <SelectNameBox>
-                  <NameContents id={`obj_${idx}`}>{el}</NameContents>
-                  <SelectBoxs
-                    currentCategoryValue={currentValue}
-                    className={`obj_${idx}`}
-                    propFunction={messagePreviewFunc}
-                    optionData={(isKeyData && isKeyData) || ['빈값입니다.']}
-                  ></SelectBoxs>
-                  </SelectNameBox>
-
-                </div>
-              ))}
-              </SelectDiv>
-          </>
-        </LeftContents>
-        <RightContents>
-          <ContnetDataWrap>
-            <KakaoBox>
-              <YellowWrap>
-                {currentValue === null ? '택배번호 안내' : currentValue}
-              </YellowWrap>
-              <WhiteWrap
-                id="view"
-                dangerouslySetInnerHTML={{ __html: isViewData || '' }}
-              ></WhiteWrap>
-            </KakaoBox>
-          </ContnetDataWrap>
-        </RightContents>
-        </ContentContainer>
-        <ButtonWrap>
+          <ContentContainer>
+            <LeftContents>
+              <>
+                <TempleteDiv>
+                  <TemplateSelectBox
+                    name=""
+                    id=""
+                    onChange={(e) => handleOnChangeSelectValue(e)}
+                  >
+                    {isTemplatesList &&
+                      isTemplatesList.map((el: any, idx: number) => (
+                        <option key={el.talkTemplateId}>
+                          {el.talkTemplateName}
+                        </option>
+                      ))}
+                  </TemplateSelectBox>
+                </TempleteDiv>
+                <SelectDiv>
+                  {isReqData &&
+                    isReqData.map((el: any, idx: any) => (
+                      <div key={idx}>
+                        <SelectNameBox>
+                          <NameContents id={`obj_${idx}`}>{el}</NameContents>
+                          <SelectBoxs
+                            currentCategoryValue={currentValue}
+                            className={`obj_${idx}`}
+                            propFunction={messagePreviewFunc}
+                            optionData={
+                              (isKeyData && isKeyData) || ['빈값입니다.']
+                            }
+                          ></SelectBoxs>
+                        </SelectNameBox>
+                      </div>
+                    ))}
+                </SelectDiv>
+              </>
+            </LeftContents>
+            <RightContents>
+              {/* <ContnetDataWrap>
+                <KakaoBox>
+                  <YellowWrap>
+                    {currentValue === null ? '택배번호 안내' : currentValue}
+                  </YellowWrap>
+                  <WhiteWrap
+                    id="view"
+                    dangerouslySetInnerHTML={{ __html: isViewData || '' }}
+                  ></WhiteWrap>
+                </KakaoBox>
+              </ContnetDataWrap> */}
+              <BoxWrap>
+                <div
+                  id="view"
+                  dangerouslySetInnerHTML={{ __html: isViewData || '' }}
+                ></div>
+              </BoxWrap>
+            </RightContents>
+          </ContentContainer>
+          <ButtonWrap>
             <ButtonBox onClick={() => navigate(-1)}>취소</ButtonBox>
             <ConfirmButton
               onClick={() => {
@@ -338,20 +348,14 @@ function Alarmtalk() {
     </motion.div>
   );
 }
-
-export const Wrapper = styled.div`
-  padding-left: 80px;
-  padding-top: 60px;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  -webkit-box-pack: center;
-  align-items: center;
-  justify-content: center;
-  /* background-color: crimson; */
+const BoxWrap = styled.div`
+  background-image: url('/phones.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  transform: rotate(6deg);
+  width: 400px;
+  height: 550px;
 `;
-
 export const H1 = styled.h1`
   font-weight: bold;
   font-size: 25px;
@@ -363,11 +367,11 @@ const ButtonWrap = styled.div`
   gap: 10px;
   /* background-color: red; */
 `;
-const HeadFont =styled.div`
+const HeadFont = styled.div`
   display: flex;
   justify-content: center;
   margin-right: 30px;
-`
+`;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -388,7 +392,7 @@ const ContentContainer = styled.div`
   flex-direction: row;
   /* gap: 30px; */
   /* background-color: black; */
-`
+`;
 
 const Button = styled.button`
   border-radius: 15px;
@@ -407,15 +411,15 @@ export const LeftContents = styled.div`
   /* background-color: aliceblue; */
 `;
 const NameContents = styled.div`
-width: 150px;
-height: 45px;
-font-size: 18px;
-font-weight: 700;
-color: #444343;
-display: flex;
-align-items: center;
-/* background-color: #edaf78; */
-`
+  width: 150px;
+  height: 45px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #444343;
+  display: flex;
+  align-items: center;
+  /* background-color: #edaf78; */
+`;
 const TemplateSelectBox = styled.select`
   width: 300px;
   height: 40px;
@@ -423,11 +427,11 @@ const TemplateSelectBox = styled.select`
   border-radius: 10px;
   cursor: pointer;
   border: 3px solid #c8c5c5;
-`
+`;
 const TempleteDiv = styled.div`
   height: 10%;
   /* background-color: beige; */
-`
+`;
 const SelectDiv = styled.div`
   height: 90%;
   display: flex;
@@ -435,7 +439,7 @@ const SelectDiv = styled.div`
   justify-content: start;
   gap: 20px;
   /* background-color: cornsilk; */
-`
+`;
 const SelectNameBox = styled.div`
   display: flex;
   flex-direction: row;
@@ -448,7 +452,7 @@ const ContnetDataWrap = styled.div`
   font-size: 13px;
   line-height: 1.2;
   border-radius: 50px;
-  border: 5px solid #EFEFEF;
+  border: 5px solid #efefef;
   letter-spacing: 2px;
   /* background-color: blueviolet; */
 `;
@@ -457,19 +461,19 @@ const ButtonBox = styled.button`
   font-size: 18px;
   font-weight: 600;
   color: #555555;
-  border: 3px solid #E6F8F0;
+  border: 3px solid #e6f8f0;
   border-radius: 10px;
   /* background-color: yellowgreen; */
   padding: 10px;
   font-size: 18px;
-  :hover{
-    background-color: #E6F8F0;
-    color: #14B869;
+  :hover {
+    background-color: #e6f8f0;
+    color: #14b869;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #14B869;
-`
+  background-color: #14b869;
+`;
 
 export default Alarmtalk;

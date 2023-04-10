@@ -745,11 +745,9 @@ function UploadPage() {
 export const Thead = styled.thead`
   > tr > th {
     font-weight: bold;
-    border-bottom: 1px solid #bdbdbd;
-    border-top: 1px solid #bdbdbd;
+    border-bottom: 1px solid #000;
     font-size: 16px;
-    color: #828282;
-    font-family: 'Inter', sans-serif;
+    font-family: 'TheJamsil5Bold';
     padding: 15px 0px;
     min-width: 80px;
   }
@@ -815,7 +813,7 @@ const Table = styled.table`
   border-spacing: 0px 10px;
 `;
 export const MapWrapper = styled.div<{ ref?: any }>`
-  border: 1px solid #dcdcdc;
+  border: 3px solid #dcdcdc;
   border-radius: 8px;
   padding: 20px 30px;
   overflow: auto;
@@ -892,8 +890,9 @@ export const Wrapper = styled.div`
   gap: 30px;
   justify-content: center;
   align-items: center;
+  padding-top: 60px;
   @media screen and (min-width: 1300px) {
-    display: flex;
+    /* display: flex; */
   }
 `;
 export const ContentsWrap = styled.div`

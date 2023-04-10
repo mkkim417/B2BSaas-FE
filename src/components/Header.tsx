@@ -108,7 +108,7 @@ const LeftContainer = styled.ul`
 `;
 const Li = styled.li`
   margin: 0 20px;
-  color: #909090;
+  color: #000;
 `;
 
 const SignupContainer = styled.div`

@@ -1,10 +1,36 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { handleLogout, isLoggedin } from '../util/cookie';
+import { getCookie, handleLogout, isLoggedin } from '../util/cookie';
 import { LogoInamge } from './Header';
+import jwt_decode from 'jwt-decode';
+import axios from 'axios';
 function HomeHeader() {
+  const [isUserData, setUserData] = useState();
   const isLoggedIn = isLoggedin();
+  const token = getCookie('userToken');
+  const userReadFn = useCallback(async (userId: number) => {
+    try {
+      await axios
+        .get(`${process.env.REACT_APP_SERVER_URL}/api/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log('fetchTemplateDetail : ', res.data.data);
+          setUserData(res.data.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  useEffect(() => {
+    if (isLoggedIn && isLoggedIn) {
+      const decoded = jwt_decode(token) as any;
+      userReadFn(decoded.userId);
+    }
+  }, [userReadFn]);
   return (
     <HeaderContainer>
       <ContentsWrapper>
@@ -36,8 +62,17 @@ function HomeHeader() {
               <UserWrap>
                 <Box width="25px" height="25px" />
                 <div>
-                  <div>소속회사명</div>
-                  <Username>김샌드</Username>
+                  <div>
+                    {isUserData && isUserData
+                      ? (isUserData['company']['companyName'] as any)
+                      : null}
+                  </div>
+                  <Username>
+                    {' '}
+                    {isUserData && isUserData
+                      ? (isUserData['user']['name'] as any)
+                      : null}
+                  </Username>
                 </div>
               </UserWrap>
             </>

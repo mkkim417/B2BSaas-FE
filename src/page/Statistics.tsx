@@ -101,8 +101,6 @@ function Statistics() {
   };
 
   useEffect(() => {
-    console.log('select값', selectedValue);
-
     if (selectedValue === '첫번째') {
       setFirstData([1, 2, 3, 4, 5]);
       setSecondData([5, 4, 3, 2, 1]);

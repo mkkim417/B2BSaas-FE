@@ -38,6 +38,7 @@ function UploadPage() {
   const [isTemplatesList, setTemplatesList] = useState<any>([]);
   const [isReqData, setReqData] = useState([]);
   const [isClientId, setClientId] = useState([]);
+  const [isExcelName, setExcelName] = useState<string>();
 
   const nextRef = useRef<HTMLButtonElement>(null);
   const InputRef = useRef<HTMLInputElement>(null);
@@ -122,6 +123,7 @@ function UploadPage() {
   //초기화더미함수
   const DummyDeleteFuction = () => {
     onClearAttachment();
+    setExcelName('');
     setData(false);
     setOpen(false);
     setKeyData('');
@@ -167,15 +169,20 @@ function UploadPage() {
   }
   function readExcel(event: any) {
     let input = event.target;
+    console.log(input.value);
+    setExcelName(input.value);
     let reader = new FileReader();
+    console.log(reader);
     reader.onload = async function () {
       let data = reader.result;
+      console.log(data);
       let workBook: XLSX.WorkBook = XLSX.read(data, {
         type: 'binary',
         cellDates: true,
         cellStyles: true,
         encoding: 'utf-8',
       } as MyParsingOptions);
+      console.log(workBook);
       if (workBook.Workbook) {
         // 'xlsx' 또는 'xlsm'과 같은 값을 반환합니다.
         // xlsx
@@ -589,7 +596,15 @@ function UploadPage() {
                 </label>
               </BottomContents>
             )}
-            <div style={{ margin: '10px 20px', textAlign: 'right' }}>
+            {/* 파일찾기 */}
+            <div
+              style={{
+                margin: '10px 20px',
+                textAlign: 'right',
+                fontSize: '13px',
+                color: '#909090',
+              }}
+            >
               <InputFile
                 type="file"
                 id="fileData"
@@ -597,6 +612,9 @@ function UploadPage() {
                 onChange={readExcel}
                 ref={fileInput}
               ></InputFile>
+              {isExcelName && isExcelName
+                ? `파일명 : ${isExcelName}`
+                : '선택된  파일없음'}
             </div>
             <BtnWrap>
               {isData && !isGroupComp ? (
@@ -857,6 +875,7 @@ const InputFile = styled.input`
   width: 150px;
   padding: 5px;
   border-radius: 7px;
+  display: none;
 `;
 const Input = styled.input`
   margin-top: 20px;

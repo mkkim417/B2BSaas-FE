@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router';
 import { Link, useMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import Accordion from '../components/Accordion';
-import { Logo } from '../components/Header';
-import { handleLogout, isLoggedin } from '../util/cookie';
+import { isLoggedin } from '../util/cookie';
 import ListIcon from '../asset/svg/ListIcon';
 import KakaoIcon from '../asset/svg/KakaoIcon';
 import ListResultIcon from '../asset/svg/ListResultIcon';
@@ -13,14 +11,8 @@ import CustomerAddIcon from '../asset/svg/CustomerAddIcon';
 import { motion } from 'framer-motion';
 
 const TopNav = () => {
-  const Uploadpage = useMatch('/uploadpage');
-  const usergrouplist = useMatch('/usergrouplist');
   const statistics = useMatch('/statistics');
-  const Home = useMatch('/');
-
   const isLoggedIn = isLoggedin();
-
-  const clientCreate = useMatch('/singleusercreate');
   const clientRegistration = useMatch('/clientregistration');
   const groupManageList = useMatch('/groupmanageList');
   const alarmtalk = useMatch('/alarmtalk');
@@ -52,6 +44,7 @@ const TopNav = () => {
                         }}
                         layoutId="circle"
                       />
+                      통계
                       {/* <LiBlue>이용현황</LiBlue> */}
                     </>
                   ) : (
@@ -80,6 +73,7 @@ const TopNav = () => {
                         }}
                         layoutId="circle"
                       />
+                      알림톡
                       {/* <LiBlue>알림톡전송</LiBlue> */}
                     </>
                   ) : (
@@ -110,6 +104,7 @@ const TopNav = () => {
                         animate={{ backgroundColor: ['lime'] }}
                         layoutId="circle"
                       />
+                      전송결과
                       {/* <LiBlue>전송결과조회</LiBlue> */}
                     </>
                   ) : (
@@ -140,6 +135,7 @@ const TopNav = () => {
                         animate={{ backgroundColor: ['lime'] }}
                         layoutId="circle"
                       />
+                      고객관리
                       {/* <LiBlue>고객관리</LiBlue> */}
                     </>
                   ) : (
@@ -170,6 +166,7 @@ const TopNav = () => {
                         animate={{ backgroundColor: ['lime'] }}
                         layoutId="circle"
                       />
+                      고객등록
                       {/* <LiBlue>고객등록</LiBlue> */}
                     </>
                   ) : (
@@ -282,8 +279,8 @@ const Circle = styled(motion.span)`
   height: 8px;
   z-index: 1;
   border-radius: 8px;
-  bottom: 23px;
-  left: 21px;
+  bottom: 26px;
+  left: 18px;
   right: 0px;
 `;
 const NavLink = styled(Link)`
@@ -291,6 +288,9 @@ const NavLink = styled(Link)`
   align-items: center;
   justify-content: center;
   position: relative;
+  flex-direction: column;
+  color: white;
+  font-size: 7px;
 `;
 const InLi = styled.div<{ active?: boolean }>`
   background: ${(props) => (props.active ? 'black' : 'white')};

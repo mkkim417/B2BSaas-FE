@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
   Chart as ChartJS,
@@ -24,7 +24,6 @@ ChartJS.register(
   Legend
 );
 
-
 export const options = {
   responsive: true,
   plugins: {
@@ -46,8 +45,8 @@ export const options = {
 //   { x: 'April', y: 4 },
 //   { x: 'May', y: 5 }
 // ]
-  // const data1 = [1, 2, 3, 4, 6]
-  // const data2 = [2, 3, 4, 5 ,7]
+// const data1 = [1, 2, 3, 4, 6]
+// const data2 = [2, 3, 4, 5 ,7]
 
 // export const data = {
 //   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -67,21 +66,20 @@ export const options = {
 //   ],
 // };
 
-
-function Statistics() {  
+function Statistics() {
   // select 박스 값
-  const selectList = ['첫번째', '두번째', '세번째']
+  const selectList = ['첫번째', '두번째', '세번째'];
 
-  // select값 state 
-  const [ selectedValue, setSelectedValue ] = useState('');
+  // select값 state
+  const [selectedValue, setSelectedValue] = useState('');
 
   // 데이터 값들
-  const [ firstData, setFirstData ] = useState<number[]>([]);
-  const [ secondData, setSecondData ] = useState<number[]>([]);
+  const [firstData, setFirstData] = useState<number[]>([]);
+  const [secondData, setSecondData] = useState<number[]>([]);
 
-  const selectHandler = (e : any) => {
-    setSelectedValue(e.target.value)
-  }
+  const selectHandler = (e: any) => {
+    setSelectedValue(e.target.value);
+  };
 
   // 그래프 셋팅
   const data = {
@@ -103,32 +101,32 @@ function Statistics() {
   };
 
   useEffect(() => {
-    console.log('select값', selectedValue)
+    console.log('select값', selectedValue);
 
-    if ( selectedValue === '첫번째') {
-      setFirstData([1, 2, 3, 4, 5])
-      setSecondData([5, 4, 3, 2, 1])
-    } else if ( selectedValue === '두번째') {
-      setFirstData([300, 100, 400, 300, 200])
-      setSecondData([100, 600, 700, 200, 100])
+    if (selectedValue === '첫번째') {
+      setFirstData([1, 2, 3, 4, 5]);
+      setSecondData([5, 4, 3, 2, 1]);
+    } else if (selectedValue === '두번째') {
+      setFirstData([300, 100, 400, 300, 200]);
+      setSecondData([100, 600, 700, 200, 100]);
     } else {
-      setFirstData([1000, 2000, 3000, 4000, 5000])
-      setSecondData([5000, 4000, 3000, 2000, 1000])
+      setFirstData([1000, 2000, 3000, 4000, 5000]);
+      setSecondData([5000, 4000, 3000, 2000, 1000]);
     }
-  }, [selectedValue])
+  }, [selectedValue]);
   return (
     <Container>
-        {selectedValue}
-        <select onChange={selectHandler}>
-          {selectList.map((item) => (
-            <option value={item} key={item}>
-              {item}
-            </option>
-          ))}
-        </select>
+      {selectedValue}
+      <select onChange={selectHandler}>
+        {selectList.map((item) => (
+          <option value={item} key={item}>
+            {item}
+          </option>
+        ))}
+      </select>
       <Line options={options} data={data} />
     </Container>
-  )
+  );
 }
 export const Wrapper = styled.div`
   display: flex;
@@ -139,7 +137,7 @@ export const Wrapper = styled.div`
   padding-left: 200px;
   gap: 30px;
   padding: 200px;
-`
+`;
 
 const Container = styled.div`
   display: flex;
@@ -147,7 +145,6 @@ const Container = styled.div`
   /* width: 100vw; */
   width: 80%;
   height: 80%;
-  margin-top: 100px;
   margin-left: 220px;
   /* padding-top: 100px;
   padding-left: 300px; */
@@ -161,6 +158,6 @@ const StaticContainer = styled.div`
   max-width: 1000px;
   max-height: 800px;
   background-color: red;
-`
+`;
 
-export default Statistics
+export default Statistics;

@@ -30,7 +30,6 @@ function GroupManageList() {
   // 조건 상태 분기
   // 전체 클라이언트 리스트 호출시 true, 그룹 내 클라이언트 호출시 false 상태로 호출진행
   const [isClientState, setIsClientState] = useState(true);
-
   // Pagination 처리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
   const [currentPage1, setCurrentPage1] = useState(1); // 현재 페이지 default값으로
@@ -41,11 +40,9 @@ function GroupManageList() {
   const [indexOfFirstPost, setIndexOfFirstPost] = useState(0); // 현재 페이지의 첫번째 아이템 인덱스
   const [currentPosts, setCurrentPosts] = useState(0); // 현재 페이지에서 보여지는 아이템들
   // const userData = userList.slice(indexOfFirstPost, indexOfLastPost)
-
   /*************************************************************************************
     그룹리스트 관련 코드
   ************************************************************************************ */
-
   // 그룹리스트 담는 변수
   const [groupList, setGroupList] = useState([] as any);
   // 그룹리스트 내 클라이언트 담는 변수
@@ -61,7 +58,6 @@ function GroupManageList() {
   const [groupSearchKeyword, setGroupSearchKeyword] = useState('');
   // 그룹 내 서치검색 키워드 변수
   const [searchGroupInKeyword, setSearchGroupInKeyword] = useState('');
-
 
   // 그룹리스트 GET API
   // const getGroupData = useCallback(async () => {
@@ -93,7 +89,6 @@ function GroupManageList() {
     }
   );
 
-
   // 그룹 클릭시 그룹 내 클라이언트리스트 호출
   const getClientInGroup = useCallback(
     async (id: any, name: any, descript: any, page: any) => {
@@ -107,7 +102,7 @@ function GroupManageList() {
           { headers: { Authorization: `Bearer ${token}` } }
         )
         .then((res) => {
-          console.log('클라이언트 그룹내 호출', res.data.data)
+          console.log('클라이언트 그룹내 호출', res.data.data);
           setGroupClient(res.data.data);
         });
       setGroupId(id);
@@ -122,7 +117,8 @@ function GroupManageList() {
           setIsGroupAllClients(item.clientCount);
         }
       });
-    },[groupData]
+    },
+    [groupData]
   );
 
   // 그룹 내에서 검색호출 API
@@ -133,19 +129,22 @@ function GroupManageList() {
         headers: { authorization: `Bearer ${token}` },
       }
     );
-    console.log('그룹 내 검색API주소', `${process.env.REACT_APP_SERVER_URL}/api/clients/${groupId}?index=${currentPage}&keyword=${groupSearchKeyword}`,)
-    console.log('검색필터 결과', response.data.data)
-    setGroupClient(response.data.data)
-  }
+    console.log(
+      '그룹 내 검색API주소',
+      `${process.env.REACT_APP_SERVER_URL}/api/clients/${groupId}?index=${currentPage}&keyword=${groupSearchKeyword}`
+    );
+    console.log('검색필터 결과', response.data.data);
+    setGroupClient(response.data.data);
+  };
 
   // 그룹 검색 useEffet
   useEffect(() => {
     if (groupSearchKeyword.length > 0) {
-      getGroupSearchData()
-    } else if ( groupSearchKeyword.length === 0 ) {
-      getClientInGroup(groupId, groupName, groupDescription, currentPage)
+      getGroupSearchData();
+    } else if (groupSearchKeyword.length === 0) {
+      getClientInGroup(groupId, groupName, groupDescription, currentPage);
     }
-  }, [groupSearchKeyword])
+  }, [groupSearchKeyword]);
 
   /*************************************************************************************
     유저리스트 관련 코드
@@ -220,7 +219,7 @@ function GroupManageList() {
     // console.log('검색필터 API결과', response.data.data.clients)
     setUserList(response.data.data.clients);
     return response;
-  }
+  };
 
   // 검색필터 useEffect
   useEffect(() => {

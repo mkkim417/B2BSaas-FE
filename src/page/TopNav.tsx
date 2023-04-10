@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router';
 import { Link, useMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import Accordion from '../components/Accordion';
-import { Logo } from '../components/Header';
-import { handleLogout, isLoggedin } from '../util/cookie';
+import { isLoggedin } from '../util/cookie';
 import ListIcon from '../asset/svg/ListIcon';
 import KakaoIcon from '../asset/svg/KakaoIcon';
 import ListResultIcon from '../asset/svg/ListResultIcon';
@@ -13,14 +11,8 @@ import CustomerAddIcon from '../asset/svg/CustomerAddIcon';
 import { motion } from 'framer-motion';
 
 const TopNav = () => {
-  const Uploadpage = useMatch('/uploadpage');
-  const usergrouplist = useMatch('/usergrouplist');
   const statistics = useMatch('/statistics');
-  const Home = useMatch('/');
-
   const isLoggedIn = isLoggedin();
-
-  const clientCreate = useMatch('/singleusercreate');
   const clientRegistration = useMatch('/clientregistration');
   const groupManageList = useMatch('/groupmanageList');
   const alarmtalk = useMatch('/alarmtalk');
@@ -30,8 +22,22 @@ const TopNav = () => {
   // console.log('Uploadpage : ', Uploadpage);
   // console.log('Home : ', Home);
   const [menuOpen, setMenuOpen] = useState(false);
+  const test = ['Overview', 'notificatinos'];
+  function sideMenuBar(test: string[]) {
+    return (
+      <FixedWrap>
+        {test.map((el) => (
+          <>
+            <li>{el}</li>
+            <li>!!</li>
+          </>
+        ))}
+      </FixedWrap>
+    );
+  }
   return (
     <TotalWrapper>
+      {sideMenuBar(test)}
       <Wrapper>
         <UserContatiner>
           <ul style={{ marginTop: '60px' }}>
@@ -52,12 +58,11 @@ const TopNav = () => {
                         }}
                         layoutId="circle"
                       />
-                      {/* <LiBlue>이용현황</LiBlue> */}
+                      통계
                     </>
                   ) : (
                     <>
                       <ListIcon width={'25px'} heigth={'25px'} />
-                      {/* <NotLiBlue>이용현황</NotLiBlue> */}
                     </>
                   )}
                 </NavLink>
@@ -80,6 +85,7 @@ const TopNav = () => {
                         }}
                         layoutId="circle"
                       />
+                      알림톡
                       {/* <LiBlue>알림톡전송</LiBlue> */}
                     </>
                   ) : (
@@ -110,6 +116,7 @@ const TopNav = () => {
                         animate={{ backgroundColor: ['lime'] }}
                         layoutId="circle"
                       />
+                      전송결과
                       {/* <LiBlue>전송결과조회</LiBlue> */}
                     </>
                   ) : (
@@ -140,6 +147,7 @@ const TopNav = () => {
                         animate={{ backgroundColor: ['lime'] }}
                         layoutId="circle"
                       />
+                      고객관리
                       {/* <LiBlue>고객관리</LiBlue> */}
                     </>
                   ) : (
@@ -170,6 +178,7 @@ const TopNav = () => {
                         animate={{ backgroundColor: ['lime'] }}
                         layoutId="circle"
                       />
+                      고객등록
                       {/* <LiBlue>고객등록</LiBlue> */}
                     </>
                   ) : (
@@ -182,27 +191,8 @@ const TopNav = () => {
               </InLi>
             </Li>
           </ul>
-          <FlexWrap>
-            {/* {isLoggedIn ? (
-              <UserButton
-                onClick={() => {
-                  const isConfirmed =
-                    window.confirm('정말 로그아웃 하시겠습니까?');
-                  if (isConfirmed) {
-                    handleLogout();
-                  }
-                }}
-              >
-                로그아웃
-              </UserButton>
-            ) : (
-              <Link to="/login">
-                <UserButton>로그인</UserButton>
-              </Link>
-            )} */}
-          </FlexWrap>
+          <FlexWrap></FlexWrap>
         </UserContatiner>
-
         {/* <Accordion
           title="이용현황"
           contents={
@@ -276,14 +266,25 @@ const TopNav = () => {
     </TotalWrapper>
   );
 };
+const FixedWrap = styled.ul`
+  display: none;
+  position: fixed;
+  left: 0;
+  z-index: 0;
+  padding-top: 80px;
+  padding-left: 80px;
+  height: 100vh;
+  background: orange;
+  width: 250px;
+`;
 const Circle = styled(motion.span)`
   position: absolute;
   width: 8px;
   height: 8px;
   z-index: 1;
   border-radius: 8px;
-  bottom: 23px;
-  left: 21px;
+  bottom: 26px;
+  left: 18px;
   right: 0px;
 `;
 const NavLink = styled(Link)`
@@ -291,6 +292,9 @@ const NavLink = styled(Link)`
   align-items: center;
   justify-content: center;
   position: relative;
+  flex-direction: column;
+  color: white;
+  font-size: 7px;
 `;
 const InLi = styled.div<{ active?: boolean }>`
   background: ${(props) => (props.active ? 'black' : 'white')};
@@ -392,10 +396,10 @@ const Wrapper = styled.div`
   width: 80px;
   border-right: 1px solid #bdbdbd;
   height: 100vh;
+  background: #fff;
   position: fixed;
   top: 0%;
   z-index: 1;
-  /* background-color: red; */
 `;
 const SlideWrapper = styled.div`
   width: 200px;

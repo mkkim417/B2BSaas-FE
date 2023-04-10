@@ -3,21 +3,13 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { getCookie } from '../util/cookie';
-import { H1, Table } from './KakaoResultList';
+import { FlexWrapResult, H1, Table, Wrapper } from './KakaoResultList';
 import styled from 'styled-components';
 import Pagination from 'react-js-pagination';
 import { PaginationBox1 } from '../components/PaginationStyled';
 import { useMutation } from 'react-query';
 import { fetchTemplatesList } from '../axios/api';
-import {
-  Button,
-  ContentsWrap,
-  MapWrapper,
-  Td,
-  Th,
-  Thead,
-  Wrapper,
-} from './UploadPage';
+import { Button, ContentsWrap, MapWrapper, Td, Th, Thead } from './UploadPage';
 function ReadyAlarmtalk() {
   const params = useParams();
   const token = getCookie('userToken');
@@ -104,13 +96,11 @@ function ReadyAlarmtalk() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <Container>
-        <BottomWrap>
+      <Wrapper>
+        <H1>알림톡 전송 내용 조회</H1>
+        <FlexWrapResult>
           {isNullComponent === false ? (
             <>
-              <div style={{ textAlign: 'center', width: '1080px' }}>
-                <H1>알림톡 전송 내용 조회</H1>
-              </div>
               <MapWrapper>
                 <Table>
                   <Thead>
@@ -167,7 +157,7 @@ function ReadyAlarmtalk() {
                   padding={'10px'}
                   onClick={() => navigate('/groupmanageList')}
                 >
-                  그룹다시선택
+                  뒤로가기
                 </Button>
                 <PaginationBox1>
                   <Pagination
@@ -185,7 +175,7 @@ function ReadyAlarmtalk() {
                   padding={'10px'}
                   onClick={DoneAlertalkSend}
                 >
-                  알림톡 전송 준비 완료
+                  다음단계
                 </Button>
               </ButtonWrap>
             </>
@@ -202,23 +192,11 @@ function ReadyAlarmtalk() {
               </ButtonWrap>
             </>
           )}
-        </BottomWrap>
-      </Container>
+        </FlexWrapResult>
+      </Wrapper>
     </motion.div>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  height: 100vh;
-  padding-left: 80px;
-  /* padding-top: 50px; */
-  /* padding-bottom: 50px; */
-  /* background-color: sandybrown; */
-`;
-
 export const BottomWrap = styled.div<{ ref?: any }>`
   width: 100%;
   margin: 0px auto;
@@ -234,14 +212,14 @@ export const BottomWrap = styled.div<{ ref?: any }>`
   }
 `;
 const ButtonWrap = styled.div`
-  width: 1080px;
-  height: 300px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 50px;
-  /* background-color: red; */
+  justify-content: space-between;
+  width: 100%;
+  @media screen and (min-width: 1300px) {
+    display: flex;
+    width: 1000px;
+  }
 `;
 const NoticeFont = styled.div`
   font-size: 18px;

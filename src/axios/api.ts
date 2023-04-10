@@ -46,7 +46,6 @@ export const postLogin = async (data: Login) => {
       response.headers.authorization || response.headers.Authorization;
     const token = authHeader ? authHeader.split(' ')[1] : null;
     // localStorage.setItem('Token', token);
-    console.log('로그인에 뭐넘오나~', response)
     return { response, token, data: response.data };
   } catch (error) {
     console.error(error);
@@ -104,15 +103,16 @@ export const deleteGroupData = async (groupId: any) => {
 };
 
 // 그룹 내 클라이언트 등록
-export const postInGroupClient = async(data : any) => {
-  const urls = data.map((item:any) => `/api/batch/clients/:clientId/groups/:groupId`);
-  const response =await axios.all(
-    urls.map((url:any) => {
+export const postInGroupClient = async (data: any) => {
+  const urls = data.map(
+    (item: any) => `/api/batch/clients/:clientId/groups/:groupId`
+  );
+  const response = await axios.all(
+    urls.map((url: any) => {
       instance.post(url);
     })
-  )
-}
-
+  );
+};
 
 // 그룹 내 클라이언트 삭제
 export const deleteInGroupClient = async (checkValue: any) => {

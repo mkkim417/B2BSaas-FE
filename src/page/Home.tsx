@@ -36,6 +36,8 @@ export const Wrapper = styled.div`
   justify-content: center;
   height: 100vh;
   gap: 30px;
+  max-width: 1080px;
+  margin: 0 auto;
 `;
 const LogoText = styled.div`
   font-size: 30px;

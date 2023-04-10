@@ -102,7 +102,6 @@ function GroupManageList() {
           { headers: { Authorization: `Bearer ${token}` } }
         )
         .then((res) => {
-          console.log('클라이언트 그룹내 호출', res.data.data);
           setGroupClient(res.data.data);
         });
       setGroupId(id);
@@ -292,10 +291,10 @@ function GroupManageList() {
   const [groupUserCreateModal, setGroupUserCreateModal] = useState(false);
   const clickGroupUserCreateModal = () => {
     setGroupUserCreateModal(true);
-  }
+  };
   const closeGroupUserCreateModal = () => {
     setGroupUserCreateModal(false);
-  }
+  };
   // 그룹리스트 내 유저 복사 모달
   const [groupUserCopyModal, setGroupUserCopyModal] = useState(false);
   const clickUserCopyModal = () => {
@@ -539,14 +538,15 @@ function GroupManageList() {
               <>
                 <div style={{ display: 'flex', gap: '7px' }}>
                   {isOpen && isOpen ? (
-                    <GroupClickButton 
+                    <GroupClickButton
                       onClick={() => {
                         if (checkedArr.length > 0) {
-                          clickUserDeleteModal()
-                        } else if ( checkedArr.length === 0) {
-                          alert('1개 이상을 체크해주세요.')
+                          clickUserDeleteModal();
+                        } else if (checkedArr.length === 0) {
+                          alert('1개 이상을 체크해주세요.');
                         }
-                        }}>
+                      }}
+                    >
                       고객정보 삭제
                     </GroupClickButton>
                   ) : null}
@@ -559,8 +559,9 @@ function GroupManageList() {
                   ) : (
                     <GroupButton
                       onClick={() => {
-                        setOpen((prev) => !prev) as any
-                        setCheckedArr([])}}
+                        setOpen((prev) => !prev) as any;
+                        setCheckedArr([]);
+                      }}
                     >
                       선택취소
                     </GroupButton>
@@ -579,8 +580,9 @@ function GroupManageList() {
                   ) : (
                     <GroupButton
                       onClick={() => {
-                        setIsEditOpen((prev) => !prev) as any
-                        setCheckedArr([])}}
+                        setIsEditOpen((prev) => !prev) as any;
+                        setCheckedArr([]);
+                      }}
                     >
                       수정취소
                     </GroupButton>
@@ -625,8 +627,9 @@ function GroupManageList() {
                   ) : (
                     <GroupButton
                       onClick={() => {
-                        setOpen((prev) => !prev) as any
-                        setCheckedArr([])}}
+                        setOpen((prev) => !prev) as any;
+                        setCheckedArr([]);
+                      }}
                     >
                       삭제취소
                     </GroupButton>
@@ -645,8 +648,9 @@ function GroupManageList() {
                   ) : (
                     <GroupButton
                       onClick={() => {
-                        setIsCopyOpen((prev) => !prev) as any
-                        setCheckedArr([])}}
+                        setIsCopyOpen((prev) => !prev) as any;
+                        setCheckedArr([]);
+                      }}
                     >
                       복사취소
                     </GroupButton>
@@ -668,8 +672,9 @@ function GroupManageList() {
                   ) : (
                     <GroupButton
                       onClick={() => {
-                      setIsMoveOpen((prev) => !prev) as any
-                      setCheckedArr([])}}
+                        setIsMoveOpen((prev) => !prev) as any;
+                        setCheckedArr([]);
+                      }}
                     >
                       이동취소
                     </GroupButton>
@@ -729,7 +734,7 @@ function GroupManageList() {
                   userList?.map((item: any) => {
                     return (
                       <CardHeader key={item.clientId}>
-                        { (isOpen || isEditOpen) ? (
+                        {isOpen || isEditOpen ? (
                           <Percentage width="6%">
                             <CheckInputBox
                               type="checkbox"
@@ -768,7 +773,7 @@ function GroupManageList() {
                   .map((item: any) => {
                     return (
                       <CardHeader key={item.clientId}>
-                        {(isOpen || isCopyOpen || isMoveOpen) ? (
+                        {isOpen || isCopyOpen || isMoveOpen ? (
                           <Percentage width="6%">
                             <CheckInputBox
                               type="checkbox"
@@ -886,8 +891,7 @@ function GroupManageList() {
       )}
       {/* 그룹 내 고객 등록 모달 */}
       {groupUserCreateModal && (
-        <UserInGroupCreateModal 
-          closeModal={closeGroupUserCreateModal}/>
+        <UserInGroupCreateModal closeModal={closeGroupUserCreateModal} />
       )}
       {/* 그룹 내 고객 복사 모달 */}
       {groupUserCopyModal && (

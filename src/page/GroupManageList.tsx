@@ -21,6 +21,7 @@ import {
 import { getCookie } from '../util/cookie';
 import GroupDeleteModal from '../components/modal/GroupDeleteModal';
 import { PaginationBox1 } from '../components/PaginationStyled';
+import UserInGroupCreateModal from '../components/modal/UserInGroupCreateModal';
 
 function GroupManageList() {
   // hook 변수 모음들
@@ -288,7 +289,14 @@ function GroupManageList() {
   const closeGroupDeleteModal = () => {
     setGroupDeleteModal(false);
   };
-
+  // 그룹리스트 내 유저 생성 모달
+  const [groupUserCreateModal, setGroupUserCreateModal] = useState(false);
+  const clickGroupUserCreateModal = () => {
+    setGroupUserCreateModal(true);
+  }
+  const closeGroupUserCreateModal = () => {
+    setGroupUserCreateModal(false);
+  }
   // 그룹리스트 내 유저 복사 모달
   const [groupUserCopyModal, setGroupUserCopyModal] = useState(false);
   const clickUserCopyModal = () => {
@@ -327,9 +335,14 @@ function GroupManageList() {
 
   // 개별 항목을 체크했을 때의 state
   const [isCheckingBox, setIsCheckingBox] = useState(false);
-  const [isOpen, setOpen] = useState(false);
 
-  // 체크항목 저장하는 변수 state
+  // 버튼 열고닫기 state
+  const [isOpen, setOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isCopyOpen, setIsCopyOpen] = useState(false);
+  const [isMoveOpen, setIsMoveOpen] = useState(false);
+
+  // 클릭 저장하는 변수 state
   const [checkedArr, setCheckedArr] = useState<String[]>([]);
 
   // 개별 체크표시 핸들러
@@ -512,7 +525,7 @@ function GroupManageList() {
           <ClientHeaderBox>
             <NameBox>{groupName}</NameBox>
             {/* <TextArea defaultValue={groupName} /> */}
-            <NameBox>{checkedArr.length}</NameBox>
+            {/* <NameBox>{checkedArr.length}</NameBox> */}
           </ClientHeaderBox>
           <ClientHeaderRow>
             <DescriptBox>{groupDescription}</DescriptBox>
@@ -527,7 +540,14 @@ function GroupManageList() {
               <>
                 <div style={{ display: 'flex', gap: '7px' }}>
                   {isOpen && isOpen ? (
-                    <GroupClickButton onClick={() => clickUserDeleteModal()}>
+                    <GroupClickButton 
+                      onClick={() => {
+                        if (checkedArr.length > 0) {
+                          clickUserDeleteModal()
+                        } else if ( checkedArr.length === 0) {
+                          alert('1개 이상을 체크해주세요.')
+                        }
+                        }}>
                       고객정보 삭제
                     </GroupClickButton>
                   ) : null}
@@ -539,25 +559,29 @@ function GroupManageList() {
                     </GroupButton>
                   ) : (
                     <GroupButton
-                      onClick={() => setOpen((prev) => !prev) as any}
+                      onClick={() => {
+                        setOpen((prev) => !prev) as any
+                        setCheckedArr([])}}
                     >
                       선택취소
                     </GroupButton>
                   )}
-                  {isOpen && isOpen ? (
+                  {isEditOpen && isEditOpen ? (
                     <GroupClickButton onClick={() => userEditHandler()}>
                       고객정보 수정
                     </GroupClickButton>
                   ) : null}
-                  {!isOpen ? (
+                  {!isEditOpen ? (
                     <GroupButton
-                      onClick={() => setOpen((prev) => !prev) as any}
+                      onClick={() => setIsEditOpen((prev) => !prev) as any}
                     >
                       선택수정
                     </GroupButton>
                   ) : (
                     <GroupButton
-                      onClick={() => setOpen((prev) => !prev) as any}
+                      onClick={() => {
+                        setIsEditOpen((prev) => !prev) as any
+                        setCheckedArr([])}}
                     >
                       수정취소
                     </GroupButton>
@@ -580,9 +604,12 @@ function GroupManageList() {
             ) : (
               <>
                 <div>
-                  <GroupButton onClick={() => navigate('/uploadpage')}>
+                  <GroupButton onClick={() => clickGroupUserCreateModal()}>
                     고객 등록
                   </GroupButton>
+                  {/* <GroupButton onClick={() => navigate('/uploadpage')}>
+                    고객 등록
+                  </GroupButton> */}
                   {isOpen && isOpen ? (
                     <GroupClickButton
                       onClick={() => clickGroupUserDeleteModal()}
@@ -598,25 +625,29 @@ function GroupManageList() {
                     </GroupButton>
                   ) : (
                     <GroupButton
-                      onClick={() => setOpen((prev) => !prev) as any}
+                      onClick={() => {
+                        setOpen((prev) => !prev) as any
+                        setCheckedArr([])}}
                     >
                       삭제취소
                     </GroupButton>
                   )}
-                  {isOpen && isOpen ? (
+                  {isCopyOpen && isCopyOpen ? (
                     <GroupClickButton onClick={() => clickUserCopyModal()}>
                       복사
                     </GroupClickButton>
                   ) : null}
-                  {!isOpen ? (
+                  {!isCopyOpen ? (
                     <GroupButton
-                      onClick={() => setOpen((prev) => !prev) as any}
+                      onClick={() => setIsCopyOpen((prev) => !prev) as any}
                     >
                       선택복사
                     </GroupButton>
                   ) : (
                     <GroupButton
-                      onClick={() => setOpen((prev) => !prev) as any}
+                      onClick={() => {
+                        setIsCopyOpen((prev) => !prev) as any
+                        setCheckedArr([])}}
                     >
                       복사취소
                     </GroupButton>
@@ -624,20 +655,22 @@ function GroupManageList() {
                   {/* <GroupButton onClick={() => clickUserCopyModal()}>
                   복사
                 </GroupButton> */}
-                  {isOpen && isOpen ? (
+                  {isMoveOpen && isMoveOpen ? (
                     <GroupClickButton onClick={() => clickUserMoveModal()}>
                       이동
                     </GroupClickButton>
                   ) : null}
-                  {!isOpen ? (
+                  {!isMoveOpen ? (
                     <GroupButton
-                      onClick={() => setOpen((prev) => !prev) as any}
+                      onClick={() => setIsMoveOpen((prev) => !prev) as any}
                     >
                       선택이동
                     </GroupButton>
                   ) : (
                     <GroupButton
-                      onClick={() => setOpen((prev) => !prev) as any}
+                      onClick={() => {
+                      setIsMoveOpen((prev) => !prev) as any
+                      setCheckedArr([])}}
                     >
                       이동취소
                     </GroupButton>
@@ -697,7 +730,7 @@ function GroupManageList() {
                   userList?.map((item: any) => {
                     return (
                       <CardHeader key={item.clientId}>
-                        {isOpen ? (
+                        { (isOpen || isEditOpen) ? (
                           <Percentage width="6%">
                             <CheckInputBox
                               type="checkbox"
@@ -736,7 +769,7 @@ function GroupManageList() {
                   .map((item: any) => {
                     return (
                       <CardHeader key={item.clientId}>
-                        {isOpen ? (
+                        {(isOpen || isCopyOpen || isMoveOpen) ? (
                           <Percentage width="6%">
                             <CheckInputBox
                               type="checkbox"
@@ -851,6 +884,11 @@ function GroupManageList() {
           content={deleteGroup}
           closeModal={closeGroupDeleteModal}
         />
+      )}
+      {/* 그룹 내 고객 등록 모달 */}
+      {groupUserCreateModal && (
+        <UserInGroupCreateModal 
+          closeModal={closeGroupUserCreateModal}/>
       )}
       {/* 그룹 내 고객 복사 모달 */}
       {groupUserCopyModal && (

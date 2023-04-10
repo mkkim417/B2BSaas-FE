@@ -490,8 +490,8 @@ function UploadPage() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <ClientHeader />
       <Wrapper>
+        <ClientHeader />
         <ContentsWrap>
           {/* 상단 파일선택 */}
           <div

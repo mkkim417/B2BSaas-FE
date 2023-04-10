@@ -313,12 +313,30 @@ function Alarmtalk() {
                   ></WhiteWrap>
                 </KakaoBox>
               </ContnetDataWrap> */}
-              <BoxWrap>
-                <div
+              {/* 디자인 */}
+              <div style={{ position: 'relative' }}>
+                <BoxWrap>
+                  <KakaoBoxWrap>
+                    {/* <div
                   id="view"
                   dangerouslySetInnerHTML={{ __html: isViewData || '' }}
-                ></div>
-              </BoxWrap>
+                ></div> */}
+                    <div>
+                      <YellowWrap>
+                        {currentValue === null ? '택배번호 안내' : currentValue}
+                      </YellowWrap>
+                      {/* <WhiteWrap
+                      id="view"
+                      dangerouslySetInnerHTML={{ __html: isViewData || '' }}
+                    ></WhiteWrap> */}
+                      <WhiteWrapTalk>
+                        카카오미리보기 Lorem ipsum dolor sit amet consectetur,
+                        adipisicing elit. Quaerat assumenda distinctio modi
+                      </WhiteWrapTalk>
+                    </div>
+                  </KakaoBoxWrap>
+                </BoxWrap>
+              </div>
             </RightContents>
           </ContentContainer>
           <ButtonWrap>
@@ -348,13 +366,26 @@ function Alarmtalk() {
     </motion.div>
   );
 }
+const WhiteWrapTalk = styled(WhiteWrap)`
+  height: 300px;
+`;
+const KakaoBoxWrap = styled(KakaoBox)`
+  top: 18px;
+  width: 239px;
+  position: absolute;
+  left: 72px;
+  height: 505px;
+  z-index: -1;
+  border-radius: 49px;
+  padding-top: 54px;
+  filter: drop-shadow(black 4px 6px 6px);
+`;
 const BoxWrap = styled.div`
-  background-image: url('/phones.png');
+  background-image: url('/iPhone12.png');
   background-size: 100%;
   background-repeat: no-repeat;
-  transform: rotate(6deg);
   width: 400px;
-  height: 550px;
+  height: 581px;
 `;
 export const H1 = styled.h1`
   font-weight: bold;

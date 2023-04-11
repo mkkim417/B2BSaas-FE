@@ -1,4 +1,6 @@
 import axios, { AxiosError } from 'axios';
+import { elements } from 'chart.js';
+import { callback } from 'chart.js/dist/helpers/helpers.core';
 import React, { useCallback, useEffect, useState } from 'react'
 import Pagination from 'react-js-pagination';
 import { useMutation, useQuery } from 'react-query';
@@ -9,16 +11,17 @@ import { getCookie } from '../../util/cookie';
 import { PaginationBox1 } from '../PaginationStyled';
 
 type Props = {
+  groupId: any;
   closeModal: () => void;
 };
-function UserInGroupCreateModal({ closeModal }: Props) {
+function UserInGroupCreateModal({ groupId, closeModal }: Props) {
   const token = getCookie('userToken');
   const navigate = useNavigate();
   // 고객리스트 관련 필요 변수들
   // 전체고객리스트 숫자
   const [isAllclients, setAllclients] = useState<any>(0);
   // 클릭 저장하는 변수 state
-  const [savedArr, setsavedArr] = useState<String[]>([]);
+  const [savedArr, setSavedArr] = useState<String[]>([]);
   // 유저리스트 담는 변수
   const [userList, setUserList] = useState([] as any);
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
@@ -28,17 +31,19 @@ function UserInGroupCreateModal({ closeModal }: Props) {
   // 유저리스트 GET API
   const getUserData = useCallback(async (page: any) => {
   }, []);
+
   const { data: userData, refetch } = useQuery<any, AxiosError>(
     ['getAllClientLists', currentPage],
     () => getAllClientList(currentPage),
     {
       onSuccess: (response) => {
         // console.log('고객리스트useQuery', response);
-        setsavedArr([]);
+        setSavedArr([]);
         // setIsClientState(true);
         setAllclients(userData?.data.clientCount);
         // 여따가 담아서 쓰자!
         setUserList(response.data.clients);
+        console.log('고객리스트', response.data.clients)
       },
       onError: (error) => {
         console.log(error);
@@ -52,10 +57,22 @@ function UserInGroupCreateModal({ closeModal }: Props) {
   };
 
   // 아이템 클릭했을때 
-  const savedHandler = (item : any) => {
-    savedArr.push(item);
-    setsavedArr(savedArr);
+  const savedHandler = (e:any, item : any) => {
+    // e.preventDefault();
+    if ( savedArr.length < 5) {
+      setSavedArr([...savedArr, item])
+    } else {
+      alert('5명을 초과하였습니다! \n 대량등록을 이용해주세요.')
+      e.preventDefault();
+    }
+    console.log('선택한 고객', savedArr)
   }
+  // 아이템 선택 해제 
+  const removeHandler = (item : any) => {
+    const FilterList = savedArr.filter((el:any) => el.clientId !== item.clientId )
+    setSavedArr(FilterList)
+  }
+  
   // 고객리스트에서 검색호출 API
   const getSearchData = async () => {
     const response = await axios.get(
@@ -85,7 +102,8 @@ function UserInGroupCreateModal({ closeModal }: Props) {
   // Post Handler 
   const postDataHandler = (e:any) => {
     e.preventDefault();
-    mutate(savedArr)
+    console.log(mutate([...savedArr, groupId]))
+    // mutate([...savedArr, groupId])
   }
   // 검색필터 useEffect
   useEffect(() => {
@@ -116,7 +134,16 @@ function UserInGroupCreateModal({ closeModal }: Props) {
                   />
             </SearchBox>
             <SelectBox>
-              <CheckBox>
+              {savedArr.map((item:any) => {
+                return (
+                  <CheckBox>
+                    {item.clientName}
+                    <RemoveButton onClick={() => removeHandler(item)}>x</RemoveButton>
+                  </CheckBox>
+                )
+              })}
+              ({savedArr.length}/5)
+              {/* <CheckBox>
                 김미미
                 <RemoveButton>x</RemoveButton>
               </CheckBox>
@@ -131,7 +158,7 @@ function UserInGroupCreateModal({ closeModal }: Props) {
               <CheckBox>
                 김미미
                 <RemoveButton>x</RemoveButton>
-              </CheckBox>
+              </CheckBox> */}
             </SelectBox>
             <DataHeader>
               <HeaderPercent width="20%">이름</HeaderPercent>
@@ -141,7 +168,7 @@ function UserInGroupCreateModal({ closeModal }: Props) {
             <DataContainer>
               {userList?.map((item:any) => {
                 return (
-                  <DataHeader onClick={(item:any) => savedArr.includes(item)}>
+                  <DataHeader onClick={(e:any) => savedHandler(e, item)}>
                     <RowPercent width="20%">{item.clientName}</RowPercent>
                     <RowPercent width="30%">{item.contact}</RowPercent>
                     <RowPercent width="50%">{item.clientEmail}</RowPercent>
@@ -207,7 +234,7 @@ const ModalContainer = styled.form`
   left: 35%;
   top: 10%;
   width: 40%;
-  height: 85%;
+  height: 760px;
   /* background-color: antiquewhite; */
 `;
 
@@ -251,7 +278,10 @@ const DataHeader = styled.div`
   font-size: 20px;
   display: flex;
   flex-direction: row;
-  /* background-color: darkgreen; */
+  :hover {
+    background-color: #F3FBF7;
+    font-weight: 900;
+  }
 `;
 const SearchInput = styled.input`
   width: 250px;
@@ -261,17 +291,18 @@ const SearchInput = styled.input`
   padding-left: 10px;
 `;
 const SelectBox = styled.div`
-  width: 610px;
+  max-width: 610px;
+  /* min-width: 100px; */
   height: 40px;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 10px;
   font-size: 16px;
-  background-color: pink;
+  /* background-color: pink; */
 `
 const SearchBox = styled.div`
-  width: 610px;
+  max-width: 610px;
   height: 40px;
   display: flex;
   justify-content: end;
@@ -321,6 +352,7 @@ const RowPercent = styled.div<{ width: any }>`
   border-left: 1ch;
   border-right: 1ch;
   border-top: 1ch;
+  cursor: pointer;
 `;
 const DataContainer = styled.div`
   width: 100%;
@@ -328,7 +360,7 @@ const DataContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: scroll;
-  background-color: blueviolet;
+  /* background-color: blueviolet; */
 `;
 const FootContainer = styled(TitleContainer)`
   height: 30px;

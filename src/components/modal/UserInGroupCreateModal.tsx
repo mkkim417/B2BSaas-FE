@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { elements } from 'chart.js';
 import { callback } from 'chart.js/dist/helpers/helpers.core';
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
@@ -29,8 +29,7 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
   const [searchKeyword, setSearchKeyword] = useState('');
 
   // 유저리스트 GET API
-  const getUserData = useCallback(async (page: any) => {
-  }, []);
+  const getUserData = useCallback(async (page: any) => {}, []);
 
   const { data: userData, refetch } = useQuery<any, AxiosError>(
     ['getAllClientLists', currentPage],
@@ -43,7 +42,6 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
         setAllclients(userData?.data.clientCount);
         // 여따가 담아서 쓰자!
         setUserList(response.data.clients);
-        console.log('고객리스트', response.data.clients)
       },
       onError: (error) => {
         console.log(error);
@@ -51,28 +49,28 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
     }
   );
   const setPage1 = (page: any) => {
-    console.log('page1', page);
     setCurrentPage(page);
     getUserData(page);
   };
 
-  // 아이템 클릭했을때 
-  const savedHandler = (e:any, item : any) => {
+  // 아이템 클릭했을때
+  const savedHandler = (e: any, item: any) => {
     // e.preventDefault();
-    if ( savedArr.length < 5) {
-      setSavedArr([...savedArr, item])
+    if (savedArr.length < 5) {
+      setSavedArr([...savedArr, item]);
     } else {
-      alert('5명을 초과하였습니다! \n 대량등록을 이용해주세요.')
+      alert('5명을 초과하였습니다! \n 대량등록을 이용해주세요.');
       e.preventDefault();
     }
-    console.log('선택한 고객', savedArr)
-  }
-  // 아이템 선택 해제 
-  const removeHandler = (item : any) => {
-    const FilterList = savedArr.filter((el:any) => el.clientId !== item.clientId )
-    setSavedArr(FilterList)
-  }
-  
+  };
+  // 아이템 선택 해제
+  const removeHandler = (item: any) => {
+    const FilterList = savedArr.filter(
+      (el: any) => el.clientId !== item.clientId
+    );
+    setSavedArr(FilterList);
+  };
+
   // 고객리스트에서 검색호출 API
   const getSearchData = async () => {
     const response = await axios.get(
@@ -85,26 +83,24 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
     // console.log('검색필터 API결과', response.data.data.clients)
     setUserList(response.data.data.clients);
     return response;
-  }
+  };
 
   // 등록 mutate
   const { mutate } = useMutation(postInGroupClient, {
-    onSuccess : (response) => {
-      console.log(response);
-      alert('등록이 완료되었습니다.')
+    onSuccess: (response) => {
+      alert('등록이 완료되었습니다.');
       closeModal();
     },
-    onError : (error) => {
+    onError: (error) => {
       console.log(error);
       alert('삭제를 실패하였습니다.');
-    }
-  })
-  // Post Handler 
-  const postDataHandler = (e:any) => {
+    },
+  });
+  // Post Handler
+  const postDataHandler = (e: any) => {
     e.preventDefault();
-    console.log(mutate([...savedArr, groupId]))
     // mutate([...savedArr, groupId])
-  }
+  };
   // 검색필터 useEffect
   useEffect(() => {
     if (searchKeyword.length > 0) {
@@ -121,26 +117,26 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
       <ModalBackGround>
         <ModalContainer>
           <ContentContainer>
-            <TitleContainer>
-              등록할 고객을 클릭해주세요.
-            </TitleContainer>
+            <TitleContainer>등록할 고객을 클릭해주세요.</TitleContainer>
             <SearchBox>
               <SearchInput
-                    placeholder="Search"
-                    type="search"
-                    onChange={(e: any) => {
-                      setSearchKeyword(e.target.value);
-                    }}
-                  />
+                placeholder="Search"
+                type="search"
+                onChange={(e: any) => {
+                  setSearchKeyword(e.target.value);
+                }}
+              />
             </SearchBox>
             <SelectBox>
-              {savedArr.map((item:any) => {
+              {savedArr.map((item: any) => {
                 return (
                   <CheckBox>
                     {item.clientName}
-                    <RemoveButton onClick={() => removeHandler(item)}>x</RemoveButton>
+                    <RemoveButton onClick={() => removeHandler(item)}>
+                      x
+                    </RemoveButton>
                   </CheckBox>
-                )
+                );
               })}
               ({savedArr.length}/5)
               {/* <CheckBox>
@@ -166,27 +162,27 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
               <HeaderPercent width="50%">이메일</HeaderPercent>
             </DataHeader>
             <DataContainer>
-              {userList?.map((item:any) => {
+              {userList?.map((item: any) => {
                 return (
-                  <DataHeader onClick={(e:any) => savedHandler(e, item)}>
+                  <DataHeader onClick={(e: any) => savedHandler(e, item)}>
                     <RowPercent width="20%">{item.clientName}</RowPercent>
                     <RowPercent width="30%">{item.contact}</RowPercent>
                     <RowPercent width="50%">{item.clientEmail}</RowPercent>
                   </DataHeader>
-                )
+                );
               })}
             </DataContainer>
             <TitleContainer>
               <PaginationBox1>
                 <Pagination
-                      activePage={currentPage}
-                      // itemsCountPerPage={15}
-                      pageRangeDisplayed={10}
-                      prevPageText={'<'}
-                      nextPageText={'>'}
-                      totalItemsCount={isAllclients}
-                      onChange={setPage1}
-                    />
+                  activePage={currentPage}
+                  // itemsCountPerPage={15}
+                  pageRangeDisplayed={10}
+                  prevPageText={'<'}
+                  nextPageText={'>'}
+                  totalItemsCount={isAllclients}
+                  onChange={setPage1}
+                />
               </PaginationBox1>
             </TitleContainer>
           </ContentContainer>
@@ -195,13 +191,15 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
             <MoveBox onClick={() => navigate('/uploadpage')}>다량등록</MoveBox>
           </FootContainer>
           <ButtonContainer>
-          <ButtonBox onClick={closeModal}>취소</ButtonBox>
-          <ConfirmButton onClick={(e:any) => postDataHandler(e)}>확인</ConfirmButton>
+            <ButtonBox onClick={closeModal}>취소</ButtonBox>
+            <ConfirmButton onClick={(e: any) => postDataHandler(e)}>
+              확인
+            </ConfirmButton>
           </ButtonContainer>
         </ModalContainer>
       </ModalBackGround>
     </ModalWrap>
-  )
+  );
 }
 // 전체 모달 감싸주는 컴포넌틑
 const ModalWrap = styled.div`
@@ -279,7 +277,7 @@ const DataHeader = styled.div`
   display: flex;
   flex-direction: row;
   :hover {
-    background-color: #F3FBF7;
+    background-color: #f3fbf7;
     font-weight: 900;
   }
 `;
@@ -300,13 +298,13 @@ const SelectBox = styled.div`
   gap: 10px;
   font-size: 16px;
   /* background-color: pink; */
-`
+`;
 const SearchBox = styled.div`
   max-width: 610px;
   height: 40px;
   display: flex;
   justify-content: end;
-`
+`;
 const CheckBox = styled.div`
   width: 100px;
   height: 35px;
@@ -315,10 +313,10 @@ const CheckBox = styled.div`
   padding-left: 10px;
   border-radius: 8px;
   font-weight: 700;
-  color:#14B869;
-  background-color: #F3FBF7;
+  color: #14b869;
+  background-color: #f3fbf7;
   justify-content: space-between;
-`
+`;
 const RemoveButton = styled.div`
   width: 30px;
   height: 40px;
@@ -329,7 +327,7 @@ const RemoveButton = styled.div`
   font-weight: 700;
   cursor: pointer;
   /* background-color: darkblue; */
-`
+`;
 const HeaderPercent = styled.div<{ width: any }>`
   display: flex;
   align-items: center;
@@ -340,7 +338,7 @@ const HeaderPercent = styled.div<{ width: any }>`
   border-left: 1ch;
   border-right: 1ch;
   /* background-color: aqua; */
-`
+`;
 const RowPercent = styled.div<{ width: any }>`
   height: 30px;
   display: flex;
@@ -348,7 +346,7 @@ const RowPercent = styled.div<{ width: any }>`
   justify-content: center;
   font-size: 18px;
   width: ${(item: any) => item.width};
-  border: 1px solid #F3F3F3;
+  border: 1px solid #f3f3f3;
   border-left: 1ch;
   border-right: 1ch;
   border-top: 1ch;
@@ -371,7 +369,7 @@ const FootContainer = styled(TitleContainer)`
   border-radius: 10px;
   gap: 5px;
   font-style: italic;
-`
+`;
 const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
@@ -390,7 +388,7 @@ const MoveBox = styled.button`
   font-weight: 500;
   font-size: 18px;
   /* border: 2px solid #7f8381; */
-`
+`;
 const ButtonBox = styled.button`
   width: 100px;
   /* border: 1px solid #14B869; */
@@ -398,13 +396,13 @@ const ButtonBox = styled.button`
   /* background-color: yellowgreen; */
   padding: 10px;
   font-size: 18px;
-  :hover{
-    background-color: #E6F8F0;
-    color: #14B869;
+  :hover {
+    background-color: #e6f8f0;
+    color: #14b869;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #14B869;
-`
-export default UserInGroupCreateModal
+  background-color: #14b869;
+`;
+export default UserInGroupCreateModal;

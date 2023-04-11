@@ -25,17 +25,14 @@ function UserGroupList() {
 
   // 개별 체크표시 핸들러
   const checkHandler = (e: React.ChangeEvent<HTMLInputElement>, id: any) => {
-    console.log('타켓 checked값 : ', e.target.checked, '타켓 Id값 :', id);
     setIsCheckingBox(!isCheckingBox);
     checkedItemHandler(e.target.checked, id);
-    console.log('개별체크표시핸들러의 Id값확인', id);
   };
   // 전체 체크박스 선택 핸들러
   const allCheckHandler = (isChecked: boolean) => {
     const idArray = [] as any;
     if (isChecked) {
       groupList.forEach((item: any) => {
-        console.log('grouplist', item);
         if (idArray.includes(item.groupId)) {
           // check 배열에 전체선택 품목 중 포함되어있는 것이 있다면 빼고 push
         } else {
@@ -47,7 +44,6 @@ function UserGroupList() {
     } else {
       setCheckedArr([]);
     }
-    console.log('checkArr', checkedArr);
   };
 
   // 체크아이템 변수에 담는 핸들러
@@ -60,7 +56,6 @@ function UserGroupList() {
     } else if (!isChecked || checkedArr.includes(id)) {
       setCheckedArr((checkedArr) => checkedArr.filter((item) => item !== id));
     }
-    console.log('checkedList', checkedArr);
   };
   //yarn json-server --watch grouplist.json --port 4000
 
@@ -68,7 +63,6 @@ function UserGroupList() {
     const response = await axios.get(
       'https://dev.sendingo-be.store/api/groups'
     );
-    console.log('grouplist', response.data.data);
     setGroupList(response.data.data);
     setMonsters(response.data.data);
     setCopy(response.data.data);
@@ -96,7 +90,6 @@ function UserGroupList() {
   const messageSendHandler = () => {
     // 체크박스 1개일 경우에만 메세지 보내기로 이동. 다수 선택 시 한개만 선택해달라고 안내
     if (checkedArr.length === 1) {
-      console.log(checkedArr);
       alert('해당 그룹의 메세지보내기 페이지로 이동됩니다.');
     } else if (checkedArr.length === 0) {
       alert('한 개의 그룹리스트를 선택해주세요.');

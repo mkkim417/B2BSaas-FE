@@ -9,7 +9,7 @@ function PricePolicy() {
     // IMP.init('imp31132542'); // 가맹점 식별코드
     const amount = price;
     if (!amount) {
-      alert('결제 금액1을 확인해주세요');
+      alert('결제 금액을 확인해주세요');
       return;
     }
     const data: any = {
@@ -22,11 +22,6 @@ function PricePolicy() {
     const callback = (response: any) => {
       const { success, merchant_uid, error_msg, imp_uid, error_code } =
         response;
-      if (success) {
-        console.log(response);
-      } else {
-        console.log(response);
-      }
     };
     IMP.request_pay(data, callback);
   };

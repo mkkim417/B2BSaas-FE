@@ -54,10 +54,8 @@ function GroupInUserList() {
   const [checkedArr, setCheckedArr] = useState<String[]>([]);
   // 개별 체크표시 핸들러
   const checkHandler = (e: React.ChangeEvent<HTMLInputElement>, id: any) => {
-    console.log('타켓 checked값 : ', e.target.checked, '타켓 Id값 :', id);
     setIsCheckingBox(!isCheckingBox);
     checkedItemHandler(e.target.checked, id);
-    console.log('개별체크표시핸들러의 Id값확인', id);
   };
   // 전체 체크박스 선택 핸들러
   const allCheckHandler = (isChecked: boolean) => {
@@ -88,7 +86,6 @@ function GroupInUserList() {
     } else if (!isChecked || checkedArr.includes(id)) {
       setCheckedArr((checkedArr) => checkedArr.filter((item) => item !== id));
     }
-    console.log('checkedList', checkedArr);
   };
 
   // 페이지 렌더링하자마자 데이터 get

@@ -34,7 +34,6 @@ function UserList() {
     );
     setUserList(response.data.data);
     setFilterList(response.data.data);
-    console.log('userlist', response.data.data);
   }, []);
 
   // Modal 변수들
@@ -80,17 +79,14 @@ function UserList() {
   const [editContact, setEditContact] = useState('');
   // 개별 체크표시 핸들러
   const checkHandler = (e: React.ChangeEvent<HTMLInputElement>, id: any) => {
-    console.log('타켓 checked값 : ', e.target.checked, '타켓 Id값 :', id);
     setIsCheckingBox(!isCheckingBox);
     checkedItemHandler(e.target.checked, id);
-    console.log('개별체크표시핸들러의 Id값확인', id);
   };
   // 전체 체크박스 선택 핸들러
   const allCheckHandler = (isChecked: boolean) => {
     if (isChecked) {
       const idArray = [] as any;
       userList.forEach((item: any) => {
-        console.log('allchecked handler', userList);
         if (idArray.includes(item.clientId)) {
           // check 배열에 전체선택 품목 중 포함되어있는 것이 있다면 빼고 push
         } else {
@@ -103,7 +99,6 @@ function UserList() {
     } else {
       setCheckedArr([]);
     }
-    console.log('allcheck checkedArr', checkedArr);
   };
   // 체크아이템 변수에 담는 핸들러
   const checkedItemHandler = (isChecked: any, id: any) => {
@@ -115,14 +110,11 @@ function UserList() {
     } else if (!isChecked || checkedArr.includes(id)) {
       setCheckedArr((checkedArr) => checkedArr.filter((item) => item !== id));
     }
-    console.log('checkedList', checkedArr);
   };
 
   // 페이지 렌더링하자마자 데이터 get
   useEffect(() => {
     getUserData();
-    console.log('api', getUserData());
-
     // setCount(userList.length);
     setIndexOfLastPost(currentPage * postPerPage);
     setIndexOfFirstPost(indexOfLastPost - postPerPage);
@@ -158,11 +150,9 @@ function UserList() {
       const urls = checkedArr.map(
         (groupId) => `https://dev.sendingo-be.store/api/clients/${groupId}`
       );
-      console.log(urls);
       axios
         .all(urls.map((url) => axios.delete(url)))
         .then((response) => {
-          console.log(response);
           alert('삭제가 완료되었습니다');
         })
         .catch((error) => {
@@ -213,7 +203,6 @@ function UserList() {
       // edit object
       userList.map((item: any) => {
         if (item.clientId === checkedArr[0]) {
-          console.log('값들어오ㅏ?', item.clientId);
           setEditUser({
             ...editUser,
             clientId: item.clientId,
@@ -230,8 +219,6 @@ function UserList() {
       // editArr.push(userList.filter((item :any) => item.clientId === checkedArr[0]))
       // console.log('eidtArr', editArr)
       // console.log('filter', userList.filter((item :any) => item.clientId === checkedArr[0]))
-      console.log('eidtArr', editUser);
-      console.log('eidtArr', editName);
       // setEditName(editArr[0].clientName)
       clickEditModal();
     }

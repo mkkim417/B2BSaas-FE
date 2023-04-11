@@ -147,7 +147,6 @@ function UploadPage() {
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
     const array = csvRows.map((i: any) => {
       const values = i.split(',');
-      console.log(values);
       const obj = csvHeader.reduce((object: any, header: any, index: any) => {
         object[header] = values[index];
         return object;

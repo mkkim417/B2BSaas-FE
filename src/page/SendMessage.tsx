@@ -33,7 +33,6 @@ function SendMessage() {
       }
 
       workBook.SheetNames.forEach(function (sheetName: any) {
-        console.log('SheetName: ' + sheetName);
         let rows = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName]);
         const jsonData = JSON.stringify(rows);
         const pareData = JSON.parse(jsonData);
@@ -44,8 +43,6 @@ function SendMessage() {
     };
     reader.readAsBinaryString(input.files[0]);
   }
-  console.log(isData);
-  console.log(isKeyData);
   return (
     <Wrapper>
       <ContentsWrap>

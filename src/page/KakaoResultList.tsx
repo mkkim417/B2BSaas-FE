@@ -95,9 +95,7 @@ function KakaoResultList() {
       }
     }
     //캘린더 선택시
-  }, [currentValue]);
-
-  console.log('isGroupClient :', isGroupClient);
+  }, [value, currentValue]);
   return (
     <motion.div
       initial={{ opacity: 0 }}

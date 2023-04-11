@@ -254,6 +254,7 @@ export const FlexWrapResult = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  align-items: center;
 `;
 export const MapWrapper = styled.div`
   width: 100%;

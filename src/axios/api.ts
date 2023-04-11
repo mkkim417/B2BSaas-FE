@@ -6,7 +6,7 @@ interface Login {
   password: string;
 }
 const instance = axios.create({
-  baseURL: `https://dev.sendingo-be.store`,
+  baseURL: `${process.env.REACT_APP_SERVER_URL}`,
   withCredentials: true,
 });
 instance.interceptors.request.use(function (config) {
@@ -105,12 +105,14 @@ export const deleteGroupData = async (groupId: any) => {
 
 // 그룹 내 클라이언트 등록
 export const postInGroupClient = async(data : any) => {
-  const urls = data.map((item:any) => `/api/batch/clients/:clientId/groups/:groupId`);
+  console.log(data)
+  const urls = data.map((item:any) => `/api/batch/clients/${item.clientId}/groups/${data[data.length-1]}`);
   const response =await axios.all(
     urls.map((url:any) => {
       instance.post(url);
     })
   )
+  return
 }
 
 

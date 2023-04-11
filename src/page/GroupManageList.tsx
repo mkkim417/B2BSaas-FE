@@ -888,6 +888,7 @@ function GroupManageList() {
       {/* 그룹 내 고객 등록 모달 */}
       {groupUserCreateModal && (
         <UserInGroupCreateModal 
+          groupId={groupId}
           closeModal={closeGroupUserCreateModal}/>
       )}
       {/* 그룹 내 고객 복사 모달 */}

@@ -43,7 +43,6 @@ function KakaoResultList() {
       const skip = postPerPage * (currentPage - 1);
 
       if (startDay === undefined) {
-        console.log('3');
         await axios
           .get(
             `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}`,
@@ -54,7 +53,6 @@ function KakaoResultList() {
             setTotal(res.data.data.list.length);
           });
       } else {
-        console.log('4');
         await axios
           .get(
             `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}&startdate=${startDay}&enddate=${endData}`,
@@ -68,17 +66,6 @@ function KakaoResultList() {
     },
     []
   );
-
-  //발송상세조회
-  const KakaoDetailBtn = useCallback(async (talkSendId: string) => {
-    const response = await axios
-      .get(
-        `${process.env.REACT_APP_SERVER_URL}/api/talk/results/detail/${talkSendId}`
-      )
-      .then((res) => {
-        console.log(res.data);
-      });
-  }, []);
   //yyyymmdd date변환 gkatn
   function formatDate(dateString: any) {
     const date = new Date(dateString);
@@ -96,24 +83,14 @@ function KakaoResultList() {
   }, [getGroupData]);
 
   useEffect(() => {
-    // if (currentValue === undefined) {
-    //   // kakaoResultListFetch(
-    //   //   isGroupList[0]['groupId'],
-    //   //   formatDate(value[0]),
-    //   //   formatDate(value[1])
-    //   // );
-    //   //console.log(isGroupList && isGroupList[0]['groupId']);
-    // }
     if (currentValue !== null) {
       if (value[0] !== null) {
-        console.log('1');
         kakaoResultListFetch(
           currentValue,
           formatDate(value[0]),
           formatDate(value[1])
         );
       } else {
-        console.log('2');
         kakaoResultListFetch(currentValue);
       }
     }
@@ -132,13 +109,6 @@ function KakaoResultList() {
         <FlexWrapResult>
           <FlexWrap>
             <GrayWrap>고객그룹</GrayWrap>
-            {/* <SelectBoxs
-            currentCategoryValue={currentValue}
-            // className={`obj_${idx}`}
-            // propFunction={messagePreviewFunc}
-            optionData={['빈값입니다.']}
-          ></SelectBoxs> */}
-            {/* 셀렉트박스 넣을부분 */}
             <select
               style={{
                 height: '40px',
@@ -254,11 +224,10 @@ export const FlexWrapResult = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  align-items: center;
 `;
 export const MapWrapper = styled.div`
   width: 100%;
-  border: 2px solid #000;
+  border: 4px solid #000;
   border-radius: 8px;
   padding: 20px 30px;
   margin: 15px auto;

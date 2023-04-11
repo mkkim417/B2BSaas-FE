@@ -194,18 +194,21 @@ const NameContainer = styled.div`
   justify-content: center;
   font-size: 20px;
   font-weight: 700;
-  color: #5b5b5b;
+  color: #000;
+  font-family: 'TheJamsil5Bold';
   width: 20%;
   height: 40px;
   /* border: 1px solid black; */
 `;
 const InputContainer = styled.input`
   display: flex;
-  height: 40px;
+  height: 55px;
   border-radius: 10px;
   border: none;
   width: 80%;
-  border: 2px solid black;
+  padding-left: 15px;
+  border: 4px solid black;
+  font-family: 'TheJamsil5Bold';
 `;
 const ButtonContainer = styled.div`
   width: 100%;
@@ -233,12 +236,13 @@ const InputBox = styled.input`
   height: 40px;
 `;
 const ButtonBox = styled.button`
-  width: 100px;
-  /* border: 1px solid #14B869; */
-  border-radius: 10px;
-  /* background-color: yellowgreen; */
-  padding: 10px;
-  font-size: 18px;
+  color: aliceblue;
+  font-family: TheJamsil5Bold;
+  background-color: rgb(20, 184, 105);
+  font-size: 14px;
+  height: 40px;
+  width: 120px;
+  border-radius: 8px;
   :hover {
     background-color: #e6f8f0;
     color: #14b869;
@@ -246,7 +250,9 @@ const ButtonBox = styled.button`
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
+  font-family: 'TheJamsil5Bold';
   background-color: #14b869;
+  font-size: 14px;
 `;
 
 export default SingleUserCreate;

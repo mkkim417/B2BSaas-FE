@@ -784,7 +784,7 @@ const Table = styled.table`
   border-spacing: 0px 10px;
 `;
 export const MapWrapper = styled.div<{ ref?: any }>`
-  border: 3px solid #dcdcdc;
+  border: 4px solid #000;
   border-radius: 8px;
   padding: 20px 30px;
   overflow: auto;
@@ -812,11 +812,12 @@ export const Button = styled.button<{
   padding?: string;
 }>`
   border-radius: 8px;
+
   word-break: keep-all;
   color: #14b769;
   width: ${(props) => (props.width ? props.width : '100px')};
   padding: ${(props) => (props.padding ? props.padding : '15px 20px')};
-  border: 2px solid #14b769;
+  border: 4px solid #14b769;
   font-weight: bold;
   font-size: 14px;
   font-family: 'Inter', sans-serif;

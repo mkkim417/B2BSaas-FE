@@ -262,7 +262,7 @@ function Alarmtalk() {
       <Wrapper>
         <Container>
           <HeadFont>
-            <HeaderContainer>알림톡 전송</HeaderContainer>
+            <HeaderContainerRe>알림톡 전송</HeaderContainerRe>
           </HeadFont>
           <ContentContainer>
             <LeftContents>
@@ -366,6 +366,9 @@ function Alarmtalk() {
     </motion.div>
   );
 }
+const HeaderContainerRe = styled(HeaderContainer)`
+  margin-top: 100px;
+`;
 const WhiteWrapTalk = styled(WhiteWrap)`
   height: 300px;
 `;
@@ -402,6 +405,7 @@ const HeadFont = styled.div`
   display: flex;
   justify-content: center;
   margin-right: 30px;
+  margin-top: 100px;
 `;
 const Container = styled.div`
   display: flex;

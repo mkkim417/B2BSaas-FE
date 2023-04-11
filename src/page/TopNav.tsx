@@ -22,7 +22,6 @@ const TopNav = () => {
   const [isMeData, setData] = useState();
   const duplacatedClick = useCallback(
     (target: any) => {
-      console.log(target, isMeData);
       setData(target);
       if (target == isMeData) {
         setMenuBoolean((prev) => !prev);

@@ -25,7 +25,7 @@ function KakaoResultList() {
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
   const [isGroupList, setGroupList] = useState([]);
   const [isGroupClient, setGroupClient] = useState([]);
-  const [currentValue, setCurrentValue] = useState();
+  const [currentValue, setCurrentValue] = useState(null);
 
   //그룹리스트
   const token = getCookie('userToken');
@@ -41,8 +41,10 @@ function KakaoResultList() {
   const kakaoResultListFetch = useCallback(
     async (groupId?: any, startDay?: string, endData?: string) => {
       const skip = postPerPage * (currentPage - 1);
+
       if (startDay === undefined) {
-        const response = await axios
+        console.log('3');
+        await axios
           .get(
             `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}`,
             { headers: { authorization: `Bearer ${token}` } }
@@ -52,7 +54,8 @@ function KakaoResultList() {
             setTotal(res.data.data.list.length);
           });
       } else {
-        const response = await axios
+        console.log('4');
+        await axios
           .get(
             `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}&startdate=${startDay}&enddate=${endData}`,
             { headers: { authorization: `Bearer ${token}` } }
@@ -103,17 +106,21 @@ function KakaoResultList() {
     // }
     if (currentValue !== null) {
       if (value[0] !== null) {
+        console.log('1');
         kakaoResultListFetch(
           currentValue,
           formatDate(value[0]),
           formatDate(value[1])
         );
       } else {
+        console.log('2');
         kakaoResultListFetch(currentValue);
       }
     }
     //캘린더 선택시
-  }, [value, currentValue]);
+  }, [currentValue]);
+
+  console.log('isGroupClient :', isGroupClient);
   return (
     <motion.div
       initial={{ opacity: 0 }}

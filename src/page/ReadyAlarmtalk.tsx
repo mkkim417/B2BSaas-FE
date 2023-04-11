@@ -99,7 +99,6 @@ function ReadyAlarmtalk() {
     talkContentId: '알림톡컨텐츠ID',
     talkTemplateId: '템플릿ID',
   } as any;
-  console.log(isKeyData);
   return (
     <motion.div
       initial={{ opacity: 0 }}

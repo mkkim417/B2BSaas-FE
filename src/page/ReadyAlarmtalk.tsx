@@ -26,28 +26,39 @@ function ReadyAlarmtalk() {
   };
   const { mutate } = useMutation(fetchTemplatesList, {
     onSuccess: (res) => {
-      console.log(res.data.data);
       // setTableData(
       //   res.data.data.map((el: any) => Object.assign(el.client, el.talkContent))
       // );
-
       // console.log(
       //   res.data.data.map((el: any) =>
       //     Object.keys(Object.assign(el.client, el.talkContent))
       //   )
       // );
-      const Data = res.data.data.map((el: any) =>
-        Object.assign(el.client, el.talkContent)
-      );
-
-      const filteredData = Data.filter((obj: any) => {
-        for (const prop in obj) {
-          if (obj[prop] == null) {
-            delete obj[prop];
+      // .filter((el: any) => el !== 'talkContentId');
+      const filteredData = res.data.data
+        .map((el: any) => {
+          const filteredObj: any = {};
+          for (const prop in el.client) {
+            filteredObj[prop] = el.client[prop];
           }
-        }
-        return Object.keys(obj).length > 0;
-      });
+          filteredObj.groupId = el.talkContent.groupId;
+          filteredObj.talkContentId = el.talkContent.talkContentId;
+          for (const prop in el.talkContent) {
+            if (prop !== 'groupId' && prop !== 'talkContentId') {
+              filteredObj[prop] = el.talkContent[prop];
+            }
+          }
+          return filteredObj;
+        })
+        .filter((obj: any) => {
+          for (const prop in obj) {
+            if (obj[prop] == null) {
+              delete obj[prop];
+            }
+          }
+          return Object.keys(obj).length > 0;
+        });
+      console.log(filteredData);
       setKeyData(Object.keys(filteredData[0]) as any);
       setTableData(filteredData);
     },
@@ -96,7 +107,7 @@ function ReadyAlarmtalk() {
     >
       <Wrapper>
         <H1>알림톡 전송 내용 조회</H1>
-        <FlexWrapResult>
+        <FlexWrapResultResize>
           {isNullComponent === false ? (
             <>
               <MapWrapper>
@@ -149,14 +160,15 @@ function ReadyAlarmtalk() {
                   </tbody>
                 </Table>
               </MapWrapper>
+              <div style={{ margin: '20px' }}></div>
               <ButtonWrap>
-                <Button
+                <NewButton
                   width={'120px'}
                   padding={'10px'}
                   onClick={() => navigate('/groupmanageList')}
                 >
                   뒤로가기
-                </Button>
+                </NewButton>
                 <PaginationBox1>
                   <Pagination
                     activePage={1}
@@ -168,31 +180,37 @@ function ReadyAlarmtalk() {
                     onChange={setPage}
                   />
                 </PaginationBox1>
-                <Button
+                <NewButton
                   width={'110px'}
                   padding={'10px'}
                   onClick={DoneAlertalkSend}
                 >
                   다음단계
-                </Button>
+                </NewButton>
               </ButtonWrap>
             </>
           ) : (
             <>
               <NoticeFont>아직 선택된 그룹이 없으시네요 😊</NoticeFont>
-              <Button
+              <NewButton
                 width={'150px'}
                 onClick={() => navigate('/groupmanageList')}
               >
                 고객그룹등록하기
-              </Button>
+              </NewButton>
             </>
           )}
-        </FlexWrapResult>
+        </FlexWrapResultResize>
       </Wrapper>
     </motion.div>
   );
 }
+const NewButton = styled(Button)`
+  height: 45px;
+`;
+const FlexWrapResultResize = styled(FlexWrapResult)`
+  align-items: center;
+`;
 export const BottomWrap = styled.div<{ ref?: any }>`
   width: 100%;
   margin: 0px auto;

@@ -63,7 +63,6 @@ function UploadPage() {
   const onDropFiles = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    console.log(file);
     readExcel(e);
   };
   //다음단계버튼
@@ -133,7 +132,6 @@ function UploadPage() {
   };
   //엑셀 필수값 필터링함수
   const refatoringFunc = (keyData: string[], name: string[]) => {
-    console.log(keyData, name);
     for (let i = 0; i < name.length; i++) {
       if (keyData.includes(name[i]) === false) {
         DummyDeleteFuction();
@@ -169,20 +167,16 @@ function UploadPage() {
   }
   function readExcel(event: any) {
     let input = event.target;
-    console.log(input.value);
     setExcelName(input.value);
     let reader = new FileReader();
-    console.log(reader);
     reader.onload = async function () {
       let data = reader.result;
-      console.log(data);
       let workBook: XLSX.WorkBook = XLSX.read(data, {
         type: 'binary',
         cellDates: true,
         cellStyles: true,
         encoding: 'utf-8',
       } as MyParsingOptions);
-      console.log(workBook);
       if (workBook.Workbook) {
         // 'xlsx' 또는 'xlsm'과 같은 값을 반환합니다.
         // xlsx
@@ -202,7 +196,6 @@ function UploadPage() {
         if (file) {
           reader.onload = function (event: any) {
             const text = event.target.result;
-            console.log(text);
             csvFileToArray(text);
           };
 
@@ -223,7 +216,6 @@ function UploadPage() {
           },
         })
         .then((res) => {
-          console.log(res.data.data);
           setTemplatesList(res.data.data);
           setTmpId(res.data.data[0].talkTemplateId);
           setReqData(JSON.parse(res.data.data[0].reqData));
@@ -234,10 +226,6 @@ function UploadPage() {
   }, []);
   //클라이언트 대량등록fn
   const clentBulkFetch = async () => {
-    console.log(isReqData); //키값 ['#{회사명}', '#{주문번호}', '#{구/면}', '#{동/리}', '#{월일}', '#{결제금액}']
-
-    console.log(isData); // 결제금액: 33000,구/면: "처인구"동/리: "왕곡동"배송예정일: "2일뒤"송장번호: 2901248912이름: "김영현"이메일: "djdjdjk2006@naver.com"전화번호: "01041096590"주문번호: 912399택배배송시간: 0.5416666666666666택배회사명: "CJ택배"회사명: "센딩고"
-
     //1.key: isReqData , value : isData.결제금액 ?  : undefined
     //2.검증처리 엑셀에 키값이 없으면 return;
 
@@ -276,10 +264,6 @@ function UploadPage() {
     }
     let requiredKeyData = Object.keys(Object.assign({}, ...isData));
 
-    console.log('isReqData :', isReqData);
-    console.log('필수값 :', reqKeyArr);
-    console.log('존재하는값 :', requiredKeyData);
-
     if ((refatoringFunc(requiredKeyData, reqKeyArr) as any) !== true) return;
 
     let data = [] as any;
@@ -303,9 +287,6 @@ function UploadPage() {
         deliveryNumber: el.송장번호 ? `${el.송장번호}` : null,
       })
     );
-    console.log(data);
-    console.log(isOpen);
-    console.log(isClUpload);
     try {
       const response = await axios
         .post(
@@ -318,10 +299,8 @@ function UploadPage() {
           }
         )
         .then((res) => {
-          console.log('api/clients/bulk : ', res.data.clientIds);
           dispatch(clientsIdCreate(res?.data?.clientIds));
           NextBtnHandler(isData, isKeyData);
-          console.log(res.data.clientIds);
           setClientId(res.data.clientIds);
         });
       // navigate('/');
@@ -345,9 +324,7 @@ function UploadPage() {
 
   //그룹저장
   const mutation = useMutation(clentBulkFetch, {
-    onSuccess: (response) => {
-      console.log(response);
-    },
+    onSuccess: (response) => {},
     onError: (error) => {
       console.error(error);
       alert('파일을 선택해주세요.');
@@ -405,7 +382,6 @@ function UploadPage() {
     try {
       if (isNewGroupInput) {
         //신규그룹
-        console.log('isClientId : ', isClientId);
         const response = await axios
           .post(
             `${process.env.REACT_APP_SERVER_URL}/api/batch/groups`,
@@ -420,9 +396,7 @@ function UploadPage() {
               },
             }
           )
-          .then((res) => {
-            console.log(res.data);
-          });
+          .then((res) => {});
       } else {
         //기존그룹
         const response = await axios
@@ -437,9 +411,7 @@ function UploadPage() {
               },
             }
           )
-          .then((res) => {
-            console.log(res.data);
-          });
+          .then((res) => {});
       }
       alert('그룹저장완료');
       navigate('/groupmanageList');
@@ -483,7 +455,6 @@ function UploadPage() {
   //   '차집합 :',
   //   isData && isData.filter((x: any) => !checkedList.includes(x))
   // )
-  console.log('nextRef : ', nextRef);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -749,7 +720,7 @@ export const Thead = styled.thead`
     font-size: 16px;
     font-family: 'TheJamsil5Bold';
     padding: 15px 0px;
-    min-width: 80px;
+    min-width: 94px;
   }
 `;
 export const DecoText = styled.div`
@@ -813,7 +784,7 @@ const Table = styled.table`
   border-spacing: 0px 10px;
 `;
 export const MapWrapper = styled.div<{ ref?: any }>`
-  border: 3px solid #dcdcdc;
+  border: 4px solid #000;
   border-radius: 8px;
   padding: 20px 30px;
   overflow: auto;
@@ -841,11 +812,12 @@ export const Button = styled.button<{
   padding?: string;
 }>`
   border-radius: 8px;
+
   word-break: keep-all;
   color: #14b769;
   width: ${(props) => (props.width ? props.width : '100px')};
   padding: ${(props) => (props.padding ? props.padding : '15px 20px')};
-  border: 2px solid #14b769;
+  border: 4px solid #14b769;
   font-weight: bold;
   font-size: 14px;
   font-family: 'Inter', sans-serif;

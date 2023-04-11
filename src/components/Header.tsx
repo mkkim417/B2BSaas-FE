@@ -30,7 +30,7 @@ function Header() {
           {isLoggedIn ? (
             <>
               <div
-                style={{ fontSize: '14px', cursor: 'pointer' }}
+                style={{ fontSize: '14px', cursor: 'pointer', color: '#000' }}
                 onClick={() => {
                   const isConfirmed =
                     window.confirm('정말 로그아웃 하시겠습니까?');
@@ -93,7 +93,7 @@ const ContentsWrapper = styled.div`
   justify-content: space-between;
 `;
 const HeaderContainer = styled.div`
-  border-bottom: 1px solid #e1e1e1;
+  border-bottom: 2px solid #000;
   width: 100%;
   position: fixed;
   top: 0;

@@ -92,7 +92,6 @@ function GroupManageList() {
   // 그룹 클릭시 그룹 내 클라이언트리스트 호출
   const getClientInGroup = useCallback(
     async (id: any, name: any, descript: any, page: any) => {
-      console.log(id, name, descript);
       setCheckedArr([]);
       setIsClientState(false);
       // /api/clients/:groupId&index={index}&keyword=${keyword}
@@ -461,7 +460,6 @@ function GroupManageList() {
     setClickActive((prev: any) => {
       return e.target.value;
     });
-    console.log(e.target.value);
   };
   return (
     <Container>

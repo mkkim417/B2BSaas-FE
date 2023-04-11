@@ -1,5 +1,5 @@
 import { connect } from 'http2';
-import React from 'react'
+import React from 'react';
 import { useMutation } from 'react-query';
 import styled from 'styled-components';
 import { deleteGroupData } from '../../axios/api';
@@ -10,20 +10,17 @@ type Props = {
   closeModal?: () => void;
 };
 function GroupDeleteModal({ title, content, closeModal }: Props) {
-
   const { mutate } = useMutation(deleteGroupData, {
     onSuccess: (response) => {
-      console.log('success', response);
-      alert('삭제 성공')
+      alert('삭제 성공');
     },
     onError: (error) => {
       console.log('error', error);
     },
-  })
-  const onSubmitHandler = async() => {
-    mutate(content.groupId)
-    console.log(content)
-  }
+  });
+  const onSubmitHandler = async () => {
+    mutate(content.groupId);
+  };
   return (
     <ModalWrap>
       <ModalBackGround>
@@ -32,24 +29,19 @@ function GroupDeleteModal({ title, content, closeModal }: Props) {
             <TitleContainer>
               <div>정말 삭제하시겠습니까?</div>
             </TitleContainer>
-              <DataContainer>
-                <div>
-                  <InputBox>그룹명</InputBox>
-                  <InputContainer
-                    value={content.groupName}
-                    disabled
-                  />
-                </div>
-                <div>
-                  <InputBox>그룹 인원수</InputBox>
-                  <InputContainer
-                    value={content.clientCount}
-                    disabled/>
-                </div>
-              </DataContainer>
-              <FootContainer>
-                <div>해당 그룹 삭제시, 관련 발송내역도 모두 삭제됩니다.</div>
-              </FootContainer>
+            <DataContainer>
+              <div>
+                <InputBox>그룹명</InputBox>
+                <InputContainer value={content.groupName} disabled />
+              </div>
+              <div>
+                <InputBox>그룹 인원수</InputBox>
+                <InputContainer value={content.clientCount} disabled />
+              </div>
+            </DataContainer>
+            <FootContainer>
+              <div>해당 그룹 삭제시, 관련 발송내역도 모두 삭제됩니다.</div>
+            </FootContainer>
           </ContentContainer>
           <ButtonContainer>
             {/* <ButtonBox>아니오</ButtonBox> */}
@@ -59,7 +51,7 @@ function GroupDeleteModal({ title, content, closeModal }: Props) {
         </ModalContainer>
       </ModalBackGround>
     </ModalWrap>
-  )
+  );
 }
 
 // 전체 모달 감싸주는 컴포넌틑
@@ -128,7 +120,7 @@ export const FootContainer = styled(TitleContainer)`
   /* background-color: #E6F8F0; */
   border-radius: 10px;
   font-style: italic;
-`
+`;
 const DataHeader = styled.div`
   width: 100%;
   height: 8%;
@@ -154,13 +146,12 @@ const DataContainer = styled.div`
   padding: 0px 150px 0px 150px;
   /* overflow: scroll; */
   /* background-color: blueviolet; */
-
 `;
 const DataRow = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 10px
-`
+  gap: 10px;
+`;
 const InputBox = styled.div`
   /* height: 28px; */
   font-weight: 500;
@@ -171,7 +162,7 @@ const InputContainer = styled.input`
   width: 100%;
   height: 35px;
   font-size: 16px;
-  border: 2px solid #14B869;
+  border: 2px solid #14b869;
   border-radius: 10px;
 `;
 const ButtonContainer = styled.div`
@@ -190,14 +181,14 @@ const ButtonBox = styled.button`
   /* background-color: yellowgreen; */
   padding: 10px;
   font-size: 18px;
-  :hover{
-    background-color: #E6F8F0;
-    color: #14B869;
+  :hover {
+    background-color: #e6f8f0;
+    color: #14b869;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #14B869;
-`
+  background-color: #14b869;
+`;
 
-export default GroupDeleteModal
+export default GroupDeleteModal;

@@ -17,7 +17,6 @@ function KakaoDetailList() {
   const token = getCookie('userToken');
   const params = useParams();
   const location = useLocation();
-  console.log('location : ', location.state.groupName);
   const [isData, setData] = useState([]);
   const KakaoDetail = useCallback(async () => {
     const response = await axios

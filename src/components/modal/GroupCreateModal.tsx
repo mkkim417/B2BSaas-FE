@@ -29,7 +29,6 @@ const GroupCreateModal = ({ closeModal }: Props) => {
 
   const { mutate } = useMutation(postGroupData, {
     onSuccess: (response) => {
-      console.log(response);
       closeModal();
     },
     onError: (error) => {
@@ -41,9 +40,7 @@ const GroupCreateModal = ({ closeModal }: Props) => {
   const submitHandler = async (e: any, closeModal: any) => {
     if (!(data.groupName === '' && data.groupDescription === '')) {
       // 빈칸없다면 그룹생성 API post
-      mutate(data)
-
-
+      mutate(data);
     } else {
       alert('빈칸을 채워주세요.');
     }
@@ -61,24 +58,24 @@ const GroupCreateModal = ({ closeModal }: Props) => {
           </DataHeader> */}
           <DataContainer>
             <div>
-            <InputBox>그룹명</InputBox>
-            <InputContainer
-              name="groupName"
-              type="text"
-              value={data.groupName}
-              placeholder="그룹명을 입력해주세요"
-              onChange={onChangeHandler}
-            />
+              <InputBox>그룹명</InputBox>
+              <InputContainer
+                name="groupName"
+                type="text"
+                value={data.groupName}
+                placeholder="그룹명을 입력해주세요"
+                onChange={onChangeHandler}
+              />
             </div>
             <div>
-            <InputBox>그룹설명</InputBox>
-            <InputContainer
-              name="groupDescription"
-              type="text"
-              value={data.groupDescription}
-              placeholder="그룹설명을 입력해주세요"
-              onChange={onChangeHandler}
-            />
+              <InputBox>그룹설명</InputBox>
+              <InputContainer
+                name="groupDescription"
+                type="text"
+                value={data.groupDescription}
+                placeholder="그룹설명을 입력해주세요"
+                onChange={onChangeHandler}
+              />
             </div>
           </DataContainer>
           <ButtonContainer>
@@ -190,7 +187,7 @@ const TitleBox = styled.div`
 const InputContainer = styled.input`
   width: 100%;
   height: 35px;
-  border: 2px solid #14B869;
+  border: 2px solid #14b869;
   border-radius: 10px;
 `;
 const ButtonContainer = styled.div`
@@ -208,14 +205,14 @@ const ButtonBox = styled.button`
   border-radius: 10px;
   padding: 10px;
   font-size: 18px;
-  :hover{
-    background-color: #E6F8F0;
-    color: #14B869;
+  :hover {
+    background-color: #e6f8f0;
+    color: #14b869;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #14B869;
-`
+  background-color: #14b869;
+`;
 
 export default GroupCreateModal;

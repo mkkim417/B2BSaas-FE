@@ -30,7 +30,6 @@ const AutoModal = (props: any) => {
           }
         )
         .then((res) => {
-          console.log(res.data);
           navigate('/groupmanageList');
         });
     } catch (error) {

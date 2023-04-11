@@ -9,7 +9,7 @@ type Props = {
   closeModal: () => void;
 };
 function UserMoveModal({ group, content, closeModal }: Props) {
-  const token = getCookie('userToken')
+  const token = getCookie('userToken');
   // Select 그룹이름 담는 변수
   const groupArr = [] as any;
   // Select 선택값 변수 = newGroupId
@@ -17,7 +17,6 @@ function UserMoveModal({ group, content, closeModal }: Props) {
   // Select Change Handler
   const selectHandler = (e: any) => {
     setSelectedGroupId(e.target.value);
-    console.log('select선택값 핸들러', e.target.value);
   };
   useEffect(() => {
     group.map((item: any) => {
@@ -30,24 +29,33 @@ function UserMoveModal({ group, content, closeModal }: Props) {
     const existGroupId = content[0].groupId;
     const urls = content.map(
       (item: any) =>
-        `${process.env.REACT_APP_SERVER_URL}/api/batch/clients/${item.clientId}/groups/${existGroupId}/move/${selectedGroupId}`);
+        `${process.env.REACT_APP_SERVER_URL}/api/batch/clients/${item.clientId}/groups/${existGroupId}/move/${selectedGroupId}`
+    );
     if (selectedGroupId === '') {
       alert('이동할 그룹을 선택해주세요.');
     } else {
       axios
-        .all(urls.map((url: any) => axios.post(url, {}, { headers: { authorization: `Bearer ${token}` } })))
+        .all(
+          urls.map((url: any) =>
+            axios.post(
+              url,
+              {},
+              { headers: { authorization: `Bearer ${token}` } }
+            )
+          )
+        )
         .then((response) => {
-          console.log(response);
           alert('이동 완료!');
           closeModal();
         })
         .catch((error) => {
-          console.log(error.response.data.message);
-          if ( error.response.data.message === '이미 존재하는 그룹입니다.') {
-            alert('이미 존재하는 그룹입니다.')
+          if (error.response.data.message === '이미 존재하는 그룹입니다.') {
+            alert('이미 존재하는 그룹입니다.');
             closeModal();
-          } else if(error.response.data.message === '존재하지 않는 그룹입니다.') {
-            alert('존재하지 않는 그룹입니다.')
+          } else if (
+            error.response.data.message === '존재하지 않는 그룹입니다.'
+          ) {
+            alert('존재하지 않는 그룹입니다.');
             closeModal();
           } else {
             alert('복사에 실패하였습니다. 관리자에게 문의해주세요.');
@@ -181,7 +189,7 @@ const SelectBox = styled.select`
   height: 40px;
   font-size: 16px;
   margin-left: 10px;
-`
+`;
 const HeaderPercent = styled.div<{ width: any }>`
   display: flex;
   align-items: center;
@@ -192,7 +200,7 @@ const HeaderPercent = styled.div<{ width: any }>`
   border-left: 1ch;
   border-right: 1ch;
   /* background-color: aqua; */
-`
+`;
 const RowPercent = styled.div<{ width: any }>`
   height: 30px;
   display: flex;
@@ -200,7 +208,7 @@ const RowPercent = styled.div<{ width: any }>`
   justify-content: center;
   font-size: 18px;
   width: ${(item: any) => item.width};
-  border: 1px solid #F3F3F3;
+  border: 1px solid #f3f3f3;
   border-left: 1ch;
   border-right: 1ch;
   border-top: 1ch;
@@ -229,13 +237,13 @@ const ButtonBox = styled.button`
   /* background-color: yellowgreen; */
   padding: 10px;
   font-size: 18px;
-  :hover{
-    background-color: #E6F8F0;
-    color: #14B869;
+  :hover {
+    background-color: #e6f8f0;
+    color: #14b869;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #14B869;
-`
+  background-color: #14b869;
+`;
 export default UserMoveModal;

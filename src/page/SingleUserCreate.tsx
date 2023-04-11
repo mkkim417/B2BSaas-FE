@@ -60,7 +60,6 @@ function SingleUserCreate() {
   // mutate 선언
   const { mutate } = useMutation(postSingleClient, {
     onSuccess: (response) => {
-      console.log(response);
       clickSuccessModal();
       navigate('/clientRegistration');
     },

@@ -9,22 +9,20 @@ type Props = {
   closeModal: () => void;
 };
 function UserInGroupDeleteModal({ title, checkValue, closeModal }: Props) {
-  
   //mutate 선언
   const { mutate } = useMutation(deleteInGroupClient, {
-    onSuccess : (response) => {
-      console.log(response);
-      alert('삭제가 완료되었습니다.')
+    onSuccess: (response) => {
+      alert('삭제가 완료되었습니다.');
       closeModal();
     },
     onError: (error) => {
       console.log(error);
       alert('삭제를 실패하였습니다.');
-    }
-  })
+    },
+  });
   const deleteDataHandler = (e: any) => {
     e.preventDefault();
-    mutate(checkValue)
+    mutate(checkValue);
   };
   return (
     <ModalWrap>
@@ -50,7 +48,7 @@ function UserInGroupDeleteModal({ title, checkValue, closeModal }: Props) {
             </DataContainer>
           </ContentContainer>
           <FootContainer>
-              <div>그룹에서 삭제되어도, 고객리스트에는 정보가 남아있습니다.</div>
+            <div>그룹에서 삭제되어도, 고객리스트에는 정보가 남아있습니다.</div>
           </FootContainer>
           <ButtonContainer>
             {/* <ButtonBox>아니오</ButtonBox> */}
@@ -138,7 +136,7 @@ const HeaderPercent = styled.div<{ width: any }>`
   border-left: 1ch;
   border-right: 1ch;
   /* background-color: aqua; */
-`
+`;
 const DataRow = styled.div`
   width: 100%;
   height: 10%;
@@ -154,7 +152,7 @@ const RowPercent = styled.div<{ width: any }>`
   justify-content: center;
   font-size: 18px;
   width: ${(item: any) => item.width};
-  border: 1px solid #F3F3F3;
+  border: 1px solid #f3f3f3;
   border-left: 1ch;
   border-right: 1ch;
   border-top: 1ch;
@@ -174,7 +172,7 @@ const FootContainer = styled(TitleContainer)`
   /* background-color: #E6F8F0; */
   border-radius: 10px;
   font-style: italic;
-`
+`;
 const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
@@ -191,13 +189,13 @@ const ButtonBox = styled.button`
   /* background-color: yellowgreen; */
   padding: 10px;
   font-size: 18px;
-  :hover{
-    background-color: #E6F8F0;
-    color: #14B869;
+  :hover {
+    background-color: #e6f8f0;
+    color: #14b869;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #14B869;
-`
+  background-color: #14b869;
+`;
 export default UserInGroupDeleteModal;

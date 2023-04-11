@@ -37,7 +37,6 @@ const UserEditModal = ({
   // mutate 선언
   const { mutate } = useMutation(eidtClientData, {
     onSuccess: (response) => {
-      console.log(response);
       closeModal();
     },
     onError: (error) => {
@@ -242,7 +241,7 @@ const TitleBox = styled.div`
 const InputContainer = styled.input`
   width: 100%;
   height: 35px;
-  border: 2px solid #14B869;
+  border: 2px solid #14b869;
   border-radius: 10px;
 `;
 
@@ -261,13 +260,13 @@ const ButtonBox = styled.button`
   border-radius: 10px;
   padding: 10px;
   font-size: 18px;
-  :hover{
-    background-color: #E6F8F0;
-    color: #14B869;
+  :hover {
+    background-color: #e6f8f0;
+    color: #14b869;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #14B869;
-`
+  background-color: #14b869;
+`;
 export default UserEditModal;

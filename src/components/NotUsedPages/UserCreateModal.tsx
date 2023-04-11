@@ -31,14 +31,12 @@ const UserCreateModal = ({ title, memo, closeModal }: Props) => {
 
   // mutate 선언
   const { mutate } = useMutation(postSingleClient, {
-    onSuccess: (response:any) => {
-      console.log('나 왜 안떠?')
-      console.log('성공', response);
-      alert('성공')
+    onSuccess: (response: any) => {
+      alert('성공');
     },
     onError: (response) => {
       console.log('error', response);
-      alert('실패!')
+      alert('실패!');
     },
   });
   // submit button handler

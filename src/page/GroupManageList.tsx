@@ -127,11 +127,6 @@ function GroupManageList() {
         headers: { authorization: `Bearer ${token}` },
       }
     );
-    console.log(
-      '그룹 내 검색API주소',
-      `${process.env.REACT_APP_SERVER_URL}/api/clients/${groupId}?index=${currentPage}&keyword=${groupSearchKeyword}`
-    );
-    console.log('검색필터 결과', response.data.data);
     setGroupClient(response.data.data);
   };
 
@@ -234,13 +229,11 @@ function GroupManageList() {
   const [isGroupAllClients, setIsGroupAllClients] = useState<any>(0);
 
   const setPage1 = (page: any) => {
-    console.log('page1', page);
     setCurrentPage(page);
     getUserData(page);
   };
 
   const setPage2 = async (page: any) => {
-    console.log('page2', page);
     setCurrentPage1(page);
 
     getClientInGroup(groupId, groupName, groupDescription, page);
@@ -355,10 +348,8 @@ function GroupManageList() {
     if (isChecked) {
       checkedArr.push(item);
       setCheckedArr(checkedArr);
-      console.log('checkedList', checkedArr);
       // setCheckedArr([...checkedArr, id])
     } else if (!isChecked || checkedArr.includes(item.clientId)) {
-      console.log('!isChecked', item.clientId);
       setCheckedArr((checkedArr) => checkedArr.filter((el) => el !== item));
       // console.log('체크해제 후 checkedList', checkedArr);
     }
@@ -387,7 +378,6 @@ function GroupManageList() {
   const [deleteGroup, setDeleteGroup] = useState([]);
   // 그룹삭제 버튼 Handler
   const clickGroupDelete = async () => {
-    console.log('deletegroup', deleteGroup);
     clickGroupDeleteModal();
   };
 
@@ -444,7 +434,6 @@ function GroupManageList() {
     groupClient.map((el: { clientId: string }) => {
       ArrClientsIdsData.push(el.clientId);
     });
-    console.log('ArrClientsIdsData : ', ArrClientsIdsData);
     navigate(`/readyalarmtalk/${groupId}`, {
       state: { ArrClientsIdsData },
     });
@@ -888,9 +877,10 @@ function GroupManageList() {
       )}
       {/* 그룹 내 고객 등록 모달 */}
       {groupUserCreateModal && (
-        <UserInGroupCreateModal 
+        <UserInGroupCreateModal
           groupId={groupId}
-          closeModal={closeGroupUserCreateModal}/>
+          closeModal={closeGroupUserCreateModal}
+        />
       )}
       {/* 그룹 내 고객 복사 모달 */}
       {groupUserCopyModal && (

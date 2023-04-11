@@ -12,9 +12,7 @@ export const clentBulkFetch = async (isData: any) => {
   try {
     const response = await axios
       .post(`${process.env.REACT_APP_SERVER_URL}/api/clients/bulk`, { data })
-      .then((res) => {
-        console.log('api/clients/bulk : ', res.data.newClients);
-      });
+      .then((res) => {});
     return response;
   } catch (error) {
     console.log(error);

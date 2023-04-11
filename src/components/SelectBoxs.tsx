@@ -26,7 +26,6 @@ const SelectBoxs = ({
   useEffect(() => {
     if (currentValue !== null) {
       propFunction(currentValue, className, isGroupId);
-      console.log(currentValue, className, isGroupId);
     }
   }, [currentValue, propFunction, isGroupId]);
   useEffect(() => {

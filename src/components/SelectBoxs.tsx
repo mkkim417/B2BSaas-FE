@@ -99,7 +99,7 @@ const SelectOptions = styled.ul<{ ref?: any }>`
   padding: 0;
   border-radius: 8px;
   background-color: #fff;
-  border: 2px solid #14b769;
+  border: 1px solid #000;
   box-sizing: border-box;
   color: #000;
   max-height: none;
@@ -110,7 +110,7 @@ const Option = styled.li`
   padding: 16px 18px;
   transition: background-color 0.2s ease-in;
   &:hover {
-    background-color: #14b769;
+    background-color: #000;
     color: white;
     font-weight: bold;
   }

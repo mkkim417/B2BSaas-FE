@@ -458,7 +458,6 @@ function GroupManageList() {
 
   const toogleActive = (e: any) => {
     setClickActive((prev: any) => {
-      console.log(e.target.value);
       return e.target.value;
     });
   };
@@ -1008,7 +1007,7 @@ const ButtonContainer = styled.div`
 const ButtonGap = styled.div`
   gap: 10px;
 `;
-const GroupButton = styled.button`
+export const GroupButton = styled.button`
   width: 110px;
   height: 40px;
   color: #14b769;

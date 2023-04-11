@@ -58,7 +58,6 @@ function ReadyAlarmtalk() {
           }
           return Object.keys(obj).length > 0;
         });
-      console.log(filteredData);
       setKeyData(Object.keys(filteredData[0]) as any);
       setTableData(filteredData);
     },
@@ -207,6 +206,7 @@ function ReadyAlarmtalk() {
 }
 const NewButton = styled(Button)`
   height: 45px;
+  padding: inherit;
 `;
 const FlexWrapResultResize = styled(FlexWrapResult)`
   align-items: center;

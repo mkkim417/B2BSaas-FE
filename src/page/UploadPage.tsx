@@ -888,6 +888,6 @@ const BottomContents = styled.div`
   font-size: 12px;
   height: 250px;
   background-color: #fbfbfb;
-  border: 2px dashed #9f9f9f;
+  border: 2px dashed #000;
 `;
 export default UploadPage;

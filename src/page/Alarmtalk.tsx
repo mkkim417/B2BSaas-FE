@@ -46,7 +46,6 @@ function Alarmtalk() {
   // 카카오내용 불러오기
   const { mutate } = useMutation(fetchTemplatesList, {
     onSuccess: (res) => {
-      console.log(res.data.data);
       setTableData(
         res.data.data.map((el: any) => Object.assign(el.client, el.talkContent))
       );
@@ -58,7 +57,6 @@ function Alarmtalk() {
       for (let el of engKeyData) {
         korKeyData.push(engToKorTransData[el]);
       }
-      console.log(korKeyData);
       setKeyData(korKeyData);
     },
     onError: (error) => {
@@ -75,7 +73,6 @@ function Alarmtalk() {
           },
         })
         .then((res) => {
-          console.log('템플릿전체조회 : ', res.data.data);
           setTemplatesList(res.data.data);
           setAllData(res.data.data[0]);
           setViewData(res.data.data[0]['text']);
@@ -99,7 +96,6 @@ function Alarmtalk() {
           }
         )
         .then((res) => {
-          console.log('fetchTemplateDetail : ', res.data.data);
           setReqTemplates(res.data.data);
         });
     } catch (error) {
@@ -188,7 +184,6 @@ function Alarmtalk() {
   //카카오전송
   const kakaoSaveFetch = async () => {
     let data = refactoringFunc(isAllData.talkTemplateCode);
-    console.log('data : ', data);
     try {
       await axios
         .post(
@@ -202,7 +197,6 @@ function Alarmtalk() {
         )
         .then((res) => {
           setAutoModal((prev) => !prev);
-          console.log('setSendModalData : ', res.data.data);
           setSendModalData(res.data.data);
         });
       // navigate('/');
@@ -213,10 +207,8 @@ function Alarmtalk() {
   };
   const messagePreviewFunc = useCallback(
     (text: string, target: string) => {
-      console.log(text, target);
       const obj_n = document.getElementById(`${target}`)?.innerHTML;
       setTarget(text);
-      console.log(obj_n);
       const targetData = document.getElementById(`${obj_n}`)?.innerHTML;
       const ChangeData = isTableData[0][KorToEngTransData[text]];
       const sumData =
@@ -251,7 +243,6 @@ function Alarmtalk() {
         clientIds: location?.state.ArrClientsIdsData,
       });
     }
-    console.log(isTableData);
   }, [fetchTemplateList, mutate]);
   return (
     <motion.div
@@ -325,14 +316,14 @@ function Alarmtalk() {
                       <YellowWrap>
                         {currentValue === null ? '택배번호 안내' : currentValue}
                       </YellowWrap>
-                      {/* <WhiteWrap
-                      id="view"
-                      dangerouslySetInnerHTML={{ __html: isViewData || '' }}
-                    ></WhiteWrap> */}
-                      <WhiteWrapTalk>
+                      <WhiteWrapTalk
+                        id="view"
+                        dangerouslySetInnerHTML={{ __html: isViewData || '' }}
+                      ></WhiteWrapTalk>
+                      {/* <WhiteWrapTalk>
                         카카오미리보기 Lorem ipsum dolor sit amet consectetur,
                         adipisicing elit. Quaerat assumenda distinctio modi
-                      </WhiteWrapTalk>
+                      </WhiteWrapTalk> */}
                     </div>
                   </KakaoBoxWrap>
                 </BoxWrap>
@@ -340,14 +331,14 @@ function Alarmtalk() {
             </RightContents>
           </ContentContainer>
           <ButtonWrap>
-            <ButtonBox onClick={() => navigate(-1)}>취소</ButtonBox>
-            <ConfirmButton
+            <GroupButton onClick={() => navigate(-1)}>취소</GroupButton>
+            <GroupButton
               onClick={() => {
                 kakaoSaveFetch();
               }}
             >
               전송
-            </ConfirmButton>
+            </GroupButton>
           </ButtonWrap>
         </Container>
         {isAutoModal && isAutoModal ? (
@@ -367,10 +358,12 @@ function Alarmtalk() {
   );
 }
 const HeaderContainerRe = styled(HeaderContainer)`
-  margin-top: 100px;
+  margin-top: 0px;
 `;
 const WhiteWrapTalk = styled(WhiteWrap)`
   height: 300px;
+  white-space: pre-line;
+  overflow-wrap: break-word;
 `;
 const KakaoBoxWrap = styled(KakaoBox)`
   top: 18px;
@@ -405,7 +398,6 @@ const HeadFont = styled.div`
   display: flex;
   justify-content: center;
   margin-right: 30px;
-  margin-top: 100px;
 `;
 const Container = styled.div`
   display: flex;
@@ -438,12 +430,10 @@ const Button = styled.button`
   padding: 5px 0px;
 `;
 export const LeftContents = styled.div`
-  width: 400px;
-  height: 550px;
-  /* display: flex;
+  width: auto;
   flex-direction: column;
-  justify-content: space-around; */
-  /* background-color: aliceblue; */
+  justify-content: center;
+  display: flex;
 `;
 const NameContents = styled.div`
   width: 150px;
@@ -456,28 +446,43 @@ const NameContents = styled.div`
   /* background-color: #edaf78; */
 `;
 const TemplateSelectBox = styled.select`
-  width: 300px;
+  width: 100%;
   height: 40px;
   font-size: 18px;
   border-radius: 10px;
   cursor: pointer;
-  border: 3px solid #c8c5c5;
+  border: 1px solid #c8c5c5;
 `;
 const TempleteDiv = styled.div`
-  height: 10%;
+  margin-bottom: 20px;
   /* background-color: beige; */
 `;
 const SelectDiv = styled.div`
-  height: 90%;
   display: flex;
   flex-direction: column;
-  justify-content: start;
-  gap: 20px;
-  /* background-color: cornsilk; */
+  justify-content: center;
+  gap: 30px;
 `;
 const SelectNameBox = styled.div`
   display: flex;
   flex-direction: row;
+`;
+export const GroupButton = styled.button`
+  width: 110px;
+  height: 40px;
+  color: #000;
+  margin-right: 5px;
+  font-weight: bold;
+  font-size: 16px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  font-family: 'TheJamsil5Bold';
+  border: 3px solid #000;
+  transition: 0.2s;
+  :hover {
+    background-color: #14b769;
+    color: #fff;
+  }
 `;
 const ContnetDataWrap = styled.div`
   border-radius: 15px;

@@ -3,15 +3,16 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
 import styled from 'styled-components';
 import {
-  FlexWrap,
   GrayWrap,
   H1,
+  MapWrapper,
   Table,
   Td,
   Th,
   Wrapper,
 } from './KakaoResultList';
 import { getCookie } from '../util/cookie';
+import { Thead } from './UploadPage';
 function KakaoDetailList() {
   const token = getCookie('userToken');
   const params = useParams();
@@ -55,49 +56,56 @@ function KakaoDetailList() {
           <ContentDiv>{location?.state?.sendState}</ContentDiv>
         </Halfdiv>
       </FlexWrap>
-      <Table>
-        <thead style={{ fontWeight: 'bold' }}>
-          <tr>
-            <Th>보낸날짜</Th>
-            <Th>메시지</Th>
-            <Th style={{ width: '100px' }}>보낸사람</Th>
-            <Th style={{ width: '70px' }}>전화번호</Th>
-            <Th style={{ width: '70px' }}>결과</Th>
-          </tr>
-        </thead>
-        <tbody style={{ textAlign: 'center' }}>
-          {isData &&
-            isData.map((el: any, idx: number) => (
-              <tr key={idx}>
-                <InitTd>{el.resultDate}</InitTd>
-                <InitTd>{el.msgContent}</InitTd>
-                <InitTd>{el.clientName}</InitTd>
-                <InitTd>{el.phone}</InitTd>
-                <InitTd>{el.resultMessage}</InitTd>
-              </tr>
-            ))}
-        </tbody>
-      </Table>
+      <MapWrapper>
+        <Table>
+          <Thead style={{ fontWeight: 'bold' }}>
+            <tr>
+              <Th>보낸날짜</Th>
+              <Th>메시지</Th>
+              <Th style={{ width: '100px' }}>보낸사람</Th>
+              <Th style={{ width: '70px' }}>전화번호</Th>
+              <Th style={{ width: '70px' }}>결과</Th>
+            </tr>
+          </Thead>
+          <tbody style={{ textAlign: 'center' }}>
+            {isData &&
+              isData.map((el: any, idx: number) => (
+                <tr key={idx}>
+                  <InitTd>{el.resultDate}</InitTd>
+                  <InitTd>{el.msgContent}</InitTd>
+                  <InitTd>{el.clientName}</InitTd>
+                  <InitTd>{el.phone}</InitTd>
+                  <InitTd>
+                    {el.resultMessage === '성공' ? (
+                      <span style={{ color: '#14b769', fontWeight: 'bold' }}>
+                        성공
+                      </span>
+                    ) : null}
+                  </InitTd>
+                </tr>
+              ))}
+          </tbody>
+        </Table>
+      </MapWrapper>
     </Wrapper>
   );
 }
-
+const FlexWrap = styled.div`
+  display: flex;
+  height: 50px;
+  width: 100%;
+`;
 const InitTd = styled(Td)`
   :nth-of-type(2) {
     text-align: center;
   }
 `;
-const ContentDiv = styled.div`
-  padding-left: 20px;
-`;
+const ContentDiv = styled.div``;
 const Halfdiv = styled.div`
   display: flex;
   align-items: center;
   width: 50%;
 `;
-const GrayWrapHeidght = styled(GrayWrap)`
-  height: 50px;
-  width: 150px;
-`;
+const GrayWrapHeidght = styled(GrayWrap)``;
 
 export default KakaoDetailList;

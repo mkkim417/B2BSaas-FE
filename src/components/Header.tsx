@@ -1,16 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { isLoggedin } from '../util/cookie';
+import { handleLogout, isLoggedin } from '../util/cookie';
 
 function Header() {
   const isLoggedIn = isLoggedin();
+  const navagate = useNavigate();
   return (
     <HeaderContainer>
       <ContentsWrapper>
         <TwiceWraper>
           <Logo>
-            <Link to={'/'}>Logo</Link>
+            <Link to={'/'}>
+              <LogoInamge></LogoInamge>
+            </Link>
           </Logo>
           <LeftContainer>
             <Li>소개</Li>
@@ -18,13 +21,30 @@ function Header() {
               <Link to={'/pricepolicy'}>요금제</Link>
             </Li>
             <Li>가이드</Li>
+            <Li>
+              <a href="http://pf.kakao.com/_NsTkxj/chat">문의하기</a>
+            </Li>
           </LeftContainer>
         </TwiceWraper>
         <SignupContainer>
           {isLoggedIn ? (
-            <BlackBox>
-              <Link to={'/groupManageList'}>서비스 시작하기</Link>
-            </BlackBox>
+            <>
+              <div
+                style={{ fontSize: '14px', cursor: 'pointer', color: '#000' }}
+                onClick={() => {
+                  const isConfirmed =
+                    window.confirm('정말 로그아웃 하시겠습니까?');
+                  if (isConfirmed) {
+                    handleLogout();
+                  }
+                }}
+              >
+                로그아웃
+              </div>
+              <BlackBox>
+                <Link to={'/groupManageList'}>서비스 시작하기</Link>
+              </BlackBox>
+            </>
           ) : (
             <>
               <Link to={'/login'}>로그인</Link>
@@ -39,6 +59,13 @@ function Header() {
   );
 }
 
+export const LogoInamge = styled.div`
+  width: 140px;
+  height: 40px;
+  background-image: url(/MainLogo_resize.jpg);
+  background-repeat: no-repeat;
+  background-size: contain;
+`;
 const BlackBox = styled.div`
   background-color: black;
   color: white;
@@ -66,7 +93,7 @@ const ContentsWrapper = styled.div`
   justify-content: space-between;
 `;
 const HeaderContainer = styled.div`
-  border-bottom: 1px solid #e1e1e1;
+  border-bottom: 2px solid #000;
   width: 100%;
   position: fixed;
   top: 0;
@@ -81,7 +108,7 @@ const LeftContainer = styled.ul`
 `;
 const Li = styled.li`
   margin: 0 20px;
-  color: #909090;
+  color: #000;
 `;
 
 const SignupContainer = styled.div`

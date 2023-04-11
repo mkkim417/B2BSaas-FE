@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import useDetectClose from '../hook/useDetectClose';
 import { kakaoGroupIdCreate } from '../redux/modules/kakaoGroupId';
 import { getCookie } from '../util/cookie';
+import { GroupButton } from '../page/Alarmtalk';
 const AutoModal = (props: any) => {
-  console.log('props.isSendModalData : ', props.isSendModalData);
   const dropDownRef = useRef();
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false); //커스텀훅
   const navigate = useNavigate();
@@ -45,9 +45,8 @@ const AutoModal = (props: any) => {
       <ModalBlock ref={dropDownRef}>
         <XboxWrap onClick={() => props.closeModal(false)}></XboxWrap>
         <ContentsWrap>
-          <BoxMent>알림톡전송</BoxMent>
+          <BoxMent>알림톡전송 미리보기</BoxMent>
           <Flex flexDirection="column">
-            <Strong>미리보기</Strong>
             <KakaoBox>
               <YellowWrap>{props.currentValue}</YellowWrap>
               <WhiteWrap
@@ -59,29 +58,11 @@ const AutoModal = (props: any) => {
         <div>
           <ButtonWrap>
             <div>
-              <Button
-                width="100px"
-                height="40px"
-                bgColor="#000"
-                border="3px solid #fff"
-                color="#fff"
-                onClick={() => props.closeModal(false)}
-              >
+              <GroupButton onClick={() => props.closeModal(false)}>
                 취소
-              </Button>
+              </GroupButton>
+              <GroupButton onClick={() => onsubmit}>전송</GroupButton>
             </div>
-            <ButtonGap>
-              <Button
-                width="100px"
-                height="40px"
-                bgColor="#000"
-                border="3px solid #fff"
-                color="#fff"
-                onClick={onSubmit}
-              >
-                전송
-              </Button>
-            </ButtonGap>
           </ButtonWrap>
         </div>
       </ModalBlock>
@@ -155,7 +136,7 @@ const ButtonGap = styled.div`
 `;
 const ButtonWrap = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 `;
 const XboxWrap = styled.span`
@@ -181,7 +162,7 @@ const Container = styled.div`
 
 export const KakaoBox = styled.div`
   width: 300px;
-  height: 450px;
+  height: 350px;
   border-radius: 10px;
   background-color: lightblue;
   padding: 15px 30px;
@@ -204,7 +185,7 @@ const ModalBlock = styled.div<{ ref?: any }>`
   background-color: white;
   color: black;
   width: 600px;
-  height: 700px;
+  height: 600px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -238,6 +219,7 @@ const BoxMent = styled.div`
   font-weight: bold;
   font-size: 26px;
   text-align: left;
+  font-family: 'TheJamsil5Bold';
 `;
 const ContentsWrap = styled.div`
   height: 500px;

@@ -1,28 +1,52 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { handleLogout, isLoggedin } from '../util/cookie';
+import { getCookie, handleLogout, isLoggedin } from '../util/cookie';
+import { LogoInamge } from './Header';
+import jwt_decode from 'jwt-decode';
+import axios from 'axios';
 function HomeHeader() {
+  const [isUserData, setUserData] = useState();
   const isLoggedIn = isLoggedin();
+  const token = getCookie('userToken');
+  const userReadFn = useCallback(async (userId: number) => {
+    try {
+      await axios
+        .get(`${process.env.REACT_APP_SERVER_URL}/api/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setUserData(res.data.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  useEffect(() => {
+    if (isLoggedIn && isLoggedIn) {
+      const decoded = jwt_decode(token) as any;
+      userReadFn(decoded.userId);
+    }
+  }, [userReadFn]);
   return (
     <HeaderContainer>
       <ContentsWrapper>
         <Logo>
-          <Link to={'/'}>Logo</Link>
+          <Link to={'/'}>
+            <LogoInamge />
+          </Link>
         </Logo>
         <TwiceWraper>
           <LeftContainer></LeftContainer>
         </TwiceWraper>
         <FlexWrap>
+          <UserButton>
+            <a href="http://pf.kakao.com/_NsTkxj/chat">문의하기</a>
+          </UserButton>
           {isLoggedIn ? (
             <>
-              <UserWrap>
-                <Box width="25px" height="25px" />
-                <div>
-                  <div>소속회사명</div>
-                  <Username>김샌드</Username>
-                </div>
-              </UserWrap>
               <UserButton
                 onClick={() => {
                   const isConfirmed =
@@ -34,6 +58,22 @@ function HomeHeader() {
               >
                 로그아웃
               </UserButton>
+              <UserWrap>
+                <Box width="25px" height="25px" />
+                <div>
+                  <div>
+                    {isUserData && isUserData
+                      ? (isUserData['company']['companyName'] as any)
+                      : null}
+                  </div>
+                  <Username>
+                    {' '}
+                    {isUserData && isUserData
+                      ? (isUserData['user']['name'] as any)
+                      : null}
+                  </Username>
+                </div>
+              </UserWrap>
             </>
           ) : (
             <Link to="/login">
@@ -52,11 +92,13 @@ function HomeHeader() {
   );
 }
 const UserButton = styled.div`
-  color: #909090;
+  color: #000;
   text-decoration: underline;
+  font-size: 15px;
+  font-weight: bold;
   cursor: pointer;
   :nth-of-type(2) {
-    font-weight: 100;
+    /* font-weight: 100; */
   }
 `;
 const Username = styled.div`
@@ -80,6 +122,8 @@ const FlexWrap = styled.div`
   justify-content: space-around;
   font-size: 14px;
   font-weight: bold;
+  align-items: center;
+  gap: 30px;
 `;
 const UserWrap = styled.div`
   display: flex;
@@ -109,7 +153,7 @@ const ContentsWrapper = styled.div`
   justify-content: space-between;
 `;
 const HeaderContainer = styled.div`
-  border-bottom: 1px solid #e1e1e1;
+  border-bottom: 2px solid #000;
   padding: 0px 20px;
   width: 100%;
   background-color: #fff;

@@ -1,23 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import { motion } from 'framer-motion';
-import axios from 'axios';
 import { getCookie } from '../util/cookie';
-import { H1, Table } from './KakaoResultList';
+import { FlexWrapResult, H1, Table, Wrapper } from './KakaoResultList';
 import styled from 'styled-components';
 import Pagination from 'react-js-pagination';
 import { PaginationBox1 } from '../components/PaginationStyled';
 import { useMutation } from 'react-query';
 import { fetchTemplatesList } from '../axios/api';
-import {
-  Button,
-  ContentsWrap,
-  MapWrapper,
-  Td,
-  Th,
-  Thead,
-  Wrapper,
-} from './UploadPage';
+import { Button, MapWrapper, Td, Th, Thead } from './UploadPage';
 function ReadyAlarmtalk() {
   const params = useParams();
   const token = getCookie('userToken');
@@ -35,28 +26,38 @@ function ReadyAlarmtalk() {
   };
   const { mutate } = useMutation(fetchTemplatesList, {
     onSuccess: (res) => {
-      console.log(res.data.data);
       // setTableData(
       //   res.data.data.map((el: any) => Object.assign(el.client, el.talkContent))
       // );
-
       // console.log(
       //   res.data.data.map((el: any) =>
       //     Object.keys(Object.assign(el.client, el.talkContent))
       //   )
       // );
-      const Data = res.data.data.map((el: any) =>
-        Object.assign(el.client, el.talkContent)
-      );
-
-      const filteredData = Data.filter((obj: any) => {
-        for (const prop in obj) {
-          if (obj[prop] == null) {
-            delete obj[prop];
+      // .filter((el: any) => el !== 'talkContentId');
+      const filteredData = res.data.data
+        .map((el: any) => {
+          const filteredObj: any = {};
+          for (const prop in el.client) {
+            filteredObj[prop] = el.client[prop];
           }
-        }
-        return Object.keys(obj).length > 0;
-      });
+          filteredObj.groupId = el.talkContent.groupId;
+          filteredObj.talkContentId = el.talkContent.talkContentId;
+          for (const prop in el.talkContent) {
+            if (prop !== 'groupId' && prop !== 'talkContentId') {
+              filteredObj[prop] = el.talkContent[prop];
+            }
+          }
+          return filteredObj;
+        })
+        .filter((obj: any) => {
+          for (const prop in obj) {
+            if (obj[prop] == null) {
+              delete obj[prop];
+            }
+          }
+          return Object.keys(obj).length > 0;
+        });
       setKeyData(Object.keys(filteredData[0]) as any);
       setTableData(filteredData);
     },
@@ -76,7 +77,6 @@ function ReadyAlarmtalk() {
       setNullComponent(true);
     }
   }, [mutate]);
-  console.log(isKeyData);
   const transData = {
     clientEmail: '이메일',
     clientId: 'ID',
@@ -104,13 +104,11 @@ function ReadyAlarmtalk() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <Container>
-        <BottomWrap>
+      <Wrapper>
+        <H1>알림톡 전송 내용 조회</H1>
+        <FlexWrapResultResize>
           {isNullComponent === false ? (
             <>
-              <div style={{ textAlign: 'center', width: '1080px' }}>
-                <H1>알림톡 전송 내용 조회</H1>
-              </div>
               <MapWrapper>
                 <Table>
                   <Thead>
@@ -161,14 +159,15 @@ function ReadyAlarmtalk() {
                   </tbody>
                 </Table>
               </MapWrapper>
+              <div style={{ margin: '20px' }}></div>
               <ButtonWrap>
-                <Button
+                <NewButton
                   width={'120px'}
                   padding={'10px'}
                   onClick={() => navigate('/groupmanageList')}
                 >
-                  그룹다시선택
-                </Button>
+                  뒤로가기
+                </NewButton>
                 <PaginationBox1>
                   <Pagination
                     activePage={1}
@@ -180,45 +179,38 @@ function ReadyAlarmtalk() {
                     onChange={setPage}
                   />
                 </PaginationBox1>
-                <Button
+                <NewButton
                   width={'110px'}
                   padding={'10px'}
                   onClick={DoneAlertalkSend}
                 >
-                  알림톡 전송 준비 완료
-                </Button>
+                  다음단계
+                </NewButton>
               </ButtonWrap>
             </>
           ) : (
             <>
-              <ButtonWrap>
-                <NoticeFont>아직 선택된 그룹이 없으시네요 😊</NoticeFont>
-                <Button
-                  width={'150px'}
-                  onClick={() => navigate('/groupmanageList')}
-                >
-                  고객그룹등록하기
-                </Button>
-              </ButtonWrap>
+              <NoticeFont>아직 선택된 그룹이 없으시네요 😊</NoticeFont>
+              <NewButton
+                width={'150px'}
+                onClick={() => navigate('/groupmanageList')}
+              >
+                고객그룹등록하기
+              </NewButton>
             </>
           )}
-        </BottomWrap>
-      </Container>
+        </FlexWrapResultResize>
+      </Wrapper>
     </motion.div>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  height: 100vh;
-  padding-left: 80px;
-  /* padding-top: 50px; */
-  /* padding-bottom: 50px; */
-  /* background-color: sandybrown; */
+const NewButton = styled(Button)`
+  height: 45px;
+  padding: inherit;
 `;
-
+const FlexWrapResultResize = styled(FlexWrapResult)`
+  align-items: center;
+`;
 export const BottomWrap = styled.div<{ ref?: any }>`
   width: 100%;
   margin: 0px auto;
@@ -234,17 +226,18 @@ export const BottomWrap = styled.div<{ ref?: any }>`
   }
 `;
 const ButtonWrap = styled.div`
-  width: 1080px;
-  height: 300px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 50px;
-  /* background-color: red; */
+  justify-content: space-between;
+  width: 100%;
+  @media screen and (min-width: 1300px) {
+    display: flex;
+    width: 1000px;
+  }
 `;
 const NoticeFont = styled.div`
   font-size: 18px;
+  margin: 10px 0px 20px;
   font-weight: 900;
   color: black;
 `;

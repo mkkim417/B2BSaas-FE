@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Outlet } from 'react-router';
 import { Link, useMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import Accordion from '../components/Accordion';
-import { Logo } from '../components/Header';
-import { handleLogout, isLoggedin } from '../util/cookie';
+import { isLoggedin } from '../util/cookie';
 import ListIcon from '../asset/svg/ListIcon';
 import KakaoIcon from '../asset/svg/KakaoIcon';
 import ListResultIcon from '../asset/svg/ListResultIcon';
@@ -13,36 +11,68 @@ import CustomerAddIcon from '../asset/svg/CustomerAddIcon';
 import { motion } from 'framer-motion';
 
 const TopNav = () => {
-  const Uploadpage = useMatch('/uploadpage');
-  const usergrouplist = useMatch('/usergrouplist');
   const statistics = useMatch('/statistics');
-  const Home = useMatch('/');
-
-  const isLoggedIn = isLoggedin();
-
-  const clientCreate = useMatch('/singleusercreate');
   const clientRegistration = useMatch('/clientregistration');
   const groupManageList = useMatch('/groupmanageList');
-  const alarmtalk = useMatch('/alarmtalk');
   const kakaoresultlist = useMatch('/kakaoresultlist');
   const readyalarmtalk = useMatch('/readyalarmtalk');
-
-  // console.log('Uploadpage : ', Uploadpage);
-  // console.log('Home : ', Home);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMenuBoolean, setMenuBoolean] = useState(false);
+  const [isMenuData, setMenuData] = useState<string[]>([]);
+  const [isMenuLink, setMenuLink] = useState<string[]>([]);
+  const [isMeData, setData] = useState();
+  const duplacatedClick = useCallback(
+    (target: any) => {
+      setData(target);
+      if (target == isMeData) {
+        setMenuBoolean((prev) => !prev);
+      }
+    },
+    [isMeData]
+  );
+  const variants = {
+    open: { opacity: 1, x: 0 },
+    closed: { opacity: 0, x: '-100%' },
+  };
+  function sideMenuBar(test: string[], link: string[]) {
+    return (
+      <FixedWrap
+        animate={isMenuBoolean ? 'open' : 'closed'}
+        variants={variants}
+        transition={{ duration: 0.5 }}
+      >
+        {test.map((el, idx) => (
+          <>
+            <li>
+              <LinkComp
+                to={`${link[idx]}`}
+                onClick={() => setMenuBoolean((prev) => !prev)}
+              >
+                {el}
+              </LinkComp>
+            </li>
+          </>
+        ))}
+      </FixedWrap>
+    );
+  }
   return (
     <TotalWrapper>
+      {sideMenuBar(isMenuData, isMenuLink)}
       <Wrapper>
         <UserContatiner>
           <ul style={{ marginTop: '60px' }}>
             <Li>
-              <InLi
-                active={statistics ? true : false}
-                onClick={() => {
-                  setMenuOpen((menuOpen) => !menuOpen);
-                }}
-              >
-                <NavLink to={'/statistics'}>
+              <NavLink to={'/statistics'}>
+                <InLi
+                  active={statistics ? true : false}
+                  onClick={() => {
+                    duplacatedClick('statistics');
+                    if (isMenuBoolean === false) {
+                      setMenuData(['통계분석']);
+                      setMenuLink(['/statistics']);
+                    }
+                  }}
+                >
                   {statistics ? (
                     <>
                       <ListIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
@@ -52,25 +82,27 @@ const TopNav = () => {
                         }}
                         layoutId="circle"
                       />
-                      {/* <LiBlue>이용현황</LiBlue> */}
                     </>
                   ) : (
                     <>
                       <ListIcon width={'25px'} heigth={'25px'} />
-                      {/* <NotLiBlue>이용현황</NotLiBlue> */}
                     </>
                   )}
-                </NavLink>
-              </InLi>
+                </InLi>
+              </NavLink>
             </Li>
             <Li>
-              <InLi
-                active={readyalarmtalk ? true : false}
-                onClick={() => {
-                  setMenuOpen((menuOpen) => !menuOpen);
-                }}
-              >
-                <NavLink to={'/readyalarmtalk'}>
+              <NavLink to={'/readyalarmtalk'}>
+                <InLi
+                  active={readyalarmtalk ? true : false}
+                  onClick={() => {
+                    duplacatedClick('readyalarmtalk');
+                    if (isMenuBoolean === false) {
+                      setMenuData(['알림톡전송']);
+                      setMenuLink(['/readyalarmtalk']);
+                    }
+                  }}
+                >
                   {readyalarmtalk ? (
                     <>
                       <KakaoIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
@@ -80,25 +112,27 @@ const TopNav = () => {
                         }}
                         layoutId="circle"
                       />
-                      {/* <LiBlue>알림톡전송</LiBlue> */}
                     </>
                   ) : (
                     <>
                       <KakaoIcon width={'25px'} heigth={'25px'} />
-                      {/* <NotLiBlue>알림톡전송</NotLiBlue> */}
                     </>
                   )}
-                </NavLink>
-              </InLi>
+                </InLi>
+              </NavLink>
             </Li>
             <Li>
-              <InLi
-                active={kakaoresultlist ? true : false}
-                onClick={() => {
-                  setMenuOpen((menuOpen) => !menuOpen);
-                }}
-              >
-                <NavLink to={'/kakaoresultlist'}>
+              <NavLink to={'/kakaoresultlist'}>
+                <InLi
+                  active={kakaoresultlist ? true : false}
+                  onClick={(e) => {
+                    duplacatedClick('kakaoresultlist');
+                    if (isMenuBoolean === false) {
+                      setMenuData(['전송결과조회']);
+                      setMenuLink(['/kakaoresultlist']);
+                    }
+                  }}
+                >
                   {kakaoresultlist ? (
                     <>
                       <ListResultIcon
@@ -110,25 +144,29 @@ const TopNav = () => {
                         animate={{ backgroundColor: ['lime'] }}
                         layoutId="circle"
                       />
-                      {/* <LiBlue>전송결과조회</LiBlue> */}
                     </>
                   ) : (
                     <>
                       <ListResultIcon width={'25px'} heigth={'25px'} />
-                      {/* <NotLiBlue>전송결과조회</NotLiBlue> */}
                     </>
                   )}
-                </NavLink>
-              </InLi>
+                </InLi>
+              </NavLink>
             </Li>
             <Li>
-              <InLi
-                active={groupManageList ? true : false}
-                onClick={() => {
-                  setMenuOpen((menuOpen) => !menuOpen);
-                }}
-              >
-                <NavLink to={'/groupManageList'}>
+              <NavLink to={'/groupManageList'}>
+                <InLi
+                  active={groupManageList ? true : false}
+                  value={'groupManageList'}
+                  onClick={(e) => {
+                    duplacatedClick('groupManageList');
+                    //setMenuBoolean((prev) => !prev);
+                    if (isMenuBoolean === false) {
+                      setMenuData(['그룹관리']);
+                      setMenuLink(['/groupManageList']);
+                    }
+                  }}
+                >
                   {groupManageList ? (
                     <>
                       <GroupMangeListIcon
@@ -140,25 +178,27 @@ const TopNav = () => {
                         animate={{ backgroundColor: ['lime'] }}
                         layoutId="circle"
                       />
-                      {/* <LiBlue>고객관리</LiBlue> */}
                     </>
                   ) : (
                     <>
                       <GroupMangeListIcon width={'25px'} heigth={'25px'} />
-                      {/* <NotLiBlue>고객관리</NotLiBlue> */}
                     </>
                   )}
-                </NavLink>
-              </InLi>
+                </InLi>
+              </NavLink>
             </Li>
             <Li>
-              <InLi
-                active={clientRegistration ? true : false}
-                onClick={() => {
-                  setMenuOpen((menuOpen) => !menuOpen);
-                }}
-              >
-                <NavLink to={'/clientregistration'}>
+              <NavLink to={'/clientregistration'}>
+                <InLi
+                  active={clientRegistration ? true : false}
+                  onClick={() => {
+                    duplacatedClick('clientRegistration');
+                    if (isMenuBoolean === false) {
+                      setMenuData(['고객등록']);
+                      setMenuLink(['/clientregistration']);
+                    }
+                  }}
+                >
                   {clientRegistration ? (
                     <>
                       <CustomerAddIcon
@@ -170,46 +210,25 @@ const TopNav = () => {
                         animate={{ backgroundColor: ['lime'] }}
                         layoutId="circle"
                       />
-                      {/* <LiBlue>고객등록</LiBlue> */}
                     </>
                   ) : (
                     <>
                       <CustomerAddIcon width={'25px'} heigth={'25px'} />
-                      {/* <NotLiBlue>고객등록</NotLiBlue> */}
                     </>
                   )}
-                </NavLink>
-              </InLi>
+                </InLi>
+              </NavLink>
             </Li>
           </ul>
-          <FlexWrap>
-            {/* {isLoggedIn ? (
-              <UserButton
-                onClick={() => {
-                  const isConfirmed =
-                    window.confirm('정말 로그아웃 하시겠습니까?');
-                  if (isConfirmed) {
-                    handleLogout();
-                  }
-                }}
-              >
-                로그아웃
-              </UserButton>
-            ) : (
-              <Link to="/login">
-                <UserButton>로그인</UserButton>
-              </Link>
-            )} */}
-          </FlexWrap>
+          <FlexWrap></FlexWrap>
         </UserContatiner>
-
         {/* <Accordion
           title="이용현황"
           contents={
             <div>
               <Ul>
                 <Link to={'/statistics'}>
-                  // {statistics ? <LiBlue>그래프</LiBlue> : <Li>그래프</Li>}
+                  
                 </Link>
               </Ul>
             </div>
@@ -222,14 +241,14 @@ const TopNav = () => {
               <Ul>
                 <Link to={'/readyalarmtalk'}>
                   {readyalarmtalk ? (
-                    // <LiBlue>알림톡전송</LiBlue>
+                    
                   ) : (
                     <Li>알림톡전송</Li>
                   )}
                 </Link>
                 <Link to={'/kakaoresultlist'}>
                   {kakaoresultlist ? (
-                    // <LiBlue>전송결과</LiBlue>
+                    
                   ) : (
                     <Li>전송결과</Li>
                   )}
@@ -245,21 +264,21 @@ const TopNav = () => {
               <Ul>
                 <Link to={'/uploadpage'}>
                   {Uploadpage ? (
-                    // <LiBlue>고객등록(다건)</LiBlue>
+                    
                   ) : (
                     <Li>고객등록(다건)</Li>
                   )}
                 </Link>
                 <Link to={'/clientRegistration'}>
                   {clientRegistration ? (
-                    // <LiBlue>고객등록</LiBlue>
+                    
                   ) : (
                     <Li>고객등록</Li>
                   )}
                 </Link>
                 <Link to={'/groupmanageList'}>
                   {groupManageList ? (
-                    // <LiBlue>그룹관리</LiBlue>
+                    
                   ) : (
                     <Li>그룹관리</Li>
                   )}
@@ -276,14 +295,36 @@ const TopNav = () => {
     </TotalWrapper>
   );
 };
+const LinkComp = styled(Link)``;
+const FixedWrap = styled(motion.ul)`
+  /* display: none; */
+  position: fixed;
+  left: 0;
+  z-index: 0;
+  margin-top: 30px;
+  padding-top: 60px;
+  padding-left: 66px;
+  height: 100vh;
+  background: #fff;
+  width: 200px;
+  border-right: 2px solid #000;
+  > li {
+    margin-bottom: 15px;
+    margin-left: 20px;
+    font-weight: bold;
+    list-style: auto;
+    font-family: 'Inter';
+    font-size: 14px;
+  }
+`;
 const Circle = styled(motion.span)`
   position: absolute;
   width: 8px;
   height: 8px;
   z-index: 1;
   border-radius: 8px;
-  bottom: 23px;
-  left: 21px;
+  bottom: 26px;
+  left: 25px;
   right: 0px;
 `;
 const NavLink = styled(Link)`
@@ -291,9 +332,12 @@ const NavLink = styled(Link)`
   align-items: center;
   justify-content: center;
   position: relative;
+  flex-direction: column;
+  color: #fff;
+  font-size: 7px;
 `;
-const InLi = styled.div<{ active?: boolean }>`
-  background: ${(props) => (props.active ? 'black' : 'white')};
+const InLi = styled.button<{ active?: boolean }>`
+  background: ${(props) => (props.active ? 'black' : null)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -365,13 +409,13 @@ const Ul = styled.ul`
   border-top: 1px solid #909090;
   background-color: #fbfbfb;
 `;
-// const NotLiBlue = styled.div`
+
 //   font-family: 'Inter', sans-serif;
 //   font-weight: bold;
 //   font-size: 16px;
 //   margin-left: 10px;
 // `;
-// const LiBlue = styled(NotLiBlue)`
+
 //   margin-left: 10px;
 //   color: #14b769;
 // `;
@@ -389,13 +433,12 @@ const Header = styled.div`
   z-index: 1;
 `;
 const Wrapper = styled.div`
-  width: 80px;
-  border-right: 1px solid #bdbdbd;
+  width: 55px;
   height: 100vh;
+  background: #fff;
   position: fixed;
   top: 0%;
   z-index: 1;
-  /* background-color: red; */
 `;
 const SlideWrapper = styled.div`
   width: 200px;

@@ -30,7 +30,6 @@ function GroupManageList() {
   // 조건 상태 분기
   // 전체 클라이언트 리스트 호출시 true, 그룹 내 클라이언트 호출시 false 상태로 호출진행
   const [isClientState, setIsClientState] = useState(true);
-
   // Pagination 처리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 default값으로
   const [currentPage1, setCurrentPage1] = useState(1); // 현재 페이지 default값으로
@@ -41,11 +40,9 @@ function GroupManageList() {
   const [indexOfFirstPost, setIndexOfFirstPost] = useState(0); // 현재 페이지의 첫번째 아이템 인덱스
   const [currentPosts, setCurrentPosts] = useState(0); // 현재 페이지에서 보여지는 아이템들
   // const userData = userList.slice(indexOfFirstPost, indexOfLastPost)
-
   /*************************************************************************************
     그룹리스트 관련 코드
   ************************************************************************************ */
-
   // 그룹리스트 담는 변수
   const [groupList, setGroupList] = useState([] as any);
   // 그룹리스트 내 클라이언트 담는 변수
@@ -61,7 +58,6 @@ function GroupManageList() {
   const [groupSearchKeyword, setGroupSearchKeyword] = useState('');
   // 그룹 내 서치검색 키워드 변수
   const [searchGroupInKeyword, setSearchGroupInKeyword] = useState('');
-
 
   // 그룹리스트 GET API
   // const getGroupData = useCallback(async () => {
@@ -93,11 +89,9 @@ function GroupManageList() {
     }
   );
 
-
   // 그룹 클릭시 그룹 내 클라이언트리스트 호출
   const getClientInGroup = useCallback(
     async (id: any, name: any, descript: any, page: any) => {
-      console.log(id, name, descript);
       setCheckedArr([]);
       setIsClientState(false);
       // /api/clients/:groupId&index={index}&keyword=${keyword}
@@ -107,7 +101,6 @@ function GroupManageList() {
           { headers: { Authorization: `Bearer ${token}` } }
         )
         .then((res) => {
-          console.log('클라이언트 그룹내 호출', res.data.data)
           setGroupClient(res.data.data);
         });
       setGroupId(id);
@@ -122,7 +115,8 @@ function GroupManageList() {
           setIsGroupAllClients(item.clientCount);
         }
       });
-    },[groupData]
+    },
+    [groupData]
   );
 
   // 그룹 내에서 검색호출 API
@@ -133,19 +127,22 @@ function GroupManageList() {
         headers: { authorization: `Bearer ${token}` },
       }
     );
-    console.log('그룹 내 검색API주소', `${process.env.REACT_APP_SERVER_URL}/api/clients/${groupId}?index=${currentPage}&keyword=${groupSearchKeyword}`,)
-    console.log('검색필터 결과', response.data.data)
-    setGroupClient(response.data.data)
-  }
+    console.log(
+      '그룹 내 검색API주소',
+      `${process.env.REACT_APP_SERVER_URL}/api/clients/${groupId}?index=${currentPage}&keyword=${groupSearchKeyword}`
+    );
+    console.log('검색필터 결과', response.data.data);
+    setGroupClient(response.data.data);
+  };
 
   // 그룹 검색 useEffet
   useEffect(() => {
     if (groupSearchKeyword.length > 0) {
-      getGroupSearchData()
-    } else if ( groupSearchKeyword.length === 0 ) {
-      getClientInGroup(groupId, groupName, groupDescription, currentPage)
+      getGroupSearchData();
+    } else if (groupSearchKeyword.length === 0) {
+      getClientInGroup(groupId, groupName, groupDescription, currentPage);
     }
-  }, [groupSearchKeyword])
+  }, [groupSearchKeyword]);
 
   /*************************************************************************************
     유저리스트 관련 코드
@@ -220,7 +217,7 @@ function GroupManageList() {
     // console.log('검색필터 API결과', response.data.data.clients)
     setUserList(response.data.data.clients);
     return response;
-  }
+  };
 
   // 검색필터 useEffect
   useEffect(() => {
@@ -293,10 +290,10 @@ function GroupManageList() {
   const [groupUserCreateModal, setGroupUserCreateModal] = useState(false);
   const clickGroupUserCreateModal = () => {
     setGroupUserCreateModal(true);
-  }
+  };
   const closeGroupUserCreateModal = () => {
     setGroupUserCreateModal(false);
-  }
+  };
   // 그룹리스트 내 유저 복사 모달
   const [groupUserCopyModal, setGroupUserCopyModal] = useState(false);
   const clickUserCopyModal = () => {
@@ -463,11 +460,9 @@ function GroupManageList() {
     setClickActive((prev: any) => {
       return e.target.value;
     });
-    console.log(e.target.value);
   };
   return (
     <Container>
-      <HeaderContainer>그룹관리</HeaderContainer>
       <ContentContainer>
         {/* 그룹리스트 공간 */}
         <GroupContainer>
@@ -540,14 +535,15 @@ function GroupManageList() {
               <>
                 <div style={{ display: 'flex', gap: '7px' }}>
                   {isOpen && isOpen ? (
-                    <GroupClickButton 
+                    <GroupClickButton
                       onClick={() => {
                         if (checkedArr.length > 0) {
-                          clickUserDeleteModal()
-                        } else if ( checkedArr.length === 0) {
-                          alert('1개 이상을 체크해주세요.')
+                          clickUserDeleteModal();
+                        } else if (checkedArr.length === 0) {
+                          alert('1개 이상을 체크해주세요.');
                         }
-                        }}>
+                      }}
+                    >
                       고객정보 삭제
                     </GroupClickButton>
                   ) : null}
@@ -560,8 +556,9 @@ function GroupManageList() {
                   ) : (
                     <GroupButton
                       onClick={() => {
-                        setOpen((prev) => !prev) as any
-                        setCheckedArr([])}}
+                        setOpen((prev) => !prev) as any;
+                        setCheckedArr([]);
+                      }}
                     >
                       선택취소
                     </GroupButton>
@@ -580,8 +577,9 @@ function GroupManageList() {
                   ) : (
                     <GroupButton
                       onClick={() => {
-                        setIsEditOpen((prev) => !prev) as any
-                        setCheckedArr([])}}
+                        setIsEditOpen((prev) => !prev) as any;
+                        setCheckedArr([]);
+                      }}
                     >
                       수정취소
                     </GroupButton>
@@ -626,8 +624,9 @@ function GroupManageList() {
                   ) : (
                     <GroupButton
                       onClick={() => {
-                        setOpen((prev) => !prev) as any
-                        setCheckedArr([])}}
+                        setOpen((prev) => !prev) as any;
+                        setCheckedArr([]);
+                      }}
                     >
                       삭제취소
                     </GroupButton>
@@ -646,8 +645,9 @@ function GroupManageList() {
                   ) : (
                     <GroupButton
                       onClick={() => {
-                        setIsCopyOpen((prev) => !prev) as any
-                        setCheckedArr([])}}
+                        setIsCopyOpen((prev) => !prev) as any;
+                        setCheckedArr([]);
+                      }}
                     >
                       복사취소
                     </GroupButton>
@@ -669,8 +669,9 @@ function GroupManageList() {
                   ) : (
                     <GroupButton
                       onClick={() => {
-                      setIsMoveOpen((prev) => !prev) as any
-                      setCheckedArr([])}}
+                        setIsMoveOpen((prev) => !prev) as any;
+                        setCheckedArr([]);
+                      }}
                     >
                       이동취소
                     </GroupButton>
@@ -710,7 +711,7 @@ function GroupManageList() {
           </ButtonContainer>
           <div
             style={{
-              border: '1px solid #eee',
+              border: '4px solid #000',
               borderRadius: '15px',
             }}
           >
@@ -730,7 +731,7 @@ function GroupManageList() {
                   userList?.map((item: any) => {
                     return (
                       <CardHeader key={item.clientId}>
-                        { (isOpen || isEditOpen) ? (
+                        {isOpen || isEditOpen ? (
                           <Percentage width="6%">
                             <CheckInputBox
                               type="checkbox"
@@ -769,7 +770,7 @@ function GroupManageList() {
                   .map((item: any) => {
                     return (
                       <CardHeader key={item.clientId}>
-                        {(isOpen || isCopyOpen || isMoveOpen) ? (
+                        {isOpen || isCopyOpen || isMoveOpen ? (
                           <Percentage width="6%">
                             <CheckInputBox
                               type="checkbox"
@@ -932,10 +933,11 @@ const Container = styled.div`
 export const HeaderContainer = styled.div`
   height: 60px;
   width: 100%;
+  font-family: 'TheJamsil5Bold';
   display: flex;
   align-items: center;
   padding-left: 80px;
-  margin-top: 10px;
+  margin-top: 90px;
   /* margin-bottom: 20px; */
   /* padding-left: 30px; */
   font-size: 34px;
@@ -943,13 +945,13 @@ export const HeaderContainer = styled.div`
   /* background-color: crimson; */
 `;
 const ContentContainer = styled.div`
-  max-width: 1600px;
+  max-width: 1800px;
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: row;
   margin: 0 auto;
-  justify-content: space-between;
+  margin-top: 100px;
   /* margin-bottom: 100px; */
   /* background-color: cyan; */
 `;
@@ -959,13 +961,13 @@ const GroupContainer = styled.div`
   width: 250px;
   @media screen and (min-width: 1300px) {
     margin: 0px 45px;
-    width: 300px;
+    width: 250px;
   }
   /* background-color: bisque; */
 `;
 const GroupContentBox = styled.div`
   height: 92%;
-  border: 2px solid #eeeeee;
+  border: 4px solid #000;
   border-radius: 20px;
   overflow: auto;
   padding: 10px;
@@ -978,19 +980,14 @@ const GroupContentItem = styled.button`
   justify-content: center;
   flex-direction: column;
   width: 90%;
-  height: 60px;
+  font-family: 'TheJamsil5Bold';
   margin: 10px auto;
   padding: 10px;
   border-radius: 8px;
   /* color: #4F4F4F; */
   font-weight: 700;
   font-size: 16px;
-  /* border: 1px solid burlywood; */
   cursor: pointer;
-  /* background-color: rgba(20, 183, 105, 0.05); */
-  /* :focus {
-    color: blue;
-  } */
 `;
 
 const ButtonBox = styled.div`
@@ -1012,16 +1009,17 @@ const ButtonContainer = styled.div`
 const ButtonGap = styled.div`
   gap: 10px;
 `;
-const GroupButton = styled.button`
+export const GroupButton = styled.button`
   width: 110px;
   height: 40px;
   color: #14b769;
   margin-right: 5px;
-  font-weight: 500;
+  font-weight: bold;
   font-size: 16px;
   border-radius: 8px;
   background-color: #ffffff;
-  border: 1px solid #14b769;
+  font-family: 'TheJamsil5Bold';
+  border: 3px solid #14b769;
   transition: 0.2s;
   :hover {
     background-color: #14b769;
@@ -1032,7 +1030,7 @@ const SearchInput = styled.input`
   width: 250px;
   height: 45px;
   border-radius: 8px;
-  border: 1px solid #bdbdbd;
+  border: 2px solid #000;
   padding-left: 10px;
 `;
 
@@ -1083,6 +1081,8 @@ const NameBox = styled.div`
   font-size: 22px;
   color: #333333;
   font-weight: 700;
+  background: linear-gradient(to top, #36fead 40%, transparent 40%);
+  font-family: 'TheJamsil5Bold';
 `;
 const DescriptBox = styled.div`
   color: #4f4f4f;
@@ -1101,33 +1101,27 @@ const ClientContentBox = styled.div`
 
 const ClientContentHeader = styled.div`
   /* height: 5%; */
-  /* background-color: aqua; */
+  background-color: #000;
+  color: white;
+  font-weight: bold;
 `;
 const CardHeader = styled.div`
   width: 100%;
-  height: 4.5vh;
-
-  /* height: 30px; */
-  /* margin: 0px 50px 0px 50px; */
   display: flex;
   flex-direction: row;
   align-items: center;
-  border: 1px solid #eeeeee;
-  border-left: 1ch;
-  border-right: 1ch;
   cursor: pointer;
-  /* padding: 5px 0px 0px 0px; */
-  /* background-color: deeppink; */
-  /* margin-bottom: 20px; */
   :hover {
     background-color: rgba(20, 183, 105, 0.05);
   }
 `;
 const Percentage = styled.div<{ width: any }>`
-  height: 36px;
+  height: 32px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
   /* margin-top: 3px; */
   /* border: 1px solid #EEEEEE; */
   /* background-color: #ead3cc; */
@@ -1136,10 +1130,11 @@ const Percentage = styled.div<{ width: any }>`
 
 const HeaderPercentage = styled(Percentage)<{ width: any }>`
   height: 36px;
-  background-color: #f9fafc;
-  color: #909090;
+  font-weight: bold;
   display: flex;
   justify-content: center;
+  font-family: 'TheJamsil5Bold';
+  font-size: 14px;
   align-items: center;
   /* border: 1px solid black; */
 
@@ -1158,6 +1153,7 @@ const ClientButton = styled.button`
 `;
 const CenterContent = styled.div`
   width: 100%;
+  padding: 15px;
   height: 100%;
   display: flex;
   justify-content: center;

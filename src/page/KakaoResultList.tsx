@@ -25,7 +25,7 @@ function KakaoResultList() {
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
   const [isGroupList, setGroupList] = useState([]);
   const [isGroupClient, setGroupClient] = useState([]);
-  const [currentValue, setCurrentValue] = useState();
+  const [currentValue, setCurrentValue] = useState(null);
 
   //그룹리스트
   const token = getCookie('userToken');
@@ -41,8 +41,9 @@ function KakaoResultList() {
   const kakaoResultListFetch = useCallback(
     async (groupId?: any, startDay?: string, endData?: string) => {
       const skip = postPerPage * (currentPage - 1);
+
       if (startDay === undefined) {
-        const response = await axios
+        await axios
           .get(
             `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}`,
             { headers: { authorization: `Bearer ${token}` } }
@@ -52,7 +53,7 @@ function KakaoResultList() {
             setTotal(res.data.data.list.length);
           });
       } else {
-        const response = await axios
+        await axios
           .get(
             `${process.env.REACT_APP_SERVER_URL}/api/talk/results/list?groupId=${groupId}&startdate=${startDay}&enddate=${endData}`,
             { headers: { authorization: `Bearer ${token}` } }
@@ -65,17 +66,6 @@ function KakaoResultList() {
     },
     []
   );
-
-  //발송상세조회
-  const KakaoDetailBtn = useCallback(async (talkSendId: string) => {
-    const response = await axios
-      .get(
-        `${process.env.REACT_APP_SERVER_URL}/api/talk/results/detail/${talkSendId}`
-      )
-      .then((res) => {
-        console.log(res.data);
-      });
-  }, []);
   //yyyymmdd date변환 gkatn
   function formatDate(dateString: any) {
     const date = new Date(dateString);
@@ -93,14 +83,6 @@ function KakaoResultList() {
   }, [getGroupData]);
 
   useEffect(() => {
-    // if (currentValue === undefined) {
-    //   // kakaoResultListFetch(
-    //   //   isGroupList[0]['groupId'],
-    //   //   formatDate(value[0]),
-    //   //   formatDate(value[1])
-    //   // );
-    //   //console.log(isGroupList && isGroupList[0]['groupId']);
-    // }
     if (currentValue !== null) {
       if (value[0] !== null) {
         kakaoResultListFetch(
@@ -113,7 +95,9 @@ function KakaoResultList() {
       }
     }
     //캘린더 선택시
-  }, [value, currentValue]);
+  }, [currentValue]);
+
+  console.log('isGroupClient :', isGroupClient);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -125,14 +109,12 @@ function KakaoResultList() {
         <FlexWrapResult>
           <FlexWrap>
             <GrayWrap>고객그룹</GrayWrap>
-            {/* <SelectBoxs
-            currentCategoryValue={currentValue}
-            // className={`obj_${idx}`}
-            // propFunction={messagePreviewFunc}
-            optionData={['빈값입니다.']}
-          ></SelectBoxs> */}
-            {/* 셀렉트박스 넣을부분 */}
             <select
+              style={{
+                height: '40px',
+                border: '2px solid #000',
+                fontWeight: 'bold',
+              }}
               name=""
               id=""
               onChange={(e) => handleOnChangeSelectValue(e)}
@@ -212,6 +194,9 @@ function KakaoResultList() {
                 ))}
             </tbody>
           </Table>
+          {isGroupClient && isGroupClient.length === 0 ? (
+            <AlertNoGroup>그룹내 전송된 내역이 없습니다.</AlertNoGroup>
+          ) : null}
         </MapWrapper>
         <PaginationBox>
           <Pagination
@@ -228,17 +213,25 @@ function KakaoResultList() {
     </motion.div>
   );
 }
-const FlexWrapResult = styled.div`
+const AlertNoGroup = styled.div`
+  font-family: 'TheJamsil5Bold';
+  font-weight: bold;
+  background: linear-gradient(to top, rgb(54, 254, 173) 40%, transparent 40%);
+  padding: 10px;
+  margin-top: 15px;
+`;
+export const FlexWrapResult = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
 `;
-const MapWrapper = styled.div`
+export const MapWrapper = styled.div`
   width: 100%;
-  border: 1px solid #dcdcdc;
+  border: 4px solid #000;
   border-radius: 8px;
   padding: 20px 30px;
   margin: 15px auto;
+  flex-direction: column;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -280,18 +273,18 @@ export const Table = styled.table`
 export const GrayWrap = styled.div`
   margin-right: 10px;
   color: #14b769;
-  border: 1px solid #14b769;
+  font-family: 'TheJamsil5Bold';
+  border: 2px solid #14b769;
   border-radius: 8px;
   font-weight: bold;
   padding: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
 `;
 export const FlexWrap = styled.div`
   display: flex;
-  height: 50px;
+  margin-bottom: 10px;
 `;
 export const Wrapper = styled.div`
   display: flex;
@@ -301,13 +294,19 @@ export const Wrapper = styled.div`
   width: 1000px;
   height: 100vh;
   margin: 0 auto;
+  /* padding-left: 80px; */
+  /* @media screen and (min-width: 1200px) {
+    padding-left: inherit;
+  } */
 `;
 export const H1 = styled.div`
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 20px;
+  font-family: 'TheJamsil5Bold';
   text-align: left;
   color: #000;
+  background: linear-gradient(to top, #36fead 40%, transparent 40%);
   @media (max-width: 768px) {
     font-size: 20px;
   }

@@ -18,7 +18,6 @@ function HomeHeader() {
           },
         })
         .then((res) => {
-          console.log('fetchTemplateDetail : ', res.data.data);
           setUserData(res.data.data);
         });
     } catch (error) {

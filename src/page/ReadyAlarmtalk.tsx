@@ -26,28 +26,39 @@ function ReadyAlarmtalk() {
   };
   const { mutate } = useMutation(fetchTemplatesList, {
     onSuccess: (res) => {
-      console.log(res.data.data);
       // setTableData(
       //   res.data.data.map((el: any) => Object.assign(el.client, el.talkContent))
       // );
-
       // console.log(
       //   res.data.data.map((el: any) =>
       //     Object.keys(Object.assign(el.client, el.talkContent))
       //   )
       // );
-      const Data = res.data.data.map((el: any) =>
-        Object.assign(el.client, el.talkContent)
-      );
-
-      const filteredData = Data.filter((obj: any) => {
-        for (const prop in obj) {
-          if (obj[prop] == null) {
-            delete obj[prop];
+      // .filter((el: any) => el !== 'talkContentId');
+      const filteredData = res.data.data
+        .map((el: any) => {
+          const filteredObj: any = {};
+          for (const prop in el.client) {
+            filteredObj[prop] = el.client[prop];
           }
-        }
-        return Object.keys(obj).length > 0;
-      });
+          filteredObj.groupId = el.talkContent.groupId;
+          filteredObj.talkContentId = el.talkContent.talkContentId;
+          for (const prop in el.talkContent) {
+            if (prop !== 'groupId' && prop !== 'talkContentId') {
+              filteredObj[prop] = el.talkContent[prop];
+            }
+          }
+          return filteredObj;
+        })
+        .filter((obj: any) => {
+          for (const prop in obj) {
+            if (obj[prop] == null) {
+              delete obj[prop];
+            }
+          }
+          return Object.keys(obj).length > 0;
+        });
+      console.log(filteredData);
       setKeyData(Object.keys(filteredData[0]) as any);
       setTableData(filteredData);
     },
@@ -96,7 +107,7 @@ function ReadyAlarmtalk() {
     >
       <Wrapper>
         <H1>알림톡 전송 내용 조회</H1>
-        <FlexWrapResult>
+        <FlexWrapResultResize>
           {isNullComponent === false ? (
             <>
               <MapWrapper>
@@ -188,11 +199,15 @@ function ReadyAlarmtalk() {
               </Button>
             </>
           )}
-        </FlexWrapResult>
+        </FlexWrapResultResize>
       </Wrapper>
     </motion.div>
   );
 }
+
+const FlexWrapResultResize = styled(FlexWrapResult)`
+  align-items: center;
+`;
 export const BottomWrap = styled.div<{ ref?: any }>`
   width: 100%;
   margin: 0px auto;

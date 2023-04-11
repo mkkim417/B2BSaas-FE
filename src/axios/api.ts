@@ -107,7 +107,7 @@ export const deleteGroupData = async (groupId: any) => {
 export const postInGroupClient = async(data : any) => {
   console.log(data)
   const urls = data.map((item:any) => `/api/batch/clients/${item.clientId}/groups/${data[data.length-1]}`);
-  const response =await axios.all(
+  const response = await axios.all(
     urls.map((url:any) => {
       instance.post(url);
     })

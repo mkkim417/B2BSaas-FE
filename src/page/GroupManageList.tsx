@@ -781,8 +781,8 @@ function GroupManageList() {
                         ) : (
                           <Percentage width="6%"></Percentage>
                         )}
-                        <Percentage width="6%">
-                          {/* <input
+                        {/* <Percentage width="6%">
+                          <input
                             type="checkbox"
                             checked={checkedArr.includes(item.clientId)}
                             onChange={(e) => checkUserHandler(e, item.clientId)}
@@ -791,8 +791,8 @@ function GroupManageList() {
                           type="checkbox"
                           checked={checkedArr.includes(item)}
                           onChange={(e: any) => checkUserHandler(e, item)}
-                        /> */}
-                        </Percentage>
+                        />
+                        </Percentage> */}
                         <Percentage width="23%">{item.groupName}</Percentage>
                         <Percentage width="12%">{item.clientName}</Percentage>
                         <Percentage width="22%">{item.contact}</Percentage>
@@ -1028,7 +1028,7 @@ export const GroupButton = styled.button`
 `;
 const SearchInput = styled.input`
   width: 250px;
-  height: 45px;
+  height: 40px;
   border-radius: 8px;
   border: 2px solid #000;
   padding-left: 10px;
@@ -1093,9 +1093,10 @@ const DescriptBox = styled.div`
   /* font-weight: 500; */
 `;
 const ClientContentBox = styled.div`
-  height: 70%;
+  height: 482px;
+  /* background-color: aliceblue; */
   /* border: 2px solid blue; */
-  /* overflow: scroll; */
+  overflow: scroll;
   /* margin: 0px 30px 0px 0px; */
 `;
 

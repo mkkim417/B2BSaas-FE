@@ -62,10 +62,11 @@ function UserMoveModal({ group, content, closeModal }: Props) {
       <ModalBackGround>
         <ModalContainer>
           <ContentContainer>
-            <TitleContainer>이동시킬 그룹명을 선택해주세요🌷</TitleContainer>
+            <TitleContainer>이동시킬 그룹명을 선택해주세요</TitleContainer>
             <SelectHeader>
               선택 :
               <SelectBox onChange={selectHandler}>
+                <option value="none">====== 선택 ======</option>
                 {group.map((item: any) => (
                   <option value={item.groupId} key={item.groupId}>
                     {item.groupName}

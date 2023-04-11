@@ -102,8 +102,11 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
   // Post Handler 
   const postDataHandler = (e:any) => {
     e.preventDefault();
-    console.log(mutate([...savedArr, groupId]))
-    // mutate([...savedArr, groupId])
+    if (savedArr.length > 0) {
+      mutate([...savedArr, groupId])
+    } else {
+      alert('최소 한명 이상 추가해주세요.')
+    }
   }
   // 검색필터 useEffect
   useEffect(() => {
@@ -234,7 +237,7 @@ const ModalContainer = styled.form`
   left: 35%;
   top: 10%;
   width: 40%;
-  height: 760px;
+  height: 700px;
   /* background-color: antiquewhite; */
 `;
 
@@ -356,7 +359,7 @@ const RowPercent = styled.div<{ width: any }>`
 `;
 const DataContainer = styled.div`
   width: 100%;
-  height: 420px;
+  height: 350px;
   display: flex;
   flex-direction: column;
   overflow: scroll;

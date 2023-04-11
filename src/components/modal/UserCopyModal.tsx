@@ -73,11 +73,11 @@ function UserCopyModal({ group, content, closeModal }: Props) {
       <ModalBackGround>
         <ModalContainer>
           <ContentContainer>
-            <TitleContainer>복사시킬 그룹명을 선택해주세요🌼</TitleContainer>
+            <TitleContainer>복사시킬 그룹명을 선택해주세요</TitleContainer>
             <SelectHeader>
               그룹선택 :
               <SelectBox onChange={selectHandler}>
-                <option value="none">=====선택=====</option>
+                <option value="none">====== 선택 ======</option>
                 {group.map((item: any) => (
                   <option value={item.groupId} key={item.groupId}>
                     {item.groupName}
@@ -150,7 +150,7 @@ const ContentContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  /* gap: 10px; */
+  gap: 10px;
   /* justify-content: center; */
   /* align-items: center; */
   /* margin-top: 30px; */

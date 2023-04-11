@@ -12,7 +12,7 @@ const AutoModal = (props: any) => {
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false); //커스텀훅
   const navigate = useNavigate();
 
-  const onSubmit = async () => {
+  const onSubmitHandler = async () => {
     const data = [] as any[];
     const token = getCookie('userToken');
     props.isSendModalData.map((el: any) => data.push(el));
@@ -60,7 +60,7 @@ const AutoModal = (props: any) => {
               <GroupButton onClick={() => props.closeModal(false)}>
                 취소
               </GroupButton>
-              <GroupButton onClick={() => onsubmit}>전송</GroupButton>
+              <GroupButton onClick={onSubmitHandler}>전송</GroupButton>
             </div>
           </ButtonWrap>
         </div>

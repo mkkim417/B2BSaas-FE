@@ -307,7 +307,7 @@ const FixedWrap = styled(motion.ul)`
   height: 100vh;
   background: #fff;
   width: 200px;
-  border-right: 1px solid #bdbdbd;
+  border-right: 2px solid #000;
   > li {
     margin-bottom: 15px;
     margin-left: 20px;
@@ -434,7 +434,6 @@ const Header = styled.div`
 `;
 const Wrapper = styled.div`
   width: 55px;
-  border-right: 2px solid #000;
   height: 100vh;
   background: #fff;
   position: fixed;

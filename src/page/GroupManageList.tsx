@@ -712,7 +712,7 @@ function GroupManageList() {
           </ButtonContainer>
           <div
             style={{
-              border: '2px solid #000',
+              border: '4px solid #000',
               borderRadius: '15px',
             }}
           >
@@ -932,6 +932,7 @@ const Container = styled.div`
 export const HeaderContainer = styled.div`
   height: 60px;
   width: 100%;
+  font-family: 'TheJamsil5Bold';
   display: flex;
   align-items: center;
   padding-left: 80px;
@@ -965,7 +966,7 @@ const GroupContainer = styled.div`
 `;
 const GroupContentBox = styled.div`
   height: 92%;
-  border: 2px solid #000;
+  border: 4px solid #000;
   border-radius: 20px;
   overflow: auto;
   padding: 10px;
@@ -1016,7 +1017,8 @@ const GroupButton = styled.button`
   font-size: 16px;
   border-radius: 8px;
   background-color: #ffffff;
-  border: 2px solid #14b769;
+  font-family: 'TheJamsil5Bold';
+  border: 3px solid #14b769;
   transition: 0.2s;
   :hover {
     background-color: #14b769;
@@ -1098,16 +1100,15 @@ const ClientContentBox = styled.div`
 
 const ClientContentHeader = styled.div`
   /* height: 5%; */
-  /* background-color: aqua; */
+  background-color: #000;
+  color: white;
+  font-weight: bold;
 `;
 const CardHeader = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
-  border: 1px solid #eeeeee;
-  border-left: 1ch;
-  border-right: 1ch;
   cursor: pointer;
   :hover {
     background-color: rgba(20, 183, 105, 0.05);
@@ -1128,10 +1129,11 @@ const Percentage = styled.div<{ width: any }>`
 
 const HeaderPercentage = styled(Percentage)<{ width: any }>`
   height: 36px;
-  color: #000;
   font-weight: bold;
   display: flex;
   justify-content: center;
+  font-family: 'TheJamsil5Bold';
+  font-size: 14px;
   align-items: center;
   /* border: 1px solid black; */
 

@@ -160,14 +160,15 @@ function ReadyAlarmtalk() {
                   </tbody>
                 </Table>
               </MapWrapper>
+              <div style={{ margin: '20px' }}></div>
               <ButtonWrap>
-                <Button
+                <NewButton
                   width={'120px'}
                   padding={'10px'}
                   onClick={() => navigate('/groupmanageList')}
                 >
                   뒤로가기
-                </Button>
+                </NewButton>
                 <PaginationBox1>
                   <Pagination
                     activePage={1}
@@ -179,24 +180,24 @@ function ReadyAlarmtalk() {
                     onChange={setPage}
                   />
                 </PaginationBox1>
-                <Button
+                <NewButton
                   width={'110px'}
                   padding={'10px'}
                   onClick={DoneAlertalkSend}
                 >
                   다음단계
-                </Button>
+                </NewButton>
               </ButtonWrap>
             </>
           ) : (
             <>
               <NoticeFont>아직 선택된 그룹이 없으시네요 😊</NoticeFont>
-              <Button
+              <NewButton
                 width={'150px'}
                 onClick={() => navigate('/groupmanageList')}
               >
                 고객그룹등록하기
-              </Button>
+              </NewButton>
             </>
           )}
         </FlexWrapResultResize>
@@ -204,7 +205,9 @@ function ReadyAlarmtalk() {
     </motion.div>
   );
 }
-
+const NewButton = styled(Button)`
+  height: 45px;
+`;
 const FlexWrapResultResize = styled(FlexWrapResult)`
   align-items: center;
 `;

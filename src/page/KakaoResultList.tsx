@@ -224,11 +224,10 @@ export const FlexWrapResult = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  align-items: center;
 `;
 export const MapWrapper = styled.div`
   width: 100%;
-  border: 2px solid #000;
+  border: 4px solid #000;
   border-radius: 8px;
   padding: 20px 30px;
   margin: 15px auto;

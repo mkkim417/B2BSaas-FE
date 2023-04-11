@@ -458,6 +458,7 @@ function GroupManageList() {
 
   const toogleActive = (e: any) => {
     setClickActive((prev: any) => {
+      console.log(e.target.value);
       return e.target.value;
     });
   };
@@ -978,19 +979,13 @@ const GroupContentItem = styled.button`
   flex-direction: column;
   width: 90%;
   font-family: 'TheJamsil5Bold';
-  height: 60px;
   margin: 10px auto;
   padding: 10px;
   border-radius: 8px;
   /* color: #4F4F4F; */
   font-weight: 700;
   font-size: 16px;
-  /* border: 1px solid burlywood; */
   cursor: pointer;
-  /* background-color: rgba(20, 183, 105, 0.05); */
-  /* :focus {
-    color: blue;
-  } */
 `;
 
 const ButtonBox = styled.div`
@@ -1107,10 +1102,6 @@ const ClientContentHeader = styled.div`
 `;
 const CardHeader = styled.div`
   width: 100%;
-  height: 4.5vh;
-
-  /* height: 30px; */
-  /* margin: 0px 50px 0px 50px; */
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -1118,15 +1109,12 @@ const CardHeader = styled.div`
   border-left: 1ch;
   border-right: 1ch;
   cursor: pointer;
-  /* padding: 5px 0px 0px 0px; */
-  /* background-color: deeppink; */
-  /* margin-bottom: 20px; */
   :hover {
     background-color: rgba(20, 183, 105, 0.05);
   }
 `;
 const Percentage = styled.div<{ width: any }>`
-  height: 36px;
+  height: 32px;
   display: flex;
   justify-content: center;
   align-items: center;

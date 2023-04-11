@@ -23,7 +23,7 @@ export const Container = styled.div`
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-  padding-left: 280px;
+  padding-left: 55px;
   padding-top: 60px;
   /* background-color: sandybrown; */
 `;

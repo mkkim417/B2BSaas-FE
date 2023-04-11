@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Outlet } from 'react-router';
 import { Link, useMatch } from 'react-router-dom';
 import styled from 'styled-components';
@@ -12,20 +12,24 @@ import { motion } from 'framer-motion';
 
 const TopNav = () => {
   const statistics = useMatch('/statistics');
-  const isLoggedIn = isLoggedin();
   const clientRegistration = useMatch('/clientregistration');
   const groupManageList = useMatch('/groupmanageList');
-  const alarmtalk = useMatch('/alarmtalk');
   const kakaoresultlist = useMatch('/kakaoresultlist');
   const readyalarmtalk = useMatch('/readyalarmtalk');
-
-  // console.log('Uploadpage : ', Uploadpage);
-  // console.log('Home : ', Home);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [isMenuBoolean, setMenuBoolean] = useState(false);
   const [isMenuData, setMenuData] = useState<string[]>([]);
   const [isMenuLink, setMenuLink] = useState<string[]>([]);
-
+  const [isMeData, setData] = useState();
+  const duplacatedClick = useCallback(
+    (target: any) => {
+      console.log(target, isMeData);
+      setData(target);
+      if (target == isMeData) {
+        setMenuBoolean((prev) => !prev);
+      }
+    },
+    [isMeData]
+  );
   const variants = {
     open: { opacity: 1, x: 0 },
     closed: { opacity: 0, x: '-100%' },
@@ -59,18 +63,17 @@ const TopNav = () => {
         <UserContatiner>
           <ul style={{ marginTop: '60px' }}>
             <Li>
-              <InLi
-                active={statistics ? true : false}
-                onClick={() => {
-                  setMenuOpen((menuOpen) => !menuOpen);
-                  setMenuBoolean((prev) => !prev);
-                  if (isMenuBoolean === false) {
-                    setMenuData(['통계분석']);
-                    setMenuLink(['/statistics']);
-                  }
-                }}
-              >
-                <NavLink to={'/statistics'}>
+              <NavLink to={'/statistics'}>
+                <InLi
+                  active={statistics ? true : false}
+                  onClick={() => {
+                    duplacatedClick('statistics');
+                    if (isMenuBoolean === false) {
+                      setMenuData(['통계분석']);
+                      setMenuLink(['/statistics']);
+                    }
+                  }}
+                >
                   {statistics ? (
                     <>
                       <ListIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
@@ -86,22 +89,21 @@ const TopNav = () => {
                       <ListIcon width={'25px'} heigth={'25px'} />
                     </>
                   )}
-                </NavLink>
-              </InLi>
+                </InLi>
+              </NavLink>
             </Li>
             <Li>
-              <InLi
-                active={readyalarmtalk ? true : false}
-                onClick={() => {
-                  setMenuOpen((menuOpen) => !menuOpen);
-                  setMenuBoolean((prev) => !prev);
-                  if (isMenuBoolean === false) {
-                    setMenuData(['알림톡전송']);
-                    setMenuLink(['/readyalarmtalk']);
-                  }
-                }}
-              >
-                <NavLink to={'/readyalarmtalk'}>
+              <NavLink to={'/readyalarmtalk'}>
+                <InLi
+                  active={readyalarmtalk ? true : false}
+                  onClick={() => {
+                    duplacatedClick('readyalarmtalk');
+                    if (isMenuBoolean === false) {
+                      setMenuData(['알림톡전송']);
+                      setMenuLink(['/readyalarmtalk']);
+                    }
+                  }}
+                >
                   {readyalarmtalk ? (
                     <>
                       <KakaoIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
@@ -117,22 +119,21 @@ const TopNav = () => {
                       <KakaoIcon width={'25px'} heigth={'25px'} />
                     </>
                   )}
-                </NavLink>
-              </InLi>
+                </InLi>
+              </NavLink>
             </Li>
             <Li>
-              <InLi
-                active={kakaoresultlist ? true : false}
-                onClick={() => {
-                  setMenuOpen((menuOpen) => !menuOpen);
-                  setMenuBoolean((prev) => !prev);
-                  if (isMenuBoolean === false) {
-                    setMenuData(['전송결과조회']);
-                    setMenuLink(['/kakaoresultlist']);
-                  }
-                }}
-              >
-                <NavLink to={'/kakaoresultlist'}>
+              <NavLink to={'/kakaoresultlist'}>
+                <InLi
+                  active={kakaoresultlist ? true : false}
+                  onClick={(e) => {
+                    duplacatedClick('kakaoresultlist');
+                    if (isMenuBoolean === false) {
+                      setMenuData(['전송결과조회']);
+                      setMenuLink(['/kakaoresultlist']);
+                    }
+                  }}
+                >
                   {kakaoresultlist ? (
                     <>
                       <ListResultIcon
@@ -150,22 +151,23 @@ const TopNav = () => {
                       <ListResultIcon width={'25px'} heigth={'25px'} />
                     </>
                   )}
-                </NavLink>
-              </InLi>
+                </InLi>
+              </NavLink>
             </Li>
             <Li>
-              <InLi
-                active={groupManageList ? true : false}
-                onClick={() => {
-                  setMenuOpen((menuOpen) => !menuOpen);
-                  setMenuBoolean((prev) => !prev);
-                  if (isMenuBoolean === false) {
-                    setMenuData(['그룹관리']);
-                    setMenuLink(['/groupManageList']);
-                  }
-                }}
-              >
-                <NavLink to={'/groupManageList'}>
+              <NavLink to={'/groupManageList'}>
+                <InLi
+                  active={groupManageList ? true : false}
+                  value={'groupManageList'}
+                  onClick={(e) => {
+                    duplacatedClick('groupManageList');
+                    //setMenuBoolean((prev) => !prev);
+                    if (isMenuBoolean === false) {
+                      setMenuData(['그룹관리']);
+                      setMenuLink(['/groupManageList']);
+                    }
+                  }}
+                >
                   {groupManageList ? (
                     <>
                       <GroupMangeListIcon
@@ -183,22 +185,21 @@ const TopNav = () => {
                       <GroupMangeListIcon width={'25px'} heigth={'25px'} />
                     </>
                   )}
-                </NavLink>
-              </InLi>
+                </InLi>
+              </NavLink>
             </Li>
             <Li>
-              <InLi
-                active={clientRegistration ? true : false}
-                onClick={() => {
-                  setMenuOpen((menuOpen) => !menuOpen);
-                  setMenuBoolean((prev) => !prev);
-                  if (isMenuBoolean === false) {
-                    setMenuData(['고객등록']);
-                    setMenuLink(['/clientregistration']);
-                  }
-                }}
-              >
-                <NavLink to={'/clientregistration'}>
+              <NavLink to={'/clientregistration'}>
+                <InLi
+                  active={clientRegistration ? true : false}
+                  onClick={() => {
+                    duplacatedClick('clientRegistration');
+                    if (isMenuBoolean === false) {
+                      setMenuData(['고객등록']);
+                      setMenuLink(['/clientregistration']);
+                    }
+                  }}
+                >
                   {clientRegistration ? (
                     <>
                       <CustomerAddIcon
@@ -216,8 +217,8 @@ const TopNav = () => {
                       <CustomerAddIcon width={'25px'} heigth={'25px'} />
                     </>
                   )}
-                </NavLink>
-              </InLi>
+                </InLi>
+              </NavLink>
             </Li>
           </ul>
           <FlexWrap></FlexWrap>
@@ -323,8 +324,8 @@ const Circle = styled(motion.span)`
   height: 8px;
   z-index: 1;
   border-radius: 8px;
-  bottom: 16px;
-  left: 16px;
+  bottom: 26px;
+  left: 25px;
   right: 0px;
 `;
 const NavLink = styled(Link)`
@@ -336,7 +337,7 @@ const NavLink = styled(Link)`
   color: #fff;
   font-size: 7px;
 `;
-const InLi = styled.div<{ active?: boolean }>`
+const InLi = styled.button<{ active?: boolean }>`
   background: ${(props) => (props.active ? 'black' : null)};
   display: flex;
   align-items: center;

@@ -13,15 +13,14 @@ function Home() {
       <Wrapper>
         <LeftContnets>
           <LogoText>
-            <div>SendinGo 관련 두줄</div>
-            <div>소개글 작성</div>
+            <div>알림톡 대량 발송과 관리를 한번에! SendinGo</div>
           </LogoText>
           <CotentsTxt>
             <div>이메일을 보내도 답변이 없으셔서 막막하셨나요? </div>
-            <div>SendinGo와 함께 간편하게 고객관리를 해보세요!</div>
+            <div>SendinGo와 함께 간편하게 고객관리를 해보세요</div>
           </CotentsTxt>
         </LeftContnets>
-        <VideoBox controls />
+        <VideoBox src={'샌딩고동영상.mp4'} controls />
       </Wrapper>
     </motion.div>
   );

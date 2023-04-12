@@ -71,12 +71,13 @@ function UploadPage() {
   //다음단계버튼
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
-      if (fileInput.current.files[0] === undefined) {
+      if (!isData) {
+        console.log(isData);
         alert('파일을 선택해주세요');
         return;
       }
-      dispatch(sendListCreate(data));
-      dispatch(sendKeyCreate(isKeyDataServe));
+      // dispatch(sendListCreate(data));
+      // dispatch(sendKeyCreate(isKeyDataServe));
       setGroupComp(true);
       setTimeout(() => {
         onNextClick();

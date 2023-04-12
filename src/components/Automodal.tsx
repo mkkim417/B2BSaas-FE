@@ -105,8 +105,8 @@ export const WhiteWrap = styled.div`
   background-color: #fff;
   letter-spacing: 0.1rem;
   line-height: 1.3;
-  padding: 10px;
-  height: 130px;
+  padding: 15px 10px;
+  height: auto;
 `;
 export const KakaoBoxContainer = styled.div`
   width: 300px;
@@ -161,7 +161,7 @@ const Container = styled.div`
 
 export const KakaoBox = styled.div`
   width: 300px;
-  height: 350px;
+  height: auto;
   border-radius: 10px;
   background-color: lightblue;
   padding: 15px 30px;

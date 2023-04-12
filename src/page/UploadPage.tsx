@@ -18,6 +18,9 @@ import { postLogin } from '../axios/api';
 import { useMutation } from 'react-query';
 import { getCookie } from '../util/cookie';
 // import { clentBulkFetch } from '../axios/groupSave';
+interface MyParsingOptions extends XLSX.ParsingOptions {
+  encoding?: string;
+}
 function UploadPage() {
   const token = getCookie('userToken');
   const [isData, setData] = useState<any>();
@@ -57,23 +60,24 @@ function UploadPage() {
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
   };
-  const dragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-  const onDropFiles = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    readExcel(e);
-  };
+  // const dragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  //   e.preventDefault();
+  // };
+  // const onDropFiles = (e: React.DragEvent<HTMLDivElement>) => {
+  //   e.preventDefault();
+  //   const file = e.dataTransfer.files[0];
+  //   readExcel(e);
+  // };
   //다음단계버튼
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
-      if (fileInput.current.files[0] === undefined) {
+      if (!isData) {
+        console.log(isData);
         alert('파일을 선택해주세요');
         return;
       }
-      dispatch(sendListCreate(data));
-      dispatch(sendKeyCreate(isKeyDataServe));
+      // dispatch(sendListCreate(data));
+      // dispatch(sendKeyCreate(isKeyDataServe));
       setGroupComp(true);
       setTimeout(() => {
         onNextClick();
@@ -157,13 +161,7 @@ function UploadPage() {
     setKeyData(Object.keys(Object.assign({}, ...array)));
   };
   //xlsx저장함수
-  interface ParsingOptions {
-    type: string;
-    encoding?: string;
-  }
-  interface MyParsingOptions extends XLSX.ParsingOptions {
-    encoding?: string;
-  }
+
   function readExcel(event: any) {
     let input = event.target;
     setExcelName(input.value);
@@ -225,26 +223,6 @@ function UploadPage() {
   }, []);
   //클라이언트 대량등록fn
   const clentBulkFetch = async () => {
-    //1.key: isReqData , value : isData.결제금액 ?  : undefined
-    //2.검증처리 엑셀에 키값이 없으면 return;
-
-    // //console.log(matchData['구/면']);
-
-    // //key matchData 치환
-
-    // console.log('reqKeyArr : ', reqKeyArr);
-    //customerName","deliveryCompany","deliveryTime","deliveryNumber"
-
-    // const transArray = csvRows.map((i: any) => {
-    //   const values = i.split(',');
-    //   console.log(values);
-    //   const obj = reqKeyArr.reduce((object: any, header: any, index: any) => {
-    //     object[header] = values[index];
-    //     return object;
-    //   }, {});
-    //   return obj;
-    // });
-    // console.log("transArray : ",transArray)
     const matchData = {
       '#{회사명}': '회사명',
       '#{고객명}': '고객명',
@@ -287,7 +265,7 @@ function UploadPage() {
       })
     );
     try {
-      const response = await axios
+      await axios
         .post(
           `${process.env.REACT_APP_SERVER_URL}/api/clients/contents/bulk`,
           { data },
@@ -298,8 +276,6 @@ function UploadPage() {
           }
         )
         .then((res) => {
-          console.log(res.data.clientIds);
-
           dispatch(clientsIdCreate(res?.data?.clientIds));
           NextBtnHandler(isData, isKeyData);
           setClientId(res.data.clientIds);
@@ -337,51 +313,7 @@ function UploadPage() {
     },
     [mutation]
   );
-  // const excelDataKakaoSend = async () => {
-  //   //카카오전송내용저장api
-  //   const data = [
-  //     {
-  //       //       groupId: 1, (*),
-  //       // clientId: 2, (*)
-  //       // organizationName: “회사명”,
-  //       // orderNumber: “10230192393”,
-  //       // region: “지역구 또는 면”,
-  //       // regionDetail: “동 또는 리”,
-  //       // deliveryDate: “배송월일”,
-  //       // paymentPrice: 100000,
-  //       // deliveryCompany: “택배회사명”,
-  //       // deliveryTime: “택배배송시간”,
-  //       // deliveryNumber: “송장번호”,
-  //       // templateCode: “TM_2216” (템플릿 Id로 바뀔 수도)
-  //     },
-  //   ];
-  //   try {
-  //     const response = await axios
-  //       .post(
-  //         `${process.env.REACT_APP_SERVER_URL}/api/talk/contents`,
-  //         {
-  //           data,
-  //         },
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       )
-  //       .then((res) => {
-  //         console.log(res.data);
-  //       });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const groupSaveFetch = async (groupId: string) => {
-    // if (descName === '') {
-    //   alert('그룹설명을 해주세요');
-    //   return;
-    // }
-    console.log(groupId);
-    console.log(isClientId);
     try {
       if (isNewGroupInput) {
         //신규그룹
@@ -418,7 +350,7 @@ function UploadPage() {
       }
 
       alert('그룹저장완료');
-      // navigate('/groupmanageList');
+      navigate('/groupmanageList');
     } catch (error) {
       console.log(error);
     }
@@ -439,6 +371,58 @@ function UploadPage() {
     },
     []
   );
+  const handleDrop = (event: any) => {
+    event.preventDefault();
+    const { items } = event.dataTransfer;
+    if (items && items.length > 0) {
+      const file = items[0].getAsFile();
+
+      let input = event.target;
+      console.log(file);
+
+      setExcelName(input.value);
+      let reader = new FileReader();
+      reader.onload = async function () {
+        let data = reader.result;
+        let workBook: XLSX.WorkBook = XLSX.read(data, {
+          type: 'binary',
+          cellDates: true,
+          cellStyles: true,
+          encoding: 'utf-8',
+        } as MyParsingOptions);
+        if (workBook.Workbook) {
+          // 'xlsx' 또는 'xlsm'과 같은 값을 반환합니다.
+          // xlsx
+          workBook.SheetNames.forEach(function (sheetName: any) {
+            let rows = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName]);
+            const jsonData = JSON.stringify(rows);
+            const pareData = JSON.parse(jsonData);
+            const keyData = Object.keys(pareData[0]);
+            let requiredData = ['이름', '전화번호', '이메일'];
+            if ((refatoringFunc(keyData, requiredData) as any) !== true) return;
+            setKeyData(keyData);
+            setData(pareData);
+          });
+        } else {
+          // csv
+          let file = event.target.files[0];
+          if (file) {
+            reader.onload = function (event: any) {
+              const text = event.target.result;
+              csvFileToArray(text);
+            };
+
+            reader.readAsText(file);
+          }
+        }
+      };
+      reader.readAsBinaryString(file);
+    }
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
   useEffect(() => {
     getGroupData();
     fetchTemplateList();
@@ -561,7 +545,7 @@ function UploadPage() {
               </MapWrapper>
             ) : (
               //   <Pagination page={activePage} onChange={setPage} total={total} />
-              <BottomContents onDrop={onDropFiles} onDragOver={dragOver}>
+              <BottomContents onDrop={handleDrop} onDragOver={handleDragOver}>
                 <TextAria>
                   <div>신규추가할 고객목록을 작성한</div>
                   <div>양식 파일을 업로드해주세요</div>

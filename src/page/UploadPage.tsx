@@ -73,6 +73,7 @@ function UploadPage() {
     async (data: any, isKeyDataServe: any) => {
       if (!isData) {
         console.log(isData);
+        console.log('2');
         alert('파일을 선택해주세요');
         return;
       }
@@ -85,7 +86,7 @@ function UploadPage() {
       }, 1000);
     },
     // [mutation]
-    [dispatch]
+    [isData]
   );
 
   //파일초기화함수

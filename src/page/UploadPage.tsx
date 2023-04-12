@@ -18,6 +18,9 @@ import { postLogin } from '../axios/api';
 import { useMutation } from 'react-query';
 import { getCookie } from '../util/cookie';
 // import { clentBulkFetch } from '../axios/groupSave';
+interface MyParsingOptions extends XLSX.ParsingOptions {
+  encoding?: string;
+}
 function UploadPage() {
   const token = getCookie('userToken');
   const [isData, setData] = useState<any>();
@@ -157,13 +160,7 @@ function UploadPage() {
     setKeyData(Object.keys(Object.assign({}, ...array)));
   };
   //xlsx저장함수
-  interface ParsingOptions {
-    type: string;
-    encoding?: string;
-  }
-  interface MyParsingOptions extends XLSX.ParsingOptions {
-    encoding?: string;
-  }
+
   function readExcel(event: any) {
     let input = event.target;
     setExcelName(input.value);
@@ -225,26 +222,6 @@ function UploadPage() {
   }, []);
   //클라이언트 대량등록fn
   const clentBulkFetch = async () => {
-    //1.key: isReqData , value : isData.결제금액 ?  : undefined
-    //2.검증처리 엑셀에 키값이 없으면 return;
-
-    // //console.log(matchData['구/면']);
-
-    // //key matchData 치환
-
-    // console.log('reqKeyArr : ', reqKeyArr);
-    //customerName","deliveryCompany","deliveryTime","deliveryNumber"
-
-    // const transArray = csvRows.map((i: any) => {
-    //   const values = i.split(',');
-    //   console.log(values);
-    //   const obj = reqKeyArr.reduce((object: any, header: any, index: any) => {
-    //     object[header] = values[index];
-    //     return object;
-    //   }, {});
-    //   return obj;
-    // });
-    // console.log("transArray : ",transArray)
     const matchData = {
       '#{회사명}': '회사명',
       '#{고객명}': '고객명',
@@ -287,7 +264,7 @@ function UploadPage() {
       })
     );
     try {
-      const response = await axios
+      await axios
         .post(
           `${process.env.REACT_APP_SERVER_URL}/api/clients/contents/bulk`,
           { data },
@@ -298,8 +275,6 @@ function UploadPage() {
           }
         )
         .then((res) => {
-          console.log(res.data.clientIds);
-
           dispatch(clientsIdCreate(res?.data?.clientIds));
           NextBtnHandler(isData, isKeyData);
           setClientId(res.data.clientIds);
@@ -337,51 +312,7 @@ function UploadPage() {
     },
     [mutation]
   );
-  // const excelDataKakaoSend = async () => {
-  //   //카카오전송내용저장api
-  //   const data = [
-  //     {
-  //       //       groupId: 1, (*),
-  //       // clientId: 2, (*)
-  //       // organizationName: “회사명”,
-  //       // orderNumber: “10230192393”,
-  //       // region: “지역구 또는 면”,
-  //       // regionDetail: “동 또는 리”,
-  //       // deliveryDate: “배송월일”,
-  //       // paymentPrice: 100000,
-  //       // deliveryCompany: “택배회사명”,
-  //       // deliveryTime: “택배배송시간”,
-  //       // deliveryNumber: “송장번호”,
-  //       // templateCode: “TM_2216” (템플릿 Id로 바뀔 수도)
-  //     },
-  //   ];
-  //   try {
-  //     const response = await axios
-  //       .post(
-  //         `${process.env.REACT_APP_SERVER_URL}/api/talk/contents`,
-  //         {
-  //           data,
-  //         },
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       )
-  //       .then((res) => {
-  //         console.log(res.data);
-  //       });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const groupSaveFetch = async (groupId: string) => {
-    // if (descName === '') {
-    //   alert('그룹설명을 해주세요');
-    //   return;
-    // }
-    console.log(groupId);
-    console.log(isClientId);
     try {
       if (isNewGroupInput) {
         //신규그룹
@@ -418,7 +349,7 @@ function UploadPage() {
       }
 
       alert('그룹저장완료');
-      // navigate('/groupmanageList');
+      navigate('/groupmanageList');
     } catch (error) {
       console.log(error);
     }

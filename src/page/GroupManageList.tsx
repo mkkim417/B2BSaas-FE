@@ -110,7 +110,7 @@ function GroupManageList() {
       setGroupDescription(descript);
 
       // 그룹들 이름 넣어주기
-      groupData.data.map((item: any) => {
+      groupList.map((item: any) => {
         if (item.groupId === id) {
           setIsGroupAllClients(item.clientCount);
         }
@@ -475,7 +475,6 @@ function GroupManageList() {
               return (
                 <div key={item.groupId}>
                   <GroupContentItem
-                    key={item.groupId}
                     value={item.groupId}
                     className={
                       'btn' + (item.groupId == clickActive ? 'Active' : '')
@@ -729,7 +728,7 @@ function GroupManageList() {
                             />
                           </Percentage>
                         ) : (
-                          <Percentage width="6%" key={item.clientId}></Percentage>
+                          <Percentage width="6%"></Percentage>
                         )}
                         {/* <Percentage width="6%">
                         <input
@@ -768,7 +767,7 @@ function GroupManageList() {
                             />
                           </Percentage>
                         ) : (
-                          <Percentage width="6%" key={item.clientId}></Percentage>
+                          <Percentage width="6%"></Percentage>
                         )}
                         {/* <Percentage width="6%">
                           <input

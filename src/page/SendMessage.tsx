@@ -118,14 +118,14 @@ const BtnWrap = styled.div`
 `;
 const Button = styled.button`
   border-radius: 15px;
-  border: 2px solid #000;
+  border: 1px solid #bdbdbd;
   background-color: white;
   color: #000;
   width: 85px;
   padding: 5px 0px;
 `;
 const InputFile = styled.input`
-  border: 1px solid #000;
+  border: 1px solid #bdbdbd;
   background-color: #fff;
   width: 300px;
 `;

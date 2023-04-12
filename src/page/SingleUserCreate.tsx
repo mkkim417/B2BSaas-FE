@@ -197,7 +197,7 @@ const NameContainer = styled.div`
   font-family: 'TheJamsil5Bold';
   width: 20%;
   height: 40px;
-  /* border: 1px solid black; */
+  /* border: 1px solid #bdbdbd; */
 `;
 const InputContainer = styled.input`
   display: flex;
@@ -206,7 +206,7 @@ const InputContainer = styled.input`
   border: none;
   width: 80%;
   padding-left: 15px;
-  border: 4px solid black;
+  border: 1px solid #bdbdbd;
   font-family: 'TheJamsil5Bold';
 `;
 const ButtonContainer = styled.div`

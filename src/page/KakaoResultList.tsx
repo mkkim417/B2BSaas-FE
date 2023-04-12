@@ -110,7 +110,7 @@ function KakaoResultList() {
             <select
               style={{
                 height: '40px',
-                border: '2px solid #000',
+                border: '1px solid #bdbdbd',
                 fontWeight: 'bold',
               }}
               name=""
@@ -225,7 +225,7 @@ export const FlexWrapResult = styled.div`
 `;
 export const MapWrapper = styled.div`
   width: 100%;
-  border: 4px solid #000;
+  border: 1px solid #bdbdbd;
   border-radius: 8px;
   padding: 20px 30px;
   margin: 15px auto;
@@ -272,7 +272,7 @@ export const GrayWrap = styled.div`
   margin-right: 10px;
   color: #14b769;
   font-family: 'TheJamsil5Bold';
-  border: 2px solid #14b769;
+  border: 1px solid #14b769;
   border-radius: 8px;
   font-weight: bold;
   padding: 10px;

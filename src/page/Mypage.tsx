@@ -57,7 +57,7 @@ const StEditbutton = styled.button`
   bottom: 83.16%;
 
   background: #ededed;
-  border: 3px solid #000000;
+  border: 1px solid #bdbdbd000;
   border-radius: 40px;
 `;
 const StSubscribeButton = styled.button`
@@ -72,7 +72,7 @@ const StSubscribeButton = styled.button`
   bottom: 83.16%;
 
   background: #ededed;
-  border: 3px solid #000000;
+  border: 1px solid #bdbdbd000;
   border-radius: 40px;
 `;
 

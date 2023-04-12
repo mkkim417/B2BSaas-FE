@@ -103,16 +103,20 @@ export const deleteGroupData = async (groupId: any) => {
 };
 
 // 그룹 내 클라이언트 등록
-export const postInGroupClient = async(data : any) => {
-  console.log(data)
-  const urls = data.map((item:any) => `/api/batch/clients/${item.clientId}/groups/${data[data.length-1]}`);
+
+export const postInGroupClient = async (data: any) => {
+  console.log(data);
+  const urls = data.map(
+    (item: any) =>
+      `/api/batch/clients/${item.clientId}/groups/${data[data.length - 1]}`
+  );
   const response = await axios.all(
-    urls.map((url:any) => {
+    urls.map((url: any) => {
       instance.post(url);
     })
-  )
+  );
   return response;
-}
+};
 
 // 그룹 내 클라이언트 삭제
 export const deleteInGroupClient = async (checkValue: any) => {
@@ -145,5 +149,5 @@ export const fetchTemplatesList = async ({ groupId, clientIds }: any) => {
 export const currentStatistic = async () => {
   const response = await instance.get(`/api/statistics/current`);
   return response.data;
-}
+};
 export { instance };

@@ -60,7 +60,6 @@ function Alarmtalk() {
           } = item;
           return rest;
         });
-      console.log(newData);
       setTableData(newData);
       const engKeyData = Object.keys(newData[0]) as any;
       const korKeyData = [] as any;

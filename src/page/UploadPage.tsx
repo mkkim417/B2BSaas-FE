@@ -298,6 +298,8 @@ function UploadPage() {
           }
         )
         .then((res) => {
+          console.log(res.data.clientIds);
+
           dispatch(clientsIdCreate(res?.data?.clientIds));
           NextBtnHandler(isData, isKeyData);
           setClientId(res.data.clientIds);
@@ -378,6 +380,8 @@ function UploadPage() {
     //   alert('그룹설명을 해주세요');
     //   return;
     // }
+    console.log(groupId);
+    console.log(isClientId);
     try {
       if (isNewGroupInput) {
         //신규그룹
@@ -412,8 +416,9 @@ function UploadPage() {
           )
           .then((res) => {});
       }
+
       alert('그룹저장완료');
-      navigate('/groupmanageList');
+      // navigate('/groupmanageList');
     } catch (error) {
       console.log(error);
     }

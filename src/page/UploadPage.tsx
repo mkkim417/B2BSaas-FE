@@ -57,14 +57,14 @@ function UploadPage() {
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
   };
-  const dragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-  const onDropFiles = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    readExcel(e);
-  };
+  // const dragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  //   e.preventDefault();
+  // };
+  // const onDropFiles = (e: React.DragEvent<HTMLDivElement>) => {
+  //   e.preventDefault();
+  //   const file = e.dataTransfer.files[0];
+  //   readExcel(e);
+  // };
   //다음단계버튼
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
@@ -439,6 +439,58 @@ function UploadPage() {
     },
     []
   );
+  const handleDrop = (event: any) => {
+    event.preventDefault();
+    const { items } = event.dataTransfer;
+    if (items && items.length > 0) {
+      const file = items[0].getAsFile();
+
+      let input = event.target;
+      console.log(file);
+
+      setExcelName(input.value);
+      let reader = new FileReader();
+      reader.onload = async function () {
+        let data = reader.result;
+        let workBook: XLSX.WorkBook = XLSX.read(data, {
+          type: 'binary',
+          cellDates: true,
+          cellStyles: true,
+          encoding: 'utf-8',
+        } as MyParsingOptions);
+        if (workBook.Workbook) {
+          // 'xlsx' 또는 'xlsm'과 같은 값을 반환합니다.
+          // xlsx
+          workBook.SheetNames.forEach(function (sheetName: any) {
+            let rows = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName]);
+            const jsonData = JSON.stringify(rows);
+            const pareData = JSON.parse(jsonData);
+            const keyData = Object.keys(pareData[0]);
+            let requiredData = ['이름', '전화번호', '이메일'];
+            if ((refatoringFunc(keyData, requiredData) as any) !== true) return;
+            setKeyData(keyData);
+            setData(pareData);
+          });
+        } else {
+          // csv
+          let file = event.target.files[0];
+          if (file) {
+            reader.onload = function (event: any) {
+              const text = event.target.result;
+              csvFileToArray(text);
+            };
+
+            reader.readAsText(file);
+          }
+        }
+      };
+      reader.readAsBinaryString(file);
+    }
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
   useEffect(() => {
     getGroupData();
     fetchTemplateList();
@@ -561,7 +613,7 @@ function UploadPage() {
               </MapWrapper>
             ) : (
               //   <Pagination page={activePage} onChange={setPage} total={total} />
-              <BottomContents onDrop={onDropFiles} onDragOver={dragOver}>
+              <BottomContents onDrop={handleDrop} onDragOver={handleDragOver}>
                 <TextAria>
                   <div>신규추가할 고객목록을 작성한</div>
                   <div>양식 파일을 업로드해주세요</div>

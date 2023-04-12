@@ -15,8 +15,14 @@ import { getCookie } from '../util/cookie';
 import { HeaderContainer } from './GroupManageList';
 import { useMutation } from 'react-query';
 import { fetchTemplatesList } from '../axios/api';
-import { KorToEngTransData, engToKorTransData } from '../constants/alarmtalk';
+import {
+  ALAERMTALK_TEMPLATE,
+  KorToEngTransData,
+  engToKorTransData,
+} from '../constants/alarmtalk';
 import { Wrapper } from './KakaoResultList';
+import useInput from '../hook/useInput';
+import { extractDomainWithoutTrailingSlash } from '../util/LinkValidate';
 function Alarmtalk() {
   const [isTemplatesList, setTemplatesList] = useState<any>([]);
   const token = getCookie('userToken');
@@ -39,6 +45,8 @@ function Alarmtalk() {
   const [isTableData, setTableData] = useState([]);
   const [isKeyData, setKeyData] = useState([]);
   const [isSendModalData, setSendModalData] = useState({});
+  const [isButtonTmp, setButtonTmp] = useState<boolean>(false);
+  const [isLinkData, onChangeLinkData] = useInput();
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
   };
@@ -46,7 +54,6 @@ function Alarmtalk() {
   // 카카오내용 불러오기
   const { mutate } = useMutation(fetchTemplatesList, {
     onSuccess: (res) => {
-      console.log();
       const newData = res.data.data
         .map((el: any) => Object.assign(el.client, el.talkContent))
         .map((item: any) => {
@@ -66,7 +73,6 @@ function Alarmtalk() {
       for (let el of engKeyData) {
         korKeyData.push(engToKorTransData[el]);
       }
-      console.log(korKeyData);
       setKeyData(korKeyData);
     },
     onError: (error) => {
@@ -145,6 +151,7 @@ function Alarmtalk() {
           groupId: Number(params.id),
           clientId: el.clientId,
           customerName: el[KorToEngTransData[labelArr[0]]],
+          useLink: isLinkData,
           talkTemplateId: isAllData.talkTemplateId,
         });
       });
@@ -207,7 +214,6 @@ function Alarmtalk() {
           }
         )
         .then((res) => {
-          console.log(res);
           setAutoModal((prev) => !prev);
           setSendModalData(res.data.data);
         });
@@ -245,6 +251,7 @@ function Alarmtalk() {
       setAllData(data[0]);
       setViewData(data[0]['text']);
       setReqData(JSON.parse(data[0].reqData));
+      currentValue === '사용법 안내' ? setButtonTmp(true) : setButtonTmp(false);
     }
   }, [currentValue, isTemplatesList]);
   useEffect(() => {
@@ -301,6 +308,17 @@ function Alarmtalk() {
                         </SelectNameBox>
                       </div>
                     ))}
+                  {isButtonTmp && isButtonTmp ? (
+                    <ButtonWrap>
+                      <BtnLabel>버튼링크</BtnLabel>
+                      <LinkInput
+                        type="text"
+                        placeholder="버튼링크를 입력해주세요."
+                        value={extractDomainWithoutTrailingSlash(isLinkData)}
+                        onChange={onChangeLinkData}
+                      />
+                    </ButtonWrap>
+                  ) : null}
                 </SelectDiv>
               </>
             </LeftContents>
@@ -369,11 +387,39 @@ function Alarmtalk() {
     </motion.div>
   );
 }
+const BtnLabel = styled.div`
+  width: 150px;
+  height: 45px;
+  font-size: 18px;
+  font-weight: 700;
+  color: rgb(68, 67, 67);
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+`;
+const LinkInput = styled.input`
+  position: relative;
+  height: 45px;
+  width: 200px;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  color: rgb(66, 66, 66);
+  padding: 9px 20px;
+  border-radius: 8px;
+  background-color: rgb(255, 255, 255);
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  align-self: center;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px;
+  border: 1px solid rgb(221, 221, 221);
+  cursor: pointer;
+`;
 const HeaderContainerRe = styled(HeaderContainer)`
   margin-top: 0px;
 `;
 const WhiteWrapTalk = styled(WhiteWrap)`
-  height: 300px;
+  height: auto;
   white-space: pre-line;
   overflow-wrap: break-word;
 `;
@@ -402,9 +448,7 @@ export const H1 = styled.h1`
 export const RightContents = styled.div``;
 const ButtonWrap = styled.div`
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  /* background-color: red; */
+  justify-content: space-between;
 `;
 const HeadFont = styled.div`
   display: flex;

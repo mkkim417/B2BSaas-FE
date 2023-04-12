@@ -144,7 +144,7 @@ function GroupManageList() {
   ************************************************************************************ */
 
   // 전체고객리스트 숫자
-  const [isAllclients, setAllclients] = useState<any>(0);
+  const [isAllclients, setAllclients] = useState<number>(10);
   // 유저리스트 담는 변수
   const [userList, setUserList] = useState([] as any);
   // 처음 렌더링시 전체고객리스트로 focus
@@ -164,7 +164,7 @@ function GroupManageList() {
         // console.log('고객리스트useQuery', response);
         setCheckedArr([]);
         setIsClientState(true);
-        setAllclients(userData?.data.clientCount);
+        setAllclients(response.data.clientCount);
         // 여따가 담아서 쓰자!
         setUserList(response.data.clients);
       },
@@ -473,7 +473,7 @@ function GroupManageList() {
             </GroupContentItem>
             {groupData?.data.map((item: any) => {
               return (
-                <>
+                <div key={item.groupId}>
                   <GroupContentItem
                     key={item.groupId}
                     value={item.groupId}
@@ -495,7 +495,7 @@ function GroupManageList() {
                   >
                     {item.groupName}({item.clientCount})
                   </GroupContentItem>
-                </>
+                </div>
               );
             })}
           </GroupContentBox>
@@ -729,7 +729,7 @@ function GroupManageList() {
                             />
                           </Percentage>
                         ) : (
-                          <Percentage width="6%"></Percentage>
+                          <Percentage width="6%" key={item.clientId}></Percentage>
                         )}
                         {/* <Percentage width="6%">
                         <input
@@ -768,7 +768,7 @@ function GroupManageList() {
                             />
                           </Percentage>
                         ) : (
-                          <Percentage width="6%"></Percentage>
+                          <Percentage width="6%" key={item.clientId}></Percentage>
                         )}
                         {/* <Percentage width="6%">
                           <input

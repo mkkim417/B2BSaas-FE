@@ -103,6 +103,7 @@ export const deleteGroupData = async (groupId: any) => {
 };
 
 // 그룹 내 클라이언트 등록
+<<<<<<< HEAD
 
 export const postInGroupClient = async (data: any) => {
   console.log(data);
@@ -110,6 +111,11 @@ export const postInGroupClient = async (data: any) => {
     (item: any) =>
       `/api/batch/clients/${item.clientId}/groups/${data[data.length - 1]}`
   );
+=======
+export const postInGroupClient = async(data : any) => {
+  console.log(data)
+  const urls = data.map((item:any) => `/api/batch/clients/${item.clientId}/groups/${data[data.length-1]}`);
+>>>>>>> 4d9df716a3d869ce8aaee3648d1ccd1fa3a3649f
   const response = await axios.all(
     urls.map((url: any) => {
       instance.post(url);
@@ -144,4 +150,10 @@ export const fetchTemplatesList = async ({ groupId, clientIds }: any) => {
   );
   return response;
 };
+
+// 현재 통계 상황
+export const currentStatistic = async () => {
+  const response = await instance.get(`/api/statistics/current`);
+  return response.data;
+}
 export { instance };

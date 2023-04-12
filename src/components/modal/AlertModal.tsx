@@ -14,7 +14,7 @@ function AlertModal({ title, content, closeModal }: Props) {
           <InputContainer>{content}</InputContainer>
           <ButtonContainer>
             {/* <ButtonBox>아니오</ButtonBox> */}
-            <ButtonBox onClick={closeModal}>확인</ButtonBox>
+            <ConfirmButton onClick={closeModal}>확인</ConfirmButton>
           </ButtonContainer>
         </ModalContainer>
       </ModalBackGround>
@@ -79,6 +79,12 @@ const ButtonBox = styled.button`
   /* background-color: yellowgreen; */
   padding: 10px;
   font-size: 18px;
+`;
+const ConfirmButton = styled(ButtonBox)`
+  color: white;
+  width: 100px;
+  border-radius: 8px;
+  background-color: #14b869;
 `;
 
 export default AlertModal;

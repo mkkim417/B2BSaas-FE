@@ -88,14 +88,15 @@ export const Logo = styled.li<{ border?: string; borderBottom?: string }>`
 const ContentsWrapper = styled.div`
   max-width: 1080px;
   align-items: center;
+  font-family: 'Noto Sans KR';
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
 `;
 const HeaderContainer = styled.div`
-  border-bottom: 2px solid #000;
   width: 100%;
   position: fixed;
+  box-shadow: 0px 0px 6px #bdbdbd;
   top: 0;
   align-items: center;
   z-index: 2;
@@ -115,7 +116,7 @@ const SignupContainer = styled.div`
   display: flex;
   gap: 40px;
   align-items: center;
-  color: #909090;
+  color: #000;
 `;
 
 export default Header;

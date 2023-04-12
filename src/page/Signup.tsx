@@ -231,7 +231,7 @@ const Submit = styled.button`
   border-radius: 5px;
   background: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.color};
-  border: 2px solid ${({ theme }) => theme.color};
+  border: 1px solid ${({ theme }) => theme.color};
   font-size: 20px;
   transition: ${({ theme }) => theme.transitionOption};
   :hover {

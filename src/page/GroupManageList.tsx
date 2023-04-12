@@ -144,7 +144,7 @@ function GroupManageList() {
   ************************************************************************************ */
 
   // 전체고객리스트 숫자
-  const [isAllclients, setAllclients] = useState<any>(0);
+  const [isAllclients, setAllclients] = useState<number>(10);
   // 유저리스트 담는 변수
   const [userList, setUserList] = useState([] as any);
   // 처음 렌더링시 전체고객리스트로 focus
@@ -164,7 +164,7 @@ function GroupManageList() {
         // console.log('고객리스트useQuery', response);
         setCheckedArr([]);
         setIsClientState(true);
-        setAllclients(userData?.data.clientCount);
+        setAllclients(response.data.clientCount);
         // 여따가 담아서 쓰자!
         setUserList(response.data.clients);
       },
@@ -473,7 +473,7 @@ function GroupManageList() {
             </GroupContentItem>
             {groupData?.data.map((item: any) => {
               return (
-                <>
+                <div key={item.groupId}>
                   <GroupContentItem
                     key={item.groupId}
                     value={item.groupId}
@@ -495,7 +495,7 @@ function GroupManageList() {
                   >
                     {item.groupName}({item.clientCount})
                   </GroupContentItem>
-                </>
+                </div>
               );
             })}
           </GroupContentBox>
@@ -700,7 +700,7 @@ function GroupManageList() {
           </ButtonContainer>
           <div
             style={{
-              border: '4px solid #000',
+              border: '1px solid #bdbdbd',
               borderRadius: '15px',
             }}
           >
@@ -729,7 +729,7 @@ function GroupManageList() {
                             />
                           </Percentage>
                         ) : (
-                          <Percentage width="6%"></Percentage>
+                          <Percentage width="6%" key={item.clientId}></Percentage>
                         )}
                         {/* <Percentage width="6%">
                         <input
@@ -768,7 +768,7 @@ function GroupManageList() {
                             />
                           </Percentage>
                         ) : (
-                          <Percentage width="6%"></Percentage>
+                          <Percentage width="6%" key={item.clientId}></Percentage>
                         )}
                         {/* <Percentage width="6%">
                           <input
@@ -957,7 +957,7 @@ const GroupContainer = styled.div`
 `;
 const GroupContentBox = styled.div`
   height: 92%;
-  border: 4px solid #000;
+  border: 1px solid #bdbdbd;
   border-radius: 20px;
   overflow: auto;
   padding: 10px;
@@ -1009,7 +1009,7 @@ export const GroupButton = styled.button`
   border-radius: 8px;
   background-color: #ffffff;
   font-family: 'TheJamsil5Bold';
-  border: 3px solid #14b769;
+  border: 1px solid #14b769;
   transition: 0.2s;
   :hover {
     background-color: #14b769;
@@ -1020,7 +1020,7 @@ const SearchInput = styled.input`
   width: 250px;
   height: 40px;
   border-radius: 8px;
-  border: 2px solid #000;
+  border: 1px solid #bdbdbd;
   padding-left: 10px;
 `;
 
@@ -1060,7 +1060,7 @@ const ClientHeaderBox = styled.div`
   flex-direction: row;
   gap: 10px;
   /* padding-bottom: 15px; */
-  /* border: 2px solid red; */
+  /* border: 1px solid red; */
 `;
 const ClientHeaderRow = styled(ClientHeaderBox)`
   display: flex;
@@ -1085,7 +1085,7 @@ const DescriptBox = styled.div`
 const ClientContentBox = styled.div`
   height: 482px;
   /* background-color: aliceblue; */
-  /* border: 2px solid blue; */
+  /* border: 1px solid blue; */
   overflow: scroll;
   /* margin: 0px 30px 0px 0px; */
 `;
@@ -1095,6 +1095,8 @@ const ClientContentHeader = styled.div`
   background-color: #000;
   color: white;
   font-weight: bold;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
 `;
 const CardHeader = styled.div`
   width: 100%;
@@ -1111,11 +1113,6 @@ const Percentage = styled.div<{ width: any }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-  /* margin-top: 3px; */
-  /* border: 1px solid #EEEEEE; */
-  /* background-color: #ead3cc; */
   width: ${(props: any) => props.width};
 `;
 
@@ -1127,7 +1124,7 @@ const HeaderPercentage = styled(Percentage)<{ width: any }>`
   font-family: 'TheJamsil5Bold';
   font-size: 14px;
   align-items: center;
-  /* border: 1px solid black; */
+  /* border: 1px solid #bdbdbd; */
 
   width: ${(props: any) => props.width};
 `;
@@ -1135,12 +1132,12 @@ const HeaderPercentage = styled(Percentage)<{ width: any }>`
 const ClientPageBox = styled.div`
   height: 7%;
   padding-top: 10px;
-  /* border: 2px solid pink; */
+  /* border: 1px solid pink; */
 `;
 const ClientButton = styled.button`
   width: 120px;
   height: 40px;
-  border: 2px solid black;
+  border: 1px solid #bdbdbd;
 `;
 const CenterContent = styled.div`
   width: 100%;

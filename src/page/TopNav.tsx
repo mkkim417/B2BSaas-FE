@@ -307,7 +307,7 @@ const FixedWrap = styled(motion.ul)`
   height: 100vh;
   background: #fff;
   width: 200px;
-  border-right: 2px solid #000;
+  border-right: 1px solid #bdbdbd;
   > li {
     margin-bottom: 15px;
     margin-left: 20px;

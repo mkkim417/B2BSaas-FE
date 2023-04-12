@@ -69,7 +69,7 @@ export default function CustomEditor({
 }
 const Button = styled.button`
   width: 100px;
-  border: 3px solid #000;
+  border: 1px solid #bdbdbd;
   padding: 10px;
   border-radius: 15px;
   transition: 0.2s;
@@ -82,6 +82,6 @@ const Button = styled.button`
 const Wrapper = styled.div`
   padding: 16px;
   width: 900px;
-  border: 3px solid #000;
+  border: 1px solid #bdbdbd;
   border-radius: 15px;
 `;

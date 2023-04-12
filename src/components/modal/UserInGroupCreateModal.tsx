@@ -96,17 +96,17 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
       alert('삭제를 실패하였습니다.');
     },
   });
-  
+
   // Post Handler
   const postDataHandler = (e: any) => {
     e.preventDefault();
     if (savedArr.length > 0) {
-      mutate([...savedArr, groupId])
+      mutate([...savedArr, groupId]);
     } else {
-      alert('최소 한명 이상 추가해주세요.')
+      alert('최소 한명 이상 추가해주세요.');
     }
-  }
-  
+  };
+
   // 검색필터 useEffect
   useEffect(() => {
     if (searchKeyword.length > 0) {
@@ -340,7 +340,7 @@ const HeaderPercent = styled.div<{ width: any }>`
   justify-content: center;
   font-size: 18px;
   width: ${(item: any) => item.width};
-  border: 1px solid black;
+  border: 1px solid #bdbdbd;
   border-left: 1ch;
   border-right: 1ch;
   /* background-color: aqua; */
@@ -393,7 +393,7 @@ const MoveBox = styled.button`
   text-decoration: underline;
   font-weight: 500;
   font-size: 18px;
-  /* border: 2px solid #7f8381; */
+  /* border: 1px solid #7f8381; */
 `;
 const ButtonBox = styled.button`
   width: 100px;

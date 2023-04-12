@@ -54,10 +54,10 @@ const DefaultButton = styled.button`
   padding: 15px;
   padding-left: 15px;
   padding-right: 15px;
-  border-bottom: 2px solid #d9d9d9;
+  border-bottom: 1px solid #d9d9d9;
 `;
 const ColorButton = styled(DefaultButton)`
   color: #14b769;
-  border-bottom: 3px solid #14b769;
+  border-bottom: 1px solid #14b769;
 `;
 export default ClientHeader;

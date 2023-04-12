@@ -69,7 +69,7 @@ const SelectBox = styled.div<{ ref: any; width?: string }>`
   justify-content: space-between;
   align-self: center;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border: 2px solid #ddd;
+  border: 1px solid #ddd;
   cursor: pointer;
   &::after {
     content: '▼';
@@ -98,7 +98,7 @@ const SelectOptions = styled.ul<{ ref?: any }>`
   padding: 0;
   border-radius: 8px;
   background-color: #fff;
-  border: 1px solid #000;
+  border: 1px solid #bdbdbd;
   box-sizing: border-box;
   color: #000;
   max-height: none;

@@ -161,7 +161,7 @@ const Stbutton = styled.button`
   font-size: 16px;
   line-height: normal;
   text-align: center;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   border-radius: 4px;
   outline: 0;
   color: #fff;

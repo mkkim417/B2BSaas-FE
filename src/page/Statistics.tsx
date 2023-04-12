@@ -87,7 +87,7 @@ function Statistics() {
   const { data: currentData } = useQuery<any, AxiosError>(
     ['getCurrentData'], () => currentStatistic(), {
       onSuccess : (response) => {
-        console.log(response)
+        console.log(currentData)
       },
       onError : (error) => {
         console.log(error)

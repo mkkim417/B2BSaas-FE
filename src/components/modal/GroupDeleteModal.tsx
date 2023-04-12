@@ -133,7 +133,7 @@ const RowPercent = styled.div<{ width: any }>`
   align-items: center;
   justify-content: center;
   width: ${(item: any) => item.width};
-  border: 1px solid black;
+  border: 1px solid #bdbdbd;
 `;
 const DataContainer = styled.div`
   width: 100%;
@@ -162,7 +162,7 @@ const InputContainer = styled.input`
   width: 100%;
   height: 35px;
   font-size: 16px;
-  border: 2px solid #14b869;
+  border: 1px solid #14b869;
   border-radius: 10px;
 `;
 const ButtonContainer = styled.div`

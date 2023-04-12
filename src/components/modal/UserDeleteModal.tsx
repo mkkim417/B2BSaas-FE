@@ -166,7 +166,7 @@ const HeaderPercent = styled.div<{ width: any }>`
   justify-content: center;
   font-size: 18px;
   width: ${(item: any) => item.width};
-  border: 1px solid black;
+  border: 1px solid #bdbdbd;
   border-left: 1ch;
   border-right: 1ch;
   /* background-color: aqua; */

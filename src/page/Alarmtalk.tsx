@@ -46,17 +46,28 @@ function Alarmtalk() {
   // 카카오내용 불러오기
   const { mutate } = useMutation(fetchTemplatesList, {
     onSuccess: (res) => {
-      setTableData(
-        res.data.data.map((el: any) => Object.assign(el.client, el.talkContent))
-      );
-      const engKeyData = res.data.data.map(
-        (el: any) =>
-          Object.keys(Object.assign(el.client, el.talkContent)) as any
-      )[0];
+      console.log();
+      const newData = res.data.data
+        .map((el: any) => Object.assign(el.client, el.talkContent))
+        .map((item: any) => {
+          const {
+            useLink,
+            talkContentId,
+            talkTemplateId,
+            groupId,
+            createdAt,
+            ...rest
+          } = item;
+          return rest;
+        });
+      console.log(newData);
+      setTableData(newData);
+      const engKeyData = Object.keys(newData[0]) as any;
       const korKeyData = [] as any;
       for (let el of engKeyData) {
         korKeyData.push(engToKorTransData[el]);
       }
+      console.log(korKeyData);
       setKeyData(korKeyData);
     },
     onError: (error) => {
@@ -184,6 +195,7 @@ function Alarmtalk() {
   //카카오전송
   const kakaoSaveFetch = async () => {
     let data = refactoringFunc(isAllData.talkTemplateCode);
+    console.log(data);
     try {
       await axios
         .post(
@@ -196,6 +208,7 @@ function Alarmtalk() {
           }
         )
         .then((res) => {
+          console.log(res);
           setAutoModal((prev) => !prev);
           setSendModalData(res.data.data);
         });
@@ -423,7 +436,7 @@ const ContentContainer = styled.div`
 
 const Button = styled.button`
   border-radius: 15px;
-  border: 2px solid #000;
+  border: 1px solid #bdbdbd;
   background-color: white;
   color: #000;
   width: 85px;
@@ -477,7 +490,7 @@ export const GroupButton = styled.button`
   border-radius: 8px;
   background-color: #ffffff;
   font-family: 'TheJamsil5Bold';
-  border: 3px solid #000;
+  border: 1px solid #bdbdbd;
   transition: 0.2s;
   :hover {
     background-color: #14b769;
@@ -501,7 +514,7 @@ const ButtonBox = styled.button`
   font-size: 18px;
   font-weight: 600;
   color: #555555;
-  border: 3px solid #e6f8f0;
+  border: 1px solid #e6f8f0;
   border-radius: 10px;
   /* background-color: yellowgreen; */
   padding: 10px;

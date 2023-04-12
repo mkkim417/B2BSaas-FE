@@ -715,7 +715,7 @@ function UploadPage() {
 export const Thead = styled.thead`
   > tr > th {
     font-weight: bold;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid #bdbdbd;
     font-size: 16px;
     font-family: 'TheJamsil5Bold';
     padding: 15px 0px;
@@ -774,7 +774,7 @@ const TemplateWrap = styled.div`
 `;
 const TemplateDown = styled.div`
   text-align: center;
-  border: 1px solid #000;
+  border: 1px solid #bdbdbd;
   padding: 15px;
 `;
 const Table = styled.table`
@@ -783,7 +783,7 @@ const Table = styled.table`
   border-spacing: 0px 10px;
 `;
 export const MapWrapper = styled.div<{ ref?: any }>`
-  border: 4px solid #000;
+  border: 1px solid #bdbdbd;
   border-radius: 8px;
   padding: 20px 30px;
   overflow: auto;
@@ -816,7 +816,7 @@ export const Button = styled.button<{
   color: #14b769;
   width: ${(props) => (props.width ? props.width : '100px')};
   padding: ${(props) => (props.padding ? props.padding : '15px 20px')};
-  border: 4px solid #14b769;
+  border: 1px solid #14b769;
   font-weight: bold;
   font-size: 14px;
   font-family: 'Inter', sans-serif;

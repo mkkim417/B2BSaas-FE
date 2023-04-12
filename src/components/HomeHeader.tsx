@@ -153,11 +153,12 @@ const ContentsWrapper = styled.div`
   justify-content: space-between;
 `;
 const HeaderContainer = styled.div`
-  border-bottom: 2px solid #000;
   padding: 0px 20px;
   width: 100%;
-  background-color: #fff;
-  top: 0;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0px 0px 6px #bdbdbd;
+  top: 0px;
+  -webkit-box-align: center;
   align-items: center;
   z-index: 2;
   position: fixed;

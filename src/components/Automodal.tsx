@@ -9,6 +9,7 @@ import { getCookie } from '../util/cookie';
 import { GroupButton } from '../page/Alarmtalk';
 const AutoModal = (props: any) => {
   const dropDownRef = useRef();
+  console.log('isAllData : ', props.isAllData);
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false); //커스텀훅
   const navigate = useNavigate();
 
@@ -30,12 +31,13 @@ const AutoModal = (props: any) => {
           }
         )
         .then((res) => {
-          navigate('/groupmanageList');
+          navigate('/kakaoresultlist');
         });
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(props?.isLinkData);
   return (
     <Container>
       <Background
@@ -49,8 +51,28 @@ const AutoModal = (props: any) => {
             <KakaoBox>
               <YellowWrap>{props.currentValue}</YellowWrap>
               <WhiteWrap
-                dangerouslySetInnerHTML={{ __html: props.isAllData }}
-              ></WhiteWrap>
+              // dangerouslySetInnerHTML={{ __html: props.isAllData }}
+              >
+                <div>{props.isAllData}</div>
+                {props.currentValue === '사용법 안내' ? (
+                  <button
+                    onClick={() =>
+                      window.open(`https://${props.isLinkData}`, '_blank')
+                    }
+                    style={{
+                      border: '1px solid #ecedee',
+                      background: '#f6f7f8',
+                      width: '100%',
+                      fontSize: '14px',
+                      marginTop: '30px',
+                      padding: '7px',
+                      borderRadius: '7px',
+                    }}
+                  >
+                    사용법 바로가기
+                  </button>
+                ) : null}
+              </WhiteWrap>
             </KakaoBox>
           </Flex>
         </ContentsWrap>

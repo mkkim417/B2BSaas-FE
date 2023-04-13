@@ -50,7 +50,7 @@ function UserMoveModal({ group, content, closeModal }: Props) {
         })
         .catch((error) => {
           if (error.response.data.message === '이미 존재하는 그룹입니다.') {
-            alert('이미 존재하는 그룹입니다.');
+            alert('이미 등록된 고객입니다.');
             closeModal();
           } else if (
             error.response.data.message === '존재하지 않는 그룹입니다.'

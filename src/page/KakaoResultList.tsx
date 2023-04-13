@@ -208,7 +208,12 @@ function KakaoResultList() {
             </tbody>
           </Table>
           {isGroupClient && isGroupClient.length === 0 ? (
-            <AlertNoGroup>그룹내 전송된 내역이 없습니다.</AlertNoGroup>
+            <FlexWrapAlert>
+              <AlertNoGroup>
+                전송내역이 없습니다.
+                <AlertBox>알림톡 전송하러 가기</AlertBox>
+              </AlertNoGroup>
+            </FlexWrapAlert>
           ) : null}
         </MapWrapper>
         <PaginationBox>
@@ -226,17 +231,29 @@ function KakaoResultList() {
     </motion.div>
   );
 }
+const AlertBox = styled.div`
+  padding: 15px;
+  border: 2px solid #159a9c;
+  color: #159a9c;
+`;
 const FlexWrapTable = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 `;
+const FlexWrapAlert = styled(FlexWrapTable)`
+  height: 100%;
+  flex-direction: column;
+`;
 const AlertNoGroup = styled.div`
-  font-family: 'TheJamsil5Bold';
   font-weight: bold;
-  //background: linear-gradient(to top, rgb(54, 254, 173) 40%, transparent 40%);
   padding: 10px;
+  display: flex;
+  font-size: 20px;
+  height: 100%;
   margin-top: 15px;
+  align-items: center;
+  justify-content: center;
 `;
 export const FlexWrapResult = styled.div`
   display: flex;

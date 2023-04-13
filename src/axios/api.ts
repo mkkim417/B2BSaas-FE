@@ -126,10 +126,26 @@ export const postInGroupClient = async (data: any) => {
   );
   const response = await axios.all(
     urls.map((url: any) => {
-      instance.post(url);
+      instance.post(url)
+      .then((res) => {
+        // console.log('res', res)
+        if (res.status === 201) {
+          alert('등록이 완료되었습니다.')
+        }
+        return res
+      })
+      .catch((error) => {
+        // console.log('error', error.response.status)
+        if (error.response.status === 409) {
+          alert('이미 등록된 고객입니다.')
+        }
+        return error.response.status
+      })
     })
-  );
-  return response;
+  )
+
+
+  // return response;
 };
 
 // 그룹 내 클라이언트 삭제
@@ -141,7 +157,7 @@ export const deleteInGroupClient = async (checkValue: any) => {
     urls.map((url: any) => {
       instance.post(url);
     })
-  );
+  )
   return response;
 };
 // 그룹 내 클라이언트 복사

@@ -328,6 +328,7 @@ const CardHeader = styled.div`
   margin-bottom: 20px;
 `;
 export const PaginationBox = styled.div`
+  width: 100%;
   .pagination {
     display: flex;
     justify-content: center;

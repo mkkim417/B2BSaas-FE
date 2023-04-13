@@ -88,12 +88,13 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
   // 등록 mutate
   const { mutate } = useMutation(postInGroupClient, {
     onSuccess: (response) => {
-      alert('등록이 완료되었습니다.');
+      // console.log('성공', response)
+      // alert('등록이 완료되었습니다.');
       closeModal();
     },
     onError: (error) => {
-      console.log(error);
-      alert('삭제를 실패하였습니다.');
+      // console.log('error', error);
+      // alert('삭제를 실패하였습니다.');
     },
   });
 

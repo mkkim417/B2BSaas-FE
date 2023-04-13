@@ -702,7 +702,9 @@ export const Thead = styled.thead`
   > tr > th {
     font-weight: bold;
     border-bottom: 1px solid #bdbdbd;
+    background: #16a6a8;
     font-size: 16px;
+    color: white;
     font-family: 'TheJamsil5Bold';
     padding: 15px 0px;
     min-width: 94px;

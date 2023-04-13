@@ -12,6 +12,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { getCookie } from '../util/cookie';
 import { Button, Thead } from './UploadPage';
 import SelectBoxs from '../components/SelectBoxs';
+import ArrowDown from '../asset/svg/ArrowDown';
 function KakaoResultList() {
   //페이지네이션
   const location = useLocation();
@@ -108,7 +109,7 @@ function KakaoResultList() {
       exit={{ opacity: 0 }}
     >
       <Wrapper>
-        <H1>전송결과조회</H1>
+        <H1>전송결과</H1>
         <FlexWrapResult>
           <FlexWrap>
             <GrayWrap>고객그룹</GrayWrap>
@@ -139,6 +140,7 @@ function KakaoResultList() {
                   <Group position="center">
                     <DatePicker
                       type="range"
+                      numberOfColumns={2}
                       value={value}
                       onChange={setValue}
                     />
@@ -156,7 +158,14 @@ function KakaoResultList() {
           <Table>
             <Thead>
               <tr>
-                <Th>보낸날짜</Th>
+                <Th>
+                  <FlexWrapTable>
+                    보낸날짜
+                    <span style={{ width: '18px', display: 'inline-block' }}>
+                      <ArrowDown />
+                    </span>
+                  </FlexWrapTable>
+                </Th>
                 <Th>총메시지</Th>
                 <Th>성공건수</Th>
                 <Th>실패건수</Th>
@@ -199,7 +208,12 @@ function KakaoResultList() {
             </tbody>
           </Table>
           {isGroupClient && isGroupClient.length === 0 ? (
-            <AlertNoGroup>그룹내 전송된 내역이 없습니다.</AlertNoGroup>
+            <FlexWrapAlert>
+              <AlertNoGroup>
+                전송내역이 없습니다.
+                <AlertBox>알림톡 전송하러 가기</AlertBox>
+              </AlertNoGroup>
+            </FlexWrapAlert>
           ) : null}
         </MapWrapper>
         <PaginationBox>
@@ -217,28 +231,46 @@ function KakaoResultList() {
     </motion.div>
   );
 }
-const AlertNoGroup = styled.div`
-  font-family: 'TheJamsil5Bold';
-  font-weight: bold;
-  background: linear-gradient(to top, rgb(54, 254, 173) 40%, transparent 40%);
-  padding: 10px;
-  margin-top: 15px;
+const AlertBox = styled.div`
+  padding: 15px;
+  border: 2px solid #159a9c;
+  color: #159a9c;
 `;
-export const FlexWrapResult = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`;
-export const MapWrapper = styled.div`
-  width: 100%;
-  border: 1px solid #bdbdbd;
-  border-radius: 8px;
-  padding: 20px 30px;
-  margin: 15px auto;
-  flex-direction: column;
+const FlexWrapTable = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+const FlexWrapAlert = styled(FlexWrapTable)`
+  height: 100%;
+  flex-direction: column;
+`;
+const AlertNoGroup = styled.div`
+  font-weight: bold;
+  padding: 10px;
+  display: flex;
+  font-size: 20px;
+  height: 100%;
+  margin-top: 15px;
+  align-items: center;
+  justify-content: center;
+`;
+export const FlexWrapResult = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+`;
+export const MapWrapper = styled.div`
+  width: 100%;
+  min-height: 70vh;
+  border-radius: 8px;
+  margin: 15px auto;
+  flex-direction: column;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: start;
 `;
 const CallanderIconWrap = styled.div`
   display: flex;
@@ -276,11 +308,9 @@ export const Table = styled.table`
 `;
 export const GrayWrap = styled.div`
   margin-right: 10px;
-  color: #14b769;
-  font-family: 'TheJamsil5Bold';
-  border: 1px solid #14b769;
   border-radius: 8px;
   font-weight: bold;
+  font-size: 18px;
   padding: 10px;
   display: flex;
   align-items: center;
@@ -292,12 +322,14 @@ export const FlexWrap = styled.div`
 `;
 export const Wrapper = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: start;
+  justify-content: start;
   flex-direction: column;
-  width: 1000px;
   height: 100vh;
   margin: 0 auto;
+  padding-top: 90px;
+  padding-left: 210px;
+  padding-right: 30px;
   /* padding-left: 80px; */
   /* @media screen and (min-width: 1200px) {
     padding-left: inherit;
@@ -307,10 +339,9 @@ export const H1 = styled.div`
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 20px;
-  font-family: 'TheJamsil5Bold';
   text-align: left;
   color: #000;
-  background: linear-gradient(to top, #36fead 40%, transparent 40%);
+  //background: linear-gradient(to top, #36fead 40%, transparent 40%);
   @media (max-width: 768px) {
     font-size: 20px;
   }

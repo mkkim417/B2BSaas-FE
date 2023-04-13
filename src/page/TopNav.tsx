@@ -30,7 +30,11 @@ const TopNav = () => {
                 <InLi active={statistics ? true : false}>
                   {statistics ? (
                     <>
-                      <ListIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
+                      <ListIcon
+                        width={'25px'}
+                        heigth={'25px'}
+                        fill={'#16A6A8'}
+                      />
                       <Circle
                         animate={{
                           backgroundColor: ['lime'],
@@ -40,9 +44,14 @@ const TopNav = () => {
                     </>
                   ) : (
                     <>
-                      <ListIcon width={'25px'} heigth={'25px'} />
+                      <ListIcon
+                        width={'25px'}
+                        heigth={'25px'}
+                        fill={'#DEEFE7'}
+                      />
                     </>
                   )}
+                  통계그래프
                 </InLi>
               </NavLink>
             </Li>
@@ -51,7 +60,11 @@ const TopNav = () => {
                 <InLi active={readyalarmtalk ? true : false}>
                   {readyalarmtalk ? (
                     <>
-                      <KakaoIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
+                      <KakaoIcon
+                        width={'25px'}
+                        heigth={'25px'}
+                        fill={'#16A6A8'}
+                      />
                       <Circle
                         animate={{
                           backgroundColor: ['lime'],
@@ -61,9 +74,14 @@ const TopNav = () => {
                     </>
                   ) : (
                     <>
-                      <KakaoIcon width={'25px'} heigth={'25px'} />
+                      <KakaoIcon
+                        width={'25px'}
+                        heigth={'25px'}
+                        fill={'#DEEFE7'}
+                      />
                     </>
                   )}
+                  알림톡내용조회
                 </InLi>
               </NavLink>
             </Li>
@@ -75,67 +93,85 @@ const TopNav = () => {
                       <ListResultIcon
                         width={'25px'}
                         heigth={'25px'}
-                        fill={'#fff'}
+                        fill={'#16A6A8'}
                       />
                       <Circle
-                        animate={{ backgroundColor: ['lime'] }}
+                        animate={{
+                          backgroundColor: ['lime'],
+                        }}
                         layoutId="circle"
                       />
                     </>
                   ) : (
                     <>
-                      <ListResultIcon width={'25px'} heigth={'25px'} />
+                      <ListResultIcon
+                        width={'25px'}
+                        heigth={'25px'}
+                        fill={'#DEEFE7'}
+                      />
                     </>
                   )}
+                  전송결과조회
                 </InLi>
               </NavLink>
             </Li>
             <Li>
               <NavLink to={'/groupManageList'}>
-                <InLi
-                  active={groupManageList ? true : false}
-                  value={'groupManageList'}
-                >
+                <InLi active={groupManageList ? true : false}>
                   {groupManageList ? (
                     <>
-                      <GroupMangeListIcon
+                      <ListIcon
                         width={'25px'}
                         heigth={'25px'}
-                        fill={'#fff'}
+                        fill={'#16A6A8'}
                       />
                       <Circle
-                        animate={{ backgroundColor: ['lime'] }}
+                        animate={{
+                          backgroundColor: ['lime'],
+                        }}
                         layoutId="circle"
                       />
                     </>
                   ) : (
                     <>
-                      <GroupMangeListIcon width={'25px'} heigth={'25px'} />
+                      <ListIcon
+                        width={'25px'}
+                        heigth={'25px'}
+                        fill={'#DEEFE7'}
+                      />
                     </>
                   )}
+                  고객그룹리스트
                 </InLi>
               </NavLink>
             </Li>
             <Li>
-              <NavLink to={'/clientregistration'}>
+              <NavLink to={'/clientRegistration'}>
                 <InLi active={clientRegistration ? true : false}>
                   {clientRegistration ? (
                     <>
                       <CustomerAddIcon
                         width={'25px'}
                         heigth={'25px'}
-                        fill={'#fff'}
+                        fill={'#16A6A8'}
                       />
                       <Circle
-                        animate={{ backgroundColor: ['lime'] }}
+                        animate={{
+                          backgroundColor: ['lime'],
+                        }}
                         layoutId="circle"
                       />
                     </>
                   ) : (
                     <>
-                      <CustomerAddIcon width={'25px'} heigth={'25px'} />
+                      <CustomerAddIcon
+                        width={'25px'}
+                        heigth={'25px'}
+                        fill={'#DEEFE7'}
+                      />
                     </>
                   )}
+                  고객그룹리스트
                 </InLi>
               </NavLink>
             </Li>
@@ -243,11 +279,12 @@ const Circle = styled(motion.span)`
   height: 8px;
   z-index: 1;
   border-radius: 8px;
-  bottom: 26px;
-  left: 25px;
+  bottom: 29px;
+  left: -1px;
   right: 0px;
 `;
 const NavLink = styled(Link)`
+  width: 70%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -257,13 +294,17 @@ const NavLink = styled(Link)`
   font-size: 7px;
 `;
 const InLi = styled.button<{ active?: boolean }>`
-  background: ${(props) => (props.active ? 'black' : null)};
+  background: ${(props) => (props.active ? '#DEEFE7' : null)};
   display: flex;
+  -webkit-box-align: center;
   align-items: center;
-  justify-content: center;
-  width: 45px;
-  height: 45px;
-  border-radius: 15px;
+  -webkit-box-pack: center;
+  gap: 10px;
+  justify-content: start;
+  width: 150px;
+  height: 50px;
+  color: ${(props) => (props.active ? '#159A9C' : '#909090')};
+  border-radius: 10px;
   transition: 0.3s;
 `;
 
@@ -353,9 +394,12 @@ const Header = styled.div`
   z-index: 1;
 `;
 const Wrapper = styled.div`
-  width: 55px;
+  width: 180px;
+  box-shadow: 0px 0px 6px #bdbdbd;
   height: 100vh;
-  background: #fff;
+  border-right: 1px;
+  background: #f3fbf8;
+
   position: fixed;
   top: 0%;
   z-index: 1;

@@ -46,7 +46,8 @@ function Alarmtalk() {
   const [isKeyData, setKeyData] = useState([]);
   const [isSendModalData, setSendModalData] = useState({});
   const [isButtonTmp, setButtonTmp] = useState<boolean>(false);
-  const [isLinkData, onChangeLinkData] = useInput();
+  const [isViewText, setViewText] = useState<any>('');
+  const [isLinkData, setLinkData] = useState('');
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
   };
@@ -131,8 +132,8 @@ function Alarmtalk() {
         data.push({
           groupId: Number(params.id),
           clientId: el.clientId,
-          customerName: el[KorToEngTransData[labelArr[0]]],
-          organizationName: el[KorToEngTransData[labelArr[1]]],
+          customerName: String(el[KorToEngTransData[labelArr[0]]]),
+          organizationName: String(el[KorToEngTransData[labelArr[1]]]),
           talkTemplateId: isAllData.talkTemplateId,
         });
       });
@@ -141,7 +142,7 @@ function Alarmtalk() {
         data.push({
           groupId: Number(params.id),
           clientId: el.clientId,
-          customerName: el[KorToEngTransData[labelArr[0]]],
+          customerName: String(el[KorToEngTransData[labelArr[0]]]),
           talkTemplateId: isAllData.talkTemplateId,
         });
       });
@@ -150,8 +151,8 @@ function Alarmtalk() {
         data.push({
           groupId: Number(params.id),
           clientId: el.clientId,
-          customerName: el[KorToEngTransData[labelArr[0]]],
-          useLink: isLinkData,
+          customerName: String(el[KorToEngTransData[labelArr[0]]]),
+          useLink: extractDomainWithoutTrailingSlash(isLinkData),
           talkTemplateId: isAllData.talkTemplateId,
         });
       });
@@ -160,12 +161,12 @@ function Alarmtalk() {
         data.push({
           groupId: Number(params.id),
           clientId: el.clientId,
-          organizationName: el[KorToEngTransData[labelArr[0]]],
-          orderNumber: el[KorToEngTransData[labelArr[1]]],
-          region: el[KorToEngTransData[labelArr[2]]],
-          regionDetail: el[KorToEngTransData[labelArr[3]]],
-          deliveryDate: el[KorToEngTransData[labelArr[4]]],
-          paymentPrice: el[KorToEngTransData[labelArr[5]]],
+          organizationName: String(el[KorToEngTransData[labelArr[0]]]),
+          orderNumber: String(el[KorToEngTransData[labelArr[1]]]),
+          region: String(el[KorToEngTransData[labelArr[2]]]),
+          regionDetail: String(el[KorToEngTransData[labelArr[3]]]),
+          deliveryDate: String(el[KorToEngTransData[labelArr[4]]]),
+          paymentPrice: Number(el[KorToEngTransData[labelArr[5]]]),
           talkTemplateId: isAllData.talkTemplateId,
         });
       });
@@ -174,10 +175,10 @@ function Alarmtalk() {
         data.push({
           groupId: Number(params.id),
           clientId: el.clientId,
-          customerName: el[KorToEngTransData[labelArr[0]]],
-          deliveryCompany: el[KorToEngTransData[labelArr[1]]],
-          deliveryTime: el[KorToEngTransData[labelArr[2]]],
-          deliveryNumber: el[KorToEngTransData[labelArr[3]]],
+          customerName: String(el[KorToEngTransData[labelArr[0]]]),
+          deliveryCompany: String(el[KorToEngTransData[labelArr[1]]]),
+          deliveryTime: String(el[KorToEngTransData[labelArr[2]]]),
+          deliveryNumber: String(el[KorToEngTransData[labelArr[3]]]),
           talkTemplateId: isAllData.talkTemplateId,
         });
       });
@@ -186,12 +187,12 @@ function Alarmtalk() {
         data.push({
           groupId: Number(params.id),
           clientId: el.clientId,
-          organizationName: el[KorToEngTransData[labelArr[0]]],
-          orderNumber: el[KorToEngTransData[labelArr[0]]],
-          region: el[KorToEngTransData[labelArr[0]]],
-          regionDetail: el[KorToEngTransData[labelArr[0]]],
-          deliveryDate: el[KorToEngTransData[labelArr[0]]],
-          paymentPrice: el[KorToEngTransData[labelArr[0]]],
+          organizationName: String(el[KorToEngTransData[labelArr[0]]]),
+          orderNumber: String(el[KorToEngTransData[labelArr[0]]]),
+          region: String(el[KorToEngTransData[labelArr[0]]]),
+          regionDetail: String(el[KorToEngTransData[labelArr[0]]]),
+          deliveryDate: String(el[KorToEngTransData[labelArr[0]]]),
+          paymentPrice: Number(el[KorToEngTransData[labelArr[0]]]),
           talkTemplateId: isAllData.talkTemplateId,
         });
       });
@@ -200,6 +201,9 @@ function Alarmtalk() {
   };
   //카카오전송
   const kakaoSaveFetch = async () => {
+    const viewText = document.getElementById(`view`)?.innerText;
+    setViewText(viewText);
+
     let data = refactoringFunc(isAllData.talkTemplateCode);
     console.log(data);
     try {
@@ -315,7 +319,7 @@ function Alarmtalk() {
                         type="text"
                         placeholder="버튼링크를 입력해주세요."
                         value={extractDomainWithoutTrailingSlash(isLinkData)}
-                        onChange={onChangeLinkData}
+                        onChange={(e) => setLinkData(e.target.value)}
                       />
                     </ButtonWrap>
                   ) : null}
@@ -376,8 +380,9 @@ function Alarmtalk() {
             closeModal={setAutoModal}
             userNum={100}
             groupName={sendGroupNameData && sendGroupNameData[0]}
-            isAllData={isViewData}
+            isAllData={isViewText}
             isSendModalData={isSendModalData}
+            isLinkData={isLinkData}
             currentValue={
               currentValue === null ? '택배번호 안내' : currentValue
             }

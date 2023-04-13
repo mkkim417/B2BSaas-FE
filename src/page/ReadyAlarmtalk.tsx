@@ -35,31 +35,23 @@ function ReadyAlarmtalk() {
       //   )
       // );
       // .filter((el: any) => el !== 'talkContentId');
-      const filteredData = res.data.data
-        .map((el: any) => {
-          const filteredObj: any = {};
-          for (const prop in el.client) {
-            filteredObj[prop] = el.client[prop];
-          }
-          filteredObj.groupId = el.talkContent.groupId;
-          filteredObj.talkContentId = el.talkContent.talkContentId;
-          for (const prop in el.talkContent) {
-            if (prop !== 'groupId' && prop !== 'talkContentId') {
-              filteredObj[prop] = el.talkContent[prop];
-            }
-          }
-          return filteredObj;
-        })
-        .filter((obj: any) => {
-          for (const prop in obj) {
-            if (obj[prop] == null) {
-              delete obj[prop];
-            }
-          }
-          return Object.keys(obj).length > 0;
+      const newData = res.data.data
+        .map((el: any) => Object.assign(el.client, el.talkContent))
+        .map((item: any) => {
+          const {
+            useLink,
+            talkContentId,
+            talkTemplateId,
+            groupId,
+            createdAt,
+            ...rest
+          } = item;
+          return rest;
         });
-      setKeyData(Object.keys(filteredData[0]) as any);
-      setTableData(filteredData);
+      console.log(newData);
+
+      setKeyData(Object.keys(newData[0]) as any);
+      setTableData(newData);
     },
     onError: (error) => {
       console.log(error);
@@ -79,15 +71,15 @@ function ReadyAlarmtalk() {
   }, [mutate]);
   const transData = {
     clientEmail: '이메일',
+    contact: '연락처',
     clientId: 'ID',
     clientName: '이름',
-    contact: '연락처',
     createdAt: '생성일',
     customerName: '고객명',
     deliveryCompany: '택배사',
     deliveryDate: '배송일',
-    deliveryNumber: '송장번호',
     deliveryTime: '배송일자',
+    deliveryNumber: '송장번호',
     groupId: '그룹ID',
     groupName: '그룹이름',
     orderNumber: '주문번호',

@@ -41,16 +41,14 @@ const TopNav = () => {
         transition={{ duration: 0.5 }}
       >
         {test.map((el, idx) => (
-          <>
-            <li>
-              <LinkComp
-                to={`${link[idx]}`}
-                onClick={() => setMenuBoolean((prev) => !prev)}
-              >
-                {el}
-              </LinkComp>
-            </li>
-          </>
+          <li key={idx}>
+            <LinkComp
+              to={`${link[idx]}`}
+              onClick={() => setMenuBoolean((prev) => !prev)}
+            >
+              {el}
+            </LinkComp>
+          </li>
         ))}
       </FixedWrap>
     );

@@ -42,14 +42,11 @@ function UploadPage() {
   const [isReqData, setReqData] = useState([]);
   const [isClientId, setClientId] = useState([]);
   const [isExcelName, setExcelName] = useState<string>();
-
+  const [isDragging, setIsDragging] = useState(false);
   const nextRef = useRef<HTMLButtonElement>(null);
   const InputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const clientIdData = useSelector((state: any) => {
-    return state.clientsId.clientsId[0];
-  });
   const onNextClick = () => {
     nextRef.current?.scrollIntoView({
       behavior: 'smooth',
@@ -60,14 +57,6 @@ function UploadPage() {
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
   };
-  // const dragOver = (e: React.DragEvent<HTMLDivElement>) => {
-  //   e.preventDefault();
-  // };
-  // const onDropFiles = (e: React.DragEvent<HTMLDivElement>) => {
-  //   e.preventDefault();
-  //   const file = e.dataTransfer.files[0];
-  //   readExcel(e);
-  // };
   //다음단계버튼
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
@@ -76,8 +65,6 @@ function UploadPage() {
         alert('파일을 선택해주세요');
         return;
       }
-      // dispatch(sendListCreate(data));
-      // dispatch(sendKeyCreate(isKeyDataServe));
       setGroupComp(true);
       setTimeout(() => {
         onNextClick();
@@ -88,11 +75,11 @@ function UploadPage() {
     [isData]
   );
 
-  //파일초기화함수
+  //파일초기화
   const onClearAttachment = () => {
     fileInput.current.value = '';
   };
-  //선택취소함수
+  //선택취소
   const checkedItemHandler = (value: string, isChecked: boolean) => {
     if (isChecked) {
       setCheckedList((prev) => [...prev, value]);
@@ -104,7 +91,7 @@ function UploadPage() {
     }
     return;
   };
-  //체크박스저장함수
+  //체크박스저장
   const checkHandler = (
     e: React.ChangeEvent<HTMLInputElement>,
     value: string
@@ -112,7 +99,7 @@ function UploadPage() {
     setIsChecked(!isChecked);
     checkedItemHandler(value, e.target.checked);
   };
-  //저장함수
+  //저장
   const onDelete = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
@@ -123,7 +110,7 @@ function UploadPage() {
     },
     [checkedList]
   );
-  //초기화더미함수
+  //초기화더미
   const DummyDeleteFuction = () => {
     onClearAttachment();
     setExcelName('');
@@ -134,7 +121,7 @@ function UploadPage() {
     setGroupComp(false);
     setClUpload(false);
   };
-  //엑셀 필수값 필터링함수
+  //엑셀 필수값 필터링
   const refatoringFunc = (keyData: string[], name: string[]) => {
     for (let i = 0; i < name.length; i++) {
       if (keyData.includes(name[i]) === false) {
@@ -145,7 +132,7 @@ function UploadPage() {
     }
     return true;
   };
-  //csv저장함수
+  //csv저장
   const csvFileToArray = (string: any) => {
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',');
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
@@ -160,7 +147,7 @@ function UploadPage() {
     setData(array);
     setKeyData(Object.keys(Object.assign({}, ...array)));
   };
-  //xlsx저장함수
+  //xlsx저장
 
   function readExcel(event: any) {
     let input = event.target;
@@ -203,7 +190,7 @@ function UploadPage() {
     reader.readAsBinaryString(input.files[0]);
   }
 
-  //템플릿전체조회fn
+  //템플릿전체조회
   const fetchTemplateList = useCallback(async () => {
     try {
       await axios
@@ -221,7 +208,7 @@ function UploadPage() {
       console.log(error);
     }
   }, []);
-  //클라이언트 대량등록fn
+  //클라이언트 대량등록
   const clentBulkFetch = async () => {
     const matchData = {
       '#{회사명}': '회사명',
@@ -313,6 +300,7 @@ function UploadPage() {
     },
     [mutation]
   );
+
   const groupSaveFetch = async (groupId: string) => {
     try {
       if (isNewGroupInput) {
@@ -355,7 +343,7 @@ function UploadPage() {
       console.log(error);
     }
   };
-  //selectBox 소통함수
+  //selectBox 소통
   const messagePreviewFunc = useCallback(
     (text: string, target: string, isGroupId: any) => {
       setGroupIdObj(isGroupId);
@@ -489,20 +477,6 @@ function UploadPage() {
               </select>
             </TemplateWrap>
             <DecoText>파일등록</DecoText>
-            {/* {isReqData &&
-            isReqData.map((el: any, idx: any) => (
-              <div key={idx}>
-                <div id={`obj_${idx}`}>{el}</div>
-                <SelectBoxs
-                  // currentCategoryValue={currentValue}
-                  // className={`obj_${idx}`}
-                  // propFunction={messagePreviewFunc}
-                  optionData={
-                    (sendKeyData && sendKeyData[0]) || ['빈값입니다.']
-                  }
-                ></SelectBoxs>
-              </div>
-            ))} */}
             {/* 테이블 */}
             {isData && isData ? (
               <MapWrapper>
@@ -676,18 +650,11 @@ function UploadPage() {
                 >
                   취소
                 </Button>
-
                 <Button
                   width={'90px'}
                   padding={'10px'}
                   onClick={() => {
-                    // mutationGroupSaveQuery(
-                    //   mutation && mutation.variables,
-                    //   groupName,
-                    //   descName
-                    // );
                     groupSaveFetch(isGroupIdObj);
-                    // excelDataKakaoSend();
                   }}
                 >
                   그룹저장

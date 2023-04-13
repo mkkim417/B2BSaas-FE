@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import PricePolicy from './PricePolicy';
 
 function Home() {
   return (
@@ -22,6 +23,7 @@ function Home() {
         </LeftContnets>
         <VideoBox src={'샌딩고동영상.mp4'} controls />
       </Wrapper>
+      <PricePolicy/>
     </motion.div>
   );
 }

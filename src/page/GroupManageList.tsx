@@ -94,7 +94,7 @@ function GroupManageList() {
   const getClientInGroup = useCallback(
     async (id: any, name: any, descript: any, page: any) => {
       setCheckedArr([]);
-      setIsClientState(false);
+      // setIsClientState(false);
       // /api/clients/:groupId&index={index}&keyword=${keyword}
       const response = await axios
         .get(
@@ -152,17 +152,17 @@ function GroupManageList() {
   const allUserRef = useRef<HTMLButtonElement>(null);
 
   // 유저리스트 GET API
-  const getUserData = useCallback(async (page: any) => {
-    // setCheckedArr([]);
-    // setIsClientState(true);
-    // console.log('IsClientState', isClientState);
-  }, []);
+  // const getUserData = useCallback(async (page: any) => {
+  //   // setCheckedArr([]);
+  //   setIsClientState(true);
+  //   // console.log('IsClientState', isClientState);
+  // }, []);
   const { data: userData, refetch } = useQuery<any, AxiosError>(
     ['getAllClientLists', currentPage],
     () => getAllClientList(currentPage),
     {
       onSuccess: (response) => {
-        // console.log('고객리스트useQuery', response.data.clients);
+        console.log('고객리스트useQuery', response.data.clients);
         setCheckedArr([]);
         // setIsClientState(true);
         setAllclients(response.data.clientCount);
@@ -177,8 +177,8 @@ function GroupManageList() {
 
   // 유저리스트 useEffect
   useEffect(() => {
+    console.log(isClientState)
     if (isClientState === true) {
-      // refetch();
       // console.log(userList)
       // getAllClientList(currentPage)
       allUserRef.current?.focus();
@@ -197,7 +197,7 @@ function GroupManageList() {
     //   setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
     // }
     // refetch, userData, isAllclients, getUserData, getClientInGroup
-  }, []);
+  }, [isAllclients, getClientInGroup]);
 
   // 검색change
   const clientSearchTextChange = useCallback(debounce(async (value:any) => {
@@ -246,7 +246,7 @@ function GroupManageList() {
 
   const setPage1 = (page: any) => {
     setCurrentPage(page);
-    getUserData(page);
+    // getUserData(page);
   };
 
   const setPage2 = async (page: any) => {
@@ -505,6 +505,7 @@ function GroupManageList() {
                       setIsEditOpen(false);
                       setIsCopyOpen(false);
                       setIsMoveOpen(false)
+                      setIsClientState(false);
                       getClientInGroup(
                         item.groupId,
                         item.groupName,
@@ -740,7 +741,7 @@ function GroupManageList() {
             <ClientContentBox>
               {isClientState ? (
                 // userList.slice(indexOfFirstPost, indexOfLastPost) &&
-                userList?.length > 0 ? (
+                userList.length > 0 ? (
                   userList?.map((item: any) => {
                     return (
                       <CardHeader key={item.clientId}>

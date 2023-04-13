@@ -164,7 +164,7 @@ function GroupManageList() {
       onSuccess: (response) => {
         // console.log('고객리스트useQuery', response.data.clients);
         setCheckedArr([]);
-        setIsClientState(true);
+        // setIsClientState(true);
         setAllclients(response.data.clientCount);
         // 여따가 담아서 쓰자!
         setUserList(response.data.clients);
@@ -178,7 +178,7 @@ function GroupManageList() {
   // 유저리스트 useEffect
   useEffect(() => {
     if (isClientState === true) {
-      refetch();
+      // refetch();
       // console.log(userList)
       // getAllClientList(currentPage)
       allUserRef.current?.focus();
@@ -196,12 +196,9 @@ function GroupManageList() {
     // } else {
     //   setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
     // }
-  }, [refetch, userData, isAllclients, getUserData, getClientInGroup]);
+    // refetch, userData, isAllclients, getUserData, getClientInGroup
+  }, []);
 
-  // /api/clients?index=${index}&keyword=${keyword}
-  // /api/clients?index=${index}&keyword=${keyword}
-  // `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${currentPage}&keyword=${searchKeyword}`
-  
   // 검색change
   const clientSearchTextChange = useCallback(debounce(async (value:any) => {
     const result = await getSearchData(value);
@@ -305,6 +302,7 @@ function GroupManageList() {
   };
   const closeGroupUserCreateModal = () => {
     setGroupUserCreateModal(false);
+    getClientInGroup(groupId, groupName, groupDescription, currentPage);
   };
   // 그룹리스트 내 유저 복사 모달
   const [groupUserCopyModal, setGroupUserCopyModal] = useState(false);
@@ -312,6 +310,7 @@ function GroupManageList() {
     setGroupUserCopyModal(true);
   };
   const closeUserCopyModal = () => {
+    getClientInGroup(groupId, groupName, groupDescription, currentPage);
     setGroupUserCopyModal(false);
   };
   // 그룹리스트 내 유저 이동 모달
@@ -320,6 +319,7 @@ function GroupManageList() {
     setGroupUserMoveModal(true);
   };
   const closeUserMoveModal = () => {
+    getClientInGroup(groupId, groupName, groupDescription, currentPage);
     setGroupUserMoveModal(false);
   };
   // 그룹리스트 내 유저 삭제 모달
@@ -328,6 +328,7 @@ function GroupManageList() {
     setGroupUserDeleteModal(true);
   };
   const closeGroupUserDeleteModal = () => {
+    getClientInGroup(groupId, groupName, groupDescription, currentPage);
     setGroupUserDeleteModal(false);
   };
 
@@ -480,6 +481,7 @@ function GroupManageList() {
               className={'btn' + ('client' == clickActive ? 'Active' : '')}
               onClick={(e: any) => {
                 refetch();
+                setIsClientState(true);
                 setCurrentPage(1);
                 toogleActive(e);
                 setOpen(false);
@@ -500,6 +502,9 @@ function GroupManageList() {
                     }
                     onClick={(e: any) => {
                       setOpen(false);
+                      setIsEditOpen(false);
+                      setIsCopyOpen(false);
+                      setIsMoveOpen(false)
                       getClientInGroup(
                         item.groupId,
                         item.groupName,
@@ -610,7 +615,7 @@ function GroupManageList() {
             ) : (
               <>
                 <div>
-                  <GroupButton onClick={() => clickGroupUserCreateModal()}>
+                  <GroupButton type="button" onClick={() => clickGroupUserCreateModal()}>
                     고객 등록
                   </GroupButton>
                   {/* <GroupButton onClick={() => navigate('/uploadpage')}>
@@ -1009,11 +1014,14 @@ const ButtonBox = styled.div`
   /* background-color: #bb95dd; */
 `;
 const ButtonContainer = styled.div`
+  min-width: 1200px;
   height: 8%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  /* padding-right: 100px; */
+  /* background-color: pink; */
 `;
 const ButtonGap = styled.div`
   gap: 10px;

@@ -8,12 +8,13 @@ import { Group } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import Callander from '../asset/svg/Callander';
 import useDetectClose from '../hook/useDetectClose';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { getCookie } from '../util/cookie';
 import { Button, Thead } from './UploadPage';
 import SelectBoxs from '../components/SelectBoxs';
 function KakaoResultList() {
   //페이지네이션
+  const location = useLocation();
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState<number>(0);
   const [postPerPage] = useState(5);
@@ -49,6 +50,7 @@ function KakaoResultList() {
             { headers: { authorization: `Bearer ${token}` } }
           )
           .then((res) => {
+            console.log(res.data.data);
             setGroupClient(res.data.data.list);
             setTotal(res.data.data.list.length);
           });
@@ -59,6 +61,7 @@ function KakaoResultList() {
             { headers: { authorization: `Bearer ${token}` } }
           )
           .then((res) => {
+            console.log(res.data.data);
             setGroupClient(res.data.data.list);
             setTotal(res.data.data.list.length);
           });
@@ -75,6 +78,7 @@ function KakaoResultList() {
     return year + month + day;
   }
   const handleOnChangeSelectValue = (e: any) => {
+    console.log(e.target.value);
     setCurrentValue(e.target.value);
     setValue([null, null]);
   };
@@ -96,6 +100,7 @@ function KakaoResultList() {
     }
     //캘린더 선택시
   }, [value, currentValue]);
+  console.log('location : ', location);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -173,20 +178,21 @@ function KakaoResultList() {
                     <Td>{el.groupName}</Td>
                     <Td>{el.sendState}</Td>
                     <Td>
-                      <Button width="100px" padding="8px">
-                        <Link
-                          to={`/kakaodetaillist/${el.talkSendId}`}
-                          state={{
-                            groupName: `${el.groupName}`,
-                            sendState: `${el.sendState}`,
-                            fcnt: `${el.fcnt}`,
-                            success: `${(el.scnt / el.msgCount) * 100}`,
-                            sendDate: `${el.sendDate}`,
-                          }}
-                        >
+                      <Link
+                        to={`/kakaodetaillist/${el.talkSendId}`}
+                        state={{
+                          groupName: `${el.groupName}`,
+                          sendState: `${el.sendState}`,
+                          fcnt: `${el.fcnt}`,
+                          success: `${(el.scnt / el.msgCount) * 100}`,
+                          sendDate: `${el.sendDate}`,
+                          selectedValue: currentValue,
+                        }}
+                      >
+                        <Button width="100px" padding="8px">
                           상세보기
-                        </Link>
-                      </Button>
+                        </Button>
+                      </Link>
                     </Td>
                   </tr>
                 ))}

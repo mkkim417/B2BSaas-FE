@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import styled from 'styled-components';
 import {
   GrayWrap,
@@ -12,14 +12,18 @@ import {
   Wrapper,
 } from './KakaoResultList';
 import { getCookie } from '../util/cookie';
-import { Thead } from './UploadPage';
+import { Button, Thead } from './UploadPage';
+import { Link } from 'react-router-dom';
 function KakaoDetailList() {
   const token = getCookie('userToken');
   const params = useParams();
   const location = useLocation();
   const [isData, setData] = useState([]);
+  const navigate = useNavigate();
+  console.log(location.state.selectedValue);
+
   const KakaoDetail = useCallback(async () => {
-    const response = await axios
+    await axios
       .get(
         `${process.env.REACT_APP_SERVER_URL}/api/talk/results/detail/${params.id}`,
         { headers: { authorization: `Bearer ${token}` } }
@@ -86,9 +90,24 @@ function KakaoDetailList() {
           </tbody>
         </Table>
       </MapWrapper>
+      <BtnWrap>
+        <Link
+          to={'/kakaoresultlist'}
+          state={{
+            selectedValue: location.state.selectedValue,
+          }}
+        >
+          <Button width="100px" padding="8px">
+            뒤로가기
+          </Button>
+        </Link>
+      </BtnWrap>
     </Wrapper>
   );
 }
+const BtnWrap = styled.div`
+  width: 100%;
+`;
 const FlexWrap = styled.div`
   display: flex;
   height: 50px;

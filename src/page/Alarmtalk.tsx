@@ -28,7 +28,6 @@ function Alarmtalk() {
   const token = getCookie('userToken');
   const navigate = useNavigate();
   const location = useLocation();
-  //console.log(location.state.ArrClientsIdsData);
   const params = useParams();
 
   const sendGroupNameData = useSelector((state: any) => {
@@ -58,20 +57,14 @@ function Alarmtalk() {
       const newData = res.data.data
         .map((el: any) => Object.assign(el.client, el.talkContent))
         .map((item: any) => {
-          const {
-            useLink,
-            talkContentId,
-            talkTemplateId,
-            groupId,
-            createdAt,
-            ...rest
-          } = item;
+          const { useLink, groupId, createdAt, ...rest } = item;
           return rest;
         });
-      setTableData(newData);
+      setTableData(newData); //데이터전송
       const engKeyData = Object.keys(newData[0]) as any;
       const korKeyData = [] as any;
       for (let el of engKeyData) {
+        if (el === 'clientId') continue;
         korKeyData.push(engToKorTransData[el]);
       }
       setKeyData(korKeyData);
@@ -135,6 +128,7 @@ function Alarmtalk() {
           customerName: String(el[KorToEngTransData[labelArr[0]]]),
           organizationName: String(el[KorToEngTransData[labelArr[1]]]),
           talkTemplateId: isAllData.talkTemplateId,
+          talkContentId: el.talkContentId,
         });
       });
     } else if (TM_CODE === 'TM_2222') {
@@ -144,6 +138,7 @@ function Alarmtalk() {
           clientId: el.clientId,
           customerName: String(el[KorToEngTransData[labelArr[0]]]),
           talkTemplateId: isAllData.talkTemplateId,
+          talkContentId: el.talkContentId,
         });
       });
     } else if (TM_CODE === 'TM_2220') {
@@ -154,6 +149,7 @@ function Alarmtalk() {
           customerName: String(el[KorToEngTransData[labelArr[0]]]),
           useLink: extractDomainWithoutTrailingSlash(isLinkData),
           talkTemplateId: isAllData.talkTemplateId,
+          talkContentId: el.talkContentId,
         });
       });
     } else if (TM_CODE === 'TM_2217') {
@@ -168,6 +164,7 @@ function Alarmtalk() {
           deliveryDate: String(el[KorToEngTransData[labelArr[4]]]),
           paymentPrice: Number(el[KorToEngTransData[labelArr[5]]]),
           talkTemplateId: isAllData.talkTemplateId,
+          talkContentId: el.talkContentId,
         });
       });
     } else if (TM_CODE === 'TM_2216') {
@@ -180,6 +177,7 @@ function Alarmtalk() {
           deliveryTime: String(el[KorToEngTransData[labelArr[2]]]),
           deliveryNumber: String(el[KorToEngTransData[labelArr[3]]]),
           talkTemplateId: isAllData.talkTemplateId,
+          talkContentId: el.talkContentId,
         });
       });
     } else if (TM_CODE === 'TM_2048') {
@@ -194,6 +192,7 @@ function Alarmtalk() {
           deliveryDate: String(el[KorToEngTransData[labelArr[0]]]),
           paymentPrice: Number(el[KorToEngTransData[labelArr[0]]]),
           talkTemplateId: isAllData.talkTemplateId,
+          talkContentId: el.talkContentId,
         });
       });
     }
@@ -206,6 +205,7 @@ function Alarmtalk() {
 
     let data = refactoringFunc(isAllData.talkTemplateCode);
     console.log(data);
+    console.log(isTableData);
     try {
       await axios
         .post(

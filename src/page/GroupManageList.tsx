@@ -162,7 +162,7 @@ function GroupManageList() {
     () => getAllClientList(currentPage),
     {
       onSuccess: (response) => {
-        // console.log('고객리스트useQuery', response);
+        // console.log('고객리스트useQuery', response.data.clients);
         setCheckedArr([]);
         setIsClientState(true);
         setAllclients(response.data.clientCount);

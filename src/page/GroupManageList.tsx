@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Pagination from 'react-js-pagination';
+import { debounce } from 'lodash';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
@@ -200,8 +201,9 @@ function GroupManageList() {
   // /api/clients?index=${index}&keyword=${keyword}
   // /api/clients?index=${index}&keyword=${keyword}
   // `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${currentPage}&keyword=${searchKeyword}`
+  
   // 고객리스트에서 검색호출 API
-  const getSearchData = async () => {
+  const getSearchData = (async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${currentPage}&keyword=${searchKeyword}`,
       {
@@ -212,7 +214,7 @@ function GroupManageList() {
     // console.log('검색필터 API결과', response.data.data.clients)
     setUserList(response.data.data.clients);
     return response;
-  };
+  });
 
   // 검색필터 useEffect
   useEffect(() => {

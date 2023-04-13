@@ -6,7 +6,7 @@ import Pagination from 'react-js-pagination';
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { getAllClientList, postInGroupClient } from '../../axios/api';
+import { getModalAllClientList, postInGroupClient } from '../../axios/api';
 import { getCookie } from '../../util/cookie';
 import { PaginationBox1 } from '../PaginationStyled';
 
@@ -33,7 +33,7 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
 
   const { data: userData, refetch } = useQuery<any, AxiosError>(
     ['getAllClientLists', currentPage],
-    () => getAllClientList(currentPage),
+    () => getModalAllClientList(currentPage),
     {
       onSuccess: (response) => {
         // console.log('고객리스트useQuery', response);
@@ -136,7 +136,7 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
             <SelectBox>
               {savedArr.map((item: any) => {
                 return (
-                  <CheckBox>
+                  <CheckBox key={item.clientId}>
                     {item.clientName}
                     <RemoveButton onClick={() => removeHandler(item)}>
                       x
@@ -170,7 +170,7 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
             <DataContainer>
               {userList?.map((item: any) => {
                 return (
-                  <DataHeader onClick={(e: any) => savedHandler(e, item)}>
+                  <DataHeader key={item.clientId} onClick={(e: any) => savedHandler(e, item)}>
                     <RowPercent width="20%">{item.clientName}</RowPercent>
                     <RowPercent width="30%">{item.contact}</RowPercent>
                     <RowPercent width="50%">{item.clientEmail}</RowPercent>

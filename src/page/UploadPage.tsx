@@ -17,6 +17,7 @@ import useInput from '../hook/useInput';
 import { postLogin } from '../axios/api';
 import { useMutation } from 'react-query';
 import { getCookie } from '../util/cookie';
+import Dropdown from '../asset/svg/Dropdown';
 // import { clentBulkFetch } from '../axios/groupSave';
 interface MyParsingOptions extends XLSX.ParsingOptions {
   encoding?: string;
@@ -42,14 +43,13 @@ function UploadPage() {
   const [isReqData, setReqData] = useState([]);
   const [isClientId, setClientId] = useState([]);
   const [isExcelName, setExcelName] = useState<string>();
-
+  const [isDragging, setIsDragging] = useState(false);
   const nextRef = useRef<HTMLButtonElement>(null);
   const InputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const clientIdData = useSelector((state: any) => {
-    return state.clientsId.clientsId[0];
-  });
+
+  //다음단계버튼1
   const onNextClick = () => {
     nextRef.current?.scrollIntoView({
       behavior: 'smooth',
@@ -60,15 +60,7 @@ function UploadPage() {
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
   };
-  // const dragOver = (e: React.DragEvent<HTMLDivElement>) => {
-  //   e.preventDefault();
-  // };
-  // const onDropFiles = (e: React.DragEvent<HTMLDivElement>) => {
-  //   e.preventDefault();
-  //   const file = e.dataTransfer.files[0];
-  //   readExcel(e);
-  // };
-  //다음단계버튼
+  //다음단계버튼2
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
       if (!isData) {
@@ -76,8 +68,6 @@ function UploadPage() {
         alert('파일을 선택해주세요');
         return;
       }
-      // dispatch(sendListCreate(data));
-      // dispatch(sendKeyCreate(isKeyDataServe));
       setGroupComp(true);
       setTimeout(() => {
         onNextClick();
@@ -88,11 +78,11 @@ function UploadPage() {
     [isData]
   );
 
-  //파일초기화함수
+  //파일초기화
   const onClearAttachment = () => {
     fileInput.current.value = '';
   };
-  //선택취소함수
+  //선택취소
   const checkedItemHandler = (value: string, isChecked: boolean) => {
     if (isChecked) {
       setCheckedList((prev) => [...prev, value]);
@@ -104,7 +94,7 @@ function UploadPage() {
     }
     return;
   };
-  //체크박스저장함수
+  //체크박스저장
   const checkHandler = (
     e: React.ChangeEvent<HTMLInputElement>,
     value: string
@@ -112,7 +102,7 @@ function UploadPage() {
     setIsChecked(!isChecked);
     checkedItemHandler(value, e.target.checked);
   };
-  //저장함수
+  //저장
   const onDelete = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
@@ -123,7 +113,7 @@ function UploadPage() {
     },
     [checkedList]
   );
-  //초기화더미함수
+  //초기화더미
   const DummyDeleteFuction = () => {
     onClearAttachment();
     setExcelName('');
@@ -134,7 +124,7 @@ function UploadPage() {
     setGroupComp(false);
     setClUpload(false);
   };
-  //엑셀 필수값 필터링함수
+  //엑셀 필수값 필터링
   const refatoringFunc = (keyData: string[], name: string[]) => {
     for (let i = 0; i < name.length; i++) {
       if (keyData.includes(name[i]) === false) {
@@ -145,7 +135,7 @@ function UploadPage() {
     }
     return true;
   };
-  //csv저장함수
+  //csv저장
   const csvFileToArray = (string: any) => {
     const csvHeader = string.slice(0, string.indexOf('\n')).split(',');
     const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
@@ -160,7 +150,7 @@ function UploadPage() {
     setData(array);
     setKeyData(Object.keys(Object.assign({}, ...array)));
   };
-  //xlsx저장함수
+  //xlsx저장
 
   function readExcel(event: any) {
     let input = event.target;
@@ -203,7 +193,7 @@ function UploadPage() {
     reader.readAsBinaryString(input.files[0]);
   }
 
-  //템플릿전체조회fn
+  //템플릿전체조회
   const fetchTemplateList = useCallback(async () => {
     try {
       await axios
@@ -221,7 +211,7 @@ function UploadPage() {
       console.log(error);
     }
   }, []);
-  //클라이언트 대량등록fn
+  //클라이언트 대량등록
   const clentBulkFetch = async () => {
     const matchData = {
       '#{회사명}': '회사명',
@@ -313,6 +303,7 @@ function UploadPage() {
     },
     [mutation]
   );
+
   const groupSaveFetch = async (groupId: string) => {
     try {
       if (isNewGroupInput) {
@@ -355,7 +346,7 @@ function UploadPage() {
       console.log(error);
     }
   };
-  //selectBox 소통함수
+  //selectBox 소통
   const messagePreviewFunc = useCallback(
     (text: string, target: string, isGroupId: any) => {
       setGroupIdObj(isGroupId);
@@ -372,6 +363,8 @@ function UploadPage() {
     []
   );
   const handleDrop = (event: any) => {
+    setIsDragging(false);
+
     event.preventDefault();
     const { items } = event.dataTransfer;
     if (items && items.length > 0) {
@@ -422,6 +415,12 @@ function UploadPage() {
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+    setIsDragging(true);
+  };
+  //업로드 마우스 내려놓을때
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
   };
   useEffect(() => {
     getGroupData();
@@ -489,20 +488,6 @@ function UploadPage() {
               </select>
             </TemplateWrap>
             <DecoText>파일등록</DecoText>
-            {/* {isReqData &&
-            isReqData.map((el: any, idx: any) => (
-              <div key={idx}>
-                <div id={`obj_${idx}`}>{el}</div>
-                <SelectBoxs
-                  // currentCategoryValue={currentValue}
-                  // className={`obj_${idx}`}
-                  // propFunction={messagePreviewFunc}
-                  optionData={
-                    (sendKeyData && sendKeyData[0]) || ['빈값입니다.']
-                  }
-                ></SelectBoxs>
-              </div>
-            ))} */}
             {/* 테이블 */}
             {isData && isData ? (
               <MapWrapper>
@@ -545,14 +530,36 @@ function UploadPage() {
               </MapWrapper>
             ) : (
               //   <Pagination page={activePage} onChange={setPage} total={total} />
-              <BottomContents onDrop={handleDrop} onDragOver={handleDragOver}>
-                <TextAria>
-                  <div>신규추가할 고객목록을 작성한</div>
-                  <div>양식 파일을 업로드해주세요</div>
-                </TextAria>
-                <label htmlFor="fileData">
-                  <LabelWrap>파일찾기</LabelWrap>
-                </label>
+              <BottomContents
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                isDragging={isDragging}
+                onDragLeave={handleDragLeave}
+              >
+                {!isDragging ? (
+                  <>
+                    <TextAria>
+                      <div>신규추가할 고객목록을 작성한</div>
+                      <div>양식 파일을 업로드해주세요</div>
+                    </TextAria>
+                    <label htmlFor="fileData">
+                      <LabelWrap>파일찾기</LabelWrap>
+                    </label>
+                  </>
+                ) : (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      fontSize: '20px',
+                      gap: '10px',
+                    }}
+                  >
+                    <Dropdown />
+                    드래그해 넣어주세요.
+                  </div>
+                )}
               </BottomContents>
             )}
             {/* 파일찾기 */}
@@ -676,18 +683,11 @@ function UploadPage() {
                 >
                   취소
                 </Button>
-
                 <Button
                   width={'90px'}
                   padding={'10px'}
                   onClick={() => {
-                    // mutationGroupSaveQuery(
-                    //   mutation && mutation.variables,
-                    //   groupName,
-                    //   descName
-                    // );
                     groupSaveFetch(isGroupIdObj);
-                    // excelDataKakaoSend();
                   }}
                 >
                   그룹저장
@@ -867,7 +867,8 @@ export const ContentsWrap = styled.div`
 `;
 const TopContents = styled.div``;
 
-const BottomContents = styled.div`
+const BottomContents = styled.div<{ isDragging?: boolean }>`
+  background-color: ${(props) => (props.isDragging ? 'lightskyblue' : '#fff')};
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -875,7 +876,8 @@ const BottomContents = styled.div`
   border-radius: 15px;
   font-size: 12px;
   height: 250px;
-  background-color: #fbfbfb;
-  border: 2px dashed #000;
+  opacity: ${(props) => (props.isDragging ? 0.3 : null)};
+  border: ${(props) =>
+    props.isDragging ? '2px dashed #000' : '2px solid #bdbdbd'};
 `;
 export default UploadPage;

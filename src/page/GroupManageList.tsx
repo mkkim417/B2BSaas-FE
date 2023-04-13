@@ -177,11 +177,9 @@ function GroupManageList() {
 
   // 유저리스트 useEffect
   useEffect(() => {
-<<<<<<< HEAD
-    console.log(isClientState);
-=======
+    
     // console.log(isClientState)
->>>>>>> 4d26f05dd712be645062bcf7a941eae7f67985f8
+
     if (isClientState === true) {
       // console.log(userList)
       // getAllClientList(currentPage)

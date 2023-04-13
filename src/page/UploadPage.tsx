@@ -17,6 +17,7 @@ import useInput from '../hook/useInput';
 import { postLogin } from '../axios/api';
 import { useMutation } from 'react-query';
 import { getCookie } from '../util/cookie';
+import Dropdown from '../asset/svg/Dropdown';
 // import { clentBulkFetch } from '../axios/groupSave';
 interface MyParsingOptions extends XLSX.ParsingOptions {
   encoding?: string;
@@ -47,6 +48,8 @@ function UploadPage() {
   const InputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  //다음단계버튼1
   const onNextClick = () => {
     nextRef.current?.scrollIntoView({
       behavior: 'smooth',
@@ -57,7 +60,7 @@ function UploadPage() {
   const handleOnChangeSelectValue = (e: any) => {
     setCurrentValue(e.target.value);
   };
-  //다음단계버튼
+  //다음단계버튼2
   const NextBtnHandler = useCallback(
     async (data: any, isKeyDataServe: any) => {
       if (!isData) {
@@ -360,6 +363,8 @@ function UploadPage() {
     []
   );
   const handleDrop = (event: any) => {
+    setIsDragging(false);
+
     event.preventDefault();
     const { items } = event.dataTransfer;
     if (items && items.length > 0) {
@@ -410,6 +415,12 @@ function UploadPage() {
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+    setIsDragging(true);
+  };
+  //업로드 마우스 내려놓을때
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
   };
   useEffect(() => {
     getGroupData();
@@ -519,14 +530,36 @@ function UploadPage() {
               </MapWrapper>
             ) : (
               //   <Pagination page={activePage} onChange={setPage} total={total} />
-              <BottomContents onDrop={handleDrop} onDragOver={handleDragOver}>
-                <TextAria>
-                  <div>신규추가할 고객목록을 작성한</div>
-                  <div>양식 파일을 업로드해주세요</div>
-                </TextAria>
-                <label htmlFor="fileData">
-                  <LabelWrap>파일찾기</LabelWrap>
-                </label>
+              <BottomContents
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                isDragging={isDragging}
+                onDragLeave={handleDragLeave}
+              >
+                {!isDragging ? (
+                  <>
+                    <TextAria>
+                      <div>신규추가할 고객목록을 작성한</div>
+                      <div>양식 파일을 업로드해주세요</div>
+                    </TextAria>
+                    <label htmlFor="fileData">
+                      <LabelWrap>파일찾기</LabelWrap>
+                    </label>
+                  </>
+                ) : (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      fontSize: '20px',
+                      gap: '10px',
+                    }}
+                  >
+                    <Dropdown />
+                    드래그해 넣어주세요.
+                  </div>
+                )}
               </BottomContents>
             )}
             {/* 파일찾기 */}
@@ -834,7 +867,8 @@ export const ContentsWrap = styled.div`
 `;
 const TopContents = styled.div``;
 
-const BottomContents = styled.div`
+const BottomContents = styled.div<{ isDragging?: boolean }>`
+  background-color: ${(props) => (props.isDragging ? 'lightskyblue' : '#fff')};
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -842,7 +876,8 @@ const BottomContents = styled.div`
   border-radius: 15px;
   font-size: 12px;
   height: 250px;
-  background-color: #fbfbfb;
-  border: 2px dashed #000;
+  opacity: ${(props) => (props.isDragging ? 0.3 : null)};
+  border: ${(props) =>
+    props.isDragging ? '2px dashed #000' : '2px solid #bdbdbd'};
 `;
 export default UploadPage;

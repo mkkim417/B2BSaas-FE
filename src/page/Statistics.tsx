@@ -11,9 +11,9 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { AxiosError } from 'axios';
-import { currentStatistic } from '../axios/api';
+import { currentStatistic, timelyStatistic } from '../axios/api';
 // import faker from 'faker'
 
 // 라이브러리 등록
@@ -34,7 +34,7 @@ export const options = {
       position: 'top' as const,
     },
     title: {
-      display: true,
+      display: false,
       text: 'Chart.js Line Chart',
     },
   },
@@ -70,15 +70,21 @@ export const options = {
 // };
 
 function Statistics() {
+  // useQuery
+  // const queryClient = useQueryClient();
   // select 박스 값
-  const selectList = ['첫번째', '두번째', '세번째'];
+  const selectList = ['시간별 통계', '두번째', '세번째'];
 
   // select값 state
   const [selectedValue, setSelectedValue] = useState('');
 
+  // 행값 배열
+  const [ timeRow, setTimeRow ] = useState([] as any)
+  // 시간별 행값 필터링용 배열
+
   // 데이터 값들
-  const [firstData, setFirstData] = useState<number[]>([]);
-  const [secondData, setSecondData] = useState<number[]>([]);
+  const [firstData, setFirstData] = useState([] as any);
+  const [secondData, setSecondData] = useState([] as any);
 
   const selectHandler = (e: any) => {
     setSelectedValue(e.target.value);
@@ -87,7 +93,33 @@ function Statistics() {
   const { data: currentData } = useQuery<any, AxiosError>(
     ['getCurrentData'], () => currentStatistic(), {
       onSuccess : (response) => {
-        console.log(response)
+        // console.log('현재데이터', response)
+      },
+      onError : (error) => {
+        console.log(error)
+      }
+    }
+  )
+  // 시간 통계데이터 get API
+  const { data : timelyData } = useQuery<any, AxiosError>(
+    ['getTimelyData'], () => timelyStatistic(), {
+      refetchOnWindowFocus: false,
+      onSuccess : (response) => {
+        console.log('시간별데이터', response.data)
+        // console.log(response.data.map((item:any) =>
+        //   item.createdAt.substr(0,10)))
+
+        response.data.map((item:any) => {
+          console.log(item.createdAt.substr(0,16))
+          if( !(timeRow.includes(item.createdAt.substr(0,16)))) {
+            timeRow.push(item.createdAt.substr(0,16))
+            firstData.push(item.accumulateSuccessRatio) // 발신성공률
+            secondData.push(item.accumulateClickRatio)  // 링크 클릭률
+          }
+          setTimeRow(timeRow)
+          setFirstData(firstData)
+          setSecondData(secondData)
+        })
       },
       onError : (error) => {
         console.log(error)
@@ -95,18 +127,20 @@ function Statistics() {
     }
   )
 
+
   // 그래프 셋팅
   const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    type: 'line',
+    labels: timeRow,
     datasets: [
       {
-        label: 'Dataset 1',
+        label: '전송 성공률',
         data: firstData,
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
       {
-        label: 'Dataset 2',
+        label: '전송 링크 클릭률',
         data: secondData,
         borderColor: 'rgb(53, 162, 235)',
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
@@ -115,43 +149,59 @@ function Statistics() {
   };
 
   useEffect(() => {
-    if (selectedValue === '첫번째') {
-      setFirstData([1, 2, 3, 4, 5]);
-      setSecondData([5, 4, 3, 2, 1]);
-    } else if (selectedValue === '두번째') {
-      setFirstData([300, 100, 400, 300, 200]);
-      setSecondData([100, 600, 700, 200, 100]);
-    } else {
-      setFirstData([1000, 2000, 3000, 4000, 5000]);
-      setSecondData([5000, 4000, 3000, 2000, 1000]);
-    }
-  }, [selectedValue]);
+    // if (selectedValue === '첫번째') {
+    //   setFirstData([1, 2, 3, 4, 5]);
+    //   setSecondData([5, 4, 3, 2, 1]);
+    // } else if (selectedValue === '두번째') {
+    //   setFirstData([300, 100, 400, 300, 200]);
+    //   setSecondData([100, 600, 700, 200, 100]);
+    // } else {
+    //   setFirstData([1000, 2000, 3000, 4000, 5000]);
+    //   setSecondData([5000, 4000, 3000, 2000, 1000]);
+    // }
+  }, []);
   return (
     <Wrapper>
       <FirstContainer>
       <TitleContainer>
         나의 통계 그래프
       </TitleContainer>
-        <RowContainer>
-          <CountBox color="#F9FAFC">
-            총 고객수
-            <CountFont>{currentData?.data.totalClientCount}명</CountFont>
-          </CountBox>
-          <CountBox color="#F9FAFC">
-            총 그룹수 
-            <CountFont>{currentData?.data.totalGroupCount}개</CountFont>
-          </CountBox>
-        </RowContainer>
-        <RowContainer>
-          <TotalBox color="#E9FFEA">
-            전체 발신성공률 
-            <TotalFont color="#50B956">100%</TotalFont>
-          </TotalBox>
-          <TotalBox color="#EEF8FF">
-            발신메세지 클릭률
-            <TotalFont color="#3599F9">77.6%</TotalFont>
-          </TotalBox>
-        </RowContainer>
+        <RowBox>
+          <ListContainer>
+          <RowContainer>
+            <CountBox color="#F9FAFC">
+              총 고객수
+              <CountFont>{currentData?.data.totalClientCount}명</CountFont>
+            </CountBox>
+            <CountBox color="#F9FAFC">
+              총 그룹수 
+              <CountFont>{currentData?.data.totalGroupCount}개</CountFont>
+            </CountBox>
+          </RowContainer>
+          <RowContainer>
+            <TotalBox color="#E9FFEA">
+              전체 발신성공률 
+              <TotalFont color="#50B956">
+                {currentData?.data.accumulateSuccessRatio}%
+              </TotalFont>
+            </TotalBox>
+            <TotalBox color="#EEF8FF">
+              발신메세지 클릭률
+              <TotalFont color="#3599F9">
+                {currentData?.data.accumulateClickRatio}%
+              </TotalFont>
+            </TotalBox>
+          </RowContainer>
+          </ListContainer>
+          {/* <RightListContainer>
+            <ListTitle>최근 발송 내역</ListTitle>
+            <div>안녕하세요 반가워용</div>
+            <div>안녕하세요 반가워용</div>
+            <div>안녕하세요 반가워용</div>
+            <div>안녕하세요 반가워용</div>
+            <div>안녕하세요 반가워용</div>
+          </RightListContainer> */}
+        </RowBox>
       </FirstContainer>
       <SecondContainer>
       <OptionBox>
@@ -189,11 +239,40 @@ const TitleContainer = styled.div`
   font-weight: 900;
   /* background-color: azure; */
 `
+const RowBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+`
+const ListContainer = styled.div`
+  width: 640px;
+  height: 210px;
+  /* border: 1px solid dimgray; */
+  border-radius: 20px;
+  /* background-color: darkblue; */
+`
+const RightListContainer = styled(ListContainer)`
+  width: 640px;
+  height: 210px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid dimgray;
+  border-radius: 20px;
+  gap: 10px;
+  background-color: whitesmoke;
+`
+const ListTitle = styled.div`
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 10px;
+`
 const RowContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 20px;
   padding: 10px;
+  /* background-color: dimgray; */
 `
 const CountBox = styled.div<{color : any}>`
   width: 300px;

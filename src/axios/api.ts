@@ -61,7 +61,8 @@ export const postSingleClient = async (user: any) => {
     contact: user.contact,
   })
   .then((res) => {
-    
+    alert('등록에 성공하였습니다.')
+    window.location.reload()
   })
   .catch((error) => {
     if (error.response.data.message === '중복된 클라이언트가 존재합니다.') {
@@ -161,6 +162,11 @@ export const fetchTemplatesList = async ({ groupId, clientIds }: any) => {
 // 현재 통계 상황
 export const currentStatistic = async () => {
   const response = await instance.get(`/api/statistics/current`);
+  return response.data;
+};
+// 시간별 통계 상황
+export const timelyStatistic = async () => {
+  const response = await instance.get(`/api/statistics/hourly`);
   return response.data;
 };
 export { instance };

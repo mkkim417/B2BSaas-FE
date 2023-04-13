@@ -20,57 +20,14 @@ const TopNav = () => {
   const [isMenuData, setMenuData] = useState<string[]>([]);
   const [isMenuLink, setMenuLink] = useState<string[]>([]);
   const [isMeData, setData] = useState();
-  const duplacatedClick = useCallback(
-    (target: any) => {
-      setData(target);
-      if (target == isMeData) {
-        setMenuBoolean((prev) => !prev);
-      }
-    },
-    [isMeData]
-  );
-  const variants = {
-    open: { opacity: 1, x: 0 },
-    closed: { opacity: 0, x: '-100%' },
-  };
-  function sideMenuBar(test: string[], link: string[]) {
-    return (
-      <FixedWrap
-        animate={isMenuBoolean ? 'open' : 'closed'}
-        variants={variants}
-        transition={{ duration: 0.5 }}
-      >
-        {test.map((el, idx) => (
-          <li key={idx}>
-            <LinkComp
-              to={`${link[idx]}`}
-              onClick={() => setMenuBoolean((prev) => !prev)}
-            >
-              {el}
-            </LinkComp>
-          </li>
-        ))}
-      </FixedWrap>
-    );
-  }
   return (
     <TotalWrapper>
-      {sideMenuBar(isMenuData, isMenuLink)}
       <Wrapper>
         <UserContatiner>
           <ul style={{ marginTop: '60px' }}>
             <Li>
               <NavLink to={'/statistics'}>
-                <InLi
-                  active={statistics ? true : false}
-                  onClick={() => {
-                    duplacatedClick('statistics');
-                    if (isMenuBoolean === false) {
-                      setMenuData(['통계분석']);
-                      setMenuLink(['/statistics']);
-                    }
-                  }}
-                >
+                <InLi active={statistics ? true : false}>
                   {statistics ? (
                     <>
                       <ListIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
@@ -91,16 +48,7 @@ const TopNav = () => {
             </Li>
             <Li>
               <NavLink to={'/readyalarmtalk'}>
-                <InLi
-                  active={readyalarmtalk ? true : false}
-                  onClick={() => {
-                    duplacatedClick('readyalarmtalk');
-                    if (isMenuBoolean === false) {
-                      setMenuData(['알림톡전송']);
-                      setMenuLink(['/readyalarmtalk']);
-                    }
-                  }}
-                >
+                <InLi active={readyalarmtalk ? true : false}>
                   {readyalarmtalk ? (
                     <>
                       <KakaoIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
@@ -121,16 +69,7 @@ const TopNav = () => {
             </Li>
             <Li>
               <NavLink to={'/kakaoresultlist'}>
-                <InLi
-                  active={kakaoresultlist ? true : false}
-                  onClick={(e) => {
-                    duplacatedClick('kakaoresultlist');
-                    if (isMenuBoolean === false) {
-                      setMenuData(['전송결과조회']);
-                      setMenuLink(['/kakaoresultlist']);
-                    }
-                  }}
-                >
+                <InLi active={kakaoresultlist ? true : false}>
                   {kakaoresultlist ? (
                     <>
                       <ListResultIcon
@@ -156,14 +95,6 @@ const TopNav = () => {
                 <InLi
                   active={groupManageList ? true : false}
                   value={'groupManageList'}
-                  onClick={(e) => {
-                    duplacatedClick('groupManageList');
-                    //setMenuBoolean((prev) => !prev);
-                    if (isMenuBoolean === false) {
-                      setMenuData(['그룹관리']);
-                      setMenuLink(['/groupManageList']);
-                    }
-                  }}
                 >
                   {groupManageList ? (
                     <>
@@ -187,16 +118,7 @@ const TopNav = () => {
             </Li>
             <Li>
               <NavLink to={'/clientregistration'}>
-                <InLi
-                  active={clientRegistration ? true : false}
-                  onClick={() => {
-                    duplacatedClick('clientRegistration');
-                    if (isMenuBoolean === false) {
-                      setMenuData(['고객등록']);
-                      setMenuLink(['/clientregistration']);
-                    }
-                  }}
-                >
+                <InLi active={clientRegistration ? true : false}>
                   {clientRegistration ? (
                     <>
                       <CustomerAddIcon

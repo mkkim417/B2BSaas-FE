@@ -30,11 +30,7 @@ const TopNav = () => {
                 <InLi active={statistics ? true : false}>
                   {statistics ? (
                     <>
-                      <ListIcon
-                        width={'25px'}
-                        heigth={'25px'}
-                        fill={'#16A6A8'}
-                      />
+                      <ListIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
                       <Circle
                         animate={{
                           backgroundColor: ['lime'],
@@ -47,7 +43,7 @@ const TopNav = () => {
                       <ListIcon
                         width={'25px'}
                         heigth={'25px'}
-                        fill={'#DEEFE7'}
+                        fill={'#002333'}
                       />
                     </>
                   )}
@@ -60,11 +56,7 @@ const TopNav = () => {
                 <InLi active={readyalarmtalk ? true : false}>
                   {readyalarmtalk ? (
                     <>
-                      <KakaoIcon
-                        width={'25px'}
-                        heigth={'25px'}
-                        fill={'#16A6A8'}
-                      />
+                      <KakaoIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
                       <Circle
                         animate={{
                           backgroundColor: ['lime'],
@@ -77,7 +69,7 @@ const TopNav = () => {
                       <KakaoIcon
                         width={'25px'}
                         heigth={'25px'}
-                        fill={'#DEEFE7'}
+                        fill={'#002333'}
                       />
                     </>
                   )}
@@ -93,7 +85,7 @@ const TopNav = () => {
                       <ListResultIcon
                         width={'25px'}
                         heigth={'25px'}
-                        fill={'#16A6A8'}
+                        fill={'#fff'}
                       />
                       <Circle
                         animate={{
@@ -107,7 +99,7 @@ const TopNav = () => {
                       <ListResultIcon
                         width={'25px'}
                         heigth={'25px'}
-                        fill={'#DEEFE7'}
+                        fill={'#002333'}
                       />
                     </>
                   )}
@@ -120,11 +112,7 @@ const TopNav = () => {
                 <InLi active={groupManageList ? true : false}>
                   {groupManageList ? (
                     <>
-                      <ListIcon
-                        width={'25px'}
-                        heigth={'25px'}
-                        fill={'#16A6A8'}
-                      />
+                      <ListIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
                       <Circle
                         animate={{
                           backgroundColor: ['lime'],
@@ -137,7 +125,7 @@ const TopNav = () => {
                       <ListIcon
                         width={'25px'}
                         heigth={'25px'}
-                        fill={'#DEEFE7'}
+                        fill={'#002333'}
                       />
                     </>
                   )}
@@ -153,7 +141,7 @@ const TopNav = () => {
                       <CustomerAddIcon
                         width={'25px'}
                         heigth={'25px'}
-                        fill={'#16A6A8'}
+                        fill={'#fff'}
                       />
                       <Circle
                         animate={{
@@ -167,7 +155,7 @@ const TopNav = () => {
                       <CustomerAddIcon
                         width={'25px'}
                         heigth={'25px'}
-                        fill={'#DEEFE7'}
+                        fill={'#002333'}
                       />
                     </>
                   )}
@@ -294,7 +282,7 @@ const NavLink = styled(Link)`
   font-size: 7px;
 `;
 const InLi = styled.button<{ active?: boolean }>`
-  background: ${(props) => (props.active ? '#DEEFE7' : null)};
+  background: ${(props) => (props.active ? '#16A6A8' : null)};
   display: flex;
   -webkit-box-align: center;
   align-items: center;
@@ -302,8 +290,9 @@ const InLi = styled.button<{ active?: boolean }>`
   gap: 10px;
   justify-content: start;
   width: 150px;
+  padding-left: 10px;
   height: 50px;
-  color: ${(props) => (props.active ? '#159A9C' : '#909090')};
+  color: ${(props) => (props.active ? '#fff' : '#002333')};
   border-radius: 10px;
   transition: 0.3s;
 `;
@@ -398,8 +387,6 @@ const Wrapper = styled.div`
   box-shadow: 0px 0px 6px #bdbdbd;
   height: 100vh;
   border-right: 1px;
-  background: #f3fbf8;
-
   position: fixed;
   top: 0%;
   z-index: 1;

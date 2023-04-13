@@ -177,7 +177,7 @@ function GroupManageList() {
 
   // 유저리스트 useEffect
   useEffect(() => {
-    console.log(isClientState)
+    console.log(isClientState);
     if (isClientState === true) {
       // console.log(userList)
       // getAllClientList(currentPage)
@@ -200,15 +200,18 @@ function GroupManageList() {
   }, [isAllclients, getClientInGroup]);
 
   // 검색change
-  const clientSearchTextChange = useCallback(debounce(async (value:any) => {
-    const result = await getSearchData(value);
-    return result;
-  }, 400),[])
+  const clientSearchTextChange = useCallback(
+    debounce(async (value: any) => {
+      const result = await getSearchData(value);
+      return result;
+    }, 400),
+    []
+  );
 
   // 고객리스트에서 검색호출 API
-  const getSearchData = (async (value:any) => {
+  const getSearchData = async (value: any) => {
     // 검색어가 없을때 전체 데이터 호출
-    if ( value === '') {
+    if (value === '') {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${currentPage}`,
         {
@@ -228,7 +231,7 @@ function GroupManageList() {
       setUserList(response.data.data.clients);
       return response;
     }
-  });
+  };
 
   // 검색필터 useEffect
   useEffect(() => {
@@ -504,7 +507,7 @@ function GroupManageList() {
                       setOpen(false);
                       setIsEditOpen(false);
                       setIsCopyOpen(false);
-                      setIsMoveOpen(false)
+                      setIsMoveOpen(false);
                       setIsClientState(false);
                       getClientInGroup(
                         item.groupId,
@@ -616,7 +619,10 @@ function GroupManageList() {
             ) : (
               <>
                 <div>
-                  <GroupButton type="button" onClick={() => clickGroupUserCreateModal()}>
+                  <GroupButton
+                    type="button"
+                    onClick={() => clickGroupUserCreateModal()}
+                  >
                     고객 등록
                   </GroupButton>
                   {/* <GroupButton onClick={() => navigate('/uploadpage')}>
@@ -940,7 +946,7 @@ const Container = styled.div`
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-  padding-left: 80px;
+  padding-left: 180px;
   /* padding-top: 50px; */
   /* padding-bottom: 50px; */
   /* background-color: sandybrown; */
@@ -1120,7 +1126,7 @@ const ClientContentBox = styled.div`
 
 const ClientContentHeader = styled.div`
   /* height: 5%; */
-  background-color: #000;
+  background-color: #159a9c;
   color: white;
   font-weight: bold;
   border-top-left-radius: 15px;
@@ -1145,7 +1151,7 @@ const Percentage = styled.div<{ width: any }>`
 `;
 
 const HeaderPercentage = styled(Percentage)<{ width: any }>`
-  height: 36px;
+  height: 40px;
   font-weight: bold;
   display: flex;
   justify-content: center;

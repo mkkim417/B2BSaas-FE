@@ -59,7 +59,15 @@ export const postSingleClient = async (user: any) => {
     clientName: user.clientName,
     clientEmail: user.clientEmail,
     contact: user.contact,
-  });
+  })
+  .then((res) => {
+    
+  })
+  .catch((error) => {
+    if (error.response.data.message === '중복된 클라이언트가 존재합니다.') {
+      alert('중복된 클라이언트가 존재합니다.')
+    }
+  })
   return response;
 };
 // 빈 그룹 생성
@@ -72,6 +80,12 @@ export const getAllClientList = async (page: any) => {
   const response = await instance.get(`/api/clients?index=${page}`);
   return response.data;
 };
+// 전체 클라이언트 리스트 불러오기(모달용)
+export const getModalAllClientList = async (page: any) => {
+  const response = await instance.get(`/api/clients?index=${page}`);
+  return response.data;
+};
+
 // 전체 그룹 리스트 불러오기
 export const getAllGroupList = async () => {
   const response = await instance.get('/api/groups');
@@ -105,7 +119,6 @@ export const deleteGroupData = async (groupId: any) => {
 // 그룹 내 클라이언트 등록
 
 export const postInGroupClient = async (data: any) => {
-  console.log(data);
   const urls = data.map(
     (item: any) =>
       `/api/batch/clients/${item.clientId}/groups/${data[data.length - 1]}`

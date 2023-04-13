@@ -87,7 +87,7 @@ function Statistics() {
   const { data: currentData } = useQuery<any, AxiosError>(
     ['getCurrentData'], () => currentStatistic(), {
       onSuccess : (response) => {
-        console.log(currentData)
+        console.log(response)
       },
       onError : (error) => {
         console.log(error)
@@ -135,11 +135,11 @@ function Statistics() {
         <RowContainer>
           <CountBox color="#F9FAFC">
             총 고객수
-            <CountFont>10명</CountFont>
+            <CountFont>{currentData?.data.totalClientCount}명</CountFont>
           </CountBox>
           <CountBox color="#F9FAFC">
             총 그룹수 
-            <CountFont>5개</CountFont>
+            <CountFont>{currentData?.data.totalGroupCount}개</CountFont>
           </CountBox>
         </RowContainer>
         <RowContainer>

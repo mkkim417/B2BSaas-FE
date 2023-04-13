@@ -197,7 +197,7 @@ function GroupManageList() {
     //   setCurrentPosts(groupClient.slice(indexOfFirstPost, indexOfLastPost));
     // }
     // refetch, userData, isAllclients, getUserData, getClientInGroup
-  }, []);
+  }, [isAllclients, getClientInGroup]);
 
   // 검색change
   const clientSearchTextChange = useCallback(debounce(async (value:any) => {

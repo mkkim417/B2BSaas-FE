@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Pagination from 'react-js-pagination';
+import { debounce } from 'lodash';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
@@ -161,7 +162,7 @@ function GroupManageList() {
     () => getAllClientList(currentPage),
     {
       onSuccess: (response) => {
-        // console.log('고객리스트useQuery', response);
+        // console.log('고객리스트useQuery', response.data.clients);
         setCheckedArr([]);
         setIsClientState(true);
         setAllclients(response.data.clientCount);
@@ -200,24 +201,42 @@ function GroupManageList() {
   // /api/clients?index=${index}&keyword=${keyword}
   // /api/clients?index=${index}&keyword=${keyword}
   // `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${currentPage}&keyword=${searchKeyword}`
+  
+  // 검색change
+  const clientSearchTextChange = useCallback(debounce(async (value:any) => {
+    const result = await getSearchData(value);
+    return result;
+  }, 400),[])
+
   // 고객리스트에서 검색호출 API
-  const getSearchData = async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${currentPage}&keyword=${searchKeyword}`,
-      {
-        headers: { authorization: `Bearer ${token}` },
-      }
-    );
-    // console.log('검색필터 주소', `${process.env.REACT_APP_SERVER_URL}/api/clients?keyword=${searchKeyword}&index=${currentPage}`)
-    // console.log('검색필터 API결과', response.data.data.clients)
-    setUserList(response.data.data.clients);
-    return response;
-  };
+  const getSearchData = (async (value:any) => {
+    // 검색어가 없을때 전체 데이터 호출
+    if ( value === '') {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${currentPage}`,
+        {
+          headers: { authorization: `Bearer ${token}` },
+        }
+      );
+      setUserList(response.data.data.clients);
+      return response;
+    } else {
+      // 검색어 있을땐 키워드 호출
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/api/clients?index=${currentPage}&keyword=${value}`,
+        {
+          headers: { authorization: `Bearer ${token}` },
+        }
+      );
+      setUserList(response.data.data.clients);
+      return response;
+    }
+  });
 
   // 검색필터 useEffect
   useEffect(() => {
     if (searchKeyword.length > 0) {
-      getSearchData();
+      // getSearchData(searchKeyword);
       // setAllclients(userList.length)
     } else if (searchKeyword.length === 0) {
       refetch();
@@ -578,6 +597,7 @@ function GroupManageList() {
                   type="search"
                   onChange={(e: any) => {
                     setSearchKeyword(e.target.value);
+                    clientSearchTextChange(e.target.value);
                   }}
                 />
                 {/* <ClientButton onClick={() => userEditHandler()}>

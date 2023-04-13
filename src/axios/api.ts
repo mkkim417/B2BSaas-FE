@@ -59,7 +59,15 @@ export const postSingleClient = async (user: any) => {
     clientName: user.clientName,
     clientEmail: user.clientEmail,
     contact: user.contact,
-  });
+  })
+  .then((res) => {
+    
+  })
+  .catch((error) => {
+    if (error.response.data.message === '중복된 클라이언트가 존재합니다.') {
+      alert('중복된 클라이언트가 존재합니다.')
+    }
+  })
   return response;
 };
 // 빈 그룹 생성

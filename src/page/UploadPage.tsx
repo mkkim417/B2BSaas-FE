@@ -363,10 +363,11 @@ function UploadPage() {
     []
   );
   const handleDrop = (event: any) => {
-    setIsDragging(false);
-
-    event.preventDefault();
     const { items } = event.dataTransfer;
+    setIsDragging(false);
+    console.log(event.target);
+    console.log(items);
+    event.preventDefault();
     if (items && items.length > 0) {
       const file = items[0].getAsFile();
 

@@ -8,7 +8,7 @@ import { Group } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import Callander from '../asset/svg/Callander';
 import useDetectClose from '../hook/useDetectClose';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getCookie } from '../util/cookie';
 import { Button, Thead } from './UploadPage';
 import SelectBoxs from '../components/SelectBoxs';
@@ -22,6 +22,7 @@ function KakaoResultList() {
   const [indexOfLastPost, setIndexOfLastPost] = useState(0);
   const [indexOfFirstPost, setIndexOfFirstPost] = useState(0);
   const [currentPosts, setCurrentPosts] = useState(0);
+  const navigate = useNavigate();
   const dropDownRef = useRef();
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false);
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
@@ -211,7 +212,9 @@ function KakaoResultList() {
             <FlexWrapAlert>
               <AlertNoGroup>
                 전송내역이 없습니다.
-                <AlertBox>알림톡 전송하러 가기</AlertBox>
+                <AlertBox onClick={() => navigate('/groupManageList')}>
+                  알림톡 전송하러 가기
+                </AlertBox>
               </AlertNoGroup>
             </FlexWrapAlert>
           ) : null}
@@ -234,6 +237,7 @@ function KakaoResultList() {
 const AlertBox = styled.div`
   padding: 15px;
   border: 2px solid #159a9c;
+  cursor: pointer;
   color: #159a9c;
 `;
 const FlexWrapTable = styled.div`
@@ -253,6 +257,7 @@ const AlertNoGroup = styled.div`
   height: 100%;
   margin-top: 15px;
   align-items: center;
+  gap: 30px;
   justify-content: center;
 `;
 export const FlexWrapResult = styled.div`

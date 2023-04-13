@@ -37,9 +37,8 @@ function UploadPage() {
   const [groupName, onChangeGroupName] = useInput();
   const [descName, onChangeDescName] = useInput();
   const [isClUpload, setClUpload] = useState(false);
-  const [isTmpId, setTmpId] = useState<string>();
   const [isGroupIdObj, setGroupIdObj] = useState('');
-  const [isTemplatesList, setTemplatesList] = useState<any>([]);
+  // const [isTemplatesList, setTemplatesList] = useState<any>([]);
   const [isReqData, setReqData] = useState([]);
   const [isClientId, setClientId] = useState([]);
   const [isExcelName, setExcelName] = useState<string>();
@@ -203,8 +202,7 @@ function UploadPage() {
           },
         })
         .then((res) => {
-          setTemplatesList(res.data.data);
-          setTmpId(res.data.data[0].talkTemplateId);
+          // setTemplatesList(res.data.data);
           setReqData(JSON.parse(res.data.data[0].reqData));
         });
     } catch (error) {
@@ -237,7 +235,6 @@ function UploadPage() {
     //템플릿 필요한데이터를 [reqData] 키값으로 두고
     isData.map((el: any) =>
       data.push({
-        talkTemplateId: isTmpId,
         clientName: `${el.이름}`,
         contact: `${el.전화번호.replace(/-/gi, '')}`,
         clientEmail: `${el.이메일}`,
@@ -428,15 +425,14 @@ function UploadPage() {
     fetchTemplateList();
   }, [getGroupData]);
 
-  useEffect(() => {
-    if (currentValue !== null) {
-      const data = isTemplatesList.filter(
-        (el: any) => el.talkTemplateName === currentValue
-      );
-      setTmpId(data[0].talkTemplateId);
-      setReqData(JSON.parse(data[0].reqData));
-    }
-  }, [currentValue]);
+  // useEffect(() => {
+  //   if (currentValue !== null) {
+  //     const data = isTemplatesList.filter(
+  //       (el: any) => el.talkTemplateName === currentValue
+  //     );
+  //     setReqData(JSON.parse(data[0].reqData));
+  //   }
+  // }, [currentValue]);
   // console.log('csv넣은대상', isData)
   // console.log('취소된대상:', checkedList)
   // console.log(
@@ -475,7 +471,7 @@ function UploadPage() {
             </TemplateWrap>
             {/* 드롭다운 */}
             <TemplateWrap>
-              <select
+              {/* <select
                 name=""
                 id=""
                 onChange={(e) => handleOnChangeSelectValue(e)}
@@ -486,7 +482,7 @@ function UploadPage() {
                       {el.talkTemplateName}
                     </option>
                   ))}
-              </select>
+              </select> */}
             </TemplateWrap>
             <DecoText>파일등록</DecoText>
             {/* 테이블 */}

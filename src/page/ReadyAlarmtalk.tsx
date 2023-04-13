@@ -35,6 +35,7 @@ function ReadyAlarmtalk() {
       //   )
       // );
       // .filter((el: any) => el !== 'talkContentId');
+      console.log(res.data.data);
       const newData = res.data.data
         .map((el: any) => Object.assign(el.client, el.talkContent))
         .map((item: any) => {
@@ -44,6 +45,7 @@ function ReadyAlarmtalk() {
             talkTemplateId,
             groupId,
             createdAt,
+            clientId,
             ...rest
           } = item;
           return rest;
@@ -70,23 +72,24 @@ function ReadyAlarmtalk() {
     }
   }, [mutate]);
   const transData = {
+    organizationName: '회사명',
+    orderNumber: '주문번호',
+    region: '구/면',
+    regionDetail: '동/리',
+    deliveryDate: '월일',
+    paymentPrice: '결제금액',
+    deliveryCompany: '택배회사명',
+    deliveryTime: '택배배송시간',
+    deliveryNumber: '송장번호',
+    customerName: '고객명',
+    useLink: '사용법링크',
     clientEmail: '이메일',
     contact: '연락처',
     clientId: 'ID',
     clientName: '이름',
     createdAt: '생성일',
-    customerName: '고객명',
-    deliveryCompany: '택배사',
-    deliveryDate: '배송일',
-    deliveryTime: '배송일자',
-    deliveryNumber: '송장번호',
     groupId: '그룹ID',
     groupName: '그룹이름',
-    orderNumber: '주문번호',
-    organizationName: '회사명',
-    paymentPrice: '결제금액',
-    region: '구/면',
-    regionDetail: '동/리',
     talkContentId: '알림톡컨텐츠ID',
     talkTemplateId: '템플릿ID',
   } as any;

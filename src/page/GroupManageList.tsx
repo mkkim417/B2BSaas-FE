@@ -162,7 +162,7 @@ function GroupManageList() {
     () => getAllClientList(currentPage),
     {
       onSuccess: (response) => {
-        console.log('고객리스트useQuery', response.data.clients);
+        // console.log('고객리스트useQuery', response.data.clients);
         setCheckedArr([]);
         // setIsClientState(true);
         setAllclients(response.data.clientCount);
@@ -170,14 +170,14 @@ function GroupManageList() {
         setUserList(response.data.clients);
       },
       onError: (error) => {
-        console.log(error);
+        console.log('error', error);
       },
     }
   );
 
   // 유저리스트 useEffect
   useEffect(() => {
-    console.log(isClientState)
+    // console.log(isClientState)
     if (isClientState === true) {
       // console.log(userList)
       // getAllClientList(currentPage)
@@ -525,7 +525,13 @@ function GroupManageList() {
           </GroupContentBox>
           <ButtonBox>
             <GroupButton onClick={clickGroupCreateModal}>그룹 추가</GroupButton>
-            <GroupButton onClick={clickGroupDelete}>그룹 삭제</GroupButton>
+            <GroupButton onClick={() => {
+              if(isClientState=== true) {
+                alert('전체 고객리스트는 삭제할 수 없습니다.')
+              } else if(isClientState === false) {
+                clickGroupDelete()
+              }
+            }}>그룹 삭제</GroupButton>
           </ButtonBox>
         </GroupContainer>
         {/* 여기부터는 클라이언트 리스트 공간 */}

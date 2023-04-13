@@ -504,7 +504,7 @@ function GroupManageList() {
                       setOpen(false);
                       setIsEditOpen(false);
                       setIsCopyOpen(false);
-                      setIsMoveOpen(false);
+                      setIsMoveOpen(false)
                       getClientInGroup(
                         item.groupId,
                         item.groupName,
@@ -1020,6 +1020,7 @@ const ButtonContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  /* padding-right: 100px; */
   /* background-color: pink; */
 `;
 const ButtonGap = styled.div`

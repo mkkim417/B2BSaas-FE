@@ -719,6 +719,7 @@ export const DecoText = styled.div`
 const LabelWrap = styled.div`
   width: 180px;
   height: 50px;
+  background-color: #fff;
   display: flex;
   cursor: pointer;
   text-align: center;

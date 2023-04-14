@@ -177,9 +177,7 @@ function GroupManageList() {
 
   // 유저리스트 useEffect
   useEffect(() => {
-    
     // console.log(isClientState)
-
     if (isClientState === true) {
       // console.log(userList)
       // getAllClientList(currentPage)
@@ -530,13 +528,17 @@ function GroupManageList() {
           </GroupContentBox>
           <ButtonBox>
             <GroupButton onClick={clickGroupCreateModal}>그룹 추가</GroupButton>
-            <GroupButton onClick={() => {
-              if(isClientState=== true) {
-                alert('전체 고객리스트는 삭제할 수 없습니다.')
-              } else if(isClientState === false) {
-                clickGroupDelete()
-              }
-            }}>그룹 삭제</GroupButton>
+            <GroupButton
+              onClick={() => {
+                if (isClientState === true) {
+                  alert('전체 고객리스트는 삭제할 수 없습니다.');
+                } else if (isClientState === false) {
+                  clickGroupDelete();
+                }
+              }}
+            >
+              그룹 삭제
+            </GroupButton>
           </ButtonBox>
         </GroupContainer>
         {/* 여기부터는 클라이언트 리스트 공간 */}
@@ -1029,7 +1031,7 @@ const ButtonBox = styled.div`
   /* background-color: #bb95dd; */
 `;
 const ButtonContainer = styled.div`
-  min-width: 1200px;
+  max-width: 1200px;
   height: 8%;
   display: flex;
   align-items: center;
@@ -1113,7 +1115,7 @@ const NameBox = styled.div`
   font-size: 22px;
   color: #333333;
   font-weight: 700;
-  background: linear-gradient(to top, #36fead 40%, transparent 40%);
+  /* background: linear-gradient(to top, #36fead 40%, transparent 40%); */
   font-family: 'TheJamsil5Bold';
 `;
 const DescriptBox = styled.div`

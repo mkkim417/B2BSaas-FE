@@ -30,10 +30,10 @@ const TopNav = () => {
                 <InLi active={statistics ? true : false}>
                   {statistics ? (
                     <>
-                      <ListIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
+                      <ListIcon width={'20px'} heigth={'20px'} fill={'#fff'} />
                       <Circle
                         animate={{
-                          backgroundColor: ['lime'],
+                          backgroundColor: ['#FBA94C'],
                         }}
                         layoutId="circle"
                       />
@@ -41,8 +41,8 @@ const TopNav = () => {
                   ) : (
                     <>
                       <ListIcon
-                        width={'25px'}
-                        heigth={'25px'}
+                        width={'20px'}
+                        heigth={'20px'}
                         fill={'#002333'}
                       />
                     </>
@@ -56,10 +56,10 @@ const TopNav = () => {
                 <InLi active={readyalarmtalk ? true : false}>
                   {readyalarmtalk ? (
                     <>
-                      <KakaoIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
+                      <KakaoIcon width={'20px'} heigth={'20px'} fill={'#fff'} />
                       <Circle
                         animate={{
-                          backgroundColor: ['lime'],
+                          backgroundColor: ['#FBA94C'],
                         }}
                         layoutId="circle"
                       />
@@ -67,8 +67,8 @@ const TopNav = () => {
                   ) : (
                     <>
                       <KakaoIcon
-                        width={'25px'}
-                        heigth={'25px'}
+                        width={'20px'}
+                        heigth={'20px'}
                         fill={'#002333'}
                       />
                     </>
@@ -83,13 +83,13 @@ const TopNav = () => {
                   {kakaoresultlist ? (
                     <>
                       <ListResultIcon
-                        width={'25px'}
-                        heigth={'25px'}
+                        width={'20px'}
+                        heigth={'20px'}
                         fill={'#fff'}
                       />
                       <Circle
                         animate={{
-                          backgroundColor: ['lime'],
+                          backgroundColor: ['#FBA94C'],
                         }}
                         layoutId="circle"
                       />
@@ -97,8 +97,8 @@ const TopNav = () => {
                   ) : (
                     <>
                       <ListResultIcon
-                        width={'25px'}
-                        heigth={'25px'}
+                        width={'20px'}
+                        heigth={'20px'}
                         fill={'#002333'}
                       />
                     </>
@@ -112,10 +112,10 @@ const TopNav = () => {
                 <InLi active={groupManageList ? true : false}>
                   {groupManageList ? (
                     <>
-                      <ListIcon width={'25px'} heigth={'25px'} fill={'#fff'} />
+                      <ListIcon width={'20px'} heigth={'20px'} fill={'#fff'} />
                       <Circle
                         animate={{
-                          backgroundColor: ['lime'],
+                          backgroundColor: ['#FBA94C'],
                         }}
                         layoutId="circle"
                       />
@@ -123,8 +123,8 @@ const TopNav = () => {
                   ) : (
                     <>
                       <ListIcon
-                        width={'25px'}
-                        heigth={'25px'}
+                        width={'20px'}
+                        heigth={'20px'}
                         fill={'#002333'}
                       />
                     </>
@@ -139,13 +139,13 @@ const TopNav = () => {
                   {clientRegistration ? (
                     <>
                       <CustomerAddIcon
-                        width={'25px'}
-                        heigth={'25px'}
+                        width={'20px'}
+                        heigth={'20px'}
                         fill={'#fff'}
                       />
                       <Circle
                         animate={{
-                          backgroundColor: ['lime'],
+                          backgroundColor: ['#FBA94C'],
                         }}
                         layoutId="circle"
                       />
@@ -153,8 +153,8 @@ const TopNav = () => {
                   ) : (
                     <>
                       <CustomerAddIcon
-                        width={'25px'}
-                        heigth={'25px'}
+                        width={'20px'}
+                        heigth={'20px'}
                         fill={'#002333'}
                       />
                     </>
@@ -386,6 +386,7 @@ const Wrapper = styled.div`
   width: 180px;
   box-shadow: 0px 0px 6px #bdbdbd;
   height: 100vh;
+  background-color: white;
   border-right: 1px;
   position: fixed;
   top: 0%;

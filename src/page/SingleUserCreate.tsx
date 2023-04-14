@@ -114,9 +114,9 @@ function SingleUserCreate() {
       <ContentContainer onSubmit={submitHandler}>
         <div>
           <BigText>단건생성</BigText>
-          <div>
+          <SmallText>
             동일한 성함, 연락처, 이메일은 그룹당 1명씩만 등록 가능합니다.
-          </div>
+          </SmallText>
         </div>
         <RowContatiner>
           <NameContainer>성함</NameContainer>
@@ -124,7 +124,7 @@ function SingleUserCreate() {
             name="clientName"
             type="text"
             value={inputData.clientName}
-            placeholder="성함"
+            placeholder="성함을 입력해주세요."
             onChange={onInputChange}
           />
         </RowContatiner>
@@ -134,7 +134,7 @@ function SingleUserCreate() {
             name="clientContact"
             type="text"
             value={inputData.clientContact}
-            placeholder="연락처"
+            placeholder="고객의연락처를 입력해주세요."
             onChange={onInputChange}
           />
         </RowContatiner>
@@ -144,7 +144,7 @@ function SingleUserCreate() {
             name="clientEmail"
             type="text"
             value={inputData.clientEmail}
-            placeholder="이메일"
+            placeholder="고객의이메일를 입력해주세요."
             onChange={onInputChange}
           />
         </RowContatiner>
@@ -171,9 +171,16 @@ function SingleUserCreate() {
   );
 }
 
+const SmallText = styled.div`
+  color: #002333;
+  font-weight: normal;
+  margin: 20px 0px 50px;
+`;
 const BigText = styled.div`
   font-size: 25px;
   font-weight: bold;
+
+  color: #002333;
 `;
 const Container = styled.div`
   display: flex;
@@ -187,18 +194,18 @@ const ContentContainer = styled.form`
   /* min-width: 450px; */
   height: 40%;
   padding: 48px;
-  width: 500px;
-  height: 500px;
+  width: 600px;
+  height: auto;
   /* margin: 100px 300px; */
   background-color: #fff;
 `;
 
 const RowContatiner = styled.div`
   width: 100%;
-  height: 25%;
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
   gap: 10px;
   /* background-color: beige; */
 `;
@@ -206,23 +213,23 @@ const NameContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 700;
   color: #000;
   font-family: 'TheJamsil5Bold';
-  width: 20%;
   height: 40px;
   /* border: 1px solid #bdbdbd; */
 `;
 const InputContainer = styled.input`
   display: flex;
   height: 55px;
-  border-radius: 10px;
-  border: none;
-  width: 80%;
+  width: 100%;
   padding-left: 15px;
   border: 1px solid #bdbdbd;
   font-family: 'TheJamsil5Bold';
+  :focus {
+    outline: auto;
+  }
 `;
 const ButtonContainer = styled.div`
   width: 100%;
@@ -256,16 +263,16 @@ const ButtonBox = styled.button`
   font-size: 14px;
   height: 40px;
   width: 120px;
-  border-radius: 8px;
   :hover {
-    background-color: #e6f8f0;
-    color: #14b869;
+    background-color: white;
+    border: 1px solid black;
+    color: black;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
   font-family: 'TheJamsil5Bold';
-  background-color: #14b869;
+  background-color: #159a9c;
   font-size: 14px;
 `;
 

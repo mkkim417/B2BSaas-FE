@@ -12,12 +12,19 @@ function ClientRegistration() {
       exit={{ opacity: 0 }}
     >
       <Wrapper>
+        <Title>고객등록</Title>
         <ClientHeader />
         <SingleUserCreate />
       </Wrapper>
     </motion.div>
   );
 }
+const Title = styled.div`
+  color: #002333;
+  font-weight: bold;
+  font-size: 25px;
+  margin-bottom: 30px;
+`;
 
 export const Container = styled.div`
   display: flex;

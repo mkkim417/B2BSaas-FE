@@ -23,6 +23,9 @@ import { getCookie } from '../util/cookie';
 import GroupDeleteModal from '../components/modal/GroupDeleteModal';
 import { PaginationBox1 } from '../components/PaginationStyled';
 import UserInGroupCreateModal from '../components/modal/UserInGroupCreateModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+
 
 function GroupManageList() {
   // hook 변수 모음들
@@ -475,418 +478,454 @@ function GroupManageList() {
   };
   return (
     <Container>
-      <ContentContainer>
-        {/* 그룹리스트 공간 */}
-        <GroupContainer>
-          <GroupContentBox>
-            <GroupContentItem
-              value="client"
-              className={'btn' + ('client' == clickActive ? 'Active' : '')}
-              onClick={(e: any) => {
-                refetch();
-                setIsClientState(true);
-                setCurrentPage(1);
-                toogleActive(e);
-                setOpen(false);
-                setGroupName('전체 고객리스트');
-                setGroupDescription('');
-              }}
-              ref={allUserRef}
-            >
-              전체 고객리스트({isAllclients})
-            </GroupContentItem>
-            {groupData?.data.map((item: any) => {
-              return (
-                <div key={item.groupId}>
-                  <GroupContentItem
-                    value={item.groupId}
-                    className={
-                      'btn' + (item.groupId == clickActive ? 'Active' : '')
-                    }
-                    onClick={(e: any) => {
-                      setOpen(false);
-                      setIsEditOpen(false);
-                      setIsCopyOpen(false);
-                      setIsMoveOpen(false);
-                      setIsClientState(false);
-                      getClientInGroup(
-                        item.groupId,
-                        item.groupName,
-                        item.groupDescription,
-                        1
-                      );
-                      setCurrentPage1(1);
-                      setDeleteGroup(item);
-                      toogleActive(e);
-                    }}
-                  >
-                    {item.groupName}({item.clientCount})
-                  </GroupContentItem>
-                </div>
-              );
-            })}
-          </GroupContentBox>
-          <ButtonBox>
-            <GroupButton onClick={clickGroupCreateModal}>그룹 추가</GroupButton>
-            <GroupButton
-              onClick={() => {
-                if (isClientState === true) {
-                  alert('전체 고객리스트는 삭제할 수 없습니다.');
-                } else if (isClientState === false) {
-                  clickGroupDelete();
-                }
-              }}
-            >
-              그룹 삭제
-            </GroupButton>
-          </ButtonBox>
-        </GroupContainer>
-        {/* 여기부터는 클라이언트 리스트 공간 */}
-        <ClientContainer>
+      <TotalContainer>
+        <TitleContainer>
           <ClientHeaderBox>
             <NameBox>{groupName}</NameBox>
-            {/* <TextArea defaultValue={groupName} /> */}
-            {/* <NameBox>{checkedArr.length}</NameBox> */}
-          </ClientHeaderBox>
-          <ClientHeaderRow>
             <DescriptBox>{groupDescription}</DescriptBox>
-            {isClientState ? null : (
-              <GroupClickButton onClick={readyAlarmTalk}>
-                알림톡전송
-              </GroupClickButton>
-            )}
-          </ClientHeaderRow>
-          <ButtonContainer>
-            {isClientState ? (
-              <>
-                <div style={{ display: 'flex', gap: '7px' }}>
-                  {isOpen && isOpen ? (
-                    <GroupClickButton
-                      onClick={() => {
+          </ClientHeaderBox>
+          { isClientState ? (
+            <SearchContainer>
+            <FontAwesomeIcon icon={faMagnifyingGlass} style={{color: "#a4a5a8",}} />
+            <SearchInput
+                    placeholder="Search in Total"
+                    type="client search"
+                    onChange={(e: any) => {
+                      setSearchKeyword(e.target.value);
+                      clientSearchTextChange(e.target.value);
+                    }}
+                  />
+            </SearchContainer>
+          ) : (
+            <SearchContainer>
+            <FontAwesomeIcon icon={faMagnifyingGlass} style={{color: "#a4a5a8",}} />
+            <SearchInput
+                    placeholder="Search in Group"
+                    type="search"
+                    onChange={(e: any) => {
+                      setGroupSearchKeyword(e.target.value);
+                    }}
+                  />
+            </SearchContainer>
+          )}
+        </TitleContainer>
+        <ContentContainer>
+        {/* 그룹리스트 공간 */}
+          <GroupContainer>
+            <GroupContentBox>
+              <GroupContentItem
+                value="client"
+                className={'btn' + ('client' == clickActive ? 'Active' : '')}
+                onClick={(e: any) => {
+                  refetch();
+                  setIsClientState(true);
+                  setCurrentPage(1);
+                  toogleActive(e);
+                  setOpen(false);
+                  setGroupName('전체 고객리스트');
+                  setGroupDescription('');
+                }}
+                ref={allUserRef}
+              >
+                <CircleFont 
+                    className={'circle' + ('client' == clickActive ? 'Active' : '')}>
+                    {isAllclients}</CircleFont>
+                전체 고객리스트
+              </GroupContentItem>
+              {groupData?.data.map((item: any) => {
+                return (
+                  <div key={item.groupId}>
+                    
+                    <GroupContentItem
+                      value={item.groupId}
+                      className={
+                        'btn' + (item.groupId == clickActive ? 'Active' : '')
+                      }
+                      onClick={(e: any) => {
+                        setOpen(false);
+                        setIsEditOpen(false);
+                        setIsCopyOpen(false);
+                        setIsMoveOpen(false);
+                        setIsClientState(false);
+                        getClientInGroup(
+                          item.groupId,
+                          item.groupName,
+                          item.groupDescription,
+                          1
+                        );
+                        setCurrentPage1(1);
+                        setDeleteGroup(item);
+                        toogleActive(e);
+                      }}
+                    >
+                      <CircleFont 
+                        className={'circle' + (item.groupId == clickActive ? 'Active' : '')}>
+                        {item.clientCount}</CircleFont>
+                      {item.groupName}
+                    </GroupContentItem>
+                  </div>
+                );
+              })}
+            </GroupContentBox>
+            <ButtonBox>
+              <PrimaryButton onClick={clickGroupCreateModal}>그룹 추가</PrimaryButton>
+              <PrimaryButton
+                onClick={() => {
+                  if (isClientState === true) {
+                    alert('전체 고객리스트는 삭제할 수 없습니다.');
+                  } else if (isClientState === false) {
+                    clickGroupDelete();
+                  }
+                }}
+              >
+                그룹 삭제
+              </PrimaryButton>
+            </ButtonBox>
+          </GroupContainer>
+        {/* 여기부터는 클라이언트 리스트 공간 */}
+          <ClientContainer>
+            <ButtonContainer>
+              {isClientState ? (
+                <>
+                  <div style={{ display: 'flex', gap: '7px' }}>
+                    {isOpen && isOpen ? (
+                      <GroupClickButton
+                        onClick={() => {
+                          if (checkedArr.length > 0) {
+                            clickUserDeleteModal();
+                          } else if (checkedArr.length === 0) {
+                            alert('1개 이상을 체크해주세요.');
+                          }
+                        }}
+                      >
+                        고객정보 삭제
+                      </GroupClickButton>
+                    ) : null}
+                    {!isOpen ? (
+                      <PrimaryButton
+                        onClick={() => setOpen((prev) => !prev) as any}
+                      >
+                        선택삭제
+                      </PrimaryButton>
+                    ) : (
+                      <PrimaryButton
+                        onClick={() => {
+                          setOpen((prev) => !prev) as any;
+                          setCheckedArr([]);
+                        }}
+                      >
+                        선택취소
+                      </PrimaryButton>
+                    )}
+                    {isEditOpen && isEditOpen ? (
+                      <GroupClickButton onClick={() => userEditHandler()}>
+                        고객정보 수정
+                      </GroupClickButton>
+                    ) : null}
+                    {!isEditOpen ? (
+                      <PrimaryButton
+                        onClick={() => setIsEditOpen((prev) => !prev) as any}
+                      >
+                        선택수정
+                      </PrimaryButton>
+                    ) : (
+                      <PrimaryButton
+                        onClick={() => {
+                          setIsEditOpen((prev) => !prev) as any;
+                          setCheckedArr([]);
+                        }}
+                      >
+                        수정취소
+                      </PrimaryButton>
+                    )}
+                  </div>
+                  {/* <ClientButton onClick={() => userEditHandler()}>
+                    고객 정보 수정
+                  </ClientButton> */}
+                  {/* <ClientButton onClick={() => clickUserDeleteModal()}>
+                    고객리스트에서 삭제
+                  </ClientButton> */}
+                </>
+              ) : (
+                <>
+                  <div>
+                    <PrimaryButton
+                      type="button"
+                      onClick={() => clickGroupUserCreateModal()}
+                    >
+                      고객 등록
+                    </PrimaryButton>
+                    {/* <GroupButton onClick={() => navigate('/uploadpage')}>
+                      고객 등록
+                    </GroupButton> */}
+                    {isOpen && isOpen ? (
+                      <GroupClickButton
+                        onClick={() => {
+                          if (checkedArr.length > 0) {
+                            clickGroupUserDeleteModal();
+                          } else if (checkedArr.length === 0) {
+                            alert('1개 이상을 체크해주세요.');
+                          }
+                        }}
+                      >
+                        삭제
+                      </GroupClickButton>
+                    ) : null}
+                    {!isOpen ? (
+                      <PrimaryButton
+                        onClick={() => setOpen((prev) => !prev) as any}
+                      >
+                        그룹내삭제
+                      </PrimaryButton>
+                    ) : (
+                      <PrimaryButton
+                        onClick={() => {
+                          setOpen((prev) => !prev) as any;
+                          setCheckedArr([]);
+                        }}
+                      >
+                        삭제취소
+                      </PrimaryButton>
+                    )}
+                    {isCopyOpen && isCopyOpen ? (
+                      <GroupClickButton onClick={() => {
                         if (checkedArr.length > 0) {
-                          clickUserDeleteModal();
+                          clickUserCopyModal();
                         } else if (checkedArr.length === 0) {
                           alert('1개 이상을 체크해주세요.');
                         }
-                      }}
-                    >
-                      고객정보 삭제
-                    </GroupClickButton>
-                  ) : null}
-                  {!isOpen ? (
-                    <GroupButton
-                      onClick={() => setOpen((prev) => !prev) as any}
-                    >
-                      선택삭제
-                    </GroupButton>
-                  ) : (
-                    <GroupButton
-                      onClick={() => {
-                        setOpen((prev) => !prev) as any;
-                        setCheckedArr([]);
-                      }}
-                    >
-                      선택취소
-                    </GroupButton>
-                  )}
-                  {isEditOpen && isEditOpen ? (
-                    <GroupClickButton onClick={() => userEditHandler()}>
-                      고객정보 수정
-                    </GroupClickButton>
-                  ) : null}
-                  {!isEditOpen ? (
-                    <GroupButton
-                      onClick={() => setIsEditOpen((prev) => !prev) as any}
-                    >
-                      선택수정
-                    </GroupButton>
-                  ) : (
-                    <GroupButton
-                      onClick={() => {
-                        setIsEditOpen((prev) => !prev) as any;
-                        setCheckedArr([]);
-                      }}
-                    >
-                      수정취소
-                    </GroupButton>
-                  )}
-                </div>
-                <SearchInput
-                  placeholder="Search"
-                  type="search"
-                  onChange={(e: any) => {
-                    setSearchKeyword(e.target.value);
-                    clientSearchTextChange(e.target.value);
-                  }}
-                />
-                {/* <ClientButton onClick={() => userEditHandler()}>
-                  고객 정보 수정
-                </ClientButton> */}
-                {/* <ClientButton onClick={() => clickUserDeleteModal()}>
-                  고객리스트에서 삭제
-                </ClientButton> */}
-              </>
-            ) : (
-              <>
-                <div>
-                  <GroupButton
-                    type="button"
-                    onClick={() => clickGroupUserCreateModal()}
-                  >
-                    고객 등록
-                  </GroupButton>
-                  {/* <GroupButton onClick={() => navigate('/uploadpage')}>
-                    고객 등록
+                      }}>
+                        복사
+                      </GroupClickButton>
+                    ) : null}
+                    {!isCopyOpen ? (
+                      <PrimaryButton
+                        onClick={() => setIsCopyOpen((prev) => !prev) as any}
+                      >
+                        선택복사
+                      </PrimaryButton>
+                    ) : (
+                      <PrimaryButton
+                        onClick={() => {
+                          setIsCopyOpen((prev) => !prev) as any;
+                          setCheckedArr([]);
+                        }}
+                      >
+                        복사취소
+                      </PrimaryButton>
+                    )}
+                    {/* <GroupButton onClick={() => clickUserCopyModal()}>
+                    복사
                   </GroupButton> */}
-                  {isOpen && isOpen ? (
-                    <GroupClickButton
-                      onClick={() => clickGroupUserDeleteModal()}
-                    >
-                      삭제
-                    </GroupClickButton>
+                    {isMoveOpen && isMoveOpen ? (
+                      <GroupClickButton onClick={() => {
+                        if (checkedArr.length > 0) {
+                          clickUserMoveModal();
+                        } else if (checkedArr.length === 0) {
+                          alert('1개 이상을 체크해주세요.');
+                        }
+                      }}>
+                        이동
+                      </GroupClickButton>
+                    ) : null}
+                    {!isMoveOpen ? (
+                      <PrimaryButton
+                        onClick={() => setIsMoveOpen((prev) => !prev) as any}
+                      >
+                        선택이동
+                      </PrimaryButton>
+                    ) : (
+                      <PrimaryButton
+                        onClick={() => {
+                          setIsMoveOpen((prev) => !prev) as any;
+                          setCheckedArr([]);
+                        }}
+                      >
+                        이동취소
+                      </PrimaryButton>
+                    )}
+                  </div>
+                  {/* <GroupButton onClick={() => clickUserMoveModal()}>
+                    이동
+                  </GroupButton> */}
+
+                  {/* {isOpen && isOpen ? (
+                    <GroupClickButton onClick={() => clickUserDelteModal()}>그룹에서해제</GroupClickButton>
                   ) : null}
                   {!isOpen ? (
-                    <GroupButton
-                      onClick={() => setOpen((prev) => !prev) as any}
-                    >
-                      그룹내삭제
+                    <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
+                      선택해제
                     </GroupButton>
                   ) : (
-                    <GroupButton
-                      onClick={() => {
-                        setOpen((prev) => !prev) as any;
-                        setCheckedArr([]);
-                      }}
-                    >
-                      삭제취소
+                    <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
+                      그룹해제취소
                     </GroupButton>
-                  )}
-                  {isCopyOpen && isCopyOpen ? (
-                    <GroupClickButton onClick={() => clickUserCopyModal()}>
-                      복사
-                    </GroupClickButton>
-                  ) : null}
-                  {!isCopyOpen ? (
-                    <GroupButton
-                      onClick={() => setIsCopyOpen((prev) => !prev) as any}
-                    >
-                      선택복사
-                    </GroupButton>
-                  ) : (
-                    <GroupButton
-                      onClick={() => {
-                        setIsCopyOpen((prev) => !prev) as any;
-                        setCheckedArr([]);
-                      }}
-                    >
-                      복사취소
-                    </GroupButton>
-                  )}
-                  {/* <GroupButton onClick={() => clickUserCopyModal()}>
-                  복사
-                </GroupButton> */}
-                  {isMoveOpen && isMoveOpen ? (
-                    <GroupClickButton onClick={() => clickUserMoveModal()}>
-                      이동
-                    </GroupClickButton>
-                  ) : null}
-                  {!isMoveOpen ? (
-                    <GroupButton
-                      onClick={() => setIsMoveOpen((prev) => !prev) as any}
-                    >
-                      선택이동
-                    </GroupButton>
-                  ) : (
-                    <GroupButton
-                      onClick={() => {
-                        setIsMoveOpen((prev) => !prev) as any;
-                        setCheckedArr([]);
-                      }}
-                    >
-                      이동취소
-                    </GroupButton>
-                  )}
-                </div>
-                <SearchInput
-                  placeholder="Search"
-                  type="search"
-                  onChange={(e: any) => {
-                    setGroupSearchKeyword(e.target.value);
-                  }}
-                />
-                {/* <GroupButton onClick={() => clickUserMoveModal()}>
-                  이동
-                </GroupButton> */}
-
-                {/* {isOpen && isOpen ? (
-                  <GroupClickButton onClick={() => clickUserDelteModal()}>그룹에서해제</GroupClickButton>
-                ) : null}
-                {!isOpen ? (
-                  <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
-                    선택해제
-                  </GroupButton>
-                ) : (
-                  <GroupButton onClick={() => setOpen((prev) => !prev) as any}>
-                    그룹해제취소
-                  </GroupButton>
-                )} */}
-                {/* <GroupClickButton onClick={() => clickUserDelteModal()}>
-                  그룹에서 삭제
-                </GroupClickButton> */}
-                {/* {!isOpen ? <ClientButton>고객 등록</ClientButton> : null}
-                {!isOpen ? <ClientButton>이동</ClientButton> : null}
-                {!isOpen ? <ClientButton>복사</ClientButton> : null} */}
-              </>
-            )}
-          </ButtonContainer>
-          <div
-            style={{
-              border: '1px solid #bdbdbd',
-              borderRadius: '15px',
-            }}
-          >
-            <ClientContentHeader>
-              <CardHeader>
-                <HeaderPercentage width="6%">선택</HeaderPercentage>
-                <HeaderPercentage width="23%">그룹명</HeaderPercentage>
-                <HeaderPercentage width="12%">이름</HeaderPercentage>
-                <HeaderPercentage width="22%">연락처</HeaderPercentage>
-                <HeaderPercentage width="37%">이메일</HeaderPercentage>
-              </CardHeader>
-            </ClientContentHeader>
-            <ClientContentBox>
-              {isClientState ? (
-                // userList.slice(indexOfFirstPost, indexOfLastPost) &&
-                userList.length > 0 ? (
-                  userList?.map((item: any) => {
-                    return (
-                      <CardHeader key={item.clientId}>
-                        {isOpen || isEditOpen ? (
-                          <Percentage width="6%">
-                            <CheckInputBox
-                              type="checkbox"
-                              checked={checkedArr.includes(item)}
-                              onChange={(e) => checkUserHandler(e, item)}
-                            />
-                          </Percentage>
-                        ) : (
-                          <Percentage width="6%"></Percentage>
-                        )}
-                        {/* <Percentage width="6%">
-                        <input
-                          type="checkbox"
-                          checked={checkedArr.includes(item)}
-                          onChange={(e: any) => checkUserHandler(e, item)}
-                        />
-                      </Percentage> */}
-                        <Percentage width="23%">{item.groupName}</Percentage>
-                        <Percentage width="12%">{item.clientName}</Percentage>
-                        <Percentage width="22%">
-                          {item.contact.replace(
-                            /^(\d{2,3})(\d{3,4})(\d{4})$/,
-                            `$1-$2-$3`
+                  )} */}
+                  {/* <GroupClickButton onClick={() => clickUserDelteModal()}>
+                    그룹에서 삭제
+                  </GroupClickButton> */}
+                  {/* {!isOpen ? <ClientButton>고객 등록</ClientButton> : null}
+                  {!isOpen ? <ClientButton>이동</ClientButton> : null}
+                  {!isOpen ? <ClientButton>복사</ClientButton> : null} */}
+                </>
+              )}
+            </ButtonContainer>
+            <div
+              style={{
+                border: '1px solid #bdbdbd',
+                borderRadius: '15px',
+              }}
+            >
+              <ClientContentHeader>
+                <CardHeader>
+                  <HeaderPercentage width="6%">선택</HeaderPercentage>
+                  <HeaderPercentage width="23%">그룹명</HeaderPercentage>
+                  <HeaderPercentage width="12%">이름</HeaderPercentage>
+                  <HeaderPercentage width="22%">연락처</HeaderPercentage>
+                  <HeaderPercentage width="37%">이메일</HeaderPercentage>
+                </CardHeader>
+              </ClientContentHeader>
+              <ClientContentBox>
+                {isClientState ? (
+                  // userList.slice(indexOfFirstPost, indexOfLastPost) &&
+                  userList.length > 0 ? (
+                    userList?.map((item: any) => {
+                      return (
+                        <CardHeader key={item.clientId}>
+                          {isOpen || isEditOpen ? (
+                            <Percentage width="6%">
+                              <CheckInputBox
+                                type="checkbox"
+                                checked={checkedArr.includes(item)}
+                                onChange={(e) => checkUserHandler(e, item)}
+                              />
+                            </Percentage>
+                          ) : (
+                            <Percentage width="6%"></Percentage>
                           )}
-                        </Percentage>
-                        <Percentage width="37%">{item.clientEmail}</Percentage>
-                      </CardHeader>
-                    );
-                  })
-                ) : (
-                  <CenterContent>더 이상 고객목록이 없습니다.</CenterContent>
-                )
-              ) : groupClient.length > 0 ? (
-                groupClient
-                  // .slice(indexOfFirstPost, indexOfLastPost)
-                  .map((item: any) => {
-                    return (
-                      <CardHeader key={item.clientId}>
-                        {isOpen || isCopyOpen || isMoveOpen ? (
-                          <Percentage width="6%">
-                            <CheckInputBox
-                              type="checkbox"
-                              checked={checkedArr.includes(item)}
-                              onChange={(e) => checkUserHandler(e, item)}
-                            />
-                          </Percentage>
-                        ) : (
-                          <Percentage width="6%"></Percentage>
-                        )}
-                        {/* <Percentage width="6%">
+                          {/* <Percentage width="6%">
                           <input
                             type="checkbox"
-                            checked={checkedArr.includes(item.clientId)}
-                            onChange={(e) => checkUserHandler(e, item.clientId)}
+                            checked={checkedArr.includes(item)}
+                            onChange={(e: any) => checkUserHandler(e, item)}
                           />
-                        <input
-                          type="checkbox"
-                          checked={checkedArr.includes(item)}
-                          onChange={(e: any) => checkUserHandler(e, item)}
-                        />
                         </Percentage> */}
-                        <Percentage width="23%">{item.groupName}</Percentage>
-                        <Percentage width="12%">{item.clientName}</Percentage>
-                        <Percentage width="22%">{item.contact}</Percentage>
-                        <Percentage width="37%">{item.clientEmail}</Percentage>
-                      </CardHeader>
-                    );
-                  })
-              ) : (
-                <CenterContent>
-                  추가된 고객 목록이 없습니다. 고객을 추가해주세요.
-                </CenterContent>
-              )}
-            </ClientContentBox>
-          </div>
-          <ClientPageBox>
-            <PaginationBox1>
-              {isClientState ? (
-                <>
-                  {searchKeyword.length > 0 ? (
-                    <Pagination
-                      activePage={currentPage}
-                      // itemsCountPerPage={15}
-                      pageRangeDisplayed={10}
-                      prevPageText={'<'}
-                      nextPageText={'>'}
-                      totalItemsCount={userList.length}
-                      onChange={setPage1}
-                    />
+                          <DataPercentage width="23%">{item.groupName}</DataPercentage>
+                          <DataPercentage width="12%">{item.clientName}</DataPercentage>
+                          <DataPercentage width="22%">
+                            {item.contact.replace(
+                              /^(\d{2,3})(\d{3,4})(\d{4})$/,
+                              `$1-$2-$3`
+                            )}
+                          </DataPercentage>
+                          <DataPercentage width="37%">{item.clientEmail}</DataPercentage>
+                        </CardHeader>
+                      );
+                    })
                   ) : (
-                    <Pagination
-                      activePage={currentPage}
-                      // itemsCountPerPage={15}
-                      pageRangeDisplayed={10}
-                      prevPageText={'<'}
-                      nextPageText={'>'}
-                      totalItemsCount={isAllclients}
-                      onChange={setPage1}
-                    />
-                  )}
-                </>
-              ) : (
-                // <Pagination
-                //   activePage={currentPage}
-                //   // itemsCountPerPage={15}
-                //   pageRangeDisplayed={10}
-                //   prevPageText={'<'}
-                //   nextPageText={'>'}
-                //   totalItemsCount={isAllclients}
-                //   onChange={setPage1}
-                // />
-                <Pagination
-                  activePage={currentPage1}
-                  // itemsCountPerPage={15}
-                  pageRangeDisplayed={10}
-                  prevPageText={'<'}
-                  nextPageText={'>'}
-                  totalItemsCount={isGroupAllClients}
-                  onChange={setPage2}
-                />
-              )}
-            </PaginationBox1>
-          </ClientPageBox>
-        </ClientContainer>
-      </ContentContainer>
+                    <CenterContent>더 이상 고객목록이 없습니다.</CenterContent>
+                  )
+                ) : groupClient.length > 0 ? (
+                  groupClient
+                    // .slice(indexOfFirstPost, indexOfLastPost)
+                    .map((item: any) => {
+                      return (
+                        <CardHeader key={item.clientId}>
+                          {isOpen || isCopyOpen || isMoveOpen ? (
+                            <Percentage width="6%">
+                              <CheckInputBox
+                                type="checkbox"
+                                checked={checkedArr.includes(item)}
+                                onChange={(e) => checkUserHandler(e, item)}
+                              />
+                            </Percentage>
+                          ) : (
+                            <Percentage width="6%"></Percentage>
+                          )}
+                          {/* <Percentage width="6%">
+                            <input
+                              type="checkbox"
+                              checked={checkedArr.includes(item.clientId)}
+                              onChange={(e) => checkUserHandler(e, item.clientId)}
+                            />
+                          <input
+                            type="checkbox"
+                            checked={checkedArr.includes(item)}
+                            onChange={(e: any) => checkUserHandler(e, item)}
+                          />
+                          </Percentage> */}
+                          <Percentage width="23%">{item.groupName}</Percentage>
+                          <Percentage width="12%">{item.clientName}</Percentage>
+                          <Percentage width="22%">{item.contact}</Percentage>
+                          <Percentage width="37%">{item.clientEmail}</Percentage>
+                        </CardHeader>
+                      );
+                    })
+                ) : (
+                  <CenterContent>
+                    추가된 고객 목록이 없습니다. 고객을 추가해주세요.
+                  </CenterContent>
+                )}
+              </ClientContentBox>
+            </div>
+            <ClientPageBox>
+              <PaginationBox1>
+                {isClientState ? (
+                  <>
+                    {searchKeyword.length > 0 ? (
+                      <Pagination
+                        activePage={currentPage}
+                        // itemsCountPerPage={15}
+                        pageRangeDisplayed={10}
+                        prevPageText={'<'}
+                        nextPageText={'>'}
+                        totalItemsCount={userList.length}
+                        onChange={setPage1}
+                      />
+                    ) : (
+                      <Pagination
+                        activePage={currentPage}
+                        // itemsCountPerPage={15}
+                        pageRangeDisplayed={10}
+                        prevPageText={'<'}
+                        nextPageText={'>'}
+                        totalItemsCount={isAllclients}
+                        onChange={setPage1}
+                      />
+                    )}
+                  </>
+                ) : (
+                  // <Pagination
+                  //   activePage={currentPage}
+                  //   // itemsCountPerPage={15}
+                  //   pageRangeDisplayed={10}
+                  //   prevPageText={'<'}
+                  //   nextPageText={'>'}
+                  //   totalItemsCount={isAllclients}
+                  //   onChange={setPage1}
+                  // />
+                  <Pagination
+                    activePage={currentPage1}
+                    // itemsCountPerPage={15}
+                    pageRangeDisplayed={10}
+                    prevPageText={'Prev'}
+                    nextPageText={'Next'}
+                    totalItemsCount={isGroupAllClients}
+                    onChange={setPage2}
+                  />
+                )}
+              </PaginationBox1>
+            </ClientPageBox>
+          </ClientContainer>
+        </ContentContainer>
+        <FootContainer>
+          {isClientState ? null : (
+              <AlarmTalkButton onClick={readyAlarmTalk}>
+                알림톡전송
+              </AlarmTalkButton>
+          )}
+        </FootContainer>
+      </TotalContainer>
       {/* 고객 수정 모달 */}
       {userEditModal && (
         <UserEditModal
@@ -964,6 +1003,7 @@ const Container = styled.div`
 export const HeaderContainer = styled.div`
   height: 60px;
   width: 100%;
+  font-family: 'NanumSquareNeo-Variable';
   display: flex;
   align-items: center;
   padding-left: 80px;
@@ -976,17 +1016,52 @@ export const HeaderContainer = styled.div`
 `;
 const ContentContainer = styled.div`
   max-width: 1800px;
-  height: 100%;
+  /* height: 100%; */
   width: 100%;
   display: flex;
   flex-direction: row;
-  margin: 0 auto;
-  margin-top: 100px;
+  /* margin: 0 auto; */
+  /* margin-top: 100px; */
   /* margin-bottom: 100px; */
-  /* background-color: cyan; */
+  /* background-color: pink; */
 `;
+
+const TotalContainer = styled.div`
+max-width: 1800px;
+height: 100vh;
+width: 100%;
+display: flex;
+flex-direction: column;
+margin: 0 auto;
+margin-top: 60px;
+/* margin-bottom: 100px; */
+/* background-color: cyan; */
+`;
+const TitleContainer = styled.div`
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 50px;
+  margin-right: 35px;
+`
+const FootContainer = styled.div`
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+  gap: 10px;
+  /* margin-bottom: 10px; */
+  margin-left: 50px;
+  margin-right: 35px;
+`
 const GroupContainer = styled.div`
-  height: 95%;
+  height: 600px;
   margin: 0px 10px;
   width: 250px;
   @media screen and (min-width: 1300px) {
@@ -996,23 +1071,25 @@ const GroupContainer = styled.div`
   /* background-color: bisque; */
 `;
 const GroupContentBox = styled.div`
-  height: 92%;
+  height: 540px;
   border: 1px solid #bdbdbd;
-  border-radius: 20px;
+  border-radius: 10px;
   overflow: auto;
   padding: 10px;
+  box-shadow: 0 2px 4px 0 #a4bde2;
   /* background-color: red; */
   /* margin: 0px 30px 0px 30px; */
 `;
 const GroupContentItem = styled.button`
   display: flex;
-  /* align-items: center; */
-  justify-content: center;
-  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  flex-direction: row;
   width: 90%;
   font-family: 'TheJamsil5Bold';
   margin: 10px auto;
   padding: 10px;
+  gap: 10px;
   border-radius: 8px;
   /* color: #4F4F4F; */
   font-weight: 700;
@@ -1020,8 +1097,18 @@ const GroupContentItem = styled.button`
   cursor: pointer;
 `;
 
+const CircleFont = styled.div`
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  font-size: 14px;
+  text-align: center;
+  line-height: 25px;
+  /* color: #B4BEC9;
+  background-color: #F3F4F8; */
+`
 const ButtonBox = styled.div`
-  height: 10%;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: start;
@@ -1031,13 +1118,14 @@ const ButtonBox = styled.div`
 `;
 const ButtonContainer = styled.div`
   max-width: 1200px;
-  height: 8%;
+  height: 45px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  margin-bottom: 5px;
   /* padding-right: 100px; */
-  /* background-color: pink; */
+  /* background-color: aliceblue; */
 `;
 const ButtonGap = styled.div`
   gap: 10px;
@@ -1059,6 +1147,17 @@ export const GroupButton = styled.button`
     color: #fff;
   }
 `;
+const SearchContainer = styled.div`
+  width: 280px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* padding-right: 10px; */
+  /* background-color: darkorchid; */
+`
+const SearchDiv = styled.div`
+  margin-left: 10px;
+`
 const SearchInput = styled.input`
   width: 250px;
   height: 40px;
@@ -1066,18 +1165,43 @@ const SearchInput = styled.input`
   border: 1px solid #bdbdbd;
   padding-left: 10px;
 `;
-
+const SearchIcon = styled.div`
+  
+`
 const GroupClickButton = styled.button`
   width: 110px;
   height: 40px;
-  color: white;
+  color: #002333;
   font-weight: 500;
   font-size: 16px;
-  border-radius: 8px;
+  border-radius: 5px;
   margin-right: 5px;
-  background-color: #14b869;
-  border: 1px solid #14b769;
+  font-family: 'TheJamsil5Bold';
+  background-color: white;
+  border: 1.5px solid #002333;
+  box-shadow: 0 2px 4px 0 #E6F8F0;
+  transition: 0.3s;
+  :hover {
+    color: #ffffff;
+    background-color: #002333;
+    border: 2px solid #002333;
+    
+  }
 `;
+
+const AlarmTalkButton = styled(GroupClickButton)`
+  width: 120px;
+  height: 50px;
+  color: white;
+  font-size: 20px;
+  background-color: #002333;
+  :hover {
+    color: #ffffff;
+    background-color: #FBA94C;
+    border: 2px solid #FBA94C;
+    
+  }
+`
 
 const GroupAlartButton = styled.button`
   width: 100px;
@@ -1092,18 +1216,18 @@ const ClientContainer = styled.div`
   max-width: 1200px;
   width: 100%;
   width: 75%;
-  height: 95%;
+  height: 600px;
   margin: 0px 30px 0px 0px;
   /* background-color: cornsilk; */
 `;
 const ClientHeaderBox = styled.div`
-  height: 5%;
+  /* height: 5%; */
+  width: 800px;
   display: flex;
   align-items: center;
   flex-direction: row;
-  gap: 10px;
+  gap: 20px;
   /* padding-bottom: 15px; */
-  /* border: 1px solid red; */
 `;
 const ClientHeaderRow = styled(ClientHeaderBox)`
   display: flex;
@@ -1111,35 +1235,43 @@ const ClientHeaderRow = styled(ClientHeaderBox)`
 `;
 const NameBox = styled.div`
   text-align: center;
-  font-size: 22px;
+  font-size: 30px;
   color: #333333;
-  font-weight: 700;
+  font-weight: 900;
   /* background: linear-gradient(to top, #36fead 40%, transparent 40%); */
   font-family: 'TheJamsil5Bold';
+  /* background-color: beige; */
 `;
 const DescriptBox = styled.div`
-  color: #4f4f4f;
-  font-size: 18px;
+  /* background-color: darkgray; */
+  color: #B4BEC9;
+  font-size: 20px;
+  font-weight: 800;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   /* font-weight: 500; */
 `;
 const ClientContentBox = styled.div`
-  height: 482px;
+  height: 450px;
   /* background-color: aliceblue; */
+  /* border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px; */
+  border: none;
   /* border: 1px solid blue; */
-  overflow: scroll;
+  overflow: auto;
+  box-shadow: 0 2px 4px 0 #a4bde2;
   /* margin: 0px 30px 0px 0px; */
+
 `;
 
 const ClientContentHeader = styled.div`
-  /* height: 5%; */
-  background-color: #159a9c;
+  height: 40px;
+  background-color: #48989B;
   color: white;
   font-weight: bold;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
+  /* border-top-left-radius: 8px;
+  border-top-right-radius: 8px; */
 `;
 const CardHeader = styled.div`
   width: 100%;
@@ -1149,15 +1281,19 @@ const CardHeader = styled.div`
   cursor: pointer;
   :hover {
     background-color: rgba(20, 183, 105, 0.05);
+    font-weight: 900;
   }
 `;
 const Percentage = styled.div<{ width: any }>`
-  height: 32px;
+  height: 45px;
   display: flex;
   justify-content: center;
   align-items: center;
   width: ${(props: any) => props.width};
 `;
+const DataPercentage = styled(Percentage)`
+  color: #002333;
+`
 
 const HeaderPercentage = styled(Percentage)<{ width: any }>`
   height: 40px;
@@ -1173,14 +1309,32 @@ const HeaderPercentage = styled(Percentage)<{ width: any }>`
 `;
 
 const ClientPageBox = styled.div`
-  height: 7%;
-  padding-top: 10px;
+  margin-top: 15px;
+  height: 45px;
+  /* padding-top: 10px; */
   /* border: 1px solid pink; */
+  /* background-color: gainsboro; */
 `;
-const ClientButton = styled.button`
-  width: 120px;
+
+const PrimaryButton = styled.button`
+  width: 110px;
   height: 40px;
-  border: 1px solid #bdbdbd;
+  color: #48989B;
+  margin-right: 5px;
+  font-weight: normal;
+  font-size: 16px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  font-family: 'TheJamsil5Bold';
+  border: 1.5px solid #48989B;
+  box-shadow: 0 2px 4px 0 #E6F8F0;
+  transition: 0.3s;
+  :hover {
+    /* background-color: #ebde9e; */
+    color: #ffffff;
+    background-color: #FBA94C;
+    border: 2px solid #FBA94C;
+  }
 `;
 const CenterContent = styled.div`
   width: 100%;

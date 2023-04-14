@@ -1,9 +1,18 @@
 .btn {
-  color: #4f4f4f;
+  color: #B4BEC9;
 }
 .btnActive {
-  color: #14b769;
-  background-color: rgba(20, 183, 105, 0.05);
+  color: #002333;
+  background-color: #F3F4F8;
+}
+.circle {
+  color: #B4BEC9;
+  background-color: #F3F4F8;
+}
+.circleActive {
+  color: #FBA94C;
+  background-color: white;
+  box-shadow: 1px 2px 2px 0px #FBA94C;
 }
 .App {
   text-align: center;

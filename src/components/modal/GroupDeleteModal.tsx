@@ -27,7 +27,8 @@ function GroupDeleteModal({ title, content, closeModal }: Props) {
         <ModalContainer>
           <ContentContainer>
             <TitleContainer>
-              <div>정말 삭제하시겠습니까?</div>
+            <TitleBox>그룹 삭제</TitleBox>
+            <SubTitleBox>해당 그룹 삭제시, 관련 발송내역도 모두 삭제됩니다.</SubTitleBox>
             </TitleContainer>
             <DataContainer>
               <div>
@@ -39,9 +40,6 @@ function GroupDeleteModal({ title, content, closeModal }: Props) {
                 <InputContainer value={content.clientCount} disabled />
               </div>
             </DataContainer>
-            <FootContainer>
-              <div>해당 그룹 삭제시, 관련 발송내역도 모두 삭제됩니다.</div>
-            </FootContainer>
           </ContentContainer>
           <ButtonContainer>
             {/* <ButtonBox>아니오</ButtonBox> */}
@@ -76,16 +74,16 @@ const ModalContainer = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 1rem;
+  /* border-radius: 1rem; */
   gap: 1rem;
-  padding: 2rem 2rem 2rem 2rem;
-  border: 1px solid var(--color-white);
+  padding: 3rem 2rem 2rem 2rem;
+  border: 2px solid #B4BEC9;
   background-color: white;
   position: absolute;
   left: 35%;
   top: 20%;
-  width: 40%;
-  height: 60%;
+  width: 550px;
+  height: 600px;
 `;
 
 const ContentContainer = styled.div`
@@ -109,17 +107,8 @@ const TitleContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  font-weight: 700;
+  gap: 10px;
   /* background-color: beige; */
-`;
-export const FootContainer = styled(TitleContainer)`
-  font-size: 18px;
-  font-weight: 500;
-  color: #209653;
-  /* background-color: #E6F8F0; */
-  border-radius: 10px;
-  font-style: italic;
 `;
 const DataHeader = styled.div`
   width: 100%;
@@ -140,30 +129,48 @@ const DataContainer = styled.div`
   height: 80%;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
-  gap: 50px;
+  gap: 30px;
   /* margin: 0px 500px 0px 500px; */
   padding: 0px 150px 0px 150px;
   /* overflow: scroll; */
   /* background-color: blueviolet; */
 `;
-const DataRow = styled.div`
+const InputBox = styled.div`
+  height: 28px;
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 10x;
 `;
-const InputBox = styled.div`
+const RequiredDiv = styled.div`
+  color: #FBA94C;
+  font-size: 24px;
+`
+
+const TitleBox = styled.div`
   /* height: 28px; */
-  font-weight: 500;
-  font-size: 20px;
-  margin-bottom: 5px;
+  font-weight: 900;
+  font-size: 36px;
 `;
+const SubTitleBox = styled.div`
+  /* font-weight: 900; */
+  font-size: 18px;
+`
 const InputContainer = styled.input`
-  width: 100%;
-  height: 35px;
-  font-size: 16px;
-  border: 1px solid #14b869;
-  border-radius: 10px;
+  width: 300px;
+  height: 40px;
+  padding-left: 10px;
+  background-color: #F3F4F8;
+  border: 1px solid #C7CCD2;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  :focus {
+    border: 2px solid #FBA94C;
+  }
 `;
 const ButtonContainer = styled.div`
   width: 100%;
@@ -176,19 +183,24 @@ const ButtonContainer = styled.div`
 `;
 const ButtonBox = styled.button`
   width: 100px;
-  /* border: 1px solid #14B869; */
-  border-radius: 10px;
-  /* background-color: yellowgreen; */
-  padding: 10px;
+  color: #0A2332;
+  border: 2px solid #0A2332;
+  /* border-radius: 10px; */
+  padding: 5px;
   font-size: 18px;
   :hover {
-    background-color: #e6f8f0;
-    color: #14b869;
+    background-color: #C1CBD6;
+    border: none;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #14b869;
-`;
+  background-color: #0A2332;
+  :hover {
+    color: white;
+    background-color: #FBA94C;
+    border: #FBA94C;
+  }
+`
 
 export default GroupDeleteModal;

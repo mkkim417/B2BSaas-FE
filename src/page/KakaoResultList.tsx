@@ -266,6 +266,7 @@ export const FlexWrapResult = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
+  padding-right: 30px;
 `;
 export const MapWrapper = styled.div`
   width: 100%;
@@ -333,9 +334,9 @@ export const Wrapper = styled.div`
   align-items: start;
   justify-content: start;
   flex-direction: column;
-  height: 100vh;
   margin: 0 auto;
   padding-top: 90px;
+  min-height: 100vh;
   padding-left: 210px;
   background: #f2f4f8;
   padding-right: 30px;

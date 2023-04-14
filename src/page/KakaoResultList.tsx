@@ -8,7 +8,7 @@ import { Group } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import Callander from '../asset/svg/Callander';
 import useDetectClose from '../hook/useDetectClose';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getCookie } from '../util/cookie';
 import { Button, Thead } from './UploadPage';
 import SelectBoxs from '../components/SelectBoxs';
@@ -22,6 +22,7 @@ function KakaoResultList() {
   const [indexOfLastPost, setIndexOfLastPost] = useState(0);
   const [indexOfFirstPost, setIndexOfFirstPost] = useState(0);
   const [currentPosts, setCurrentPosts] = useState(0);
+  const navigate = useNavigate();
   const dropDownRef = useRef();
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false);
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
@@ -109,7 +110,7 @@ function KakaoResultList() {
       exit={{ opacity: 0 }}
     >
       <Wrapper>
-        <H1>전송결과</H1>
+        <H1 marginBottom="30px">전송결과</H1>
         <FlexWrapResult>
           <FlexWrap>
             <GrayWrap>고객그룹</GrayWrap>
@@ -211,7 +212,9 @@ function KakaoResultList() {
             <FlexWrapAlert>
               <AlertNoGroup>
                 전송내역이 없습니다.
-                <AlertBox>알림톡 전송하러 가기</AlertBox>
+                <AlertBox onClick={() => navigate('/groupManageList')}>
+                  알림톡 전송하러 가기
+                </AlertBox>
               </AlertNoGroup>
             </FlexWrapAlert>
           ) : null}
@@ -234,9 +237,12 @@ function KakaoResultList() {
 const AlertBox = styled.div`
   padding: 15px;
   border: 2px solid #159a9c;
+  cursor: pointer;
   color: #159a9c;
 `;
-const FlexWrapTable = styled.div`
+export const FlexWrapTable = styled.div<{ marginBottom?: string }>`
+  margin-bottom: ${(props) =>
+    props.marginBottom ? props.marginBottom : 'inherit'};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -253,6 +259,7 @@ const AlertNoGroup = styled.div`
   height: 100%;
   margin-top: 15px;
   align-items: center;
+  gap: 30px;
   justify-content: center;
 `;
 export const FlexWrapResult = styled.div`
@@ -262,7 +269,7 @@ export const FlexWrapResult = styled.div`
 `;
 export const MapWrapper = styled.div`
   width: 100%;
-  min-height: 70vh;
+  min-height: 65vh;
   border-radius: 8px;
   margin: 15px auto;
   flex-direction: column;
@@ -304,6 +311,7 @@ const CallanderWrap = styled.div`
 export const Table = styled.table`
   width: 100%;
   border-collapse: separate;
+  background: #fff;
   border-spacing: 0px 10px;
 `;
 export const GrayWrap = styled.div`
@@ -329,16 +337,18 @@ export const Wrapper = styled.div`
   margin: 0 auto;
   padding-top: 90px;
   padding-left: 210px;
+  background: #f2f4f8;
   padding-right: 30px;
   /* padding-left: 80px; */
   /* @media screen and (min-width: 1200px) {
     padding-left: inherit;
   } */
 `;
-export const H1 = styled.div`
+export const H1 = styled.div<{ marginBottom?: string }>`
+  margin-bottom: ${(props) =>
+    props.marginBottom ? props.marginBottom : 'inherit'};
   font-size: 30px;
   font-weight: bold;
-  margin-bottom: 20px;
   text-align: left;
   color: #000;
   //background: linear-gradient(to top, #36fead 40%, transparent 40%);

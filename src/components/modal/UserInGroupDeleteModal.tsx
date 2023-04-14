@@ -121,7 +121,7 @@ const TitleContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 10px;
   /* background-color: beige; */
 `;
 const DataHeader = styled.div`

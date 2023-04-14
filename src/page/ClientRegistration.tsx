@@ -11,19 +11,40 @@ function ClientRegistration() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <Wrapper>
+      <Wrapper1>
         <Title>고객등록</Title>
         <ClientHeader />
         <SingleUserCreate />
-      </Wrapper>
+      </Wrapper1>
     </motion.div>
   );
 }
-const Title = styled.div`
+
+export const Wrapper1 = styled.div`
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0 auto;
+  padding-top: 60px;
+  padding-left: 180px;
+  background: #f2f4f8;
+  padding-right: 30px;
+  /* padding-left: 80px; */
+  /* @media screen and (min-width: 1200px) {
+    padding-left: inherit;
+  } */
+`;
+export const Title = styled.div`
   color: #002333;
   font-weight: bold;
-  font-size: 25px;
-  margin-bottom: 30px;
+  font-size: 30px;
+  font-weight: 800;
+  padding-left: 30px;
+  padding-top: 30px;
+  /* margin-bottom: 30px; */
+  /* background-color: red; */
 `;
 
 export const Container = styled.div`

@@ -65,7 +65,6 @@ function ReadyAlarmtalk() {
     if (location?.state?.ArrClientsIdsData) {
       mutate({
         groupId: params?.id,
-        clientIds: location?.state.ArrClientsIdsData,
       });
     } else {
       setNullComponent(true);
@@ -205,6 +204,7 @@ const NewButton = styled(Button)`
 `;
 const FlexWrapResultResize = styled(FlexWrapResult)`
   align-items: center;
+  flex-direction: column;
 `;
 export const BottomWrap = styled.div<{ ref?: any }>`
   width: 100%;

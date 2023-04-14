@@ -112,6 +112,12 @@ function SingleUserCreate() {
   return (
     <Container>
       <ContentContainer onSubmit={submitHandler}>
+        <div>
+          <BigText>단건생성</BigText>
+          <div>
+            동일한 성함, 연락처, 이메일은 그룹당 1명씩만 등록 가능합니다.
+          </div>
+        </div>
         <RowContatiner>
           <NameContainer>성함</NameContainer>
           <InputContainer
@@ -165,18 +171,26 @@ function SingleUserCreate() {
   );
 }
 
+const BigText = styled.div`
+  font-size: 25px;
+  font-weight: bold;
+`;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
   height: 100vh;
   align-items: center;
   justify-content: center;
 `;
 const ContentContainer = styled.form`
-  min-width: 450px;
+  /* min-width: 450px; */
   height: 40%;
-  margin: 100px 300px;
-  /* background-color: red; */
+  padding: 48px;
+  width: 500px;
+  height: 500px;
+  /* margin: 100px 300px; */
+  background-color: #fff;
 `;
 
 const RowContatiner = styled.div`

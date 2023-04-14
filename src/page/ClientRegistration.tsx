@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ClientHeader from '../components/ClientHeader';
 import SingleUserCreate from './SingleUserCreate';
 import { motion } from 'framer-motion';
+import { Wrapper } from './KakaoResultList';
 function ClientRegistration() {
   return (
     <motion.div
@@ -10,10 +11,10 @@ function ClientRegistration() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <Container>
+      <Wrapper>
         <ClientHeader />
         <SingleUserCreate />
-      </Container>
+      </Wrapper>
     </motion.div>
   );
 }

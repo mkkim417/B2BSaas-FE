@@ -14,6 +14,7 @@ import {
 import { getCookie } from '../util/cookie';
 import { Button, Thead } from './UploadPage';
 import { Link } from 'react-router-dom';
+import ArrowBack from '../asset/svg/ArrowBack';
 function KakaoDetailList() {
   const token = getCookie('userToken');
   const params = useParams();
@@ -38,25 +39,46 @@ function KakaoDetailList() {
   }, [KakaoDetail]);
   return (
     <Wrapper>
-      <H1>전송상세조회</H1>
+      <FlexWrapTable>
+        <span
+          style={{
+            width: '45px',
+            display: 'inline-block',
+            padding: '10px',
+            cursor: 'pointer',
+          }}
+          onClick={() => navigate(-1)}
+        >
+          <ArrowBack />
+        </span>
+        <H1>전송상세조회</H1>
+      </FlexWrapTable>
       <FlexWrap>
         <Halfdiv>
-          <GrayWrapHeidght>보낸날짜</GrayWrapHeidght>
-          <ContentDiv>{location?.state?.sendDate}</ContentDiv>
-        </Halfdiv>
-        <Halfdiv>
-          <GrayWrapHeidght>총성공률(%)</GrayWrapHeidght>
-          <ContentDiv>{location?.state?.success}%</ContentDiv>
-        </Halfdiv>
-      </FlexWrap>
-      <FlexWrap>
-        <Halfdiv>
-          <GrayWrapHeidght>그룹이름</GrayWrapHeidght>
-          <ContentDiv>{location?.state?.groupName}</ContentDiv>
-        </Halfdiv>
-        <Halfdiv>
-          <GrayWrapHeidght>발송상태</GrayWrapHeidght>
-          <ContentDiv>{location?.state?.sendState}</ContentDiv>
+          <GrayWrapHeidght>
+            <FlexWrapTable flexDirection="column">
+              <FlexText>보낸날짜</FlexText>
+              <ContentDiv>{location?.state?.sendDate}</ContentDiv>
+            </FlexWrapTable>
+          </GrayWrapHeidght>
+          <GrayWrapHeidght>
+            <FlexWrapTable flexDirection="column">
+              <FlexText>총성공률(%)</FlexText>
+              <ContentDiv>{location?.state?.success}%</ContentDiv>
+            </FlexWrapTable>
+          </GrayWrapHeidght>
+          <GrayWrapHeidght>
+            <FlexWrapTable flexDirection="column">
+              <FlexText>그룹이름</FlexText>
+              <ContentDiv>{location?.state?.groupName}</ContentDiv>
+            </FlexWrapTable>
+          </GrayWrapHeidght>
+          <GrayWrapHeidght>
+            <FlexWrapTable flexDirection="column">
+              <FlexText>발송상태</FlexText>
+              <ContentDiv>{location?.state?.sendState}</ContentDiv>
+            </FlexWrapTable>
+          </GrayWrapHeidght>
         </Halfdiv>
       </FlexWrap>
       <MapWrapper>
@@ -90,28 +112,31 @@ function KakaoDetailList() {
           </tbody>
         </Table>
       </MapWrapper>
-      <BtnWrap>
-        <Link
-          to={'/kakaoresultlist'}
-          state={{
-            selectedValue: location.state.selectedValue,
-          }}
-        >
-          <Button width="100px" padding="8px">
-            뒤로가기
-          </Button>
-        </Link>
-      </BtnWrap>
     </Wrapper>
   );
 }
-const BtnWrap = styled.div`
-  width: 100%;
+const FlexText = styled.div`
+  color: #bdbdbd;
+  font-size: 14px;
+`;
+const FlexWrapTable = styled.div<{
+  marginBottom?: string;
+  flexDirection?: string;
+}>`
+  margin-bottom: ${(props) =>
+    props.marginBottom ? props.marginBottom : 'inherit'};
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  flex-direction: ${(props) =>
+    props.flexDirection ? props.flexDirection : 'inhert'};
+  gap: 10px;
 `;
 const FlexWrap = styled.div`
   display: flex;
   height: 50px;
   width: 100%;
+  margin-top: 30px;
 `;
 const InitTd = styled(Td)`
   :nth-of-type(2) {
@@ -122,8 +147,13 @@ const ContentDiv = styled.div``;
 const Halfdiv = styled.div`
   display: flex;
   align-items: center;
-  width: 50%;
+  width: 100%;
 `;
-const GrayWrapHeidght = styled(GrayWrap)``;
+const GrayWrapHeidght = styled(GrayWrap)`
+  background: #fff;
+  padding: 15px;
+  justify-content: space-between;
+  width: 25%;
+`;
 
 export default KakaoDetailList;

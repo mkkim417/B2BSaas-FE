@@ -125,7 +125,7 @@ const ModalContainer = styled.form`
   background-color: white;
   position: absolute;
   left: 35%;
-  top: 20%;
+  top: 10%;
   width: 550px;
   height: 600px;
 `;

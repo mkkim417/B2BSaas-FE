@@ -75,73 +75,56 @@ const UserEditModal = ({
         <ModalContainer>
           <TitleContainer>
             <TitleBox>고객 정보 수정</TitleBox>
+            <SubTitleBox>빈칸없이 작성해주세요.</SubTitleBox>
           </TitleContainer>
 
           <DataContainer>
-            <InputBox>성함</InputBox>
+            <div>
+            <InputBox>
+              성함
+              <RequiredDiv>*</RequiredDiv>
+            </InputBox>
             <InputContainer
               name="clientName"
               type="text"
               value={data.clientName}
               onChange={onChangeHandler}
             />
-            <InputBox>연락처</InputBox>
+            </div>
+            <div>
+            <InputBox>
+              연락처
+              <RequiredDiv>*</RequiredDiv>
+            </InputBox>
             <InputContainer
               name="contact"
               value={data.contact}
               onChange={onChangeHandler}
             />
-            <InputBox>이메일</InputBox>
+            </div>
+            <div>
+            <InputBox>
+              이메일
+              <RequiredDiv>*</RequiredDiv>
+            </InputBox>
             <InputContainer
               name="clientEmail"
               type="text"
               value={data.clientEmail}
               onChange={onChangeHandler}
             />
+            </div>
           </DataContainer>
           <ButtonContainer>
             <ButtonBox onClick={closeModal}>취소</ButtonBox>
-            <ButtonBox onClick={(e) => submitHandler(e, closeModal)}>
+            <ConfirmButton onClick={(e) => submitHandler(e, closeModal)}>
               확인
-            </ButtonBox>
+            </ConfirmButton>
           </ButtonContainer>
         </ModalContainer>
       </ModalBackGround>
     </ModalWrap>
-    // <ModalWrap>
-    //   <ModalBackGround />
-    //   <ModalContainer>
-    //     <div>{clientName}</div>
-    //     <div>{clientContact}</div>
-    //     <InputContainer>
-    //       <div>
-    //         이름
-    //         <input
-    //           name="clientName"
-    //           type="text"
-    //           value={data.clientName}
-    //           placeholder="성명"
-    //           onChange={onChangeHandler}
-    //         />
-    //       </div>
-    //       <div>
-    //         연락처
-    //         <input
-    //           name="contact"
-    //           value={data.contact}
-    //           placeholder="연락처"
-    //           onChange={onChangeHandler}
-    //         />
-    //       </div>
-    //     </InputContainer>
-    //     <ButtonContainer>
-    //       <ButtonBox onClick={closeModal}>아니오</ButtonBox>
-    //       <ButtonBox onClick={(e) => submitHandler(e, closeModal)}>
-    //         네
-    //       </ButtonBox>
-    //     </ButtonContainer>
-    //   </ModalContainer>
-    // </ModalWrap>
+
   );
 };
 
@@ -167,16 +150,16 @@ const ModalContainer = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 1rem;
+  /* border-radius: 1rem; */
   gap: 1rem;
-  padding: 2rem 2rem 2rem 2rem;
-  border: 1px solid var(--color-white);
+  padding: 3rem 2rem 2rem 2rem;
+  border: 2px solid #B4BEC9;
   background-color: white;
   position: absolute;
   left: 35%;
-  top: 20%;
-  width: 40%;
-  height: 60%;
+  top: 10%;
+  width: 550px;
+  height: 600px;
 `;
 
 const ContentContainer = styled.div`
@@ -197,8 +180,10 @@ const TitleContainer = styled.div`
   width: 100%;
   height: 10%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   /* background-color: beige; */
 `;
 const DataHeader = styled.div`
@@ -220,31 +205,51 @@ const DataContainer = styled.div`
   height: 80%;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
-  gap: 10px;
+  margin: 0 auto;
+  gap: 30px;
+  /* padding-left: 50px; */
   /* margin: 0px 500px 0px 500px; */
   padding: 0px 150px 0px 150px;
   /* overflow: scroll; */
   /* background-color: blueviolet; */
 `;
 const InputBox = styled.div`
-  /* height: 28px; */
-  font-weight: 500;
-  font-size: 20px;
-  margin-bottom: 5px;
+  height: 28px;
+  display: flex;
+  flex-direction: row;
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 10x;
 `;
+const RequiredDiv = styled.div`
+  color: #FBA94C;
+  font-size: 24px;
+`
+
 const TitleBox = styled.div`
   /* height: 28px; */
   font-weight: 900;
-  font-size: 24px;
+  font-size: 36px;
 `;
+const SubTitleBox = styled.div`
+  /* font-weight: 900; */
+  font-size: 18px;
+`
 const InputContainer = styled.input`
-  width: 100%;
-  height: 35px;
-  border: 1px solid #14b869;
-  border-radius: 10px;
+  width: 300px;
+  height: 40px;
+  padding-left: 10px;
+  background-color: #F3F4F8;
+  border: 1px solid #C7CCD2;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  :focus {
+    border: 2px solid #FBA94C;
+  }
 `;
-
 const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
@@ -256,17 +261,23 @@ const ButtonContainer = styled.div`
 `;
 const ButtonBox = styled.button`
   width: 100px;
-  /* border: 1px solid #14B869; */
-  border-radius: 10px;
-  padding: 10px;
+  color: #0A2332;
+  border: 2px solid #0A2332;
+  /* border-radius: 10px; */
+  padding: 5px;
   font-size: 18px;
   :hover {
-    background-color: #e6f8f0;
-    color: #14b869;
+    background-color: #C1CBD6;
+    border: none;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #14b869;
-`;
+  background-color: #0A2332;
+  :hover {
+    color: white;
+    background-color: #FBA94C;
+    border: #FBA94C;
+  }
+`
 export default UserEditModal;

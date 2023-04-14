@@ -326,17 +326,6 @@ function Alarmtalk() {
               </>
             </LeftContents>
             <RightContents>
-              {/* <ContnetDataWrap>
-                <KakaoBox>
-                  <YellowWrap>
-                    {currentValue === null ? '택배번호 안내' : currentValue}
-                  </YellowWrap>
-                  <WhiteWrap
-                    id="view"
-                    dangerouslySetInnerHTML={{ __html: isViewData || '' }}
-                  ></WhiteWrap>
-                </KakaoBox>
-              </ContnetDataWrap> */}
               {/* 디자인 */}
               <div style={{ position: 'relative' }}>
                 <BoxWrap>
@@ -449,7 +438,9 @@ export const H1 = styled.h1`
   font-weight: bold;
   font-size: 25px;
 `;
-export const RightContents = styled.div``;
+export const RightContents = styled.div`
+  z-index: 1;
+`;
 const ButtonWrap = styled.div`
   display: flex;
   justify-content: space-between;
@@ -536,7 +527,6 @@ export const GroupButton = styled.button`
   font-size: 16px;
   border-radius: 8px;
   background-color: #ffffff;
-  font-family: 'TheJamsil5Bold';
   border: 1px solid #bdbdbd;
   transition: 0.2s;
   :hover {

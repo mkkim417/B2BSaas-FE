@@ -964,14 +964,13 @@ const Container = styled.div`
 export const HeaderContainer = styled.div`
   height: 60px;
   width: 100%;
-  font-family: 'TheJamsil5Bold';
   display: flex;
   align-items: center;
   padding-left: 80px;
   margin-top: 90px;
   /* margin-bottom: 20px; */
   /* padding-left: 30px; */
-  font-size: 34px;
+  font-size: 28px;
   font-weight: 900;
   /* background-color: crimson; */
 `;

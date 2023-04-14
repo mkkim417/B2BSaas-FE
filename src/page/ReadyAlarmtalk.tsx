@@ -204,6 +204,7 @@ const NewButton = styled(Button)`
 `;
 const FlexWrapResultResize = styled(FlexWrapResult)`
   align-items: center;
+  flex-direction: column;
 `;
 export const BottomWrap = styled.div<{ ref?: any }>`
   width: 100%;

@@ -4,6 +4,7 @@ import { useMutation } from 'react-query';
 import styled from 'styled-components';
 import { deleteClientData } from '../../axios/api';
 import { getCookie } from '../../util/cookie';
+import { SubTitleBox, TitleBox } from './GroupCreateModal';
 
 type Props = {
   title?: string;
@@ -54,7 +55,8 @@ function UserDeleteModal({ title, checkValue, closeModal }: Props) {
         <ModalContainer>
           <ContentContainer>
             <TitleContainer>
-              <div>{title}</div>
+              <TitleBox>고객정보 삭제</TitleBox>
+              <SubTitleBox>해당 고객을 삭제시, 관련 발송내역이 모두 삭제됩니다.</SubTitleBox>
             </TitleContainer>
             <DataHeader>
               <HeaderPercent width="20%">이름</HeaderPercent>
@@ -109,23 +111,23 @@ const ModalContainer = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 1rem;
-  gap: 0.5rem;
+  /* border-radius: 1rem; */
+  gap: 1rem;
   padding: 2rem 2rem 2rem 2rem;
-  border: 1px solid var(--color-white);
+  border: 2px solid #B4BEC9;
   background-color: white;
   position: absolute;
   left: 35%;
   top: 10%;
   width: 40%;
-  height: 70%;
+  height: 80%;
 `;
 
 const ContentContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  /* gap: 10px; */
+  gap: 10px;
   /* justify-content: center; */
   /* align-items: center; */
   /* margin-top: 30px; */
@@ -137,27 +139,23 @@ const ContentContainer = styled.div`
 
 const TitleContainer = styled.div`
   width: 100%;
-  height: 10%;
+  height: 20%;
   font-weight: 500;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   /* background-color: beige; */
 `;
 const DataHeader = styled.div`
   width: 100%;
-  height: 10%;
+  height: 45px;
   display: flex;
+  color: white;
+  font-weight: 800;
   flex-direction: row;
-  /* background-color: darkgreen; */
-`;
-const DataRow = styled.div`
-  width: 100%;
-  height: 10%;
-  display: flex;
-  flex-direction: row;
-  /* background-color: blue; */
+  background-color: #48989B;
 `;
 const HeaderPercent = styled.div<{ width: any }>`
   display: flex;
@@ -170,6 +168,14 @@ const HeaderPercent = styled.div<{ width: any }>`
   border-right: 1ch;
   /* background-color: aqua; */
 `;
+const DataRow = styled.div`
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  /* background-color: blue; */
+`;
+
 const RowPercent = styled.div<{ width: any }>`
   height: 30px;
   display: flex;
@@ -181,7 +187,6 @@ const RowPercent = styled.div<{ width: any }>`
   border-left: 1ch;
   border-right: 1ch;
   border-top: 1ch;
-  /* background-color: aqua; */
 `;
 const DataContainer = styled.div`
   width: 100%;
@@ -190,31 +195,45 @@ const DataContainer = styled.div`
   flex-direction: column;
   overflow: scroll;
   /* background-color: blueviolet; */
+  box-shadow: 0 2px 4px 0 #a4bde2;
+`;
+const FootContainer = styled(TitleContainer)`
+  font-size: 18px;
+  font-weight: 500;
+  color: #209653;
+  /* background-color: #E6F8F0; */
+  border-radius: 10px;
+  font-style: italic;
 `;
 const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: end;
   flex-direction: row;
-  margin-right: 20px;
+  /* margin-right: 20px; */
   gap: 20px;
   /* background-color: aqua; */
 `;
 const ButtonBox = styled.button`
   width: 100px;
-  /* border: 1px solid #14B869; */
-  border-radius: 10px;
-  /* background-color: yellowgreen; */
-  padding: 10px;
+  height: 40px;
+  color: #0A2332;
+  border: 2px solid #0A2332;
+  /* border-radius: 10px; */
+  padding: 5px;
   font-size: 18px;
   :hover {
-    background-color: #e6f8f0;
-    color: #14b869;
+    background-color: #C1CBD6;
+    border: none;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #14b869;
+  background-color: #0A2332;
+  :hover {
+    color: white;
+    background-color: #FBA94C;
+    border: #FBA94C;
+  }
 `;
-
 export default UserDeleteModal;

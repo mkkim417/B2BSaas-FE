@@ -82,7 +82,7 @@ function UserCopyModal({ group, content, closeModal }: Props) {
               <SubTitleBox>고객들을 복사할 그룹을 선택해주세요.</SubTitleBox>
             </TitleContainer>
             <SelectHeader>
-              그룹 :
+              <GroupDiv>그룹</GroupDiv>
               <SelectBox onChange={selectHandler}>
                 <option value="none"> 그룹을 선택해주세요.</option>
                 {group.map((item: any) => (
@@ -141,10 +141,10 @@ const ModalContainer = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 1rem;
+  /* border-radius: 1rem; */
   gap: 1rem;
   padding: 2rem 2rem 2rem 2rem;
-  border: 1px solid var(--color-white);
+  border: 2px solid #B4BEC9;
   background-color: white;
   position: absolute;
   left: 35%;
@@ -177,7 +177,7 @@ const TitleContainer = styled.div`
   font-weight: 500;
   align-items: center;
   justify-content: center;
-  background-color: beige;
+  /* background-color: beige; */
 `;
 const SelectHeader = styled.div`
   width: 100%;
@@ -186,7 +186,7 @@ const SelectHeader = styled.div`
   font-size: 18px;
   align-items: center;
   flex-direction: row;
-  background-color: pink;
+  /* background-color: pink; */
 `;
 const DataHeader = styled.div`
   width: 100%;
@@ -206,9 +206,21 @@ const DataRow = styled.div`
   flex-direction: row;
   /* background-color: blue; */
 `;
+const GroupDiv = styled.div`
+  height: 35px;
+  width: 50px;
+  color: #48989B;
+  text-align: center;
+  line-height: 35px;
+  font-weight: 800;
+  /* background-color: #48989B;; */
+  border: 2px solid #48989B;
+`
 const SelectBox = styled.select`
   width: 200px;
   height: 35px;
+  color: #002333;
+  font-weight: 700;
   font-size: 16px;
   margin-left: 10px;
 `;
@@ -249,25 +261,31 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: end;
   flex-direction: row;
-  margin-right: 20px;
+  /* margin-right: 20px; */
   gap: 20px;
   /* background-color: aqua; */
 `;
 const ButtonBox = styled.button`
   width: 100px;
-  /* border: 1px solid #14B869; */
-  border-radius: 10px;
-  /* background-color: yellowgreen; */
-  padding: 10px;
+  height: 40px;
+  color: #0A2332;
+  border: 2px solid #0A2332;
+  /* border-radius: 10px; */
+  padding: 5px;
   font-size: 18px;
   :hover {
-    background-color: #e6f8f0;
-    color: #14b869;
+    background-color: #C1CBD6;
+    border: none;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #14b869;
-`;
+  background-color: #0A2332;
+  :hover {
+    color: white;
+    background-color: #FBA94C;
+    border: #FBA94C;
+  }
+`
 
 export default UserCopyModal;

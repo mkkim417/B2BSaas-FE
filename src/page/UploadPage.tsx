@@ -446,8 +446,11 @@ function UploadPage() {
       exit={{ opacity: 0 }}
     >
       <Wrapper>
+        <Title>고객등록</Title>
         <ClientHeader />
-        <ContentsWrap>
+        <ContentsWrap1>
+          <SubTitle>고객 정보 등록</SubTitle>
+          <SubDiv> 엑셀 템플릿을 다운로드하고, 양식에 맞게 고객 데이터를 작성하여 업로드해주세요.</SubDiv>
           {/* 상단 파일선택 */}
           <div
             style={{
@@ -460,14 +463,14 @@ function UploadPage() {
             <TopContents></TopContents>
             {/* 템플릿다운로드 */}
             <TemplateWrap>
-              <TemplateDown>
+              {/* <TemplateDown>
                 <a href={'/oneTest.xlsx'} download>
                   템플릿다운로드
                 </a>
-              </TemplateDown>
-              <span>
+              </TemplateDown> */}
+              {/* <span>
                 템플릿 파일에 추가할 고객 목록을 작성하여 업로드 해주세요.
-              </span>
+              </span> */}
             </TemplateWrap>
             {/* 드롭다운 */}
             <TemplateWrap>
@@ -484,7 +487,12 @@ function UploadPage() {
                   ))}
               </select> */}
             </TemplateWrap>
-            <DecoText>파일등록</DecoText>
+            {/* <DecoText>파일등록</DecoText> */}
+            <TemplateDown>
+                <a href={'/oneTest.xlsx'} download>
+                  템플릿다운로드
+                </a>
+              </TemplateDown>
             {/* 테이블 */}
             {isData && isData ? (
               <MapWrapper>
@@ -536,8 +544,7 @@ function UploadPage() {
                 {!isDragging ? (
                   <>
                     <TextAria>
-                      <div>신규추가할 고객목록을 작성한</div>
-                      <div>양식 파일을 업로드해주세요</div>
+                      <div>작성한 템플릿을 업로드해주세요.</div>
                     </TextAria>
                     <label htmlFor="fileData">
                       <LabelWrap>파일찾기</LabelWrap>
@@ -616,7 +623,7 @@ function UploadPage() {
                   <>
                     <DisButton
                       onClick={() => alert('파일을 업로드해주세요')}
-                      width={'180px'}
+                      width={'200px'}
                     >
                       고객업로드 등록
                     </DisButton>
@@ -692,11 +699,27 @@ function UploadPage() {
               </BtnWrap>
             </BottomWrap>
           ) : null}
-        </ContentsWrap>
+        </ContentsWrap1>
       </Wrapper>
     </motion.div>
   );
 }
+
+// padding-top: 90px;
+//   padding-left: 210px;
+//   background: #f2f4f8;
+//   padding-right: 30px;
+const Title = styled.div`
+  color: #002333;
+  font-weight: bold;
+  font-size: 30px;
+  font-weight: 800;
+  /* padding-left: 210px; */
+  padding-top: 30px;
+  padding-left: 30px;
+  /* margin-bottom: 30px; */
+  /* background-color: red; */
+`;
 
 export const Thead = styled.thead`
   > tr > th {
@@ -717,18 +740,18 @@ export const DecoText = styled.div`
   margin-bottom: 10px;
 `;
 const LabelWrap = styled.div`
-  width: 180px;
-  height: 50px;
-  background-color: #fff;
+  width: 200px;
+  height: 60px;
+  /* background-color: #fff; */
   display: flex;
   cursor: pointer;
   text-align: center;
   margin-top: 30px;
   color: rgb(255, 255, 255);
-  background-color: rgb(20, 183, 105);
+  background-color: #179A9C;
   padding: 14px;
-  border-radius: 8px;
-  font-size: 16px;
+  /* border-radius: 8px; */
+  font-size: 20px;
   align-items: center;
   justify-content: center;
   font-weight: bold;
@@ -762,9 +785,16 @@ const TemplateWrap = styled.div`
   margin-bottom: 15px;
 `;
 const TemplateDown = styled.div`
+  width: 250px;
+  height: 60px;
   text-align: center;
-  border: 1px solid #bdbdbd;
-  padding: 15px;
+  line-height: 60px;
+  font-weight: 800;
+  color: #179A9C;
+  font-size: 24px;
+  margin-bottom: 20px;
+  border: 3px solid #179A9C;
+  /* padding: 15px; */
 `;
 const Table = styled.table`
   width: 1000px;
@@ -818,14 +848,14 @@ export const Button = styled.button<{
 const DisButton = styled.button<{
   width?: string;
 }>`
-  border-radius: 8px;
+  /* border-radius: 8px; */
   cursor: not-allowed;
   color: #bdbdbd;
   width: ${(props) => (props.width ? props.width : '100px')};
   padding: 15px 20px;
   background-color: #eee;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
   font-family: 'Inter', sans-serif;
 `;
 const InputFile = styled.input`
@@ -853,6 +883,21 @@ export const Wrapper = styled.div`
   padding-top: 60px;
   @media screen and (min-width: 1300px) {
     /* display: flex; */
+    background-color: #f2f4f8;
+  }
+`;
+
+export const ContentsWrap1 = styled.div`
+  width: 100%;
+  display: flex;
+  margin: 0px auto;
+  padding-left: 100px;
+  padding-right: 100px;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  @media screen and (min-width: 1300px) {
+    width: 1400px;
   }
 `;
 export const ContentsWrap = styled.div`
@@ -865,6 +910,20 @@ export const ContentsWrap = styled.div`
     width: 1000px;
   }
 `;
+const SubTitle = styled.div`
+  font-size: 30px;
+  font-weight: 800;
+  padding-top: 30px;
+  color: #002333;
+  padding-bottom: 20px;
+`
+const SubDiv = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  /* padding-top: 30px; */
+  color: #002333;
+  padding-bottom: 20px;
+`
 const TopContents = styled.div``;
 
 const BottomContents = styled.div<{ isDragging?: boolean }>`
@@ -878,6 +937,6 @@ const BottomContents = styled.div<{ isDragging?: boolean }>`
   height: 250px;
   opacity: ${(props) => (props.isDragging ? 0.3 : null)};
   border: ${(props) =>
-    props.isDragging ? '2px dashed #000' : '2px solid #bdbdbd'};
+    props.isDragging ? '3px bold #000' : '3px dashed #bdbdbd'};
 `;
 export default UploadPage;

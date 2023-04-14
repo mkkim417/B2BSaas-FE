@@ -37,6 +37,7 @@ const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  /* background-color: blue; */
 `;
 const ButtonContainer = styled.div`
   display: flex;
@@ -54,6 +55,6 @@ const DefaultButton = styled.button`
 `;
 const ColorButton = styled(DefaultButton)`
   color: #001d6c;
-  border-bottom: 1px solid #001d6c;
+  border-bottom: 2px solid #001d6c;
 `;
 export default ClientHeader;

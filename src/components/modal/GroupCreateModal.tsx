@@ -51,20 +51,25 @@ const GroupCreateModal = ({ closeModal }: Props) => {
       <ModalBackGround>
         <ModalContainer>
           <TitleContainer>
-            <TitleBox>그룹을 생성해주세요</TitleBox>
+            <TitleBox>그룹 생성</TitleBox>
+            <SubTitleBox>새로운 그룹 정보를 입력해주세요.</SubTitleBox>
           </TitleContainer>
           {/* <DataHeader>
             여긴어디
           </DataHeader> */}
           <DataContainer>
             <div>
-              <InputBox>그룹명</InputBox>
+              <InputBox>
+                그룹명
+                <RequiredDiv>*</RequiredDiv>
+              </InputBox>
               <InputContainer
                 name="groupName"
                 type="text"
                 value={data.groupName}
                 placeholder="그룹명을 입력해주세요"
                 onChange={onChangeHandler}
+                required
               />
             </div>
             <div>
@@ -113,16 +118,16 @@ const ModalContainer = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 1rem;
+  /* border-radius: 1rem; */
   gap: 1rem;
-  padding: 2rem 2rem 2rem 2rem;
-  border: 1px solid var(--color-white);
+  padding: 3rem 2rem 2rem 2rem;
+  border: 2px solid #B4BEC9;
   background-color: white;
   position: absolute;
   left: 35%;
   top: 20%;
-  width: 40%;
-  height: 60%;
+  width: 550px;
+  height: 600px;
 `;
 
 const ContentContainer = styled.div`
@@ -139,12 +144,14 @@ const ContentContainer = styled.div`
   /* background-color: red; */
 `;
 
-const TitleContainer = styled.div`
+export const TitleContainer = styled.div`
   width: 100%;
   height: 10%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   /* background-color: beige; */
 `;
 const DataHeader = styled.div`
@@ -166,29 +173,48 @@ const DataContainer = styled.div`
   height: 80%;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
-  gap: 50px;
+  gap: 30px;
   /* margin: 0px 500px 0px 500px; */
   padding: 0px 150px 0px 150px;
   /* overflow: scroll; */
   /* background-color: blueviolet; */
 `;
 const InputBox = styled.div`
-  /* height: 28px; */
-  font-weight: 500;
-  font-size: 20px;
-  margin-bottom: 5px;
+  height: 28px;
+  display: flex;
+  flex-direction: row;
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 10x;
 `;
-const TitleBox = styled.div`
+const RequiredDiv = styled.div`
+  color: #FBA94C;
+  font-size: 24px;
+`
+
+export const TitleBox = styled.div`
   /* height: 28px; */
   font-weight: 900;
-  font-size: 24px;
+  font-size: 36px;
 `;
+export const SubTitleBox = styled.div`
+  /* font-weight: 900; */
+  font-size: 18px;
+`
 const InputContainer = styled.input`
-  width: 100%;
-  height: 35px;
-  border: 1px solid #14b869;
-  border-radius: 10px;
+  width: 300px;
+  height: 40px;
+  padding-left: 10px;
+  background-color: #F3F4F8;
+  border: 1px solid #C7CCD2;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  :focus {
+    border: 2px solid #FBA94C;
+  }
 `;
 const ButtonContainer = styled.div`
   width: 100%;
@@ -201,18 +227,24 @@ const ButtonContainer = styled.div`
 `;
 const ButtonBox = styled.button`
   width: 100px;
-  /* border: 1px solid #14B869; */
-  border-radius: 10px;
-  padding: 10px;
+  color: #0A2332;
+  border: 2px solid #0A2332;
+  /* border-radius: 10px; */
+  padding: 5px;
   font-size: 18px;
   :hover {
-    background-color: #e6f8f0;
-    color: #14b869;
+    background-color: #C1CBD6;
+    border: none;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #14b869;
+  background-color: #0A2332;
+  :hover {
+    color: white;
+    background-color: #FBA94C;
+    border: #FBA94C;
+  }
 `;
 
 export default GroupCreateModal;

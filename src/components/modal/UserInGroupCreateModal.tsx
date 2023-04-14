@@ -1,6 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { elements } from 'chart.js';
-import { callback } from 'chart.js/dist/helpers/helpers.core';
+
 import React, { useCallback, useEffect, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import { useMutation, useQuery } from 'react-query';
@@ -9,6 +8,10 @@ import styled from 'styled-components';
 import { getModalAllClientList, postInGroupClient } from '../../axios/api';
 import { getCookie } from '../../util/cookie';
 import { PaginationBox1 } from '../PaginationStyled';
+import { SubTitleBox, TitleBox } from './GroupCreateModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { sizes } from '@mantine/core/lib/ActionIcon/ActionIcon.styles';
 
 type Props = {
   groupId: any;
@@ -124,8 +127,15 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
       <ModalBackGround>
         <ModalContainer>
           <ContentContainer>
-            <TitleContainer>등록할 고객을 클릭해주세요.</TitleContainer>
+            <TitleContainer>
+              <TitleBox>고객등록</TitleBox>
+              <SubTitleBox>
+                다섯명 이상의 등록은 다량등록을 이용해주세요
+                <MoveBox onClick={() => navigate('/uploadpage')}>다량등록</MoveBox>
+              </SubTitleBox>
+            </TitleContainer>
             <SearchBox>
+            <FontAwesomeIcon icon={faMagnifyingGlass} size="xs" style={{color: "#a4a5a8"}}/>
               <SearchInput
                 placeholder="Search"
                 type="search"
@@ -145,29 +155,13 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
                   </CheckBox>
                 );
               })}
-              ({savedArr.length}/5)
-              {/* <CheckBox>
-                김미미
-                <RemoveButton>x</RemoveButton>
-              </CheckBox>
-              <CheckBox>
-                김미미
-                <RemoveButton>x</RemoveButton>
-              </CheckBox>
-              <CheckBox>
-                김미미
-                <RemoveButton>x</RemoveButton>
-              </CheckBox>
-              <CheckBox>
-                김미미
-                <RemoveButton>x</RemoveButton>
-              </CheckBox> */}
+              <SelectDiv>({savedArr.length}/5)</SelectDiv>
             </SelectBox>
-            <DataHeader>
+            <TitleHeader>
               <HeaderPercent width="20%">이름</HeaderPercent>
               <HeaderPercent width="30%">연락처</HeaderPercent>
               <HeaderPercent width="50%">이메일</HeaderPercent>
-            </DataHeader>
+            </TitleHeader>
             <DataContainer>
               {userList?.map((item: any) => {
                 return (
@@ -179,7 +173,7 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
                 );
               })}
             </DataContainer>
-            <TitleContainer>
+            <PageContainer>
               <PaginationBox1>
                 <Pagination
                   activePage={currentPage}
@@ -191,12 +185,8 @@ function UserInGroupCreateModal({ groupId, closeModal }: Props) {
                   onChange={setPage1}
                 />
               </PaginationBox1>
-            </TitleContainer>
+            </PageContainer>
           </ContentContainer>
-          <FootContainer>
-            다섯명 이상의 등록은 다량등록을 이용해주세요
-            <MoveBox onClick={() => navigate('/uploadpage')}>다량등록</MoveBox>
-          </FootContainer>
           <ButtonContainer>
             <ButtonBox onClick={closeModal}>취소</ButtonBox>
             <ConfirmButton onClick={(e: any) => postDataHandler(e)}>
@@ -230,10 +220,10 @@ const ModalContainer = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 1rem;
+  /* border-radius: 1rem; */
   /* gap: 1rem; */
-  padding: 1.5rem 2rem 1rem 2rem;
-  border: 1px solid var(--color-white);
+  padding: 2rem 2rem 2rem 2rem;
+  border: 2px solid #B4BEC9;
   background-color: white;
   position: absolute;
   left: 35%;
@@ -259,12 +249,23 @@ const ContentContainer = styled.div`
 
 const TitleContainer = styled.div`
   width: 100%;
-  height: 30px;
+  height: 100px;
   display: flex;
-  font-size: 24px;
-  font-weight: 500;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 10px;
+  /* background-color: blue; */
+`;
+
+const PageContainer = styled.div`
+  width: 100%;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   /* background-color: blue; */
 `;
 
@@ -277,10 +278,24 @@ const SelectHeader = styled.div`
   flex-direction: row;
   /* background-color: pink; */
 `;
+
+const TitleHeader = styled.div`
+  width: 100%;
+  height: 35px;
+  font-size: 20px;
+  font-weight: 800;
+  background-color: #48989B;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  box-shadow: 0 2px 4px 0 #a4bde2;
+`;
+
 const DataHeader = styled.div`
   width: 100%;
   height: 30px;
   font-size: 20px;
+  color: #002333;
   display: flex;
   flex-direction: row;
   :hover {
@@ -289,7 +304,7 @@ const DataHeader = styled.div`
   }
 `;
 const SearchInput = styled.input`
-  width: 250px;
+  width: 200px;
   height: 38px;
   border-radius: 8px;
   border: 1px solid #bdbdbd;
@@ -306,11 +321,24 @@ const SelectBox = styled.div`
   font-size: 16px;
   /* background-color: pink; */
 `;
+const SelectDiv = styled.div`
+  width: 50px;
+  height: 25px;
+  text-align: center;
+  line-height: 25px;
+  font-weight: 500;
+  font-size: 18px;
+  color: #002333;
+  /* background-color: #FBA94C; */
+`
 const SearchBox = styled.div`
   max-width: 610px;
   height: 40px;
   display: flex;
+  align-items: center;
+  gap: 5px;
   justify-content: end;
+  /* background-color: aqua; */
 `;
 const CheckBox = styled.div`
   width: 100px;
@@ -320,8 +348,8 @@ const CheckBox = styled.div`
   padding-left: 10px;
   border-radius: 8px;
   font-weight: 700;
-  color: #14b869;
-  background-color: #f3fbf7;
+  color: #002333;
+  background-color: #F3FBF8;
   justify-content: space-between;
 `;
 const RemoveButton = styled.div`
@@ -353,18 +381,19 @@ const RowPercent = styled.div<{ width: any }>`
   justify-content: center;
   font-size: 18px;
   width: ${(item: any) => item.width};
-  border: 1px solid #f3f3f3;
+  /* border: 1px solid #f3f3f3;
   border-left: 1ch;
   border-right: 1ch;
-  border-top: 1ch;
+  border-top: 1ch; */
   cursor: pointer;
 `;
 const DataContainer = styled.div`
   width: 100%;
-  height: 350px;
+  height: 300px;
   display: flex;
   flex-direction: column;
   overflow: scroll;
+  box-shadow: 0 2px 4px 0 #a4bde2;
   /* background-color: blueviolet; */
 `;
 const FootContainer = styled(TitleContainer)`
@@ -390,7 +419,7 @@ const MoveBox = styled.button`
   width: 80px;
   height: 30px;
   border-radius: 8px;
-  color: #209653;
+  color: #FBA94C;
   text-decoration: underline;
   font-weight: 500;
   font-size: 18px;
@@ -398,18 +427,23 @@ const MoveBox = styled.button`
 `;
 const ButtonBox = styled.button`
   width: 100px;
-  /* border: 1px solid #14B869; */
-  border-radius: 10px;
-  /* background-color: yellowgreen; */
-  padding: 10px;
+  color: #0A2332;
+  border: 2px solid #0A2332;
+  /* border-radius: 10px; */
+  padding: 5px;
   font-size: 18px;
   :hover {
-    background-color: #e6f8f0;
-    color: #14b869;
+    background-color: #C1CBD6;
+    border: none;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #14b869;
+  background-color: #0A2332;
+  :hover {
+    color: white;
+    background-color: #FBA94C;
+    border: #FBA94C;
+  }
 `;
 export default UserInGroupCreateModal;

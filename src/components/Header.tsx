@@ -60,9 +60,10 @@ function Header() {
 }
 
 export const LogoInamge = styled.div`
-  width: 140px;
-  height: 40px;
-  background-image: url(/MainLogo_resize.jpg);
+  width: 160px;
+  height: 60px;
+  /* background-image: url(/MainLogo_resize.jpg); */
+  background-image: url(/MainLogo_v2.png);
   background-repeat: no-repeat;
   background-size: contain;
 `;

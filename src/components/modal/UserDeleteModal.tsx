@@ -4,7 +4,6 @@ import { useMutation } from 'react-query';
 import styled from 'styled-components';
 import { deleteClientData } from '../../axios/api';
 import { getCookie } from '../../util/cookie';
-import { FootContainer } from './GroupDeleteModal';
 
 type Props = {
   title?: string;
@@ -74,9 +73,9 @@ function UserDeleteModal({ title, checkValue, closeModal }: Props) {
               })}
             </DataContainer>
           </ContentContainer>
-          <FootContainer>
+          {/* <FootContainer>
             <div>해당 고객을 삭제시, 관련 발송내역이 모두 삭제됩니다.</div>
-          </FootContainer>
+          </FootContainer> */}
           <ButtonContainer>
             {/* <ButtonBox>아니오</ButtonBox> */}
             <ButtonBox onClick={closeModal}>취소</ButtonBox>

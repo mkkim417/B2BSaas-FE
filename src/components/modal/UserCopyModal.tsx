@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import styled from 'styled-components';
 import { getCookie } from '../../util/cookie';
+import { SubTitleBox, TitleBox } from './GroupCreateModal';
 
 type Props = {
   group?: any;
@@ -76,11 +77,14 @@ function UserCopyModal({ group, content, closeModal }: Props) {
       <ModalBackGround>
         <ModalContainer>
           <ContentContainer>
-            <TitleContainer>복사시킬 그룹명을 선택해주세요</TitleContainer>
+            <TitleContainer>
+              <TitleBox>그룹 복사</TitleBox>
+              <SubTitleBox>고객들을 복사할 그룹을 선택해주세요.</SubTitleBox>
+            </TitleContainer>
             <SelectHeader>
-              그룹선택 :
+              그룹 :
               <SelectBox onChange={selectHandler}>
-                <option value="none">====== 선택 ======</option>
+                <option value="none"> 그룹을 선택해주세요.</option>
                 {group.map((item: any) => (
                   <option value={item.groupId} key={item.groupId}>
                     {item.groupName}
@@ -96,11 +100,11 @@ function UserCopyModal({ group, content, closeModal }: Props) {
             <DataContainer>
               {content.map((item: any) => {
                 return (
-                  <DataHeader key={item.clientId}>
+                  <DataRow key={item.clientId}>
                     <RowPercent width="20%">{item.clientName}</RowPercent>
                     <RowPercent width="30%">{item.contact}</RowPercent>
                     <RowPercent width="50%">{item.clientEmail}</RowPercent>
-                  </DataHeader>
+                  </DataRow>
                 );
               })}
             </DataContainer>
@@ -165,13 +169,15 @@ const ContentContainer = styled.div`
 
 const TitleContainer = styled.div`
   width: 100%;
-  height: 10%;
+  height: 15%;
   display: flex;
+  flex-direction: column;
+  gap: 10px;
   font-size: 24px;
   font-weight: 500;
   align-items: center;
   justify-content: center;
-  /* background-color: beige; */
+  background-color: beige;
 `;
 const SelectHeader = styled.div`
   width: 100%;
@@ -180,20 +186,29 @@ const SelectHeader = styled.div`
   font-size: 18px;
   align-items: center;
   flex-direction: row;
-  /* background-color: pink; */
+  background-color: pink;
 `;
 const DataHeader = styled.div`
   width: 100%;
-  height: 8%;
+  height: 40px;
   display: flex;
   font-size: 20px;
+  font-weight: 800;
+  color: white;
   /* align-items: center; */
   flex-direction: row;
-  /* background-color: darkgreen; */
+  background-color: #48989B;
+`;
+const DataRow = styled.div`
+  width: 100%;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  /* background-color: blue; */
 `;
 const SelectBox = styled.select`
   width: 200px;
-  height: 40px;
+  height: 35px;
   font-size: 16px;
   margin-left: 10px;
 `;
@@ -209,7 +224,7 @@ const HeaderPercent = styled.div<{ width: any }>`
   /* background-color: aqua; */
 `;
 const RowPercent = styled.div<{ width: any }>`
-  height: 30px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,11 +237,12 @@ const RowPercent = styled.div<{ width: any }>`
 `;
 const DataContainer = styled.div`
   width: 100%;
-  height: 70%;
+  height: 65%;
   display: flex;
   flex-direction: column;
   overflow: scroll;
   /* background-color: blueviolet; */
+  box-shadow: 0 2px 4px 0 #a4bde2;
 `;
 const ButtonContainer = styled.div`
   width: 100%;

@@ -263,7 +263,6 @@ function Alarmtalk() {
       fetchTemplateList();
       mutate({
         groupId: params?.id,
-        clientIds: location?.state.ArrClientsIdsData,
       });
     }
   }, [fetchTemplateList, mutate]);

@@ -65,7 +65,6 @@ function ReadyAlarmtalk() {
     if (location?.state?.ArrClientsIdsData) {
       mutate({
         groupId: params?.id,
-        clientIds: location?.state.ArrClientsIdsData,
       });
     } else {
       setNullComponent(true);

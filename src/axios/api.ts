@@ -55,20 +55,21 @@ export const postLogin = async (data: Login) => {
 
 // 단건 클라이언트 생성
 export const postSingleClient = async (user: any) => {
-  const response = await instance.post('/api/clients', {
-    clientName: user.clientName,
-    clientEmail: user.clientEmail,
-    contact: user.contact,
-  })
-  .then((res) => {
-    alert('등록에 성공하였습니다.')
-    window.location.reload()
-  })
-  .catch((error) => {
-    if (error.response.data.message === '중복된 클라이언트가 존재합니다.') {
-      alert('중복된 클라이언트가 존재합니다.')
-    }
-  })
+  const response = await instance
+    .post('/api/clients', {
+      clientName: user.clientName,
+      clientEmail: user.clientEmail,
+      contact: user.contact,
+    })
+    .then((res) => {
+      alert('등록에 성공하였습니다.');
+      window.location.reload();
+    })
+    .catch((error) => {
+      if (error.response.data.message === '중복된 클라이언트가 존재합니다.') {
+        alert('중복된 클라이언트가 존재합니다.');
+      }
+    });
   return response;
 };
 // 빈 그룹 생성
@@ -126,24 +127,24 @@ export const postInGroupClient = async (data: any) => {
   );
   const response = await axios.all(
     urls.map((url: any) => {
-      instance.post(url)
-      .then((res) => {
-        // console.log('res', res)
-        if (res.status === 201) {
-          alert('등록이 완료되었습니다.')
-        }
-        return res
-      })
-      .catch((error) => {
-        // console.log('error', error.response.status)
-        if (error.response.status === 409) {
-          alert('이미 등록된 고객입니다.')
-        }
-        return error.response.status
-      })
+      instance
+        .post(url)
+        .then((res) => {
+          // console.log('res', res)
+          if (res.status === 201) {
+            alert('등록이 완료되었습니다.');
+          }
+          return res;
+        })
+        .catch((error) => {
+          // console.log('error', error.response.status)
+          if (error.response.status === 409) {
+            alert('이미 등록된 고객입니다.');
+          }
+          return error.response.status;
+        });
     })
-  )
-
+  );
 
   // return response;
 };
@@ -157,19 +158,18 @@ export const deleteInGroupClient = async (checkValue: any) => {
     urls.map((url: any) => {
       instance.post(url);
     })
-  )
+  );
   return response;
 };
 // 그룹 내 클라이언트 복사
 // 그룹 내 클라이언트 이동
 
 // 카카오내용 불러오기
-export const fetchTemplatesList = async ({ groupId, clientIds }: any) => {
+export const fetchTemplatesList = async ({ groupId }: any) => {
   const response = await instance.post(
     `${process.env.REACT_APP_SERVER_URL}/api/talk/clients/contents`,
     {
       groupId,
-      clientIds,
     }
   );
   return response;

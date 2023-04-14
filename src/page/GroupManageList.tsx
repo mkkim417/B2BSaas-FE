@@ -1010,7 +1010,7 @@ export const HeaderContainer = styled.div`
   margin-top: 90px;
   /* margin-bottom: 20px; */
   /* padding-left: 30px; */
-  font-size: 34px;
+  font-size: 28px;
   font-weight: 900;
   /* background-color: crimson; */
 `;

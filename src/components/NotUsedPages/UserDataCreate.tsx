@@ -35,7 +35,9 @@ function UserDataCreate() {
           memo="클라이언트 생성하는 모달"
         />
       )}
-      {groupOpenModal && <GroupCreateModal closeModal={closeGroupModal} />}
+      {groupOpenModal && (
+        <GroupCreateModal isOpen={true} closeModal={closeGroupModal} />
+      )}
     </Wrapper>
   );
 }

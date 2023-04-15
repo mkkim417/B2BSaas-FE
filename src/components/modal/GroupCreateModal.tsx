@@ -5,11 +5,13 @@ import { useMutation } from 'react-query';
 import styled from 'styled-components';
 import { postGroupData } from '../../axios/api';
 import { PaginationBox } from '../NotUsedPages/UserList';
+import DefaultModal from './DefaultModal';
 
 type Props = {
+  isOpen: boolean;
   closeModal: () => void;
 };
-const GroupCreateModal = ({ closeModal }: Props) => {
+const GroupCreateModal = ({ isOpen, closeModal }: Props) => {
   // const token = localStorage.getItem('Token');
   // group input 변수들
   const initialData = {
@@ -47,52 +49,49 @@ const GroupCreateModal = ({ closeModal }: Props) => {
   };
 
   return (
-    <ModalWrap>
-      <ModalBackGround>
-        <ModalContainer>
-          <TitleContainer>
-            <TitleBox>그룹 생성</TitleBox>
-            <SubTitleBox>새로운 그룹 정보를 입력해주세요.</SubTitleBox>
-          </TitleContainer>
-          {/* <DataHeader>
-            여긴어디
-          </DataHeader> */}
-          <DataContainer>
-            <div>
-              <InputBox>
-                그룹명
-                <RequiredDiv>*</RequiredDiv>
-              </InputBox>
-              <InputContainer
-                name="groupName"
-                type="text"
-                value={data.groupName}
-                placeholder="그룹명을 입력해주세요"
-                onChange={onChangeHandler}
-                required
-              />
-            </div>
-            <div>
-              <InputBox>그룹설명</InputBox>
-              <InputContainer
-                name="groupDescription"
-                type="text"
-                value={data.groupDescription}
-                placeholder="그룹설명을 입력해주세요"
-                onChange={onChangeHandler}
-              />
-            </div>
-          </DataContainer>
-          <ButtonContainer>
-            {/* <ButtonBox>아니오</ButtonBox> */}
-            <ButtonBox onClick={closeModal}>취소</ButtonBox>
-            <ConfirmButton onClick={(e) => submitHandler(e, closeModal)}>
-              확인
-            </ConfirmButton>
-          </ButtonContainer>
-        </ModalContainer>
-      </ModalBackGround>
-    </ModalWrap>
+    <DefaultModal
+      isOpen={isOpen}
+      closeModal={closeModal}
+      modalFooter={
+        <ButtonContainer>
+          <ButtonBox onClick={closeModal}>취소</ButtonBox>
+          <ConfirmButton onClick={(e) => submitHandler(e, closeModal)}>
+            확인
+          </ConfirmButton>
+        </ButtonContainer>
+      }
+    >
+      <TitleContainer>
+        <TitleBox>그룹 생성</TitleBox>
+        <SubTitleBox>새로운 그룹 정보를 입력해주세요.</SubTitleBox>
+      </TitleContainer>
+      <DataContainer>
+        <div>
+          <InputBox>
+            그룹명
+            <RequiredDiv>*</RequiredDiv>
+          </InputBox>
+          <InputContainer
+            name="groupName"
+            type="text"
+            value={data.groupName}
+            placeholder="그룹명을 입력해주세요"
+            onChange={onChangeHandler}
+            required
+          />
+        </div>
+        <div>
+          <InputBox>그룹설명</InputBox>
+          <InputContainer
+            name="groupDescription"
+            type="text"
+            value={data.groupDescription}
+            placeholder="그룹설명을 입력해주세요"
+            onChange={onChangeHandler}
+          />
+        </div>
+      </DataContainer>
+    </DefaultModal>
   );
 };
 
@@ -121,7 +120,7 @@ const ModalContainer = styled.form`
   /* border-radius: 1rem; */
   gap: 1rem;
   padding: 3rem 2rem 2rem 2rem;
-  border: 2px solid #B4BEC9;
+  border: 2px solid #b4bec9;
   background-color: white;
   position: absolute;
   left: 35%;
@@ -190,9 +189,9 @@ const InputBox = styled.div`
   margin-bottom: 10x;
 `;
 const RequiredDiv = styled.div`
-  color: #FBA94C;
+  color: #fba94c;
   font-size: 24px;
-`
+`;
 
 export const TitleBox = styled.div`
   /* height: 28px; */
@@ -202,18 +201,18 @@ export const TitleBox = styled.div`
 export const SubTitleBox = styled.div`
   /* font-weight: 900; */
   font-size: 18px;
-`
+`;
 const InputContainer = styled.input`
   width: 300px;
   height: 40px;
   padding-left: 10px;
-  background-color: #F3F4F8;
-  border: 1px solid #C7CCD2;
+  background-color: #f3f4f8;
+  border: 1px solid #c7ccd2;
   border-left: none;
   border-right: none;
   border-top: none;
   :focus {
-    border: 2px solid #FBA94C;
+    border: 2px solid #fba94c;
   }
 `;
 const ButtonContainer = styled.div`
@@ -227,23 +226,23 @@ const ButtonContainer = styled.div`
 `;
 const ButtonBox = styled.button`
   width: 100px;
-  color: #0A2332;
-  border: 2px solid #0A2332;
+  color: #0a2332;
+  border: 2px solid #0a2332;
   /* border-radius: 10px; */
   padding: 5px;
   font-size: 18px;
   :hover {
-    background-color: #C1CBD6;
+    background-color: #c1cbd6;
     border: none;
   }
 `;
 const ConfirmButton = styled(ButtonBox)`
   color: white;
-  background-color: #0A2332;
+  background-color: #0a2332;
   :hover {
     color: white;
-    background-color: #FBA94C;
-    border: #FBA94C;
+    background-color: #fba94c;
+    border: #fba94c;
   }
 `;
 

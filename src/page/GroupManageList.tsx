@@ -23,9 +23,8 @@ import { getCookie } from '../util/cookie';
 import GroupDeleteModal from '../components/modal/GroupDeleteModal';
 import { PaginationBox1 } from '../components/PaginationStyled';
 import UserInGroupCreateModal from '../components/modal/UserInGroupCreateModal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 function GroupManageList() {
   // hook 변수 모음들
@@ -484,33 +483,39 @@ function GroupManageList() {
             <NameBox>{groupName}</NameBox>
             <DescriptBox>{groupDescription}</DescriptBox>
           </ClientHeaderBox>
-          { isClientState ? (
+          {isClientState ? (
             <SearchContainer>
-            <FontAwesomeIcon icon={faMagnifyingGlass} style={{color: "#a4a5a8",}} />
-            <SearchInput
-                    placeholder="Search in Total"
-                    type="client search"
-                    onChange={(e: any) => {
-                      setSearchKeyword(e.target.value);
-                      clientSearchTextChange(e.target.value);
-                    }}
-                  />
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                style={{ color: '#a4a5a8' }}
+              />
+              <SearchInput
+                placeholder="Search in Total"
+                type="client search"
+                onChange={(e: any) => {
+                  setSearchKeyword(e.target.value);
+                  clientSearchTextChange(e.target.value);
+                }}
+              />
             </SearchContainer>
           ) : (
             <SearchContainer>
-            <FontAwesomeIcon icon={faMagnifyingGlass} style={{color: "#a4a5a8",}} />
-            <SearchInput
-                    placeholder="Search in Group"
-                    type="search"
-                    onChange={(e: any) => {
-                      setGroupSearchKeyword(e.target.value);
-                    }}
-                  />
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                style={{ color: '#a4a5a8' }}
+              />
+              <SearchInput
+                placeholder="Search in Group"
+                type="search"
+                onChange={(e: any) => {
+                  setGroupSearchKeyword(e.target.value);
+                }}
+              />
             </SearchContainer>
           )}
         </TitleContainer>
         <ContentContainer>
-        {/* 그룹리스트 공간 */}
+          {/* 그룹리스트 공간 */}
           <GroupContainer>
             <GroupContentBox>
               <GroupContentItem
@@ -527,15 +532,18 @@ function GroupManageList() {
                 }}
                 ref={allUserRef}
               >
-                <CircleFont 
-                    className={'circle' + ('client' == clickActive ? 'Active' : '')}>
-                    {isAllclients}</CircleFont>
+                <CircleFont
+                  className={
+                    'circle' + ('client' == clickActive ? 'Active' : '')
+                  }
+                >
+                  {isAllclients}
+                </CircleFont>
                 전체 고객리스트
               </GroupContentItem>
               {groupData?.data.map((item: any) => {
                 return (
                   <div key={item.groupId}>
-                    
                     <GroupContentItem
                       value={item.groupId}
                       className={
@@ -558,9 +566,14 @@ function GroupManageList() {
                         toogleActive(e);
                       }}
                     >
-                      <CircleFont 
-                        className={'circle' + (item.groupId == clickActive ? 'Active' : '')}>
-                        {item.clientCount}</CircleFont>
+                      <CircleFont
+                        className={
+                          'circle' +
+                          (item.groupId == clickActive ? 'Active' : '')
+                        }
+                      >
+                        {item.clientCount}
+                      </CircleFont>
                       {item.groupName}
                     </GroupContentItem>
                   </div>
@@ -568,7 +581,9 @@ function GroupManageList() {
               })}
             </GroupContentBox>
             <ButtonBox>
-              <PrimaryButton onClick={clickGroupCreateModal}>그룹 추가</PrimaryButton>
+              <PrimaryButton onClick={clickGroupCreateModal}>
+                그룹 추가
+              </PrimaryButton>
               <PrimaryButton
                 onClick={() => {
                   if (isClientState === true) {
@@ -582,7 +597,7 @@ function GroupManageList() {
               </PrimaryButton>
             </ButtonBox>
           </GroupContainer>
-        {/* 여기부터는 클라이언트 리스트 공간 */}
+          {/* 여기부터는 클라이언트 리스트 공간 */}
           <ClientContainer>
             <ButtonContainer>
               {isClientState ? (
@@ -688,13 +703,15 @@ function GroupManageList() {
                       </PrimaryButton>
                     )}
                     {isCopyOpen && isCopyOpen ? (
-                      <GroupClickButton onClick={() => {
-                        if (checkedArr.length > 0) {
-                          clickUserCopyModal();
-                        } else if (checkedArr.length === 0) {
-                          alert('1개 이상을 체크해주세요.');
-                        }
-                      }}>
+                      <GroupClickButton
+                        onClick={() => {
+                          if (checkedArr.length > 0) {
+                            clickUserCopyModal();
+                          } else if (checkedArr.length === 0) {
+                            alert('1개 이상을 체크해주세요.');
+                          }
+                        }}
+                      >
                         복사
                       </GroupClickButton>
                     ) : null}
@@ -718,13 +735,15 @@ function GroupManageList() {
                     복사
                   </GroupButton> */}
                     {isMoveOpen && isMoveOpen ? (
-                      <GroupClickButton onClick={() => {
-                        if (checkedArr.length > 0) {
-                          clickUserMoveModal();
-                        } else if (checkedArr.length === 0) {
-                          alert('1개 이상을 체크해주세요.');
-                        }
-                      }}>
+                      <GroupClickButton
+                        onClick={() => {
+                          if (checkedArr.length > 0) {
+                            clickUserMoveModal();
+                          } else if (checkedArr.length === 0) {
+                            alert('1개 이상을 체크해주세요.');
+                          }
+                        }}
+                      >
                         이동
                       </GroupClickButton>
                     ) : null}
@@ -810,15 +829,21 @@ function GroupManageList() {
                             onChange={(e: any) => checkUserHandler(e, item)}
                           />
                         </Percentage> */}
-                          <DataPercentage width="23%">{item.groupName}</DataPercentage>
-                          <DataPercentage width="12%">{item.clientName}</DataPercentage>
+                          <DataPercentage width="23%">
+                            {item.groupName}
+                          </DataPercentage>
+                          <DataPercentage width="12%">
+                            {item.clientName}
+                          </DataPercentage>
                           <DataPercentage width="22%">
                             {item.contact.replace(
                               /^(\d{2,3})(\d{3,4})(\d{4})$/,
                               `$1-$2-$3`
                             )}
                           </DataPercentage>
-                          <DataPercentage width="37%">{item.clientEmail}</DataPercentage>
+                          <DataPercentage width="37%">
+                            {item.clientEmail}
+                          </DataPercentage>
                         </CardHeader>
                       );
                     })
@@ -857,7 +882,9 @@ function GroupManageList() {
                           <Percentage width="23%">{item.groupName}</Percentage>
                           <Percentage width="12%">{item.clientName}</Percentage>
                           <Percentage width="22%">{item.contact}</Percentage>
-                          <Percentage width="37%">{item.clientEmail}</Percentage>
+                          <Percentage width="37%">
+                            {item.clientEmail}
+                          </Percentage>
                         </CardHeader>
                       );
                     })
@@ -920,9 +947,9 @@ function GroupManageList() {
         </ContentContainer>
         <FootContainer>
           {isClientState ? null : (
-              <AlarmTalkButton onClick={readyAlarmTalk}>
-                알림톡전송
-              </AlarmTalkButton>
+            <AlarmTalkButton onClick={readyAlarmTalk}>
+              알림톡전송
+            </AlarmTalkButton>
           )}
         </FootContainer>
       </TotalContainer>
@@ -946,7 +973,7 @@ function GroupManageList() {
       )}
       {/* 그룹 생성 모달 */}
       {groupCreateModal && (
-        <GroupCreateModal closeModal={closeGroupCreateModal} />
+        <GroupCreateModal isOpen={true} closeModal={closeGroupCreateModal} />
       )}
       {/* 그룹 삭제 모달 */}
       {groupDeleteModal && (
@@ -1027,15 +1054,15 @@ const ContentContainer = styled.div`
 `;
 
 const TotalContainer = styled.div`
-max-width: 1800px;
-height: 100vh;
-width: 100%;
-display: flex;
-flex-direction: column;
-margin: 0 auto;
-margin-top: 60px;
-/* margin-bottom: 100px; */
-/* background-color: cyan; */
+  max-width: 1800px;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  margin-top: 60px;
+  /* margin-bottom: 100px; */
+  /* background-color: cyan; */
 `;
 const TitleContainer = styled.div`
   height: 60px;
@@ -1048,7 +1075,7 @@ const TitleContainer = styled.div`
   margin-bottom: 10px;
   margin-left: 50px;
   margin-right: 35px;
-`
+`;
 const FootContainer = styled.div`
   height: 60px;
   display: flex;
@@ -1059,7 +1086,7 @@ const FootContainer = styled.div`
   /* margin-bottom: 10px; */
   margin-left: 50px;
   margin-right: 35px;
-`
+`;
 const GroupContainer = styled.div`
   height: 600px;
   margin: 0px 10px;
@@ -1106,7 +1133,7 @@ const CircleFont = styled.div`
   line-height: 25px;
   /* color: #B4BEC9;
   background-color: #F3F4F8; */
-`
+`;
 const ButtonBox = styled.div`
   height: 60px;
   display: flex;
@@ -1154,10 +1181,10 @@ const SearchContainer = styled.div`
   align-items: center;
   /* padding-right: 10px; */
   /* background-color: darkorchid; */
-`
+`;
 const SearchDiv = styled.div`
   margin-left: 10px;
-`
+`;
 const SearchInput = styled.input`
   width: 250px;
   height: 40px;
@@ -1165,9 +1192,7 @@ const SearchInput = styled.input`
   border: 1px solid #bdbdbd;
   padding-left: 10px;
 `;
-const SearchIcon = styled.div`
-  
-`
+const SearchIcon = styled.div``;
 const GroupClickButton = styled.button`
   width: 110px;
   height: 40px;
@@ -1179,13 +1204,12 @@ const GroupClickButton = styled.button`
   font-family: 'TheJamsil5Bold';
   background-color: white;
   border: 1.5px solid #002333;
-  box-shadow: 0 2px 4px 0 #E6F8F0;
+  box-shadow: 0 2px 4px 0 #e6f8f0;
   transition: 0.3s;
   :hover {
     color: #ffffff;
     background-color: #002333;
     border: 2px solid #002333;
-    
   }
 `;
 
@@ -1197,11 +1221,10 @@ const AlarmTalkButton = styled(GroupClickButton)`
   background-color: #002333;
   :hover {
     color: #ffffff;
-    background-color: #FBA94C;
-    border: 2px solid #FBA94C;
-    
+    background-color: #fba94c;
+    border: 2px solid #fba94c;
   }
-`
+`;
 
 const GroupAlartButton = styled.button`
   width: 100px;
@@ -1244,7 +1267,7 @@ const NameBox = styled.div`
 `;
 const DescriptBox = styled.div`
   /* background-color: darkgray; */
-  color: #B4BEC9;
+  color: #b4bec9;
   font-size: 20px;
   font-weight: 800;
   display: flex;
@@ -1262,12 +1285,11 @@ const ClientContentBox = styled.div`
   overflow: auto;
   box-shadow: 0 2px 4px 0 #a4bde2;
   /* margin: 0px 30px 0px 0px; */
-
 `;
 
 const ClientContentHeader = styled.div`
   height: 40px;
-  background-color: #48989B;
+  background-color: #48989b;
   color: white;
   font-weight: bold;
   /* border-top-left-radius: 8px;
@@ -1293,7 +1315,7 @@ const Percentage = styled.div<{ width: any }>`
 `;
 const DataPercentage = styled(Percentage)`
   color: #002333;
-`
+`;
 
 const HeaderPercentage = styled(Percentage)<{ width: any }>`
   height: 40px;
@@ -1319,21 +1341,21 @@ const ClientPageBox = styled.div`
 const PrimaryButton = styled.button`
   width: 110px;
   height: 40px;
-  color: #48989B;
+  color: #48989b;
   margin-right: 5px;
   font-weight: normal;
   font-size: 16px;
   border-radius: 5px;
   background-color: #ffffff;
   font-family: 'TheJamsil5Bold';
-  border: 1.5px solid #48989B;
-  box-shadow: 0 2px 4px 0 #E6F8F0;
+  border: 1.5px solid #48989b;
+  box-shadow: 0 2px 4px 0 #e6f8f0;
   transition: 0.3s;
   :hover {
     /* background-color: #ebde9e; */
     color: #ffffff;
-    background-color: #FBA94C;
-    border: 2px solid #FBA94C;
+    background-color: #fba94c;
+    border: 2px solid #fba94c;
   }
 `;
 const CenterContent = styled.div`
@@ -1359,7 +1381,7 @@ const CheckInputBox = styled.input`
     border: 1.5px solid #eeeeee;
     /* border-radius: 0.35rem; */
     /* color: #14B769; */
-    background-color: #48989B;
+    background-color: #48989b;
     background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
   }
 `;
